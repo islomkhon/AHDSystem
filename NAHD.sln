@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AHD", "AHD\AHD.csproj", "{DD6ABA46-D395-494E-9E8E-5389BBAA83BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD6ABA46-D395-494E-9E8E-5389BBAA83BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD6ABA46-D395-494E-9E8E-5389BBAA83BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD6ABA46-D395-494E-9E8E-5389BBAA83BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD6ABA46-D395-494E-9E8E-5389BBAA83BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97D7D99B-1441-43B9-83DC-A529CCE1D41B}
+	EndGlobalSection
+EndGlobal
