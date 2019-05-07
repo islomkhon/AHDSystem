@@ -1,0 +1,245 @@
+﻿@model AHD.Models.NueUserProfile
+@{
+    ViewBag.Title = "Add New User - ";
+}
+@Styles.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.css")
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Add new Neudesic user</h4>
+        <div class="row">
+            <div class="col-7">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="cmxform" id="addNewNeuUserForm" action="/NeuUserManagement/AddNewNeuUser" method="POST" enctype="multipart/form-data">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="ntplId">NTPL ID</label>
+                                    @Html.TextBoxFor(m => m.ntplId, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    @Html.TextBoxFor(m => m.firstName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="middleName">Middle Name</label>
+                                    @Html.TextBoxFor(m => m.middleName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    @Html.TextBoxFor(m => m.lastName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="fullName">Full Name</label>
+                                    @Html.TextBoxFor(m => m.fullName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input id="email" class="form-control" name="email" type="email">
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Employment Status</label>
+                                    <div class="col-sm-9">
+                                        <select id="employmentStatus" name="employmentStatus" class="form-control">
+                                            <option value="Employed" selected>Employed</option>
+                                            <option value="Contractor">Contractor</option>
+                                            <option value="OnNotice">On Notice</option>
+                                            <option value="Probation">Probation</option>
+                                            <option value="Relieved">Relieved</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dateofJoining">Joining Date</label>
+                                    <div id="joing-date-picker" class="input-group date datepicker start-date-picker">
+                                        <input type="text" name="dateofJoining" id="dateofJoining" class="form-control">
+                                        <span class="input-group-addon input-group-append border-left">
+                                            <span class="mdi mdi-calendar input-group-text"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Practice</label>
+                                    <div class="col-sm-9">
+                                        <select id="practice" name="practice" class="form-control">
+                                            <option value="Enablement" selected>Enablement</option>
+                                            <option value="Product">Product</option>
+                                            <option value="UX">UX</option>
+                                            <option value="BI">BI</option>
+                                            <option value="CAD">CAD</option>
+                                            <option value="QA">QA</option>
+                                            <option value="CRM">CRM</option>
+                                            <option value="MC">MC</option>
+                                            <option value="IT">IT</option>
+                                            <option value="IW">IW</option>
+                                            <option value="CSD">CSD</option>
+                                            <option value="NMS">NMS</option>
+                                            <option value="US Operations">US Operations</option>
+                                            <option value="Java">Java</option>
+                                            <option value="BizTalk">BizTalk</option>
+                                            <option value="Mobility">Mobility</option>
+                                            <option value="App Dev">App Dev</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Location</label>
+                                    <div class="col-sm-9">
+                                        <select id="location" name="location" class="form-control">
+                                            <option value="Kochi" selected>Kochi</option>
+                                            <option value="Hyderabad">Hyderabad</option>
+                                            <option value="Bangalore">Bangalore</option>
+                                            <option value="Mumbai">Mumbai</option>
+                                            <option value="Remote">Remote</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">User Access</label>
+                                    <div class="col-sm-9">
+                                        <div class="dropdown-mul-1">
+                                            <select style="display:none" id="userAccess" name="userAccess" multiple placeholder="Select">
+                                                <option value="Root_Admin">Super Admin</option>
+                                                <option value="Hcm_Admin">HCM Admin</option>
+                                                <option value="Hcm_User">HCM User</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input class="btn btn-primary" type="submit" value="Submit">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/x-editable.js")
+@Scripts.Render("~/Rebone/public/js/dropify.js")
+@Scripts.Render("~/Rebone/public/js/dropzone.js")
+@Scripts.Render("~/Rebone/public/js/jquery-file-upload.js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/form-repeater.js")
+@Scripts.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.js")
+<script>
+    $.validator.setDefaults({
+        submitHandler: function () {
+            alert("submitted!");
+        }
+    });
+
+    $(function () {
+        // validate signup form on keyup and submit
+        $("#addNewNeuUserForm").validate({
+            rules: {
+                firstname: "required",
+                lastname: "required",
+                username: {
+                    required: true,
+                    minlength: 2
+                },
+                password: {
+                    required: true,
+                    minlength: 5
+                },
+                confirm_password: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#password"
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                topic: {
+                    required: "#newsletter:checked",
+                    minlength: 2
+                },
+                agree: "required"
+            },
+            messages: {
+                firstname: "Please enter your firstname",
+                lastname: "Please enter your lastname",
+                username: {
+                    required: "Please enter a username",
+                    minlength: "Your username must consist of at least 2 characters"
+                },
+                password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long"
+                },
+                confirm_password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long",
+                    equalTo: "Please enter the same password as above"
+                },
+                email: "Please enter a valid email address",
+                agree: "Please accept our policy",
+                topic: "Please select at least 2 topics"
+            },
+            errorPlacement: function (label, element) {
+                label.addClass('mt-2 text-danger');
+                label.insertAfter(element);
+            },
+            highlight: function (element, errorClass) {
+                $(element).parent().addClass('has-danger')
+                $(element).addClass('form-control-danger')
+            }
+        });
+        // propose username by combining first- and lastname
+        $("#username").focus(function () {
+            var firstname = $("#firstname").val();
+            var lastname = $("#lastname").val();
+            if (firstname && lastname && !this.value) {
+                this.value = firstname + "." + lastname;
+            }
+        });
+
+        if ($("#joing-date-picker").length) {
+            $('#joing-date-picker').datepicker({
+                enableOnReadonly: true,
+                todayHighlight: true,
+            });
+        };
+
+        $('.dropdown-mul-1').dropdown({
+            multipleMode: 'label',
+            choice: function () {
+                // console.log(arguments,this);
+            }
+        });
+    });
+    (function ($) {
+        'use strict';
+        $('#defaultconfig').maxlength({
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+
+        $('#defaultconfig-2').maxlength({
+            alwaysShow: true,
+            threshold: 20,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+
+        $('#defaultconfig-3').maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger",
+            separator: ' of ',
+            preText: 'You have ',
+            postText: ' chars remaining.',
+            validate: true
+        });
+
+        $('#maxlength-textarea').maxlength({
+            alwaysShow: true,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+    })(jQuery);
+</script>

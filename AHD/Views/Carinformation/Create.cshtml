@@ -1,0 +1,87 @@
+﻿@model AHD.Models.CarModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+    <div class="container">
+        @using (Html.BeginForm())
+        {  <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Add Car Details</h4>
+            </div>
+            <div class="panel-body">
+                @if (TempData["Message"] != null)
+                {
+                    @TempData["Message"]
+                }
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        Carname
+                        @Html.TextBoxFor(m => m.Carname, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        Carcolor
+                        @Html.TextBoxFor(m => m.Color, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        Price
+                        @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        Engineno
+                        @Html.TextBoxFor(m => m.Engineno, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        Registrationno
+                        @Html.TextBoxFor(m => m.Registrationno, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        RegistrationDate
+                        @Html.TextBoxFor(m => m.RegistrationDate, "{0:yyyy-MM-dd}", new { @class = "form-control date", type = "date" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        Model
+                        @Html.TextBoxFor(m => m.Model, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        Chassisno
+                        @Html.TextBoxFor(m => m.Chassisno, new { @class = "form-control" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        <input id="Submit1" class="btn btn-success" type="submit" value="submit" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.ActionLink("Back to Home Page", "Index", "Car", null, new { @class = "btn btn-warning" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</body>
+
+</html>

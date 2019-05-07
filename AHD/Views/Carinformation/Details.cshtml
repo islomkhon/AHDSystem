@@ -1,0 +1,85 @@
+﻿@model AHD.Models.CarModel
+@{
+    ViewBag.Title = "Details";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Car Details</h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.Label("Carname :-")
+                        @Html.DisplayFor(m => m.Carname, new { @class = "form-control" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+
+                        @Html.Label("Color :-")
+                        @Html.DisplayFor(m => m.Color, new { @class = "form-control" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.Label("Price :-")
+                        @Html.DisplayFor(m => m.Price, new { @class = "form-control" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.Label("Engineno :-")
+                        @Html.DisplayFor(m => m.Engineno, new { @class = "form-control" })
+                    </div>
+                </div><br />
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.Label("Registrationno :-")
+                        @Html.DisplayFor(m => m.Registrationno, new { @class = "form-control" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.Label("RegistrationDate :-")
+                        @Html.DisplayFor(m => m.RegistrationDate, new { @class = "form-control" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.Label("Model :-")
+                        @Html.DisplayFor(m => m.Model, new { @class = "form-control" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.Label("Chassisno :-")
+                        @Html.DisplayFor(m => m.Chassisno, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-6 col-lg-4">
+                        @Html.ActionLink("Back to Home Page", "Index", "Car", null, new { @class = "btn btn-warning" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
