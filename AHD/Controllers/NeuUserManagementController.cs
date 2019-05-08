@@ -27,76 +27,123 @@ namespace AHD.Controllers
             return View(userDetails);
         }
 
-        // GET: NeuUserManagement/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: NeuUserManagement/AddNewNeuUser
         public ActionResult AddNewNeuUser()
         {
             return View();
         }
 
-        // POST: NeuUserManagement/Create
+        // POST: NeuUserManagement/AddNewNeuUser
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult AddNewNeuUser(NueUserProfile nueUserProfile)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                var document = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile");
+                var filter = (Builders<NueUserProfile>.Filter.Eq("NTPLID", nueUserProfile.ntplId) 
+                    & Builders<NueUserProfile>.Filter.Eq("Email", nueUserProfile.email)
+                    & Builders<NueUserProfile>.Filter.Eq("FullName", nueUserProfile.fullName));
+                var count = document.Find<NueUserProfile>(filter).CountDocuments();
+                if (count == 0)
+                {
+                    nueUserProfile.email = nueUserProfile.email.ToLower();
+                    document.InsertOne(nueUserProfile);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["Message"] = "User details already exist";
+                    return View("AddNewNeuUser", nueUserProfile);
+                }
             }
             catch
             {
-                return View();
+                return View("AddNewNeuUser");
             }
         }
 
         // GET: NeuUserManagement/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult EditNeuUserDetails(string id)
         {
-            return View();
+            var document = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile");
+            var filter = (Builders<NueUserProfile>.Filter.Eq("Id", new ObjectId(id)));
+            var count = document.Find<NueUserProfile>(filter).CountDocuments();
+            if (count > 0)
+            {
+                var userDetail = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile").Find(filter).First();
+                return View(userDetail);
+            }
+            return RedirectToAction("Index");
         }
 
         // POST: NeuUserManagement/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult EditNeuUserDetails(string id, NueUserProfile nueUserProfile)
         {
             try
             {
-                // TODO: Add update logic here
+                nueUserProfile.Id = new ObjectId(id);
 
-                return RedirectToAction("Index");
+                nueUserProfile.email = nueUserProfile.email.ToLower();
+
+                var document = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile");
+                var filter = Builders<NueUserProfile>.Filter.Eq("Id", new ObjectId(id));
+                var count = document.Find<NueUserProfile>(filter).CountDocuments();
+
+                var filterDup = ((Builders<NueUserProfile>.Filter.Eq("NTPLID", nueUserProfile.ntplId)
+                    | Builders<NueUserProfile>.Filter.Eq("Email", nueUserProfile.email)
+                    | Builders<NueUserProfile>.Filter.Eq("FullName", nueUserProfile.fullName))
+                    & Builders<NueUserProfile>.Filter.Ne("Id", new ObjectId(id)));
+                var countDup = document.Find<NueUserProfile>(filterDup).CountDocuments();
+                if (count > 0 && countDup <= 0)
+                {
+                    var collection = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile");
+                    collection.ReplaceOne(filter, nueUserProfile);
+                    return RedirectToAction("Index");
+                }
+                else if (countDup > 0)
+                {
+                    TempData["Message"] = "Information is already in use";
+                    return View("EditNeuUserDetails", nueUserProfile);
+                }
+                else
+                {
+                    TempData["Message"] = "User details does not exist";
+                    return View("EditNeuUserDetails", nueUserProfile);
+                }
             }
             catch
             {
-                return View();
+                return View("EditNeuUserDetails");
             }
-        }
-
-        // GET: NeuUserManagement/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
         }
 
         // POST: NeuUserManagement/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public JsonResult DeleteNeuUserDetails(FormCollection formCollection)
         {
             try
             {
                 // TODO: Add delete logic here
+                string id = formCollection["id"];
 
-                return RedirectToAction("Index");
+                var filter = (Builders<NueUserProfile>.Filter.Eq("Id", new ObjectId(id)));
+                var collection = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile");
+                var result = collection.DeleteOne(filter);
+                if(result.DeletedCount > 0)
+                {
+                    return Json(new JsonResponse("Ok", "Data deleted successfully"), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "An error occerd. Unable to locate requested information"), JsonRequestBehavior.AllowGet);
+                }
             }
             catch
             {
-                return View();
+                return Json(new JsonResponse("Failed", "An error occerd while deleting data"), JsonRequestBehavior.AllowGet);
             }
+
         }
     }
 }

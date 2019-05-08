@@ -1,0 +1,293 @@
+﻿@model AHD.Models.NueUserProfile
+@{
+    ViewBag.Title = "Edit User - ";
+}
+@Styles.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.css")
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Edit Neudesic user details</h4>
+        <div class="row">
+            <div class="col-7">
+                <div class="card">
+                    <div class="card-body">
+                        @if (TempData["Message"] != null)
+                        {
+                            @TempData["Message"]
+                        }
+                        <form class="cmxform" id="addNewNeuUserForm" action="/NeuUserManagement/EditNeuUserDetails" method="POST" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.Id)
+                            <fieldset>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <label for="ntplId">NTPL ID</label>
+                                    @Html.TextBoxFor(m => m.ntplId, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    @Html.TextBoxFor(m => m.firstName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="middleName">Middle Name</label>
+                                    @Html.TextBoxFor(m => m.middleName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    @Html.TextBoxFor(m => m.lastName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="fullName">Full Name</label>
+                                    @Html.TextBoxFor(m => m.fullName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    @Html.TextBoxFor(m => m.email, new { @type = "email", @class = "form-control" })
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Employment Status</label>
+                                    <div class="col-sm-9">
+                                        <input type="hidden" value="@Model.employmentStatus" class="dynaLoadSelectContent" data-target="employmentStatus" />
+                                        <select id="employmentStatus" name="employmentStatus" class="form-control">
+                                            <option value="Employed" selected>Employed</option>
+                                            <option value="Contractor">Contractor</option>
+                                            <option value="OnNotice">On Notice</option>
+                                            <option value="Probation">Probation</option>
+                                            <option value="Relieved">Relieved</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dateofJoining">Joining Date</label>
+                                    <div id="joing-date-picker" class="input-group date datepicker start-date-picker">
+                                        @Html.TextBoxFor(m => m.dateofJoining, new { @type = "text", @class = "form-control" })
+                                        <span class="input-group-addon input-group-append border-left">
+                                            <span class="mdi mdi-calendar input-group-text"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Practice</label>
+                                    <div class="col-sm-9">
+                                        <input type="hidden" value="@Model.practice" class="dynaLoadSelectContent" data-target="practice" />
+                                        <select id="practice" name="practice" class="form-control">
+                                            <option value="Enablement" selected>Enablement</option>
+                                            <option value="Product">Product</option>
+                                            <option value="UX">UX</option>
+                                            <option value="BI">BI</option>
+                                            <option value="CAD">CAD</option>
+                                            <option value="QA">QA</option>
+                                            <option value="CRM">CRM</option>
+                                            <option value="MC">MC</option>
+                                            <option value="IT">IT</option>
+                                            <option value="IW">IW</option>
+                                            <option value="CSD">CSD</option>
+                                            <option value="NMS">NMS</option>
+                                            <option value="US Operations">US Operations</option>
+                                            <option value="Java">Java</option>
+                                            <option value="BizTalk">BizTalk</option>
+                                            <option value="Mobility">Mobility</option>
+                                            <option value="App Dev">App Dev</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Location</label>
+                                    <div class="col-sm-9">
+                                        <input type="hidden" value="@Model.location" class="dynaLoadSelectContent" data-target="location" />
+                                        <select id="location" name="location" class="form-control">
+                                            <option value="Kochi" selected>Kochi</option>
+                                            <option value="Hyderabad">Hyderabad</option>
+                                            <option value="Bangalore">Bangalore</option>
+                                            <option value="Mumbai">Mumbai</option>
+                                            <option value="Remote">Remote</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Job Level</label>
+                                    <div class="col-sm-9">
+                                        <input type="hidden" value="@Model.jobLevel" class="dynaLoadSelectContent" data-target="jobLevel" />
+                                        <select id="jobLevel" name="jobLevel" class="form-control">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fullName">Designation</label>
+                                    @Html.TextBoxFor(m => m.designation, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 col-form-label">Active</label>
+                                    <div class="col-sm-9">
+                                        <input type="hidden" value="@Model.active.ToString()" id="activePreload" class="dynaLoadSelectContent" data-target="active" />
+                                        <select id="active" name="active" class="form-control">
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">User Access</label>
+                                    <div class="col-sm-9">
+                                        <div class="dropdown-mul-1">
+                                            <input type="hidden" value="@String.Join(";", Model.userAccess)" class="dynaLoadSelectMultyContent" data-target="userAccess" />
+                                            <select style="display:none" id="userAccess" name="userAccess" multiple placeholder="Select">
+                                                <option value="Root_Admin">Root_Admin</option>
+                                                <option value="Hcm_Admin">Hcm_Admin</option>
+                                                <option value="Hcm_User">Hcm_User</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input class="btn btn-primary" type="submit" value="Submit">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/x-editable.js")
+@Scripts.Render("~/Rebone/public/js/dropify.js")
+@Scripts.Render("~/Rebone/public/js/dropzone.js")
+@Scripts.Render("~/Rebone/public/js/jquery-file-upload.js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/form-repeater.js")
+@Scripts.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.js")
+<script>
+    $.validator.setDefaults({
+        submitHandler: function () {
+            $('#addNewNeuUserForm').submit();
+        }
+    });
+
+    $(function () {
+        // validate signup form on keyup and submit
+        $("#addNewNeuUserForm").validate({
+            rules: {
+                ntplId: {
+                    required: true
+                },
+                firstName: {
+                    required: true
+                },
+                lastName: {
+                    required: true
+                },
+                fullName: {
+                    required: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                dateofJoining: {
+                    required: true,
+                    date: true
+                }
+            },
+            messages: {
+                ntplId: {
+                    required: "Please enter NTPL ID",
+                },
+                firstName: {
+                    required: "Please enter your First Name",
+                },
+                lastname: {
+                    required: "Please enter your Last Name",
+                },
+                fullName: {
+                    required: "Please enter your Full Name",
+                },
+                dateofJoining: {
+                    required: "Please enter your Full Date of Joing",
+                },
+                email: "Please enter a valid email address",
+                agree: "Please accept our policy",
+                topic: "Please select at least 2 topics"
+            },
+            errorPlacement: function (label, element) {
+                label.addClass('mt-2 text-danger');
+                label.insertAfter(element);
+            },
+            highlight: function (element, errorClass) {
+                $(element).parent().addClass('has-danger')
+                $(element).addClass('form-control-danger')
+            }
+        });
+
+        $("#fullName").focus(function () {
+            var firstname = $("#firstname").val();
+            var firstname = $("#firstname").val();
+            var midname = $("#middleName").val();
+            if (firstname && lastname && !this.value) {
+                this.value = firstname + " " + midname + " " + lastname;
+            }
+        });
+
+        if ($("#joing-date-picker").length) {
+            $('#joing-date-picker').datepicker({
+                enableOnReadonly: true,
+                todayHighlight: true,
+            });
+        };
+
+        $('.dynaLoadSelectContent').each(function (e) {
+            $("#" + $(this).data('target')).val($(this).val());
+        });
+
+        $('.dynaLoadSelectMultyContent').each(function (e) {
+            var multiSelVal = $(this).val();
+            var target = $(this).data('target');
+            $.each(multiSelVal.split(";"), function (i, e) {
+                $("#" + target + " option[value='" + e + "']").prop("selected", true);
+            });
+        });
+        var uActive = ($('#activePreload').val() + "").toLowerCase();
+        console.log($('#activePreload').val());
+        $("#" + $('#activePreload').data('target')).val(uActive);
+
+        $('.dropdown-mul-1').dropdown({
+            multipleMode: 'label',
+            choice: function () {
+                // console.log(arguments,this);
+            }
+        });
+    });
+    (function ($) {
+        'use strict';
+        $('#defaultconfig').maxlength({
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+
+        $('#defaultconfig-2').maxlength({
+            alwaysShow: true,
+            threshold: 20,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+
+        $('#defaultconfig-3').maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger",
+            separator: ' of ',
+            preText: 'You have ',
+            postText: ' chars remaining.',
+            validate: true
+        });
+
+        $('#maxlength-textarea').maxlength({
+            alwaysShow: true,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+    })(jQuery);
+</script>

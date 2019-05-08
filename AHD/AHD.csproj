@@ -209,7 +209,9 @@
     <Compile Include="Models\CarModel.cs" />
     <Compile Include="Models\EmploymentStatus.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MongoCommunicator.cs" />
     <Compile Include="Models\NueUserProfile.cs" />
     <Compile Include="Models\Practice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1357,6 +1359,7 @@
     <Content Include="Views\Carinformation\Index.cshtml" />
     <Content Include="Views\NeuUserManagement\Index.cshtml" />
     <Content Include="Views\NeuUserManagement\AddNewNeuUser.cshtml" />
+    <Content Include="Views\NeuUserManagement\EditNeuUserDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -26,11 +26,17 @@ namespace AHD.Models
         [BsonElement("EmploymentStatus")]
         public EmploymentStatus employmentStatus { get; set; }
         [BsonElement("DateofJoining")]
-        public BsonDateTime dateofJoining { get; set; }
+        public string dateofJoining { get; set; }
         [BsonElement("Practice")]
         public Practice practice { get; set; }
         [BsonElement("Location")]
         public string location { get; set; }
+        [BsonElement("JobLevel")]
+        public int jobLevel { get; set; }
+        [BsonElement("Designation")]
+        public string designation { get; set; }
+        [BsonElement("Active")]
+        public bool active { get; set; }
         [BsonElement("UserAccess")]
         public LinkedList<String> userAccess { get; set; }
     }

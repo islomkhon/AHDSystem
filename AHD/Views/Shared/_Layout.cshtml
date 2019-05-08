@@ -17,8 +17,8 @@
         <!-- partial:../../partials/_navbar.html -->
         <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
-                <a class="navbar-brand brand-logo" href="/"><img src="~/Rebone/public/images/logo.png" alt="logo" /></a>
-                <a class="navbar-brand brand-logo-mini" href="/"><img src="~/Rebone/public/images/favicon.png" alt="logo" /></a>
+                <a class="navbar-brand brand-logo" href="/Home/Index"><img src="~/Rebone/public/images/logo.png" alt="logo" /></a>
+                <a class="navbar-brand brand-logo-mini" href="/Home/Index"><img src="~/Rebone/public/images/favicon.png" alt="logo" /></a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center">
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -28,7 +28,7 @@
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item dropdown d-none d-xl-inline-block">
                         <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <span class="profile-text">Hello, User-X !</span><img class="img-xs rounded-circle" src="~/Rebone/public/images/faces-clipart/pic-1.png" alt="Profile image">
+                            <span class="profile-text">Hello, @Session["fullName"] !</span><img class="img-xs rounded-circle" src="~/Rebone/public/images/faces-clipart/pic-1.png" alt="Profile image">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <a class="dropdown-item p-0">
@@ -41,7 +41,7 @@
                             <a class="dropdown-item mt-2">
                                 Switch Accounts
                             </a>
-                            <a class="dropdown-item">
+                            <a class="dropdown-item" href="/Home/Logout">
                                 Sign Out
                             </a>
                         </div>
@@ -65,9 +65,9 @@
                                     <img src="~/Rebone/public/images/faces-clipart/pic-1.png" alt="profile image">
                                 </div>
                                 <div class="text-wrapper">
-                                    <p class="profile-name">User-X</p>
+                                    <p class="profile-name">@Session["fullName"]</p>
                                     <div>
-                                        <small class="designation text-muted">Engagement Manager</small>
+                                        <small class="designation text-muted">@Session["designation"]</small>
                                         <span class="status-indicator online"></span>
                                     </div>
                                 </div>
@@ -103,7 +103,6 @@
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    
     <!-- End custom js for this page-->
     <script>
         $(function () {
