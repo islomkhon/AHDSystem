@@ -6,6 +6,7 @@ using MongoDB.Driver.Builders;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -23,13 +24,16 @@ namespace AHD.Controllers
         // GET: NeuUserManagement
         public ActionResult Index()
         {
-            var userDetails = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile").Find(new BsonDocument()).ToList();
-            return View(userDetails);
+            List<NueUserProfile> userDetails = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile").Find(new BsonDocument()).ToList();
+            ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+            ViewData["userDetails"] = userDetails;
+            return View();
         }
 
         // GET: NeuUserManagement/AddNewNeuUser
         public ActionResult AddNewNeuUser()
         {
+            ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
             return View();
         }
 
@@ -53,11 +57,13 @@ namespace AHD.Controllers
                 else
                 {
                     TempData["Message"] = "User details already exist";
+                    ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
                     return View("AddNewNeuUser", nueUserProfile);
                 }
             }
             catch
             {
+                ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
                 return View("AddNewNeuUser");
             }
         }
@@ -71,6 +77,7 @@ namespace AHD.Controllers
             if (count > 0)
             {
                 var userDetail = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile").Find(filter).First();
+                ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
                 return View(userDetail);
             }
             return RedirectToAction("Index");
@@ -114,6 +121,7 @@ namespace AHD.Controllers
             }
             catch
             {
+                ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
                 return View("EditNeuUserDetails");
             }
         }

@@ -199,6 +199,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CarinformationController.cs" />
+    <Compile Include="Controllers\HcmAHDDashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\NeuUserManagementController.cs" />
@@ -212,8 +213,10 @@
     <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MongoCommunicator.cs" />
+    <Compile Include="Models\NeuLeaveCancelation.cs" />
     <Compile Include="Models\NueUserProfile.cs" />
     <Compile Include="Models\Practice.cs" />
+    <Compile Include="Models\RequestStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -1360,6 +1363,8 @@
     <Content Include="Views\NeuUserManagement\Index.cshtml" />
     <Content Include="Views\NeuUserManagement\AddNewNeuUser.cshtml" />
     <Content Include="Views\NeuUserManagement\EditNeuUserDetails.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\Index.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\LeaveCancelationCreate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1395,7 +1400,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>30030</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:23592</IISUrl>
+          <IISUrl>http://localhost:23593</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

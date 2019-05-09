@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using AHD;
+@using AHD.Models;
+@{
+    NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -28,7 +33,7 @@
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item dropdown d-none d-xl-inline-block">
                         <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <span class="profile-text">Hello, @Session["fullName"] !</span><img class="img-xs rounded-circle" src="~/Rebone/public/images/faces-clipart/pic-1.png" alt="Profile image">
+                            <span class="profile-text">Hello, @userProfileSession.fullName !</span><img class="img-xs rounded-circle" src="~/Rebone/public/images/faces-clipart/pic-1.png" alt="Profile image">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <a class="dropdown-item p-0">
@@ -65,9 +70,9 @@
                                     <img src="~/Rebone/public/images/faces-clipart/pic-1.png" alt="profile image">
                                 </div>
                                 <div class="text-wrapper">
-                                    <p class="profile-name">@Session["fullName"]</p>
+                                    <p class="profile-name">@userProfileSession.fullName</p>
                                     <div>
-                                        <small class="designation text-muted">@Session["designation"]</small>
+                                        <small class="designation text-muted">@userProfileSession.designation</small>
                                         <span class="status-indicator online"></span>
                                     </div>
                                 </div>

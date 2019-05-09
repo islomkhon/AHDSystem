@@ -1,0 +1,80 @@
+﻿@using AHD;
+@using AHD.Models;
+
+@{
+    NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
+}
+@{
+    ViewBag.Title = "HCM Dashboard - ";
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">HCM Request Summary..</h4>
+        <div class="row">
+            <div class="col-md-12 mb-4 mt-4">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary " data-toggle="modal" data-target="#exampleModal-4" data-target1="/NeuUserManagement/AddNewNeuUser"><i class="mdi mdi-gondola text-primary"></i> Add New Request</button>
+                        @{
+                            if (userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Root_Admin")).Count() > 0
+                                || userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Hcm_Admin")).Count() > 0
+                                || userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Hcm_User")).Count() > 0)
+                            {
+                                <button type="button" class="btn btn-sm btn-outline-secondary link-action-tiggerX" data-target="/HCMRequestInboxManagement/AddNewNeuUser"><i class="mdi mdi-compare text-primary"></i> Request Inbox</button>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal-4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-4" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel-4">New HCM Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Request Category</label>
+                        <div class="col-sm-9">
+                            <select id="hcmRequestDepartment" name="hcmRequestDepartment" class="form-control">
+                                <optgroup label="Leaves and Holydays">
+                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Leave Cancelation</option>
+                                    <option value="WorkFromHome" data-target="/HcmAHDDashboard/WorkFromHomeCreate">Work From Home</option>
+                                    <option value="LeaveBalanceEnquiry" data-target="/HcmAHDDashboard/LeaveBalanceEnquiryCreate">Leave Balance Enquiry</option>
+                                    <option value="hcmLeaveOthersRequest" data-target="/HcmAHDDashboard/hcmLeaveOthersRequestCreate">Others</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success hcm_create_Request">Create Request</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/Rebone/js")
+<script>
+    $(function () {
+
+        $(document).on('click', '.hcm_create_Request', function (e) {
+            var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
+            window.location = target;
+        });
+
+    });
+</script>

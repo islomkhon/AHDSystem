@@ -1,5 +1,4 @@
-﻿@model AHD.Models.NueUserProfile
-
+﻿@using AHD;
 @{
     ViewBag.Title = "HCM - ";
 
@@ -15,7 +14,7 @@
         font-family: "Open Sans",sans-serif;
         background-attachment: fixed;
         color: #fff;
-        cursor:pointer;
+        cursor: pointer;
     }
 
         .update-card.card {
@@ -47,14 +46,16 @@
             .update-card .card-block h6 {
                 font-size: 14px;
             }
-    .update-card i.main-icon{
-        font-size: xx-large;
-        position: relative;
-        z-index: 1;
-    }
-            .update-card .card-block .m-b-0 {
-                margin-bottom: 0px;
-            }
+
+        .update-card i.main-icon {
+            font-size: xx-large;
+            position: relative;
+            z-index: 1;
+        }
+
+        .update-card .card-block .m-b-0 {
+            margin-bottom: 0px;
+        }
 
     .bg-c-yellow {
         background: -webkit-gradient(linear, left top, right top, from(#fe9365), to(#feb798));
@@ -65,6 +66,7 @@
         background: -webkit-gradient(linear, left top, right top, from(#0ac282), to(#0df3a3));
         background: linear-gradient(to right, #0ac282, #0df3a3);
     }
+
     .bg-c-pink {
         background: -webkit-gradient(linear, left top, right top, from(#fe5d70), to(#fe909d));
         background: linear-gradient(to right, #fe5d70, #fe909d);
@@ -74,7 +76,6 @@
         background: -webkit-gradient(linear, left top, right top, from(#01a9ac), to(#01dbdf));
         background: linear-gradient(to right, #01a9ac, #01dbdf);
     }
-
 </style>
 <div class="card">
     <div class="card-body">
@@ -82,7 +83,7 @@
 
             <div class="col-xl-3 col-md-6">
 
-                <div class="card bg-c-yellow update-card link-action-tigger" data-target="/NeuUserManagement/Index">
+                <div class="card bg-c-yellow update-card link-action-tigger" data-target="/HcmAHDDashboard/Index">
                     <div class="card-block">
                         <div class="row align-items-end">
                             <div class="col-8">

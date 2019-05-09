@@ -4,6 +4,7 @@ using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
@@ -77,7 +78,8 @@ namespace AHD.Controllers
                 Session["userProfileSession"] = null;
                 return RedirectToAction("Login", "Account");
             }
-            return View((Session["userProfileSession"] as NueUserProfile));
+            ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+            return View();
         }
 
         public ActionResult Logout()

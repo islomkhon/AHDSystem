@@ -1,4 +1,5 @@
 ﻿using AHD.App_Start;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,22 @@ namespace AHD.Models
         public MongoCommunicator()
         {
             _dbContext = new MongoContext();
+        }
+
+        public List<NueUserProfile> getUserList()
+        {
+            List<NueUserProfile> returnUserList = new List<NueUserProfile>();
+            try
+            {
+                var document = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile");
+                returnUserList = _dbContext._database.GetCollection<NueUserProfile>("NueUserProfile").Find(new BsonDocument()).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return returnUserList;
         }
 
         public NueUserProfile getActiveUserData(string userEmail)

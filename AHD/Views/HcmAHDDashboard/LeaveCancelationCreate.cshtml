@@ -1,0 +1,158 @@
+﻿@using AHD;
+@using AHD.Models;
+
+@{
+    NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
+    List<NueUserProfile> userMasterList = ViewData["UserMasterList"] as List<NueUserProfile>;
+}
+@{
+    ViewBag.Title = "HCM Create New - ";
+}
+@Styles.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.css")
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Create New Leave Cancelation Request </h4>
+        <div class="row">
+            <div class="col-7">
+                <div class="card">
+                    <div class="card-body">
+                        @if (TempData["Message"] != null)
+                        {
+                            @TempData["Message"]
+                        }
+                        <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmAHDDashboard/LeaveCancelationCreate" method="POST" enctype="multipart/form-data">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="leaveDate">Leave Date</label>
+                                    <div id="joing-date-picker" class="input-group date datepicker start-date-picker">
+                                        <input type="text" name="leaveDate" id="leaveDate" class="form-control">
+                                        <span class="input-group-addon input-group-append border-left">
+                                            <span class="mdi mdi-calendar input-group-text"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="leaveCancelationMessage">Message</label>
+                                    <textarea class="form-control" name="leaveCancelationMessage" id="leaveCancelationMessage" rows="3"></textarea>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Approver</label>
+                                    <div class="col-sm-9">
+                                        <select class="js-example-basic-single" id="leaveCancelationApprover" name="leaveCancelationApprover" style="width:100%">
+                                            <option value="">-- Select --</option>
+                                            @foreach (NueUserProfile item in userMasterList)
+                                            {
+                                                <option value="@item.ntplId">@item.email</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <input class="btn btn-primary" type="submit" value="Submit">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/x-editable.js")
+@Scripts.Render("~/Rebone/public/js/dropify.js")
+@Scripts.Render("~/Rebone/public/js/dropzone.js")
+@Scripts.Render("~/Rebone/public/js/jquery-file-upload.js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/form-repeater.js")
+@Scripts.Render("~/Rebone/public/js/select2.js")
+@Scripts.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.js")
+<script>
+    $.validator.setDefaults({
+        submitHandler: function () {
+            $('#addNewLeaveCancelationForm').submit();
+        }
+    });
+
+    $(function () {
+        // validate signup form on keyup and submit
+        $("#addNewLeaveCancelationForm").validate({
+            rules: {
+                leaveCancelationApprover: {
+                    required: true,
+                    email: false
+                },
+                leaveDate: {
+                    required: true,
+                    date: true
+                }
+            },
+            messages: {
+                leaveCancelationApprover: {
+                    required: "Please select leave approver",
+                },
+                leaveDate: {
+                    required: "Please enter your Date Leave",
+                }
+            },
+            errorPlacement: function (label, element) {
+                label.addClass('mt-2 text-danger');
+                label.insertAfter(element);
+            },
+            highlight: function (element, errorClass) {
+                $(element).parent().addClass('has-danger')
+                $(element).addClass('form-control-danger')
+            }
+        });
+
+        if ($("#joing-date-picker").length) {
+            $('#joing-date-picker').datepicker({
+                enableOnReadonly: true,
+                todayHighlight: true,
+                endDate: '+d',
+                autoclose: true,
+            });
+        };
+
+        $('.dropdown-mul-1').dropdown({
+            multipleMode: 'label',
+            choice: function () {
+                // console.log(arguments,this);
+            }
+        });
+
+        if ($(".leaveCancelationApprover").length) {
+            $(".leaveCancelationApprover").select2();
+        }
+    });
+    (function ($) {
+        'use strict';
+        $('#defaultconfig').maxlength({
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+
+        $('#defaultconfig-2').maxlength({
+            alwaysShow: true,
+            threshold: 20,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+
+        $('#defaultconfig-3').maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger",
+            separator: ' of ',
+            preText: 'You have ',
+            postText: ' chars remaining.',
+            validate: true
+        });
+
+        $('#maxlength-textarea').maxlength({
+            alwaysShow: true,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+    })(jQuery);
+</script>

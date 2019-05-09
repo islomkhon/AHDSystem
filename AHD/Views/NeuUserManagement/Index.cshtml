@@ -1,5 +1,8 @@
-﻿@model IEnumerable<AHD.Models.NueUserProfile>
-
+﻿@using AHD;
+@using AHD.Models;
+@{
+    List<NueUserProfile> userDetails = ViewData["userDetails"] as List<NueUserProfile>;
+}
 @{
     ViewBag.Title = "User Management";
 }
@@ -32,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (NueUserProfile item in userDetails)
                         {
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => item.ntplId)</td>
