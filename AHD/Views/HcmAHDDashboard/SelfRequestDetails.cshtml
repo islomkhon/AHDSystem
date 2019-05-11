@@ -1,0 +1,530 @@
+﻿@using AHD;
+@using AHD.Models;
+
+@{
+    NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
+}
+@{
+    ViewBag.Title = "Request Details - " + ViewData["RequestId"];
+}
+<style>
+    .tab-basic .nav-item .nav-link.active {
+        color: #383838;
+    }
+    .tab-basic .nav-item .nav-link.active .req-number {
+       color: #383838;
+       font-size: medium;
+       position: relative;
+       bottom: 3px;
+    }
+</style>
+<div class="card">
+    <div class="card-body">
+
+        <h5 class="mb-1 pb-1">Leaves and Holydays</h5>
+        @if (TempData["Message"] != null)
+        {
+            @TempData["Message"]
+        }
+        <div class="row">
+            <div class="col-md-12 mb-5 mt-4">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary " data-toggle="modal" data-target="#commentModal-1"><i class="mdi mdi-comment-outline text-primary"></i> Comment </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary link-action-tiggerX" data-target="/HCMRequestInboxManagement/AddNewNeuUser"><i class="mdi mdi-attachment text-primary"></i> Attach File </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showSwal('close-leave-cancelation-request')"><i class="mdi mdi-close-circle-outline text-primary"></i> Close </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showSwal('withdraw-leave-cancelation-request')"><i class="mdi mdi-compare text-primary"></i> Withdraw </button>
+
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showSwal('inter-approve-leave-cancelation-request')"><i class="mdi mdi-compare text-primary"></i> Approve </button>
+
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showSwal('final-approve-leave-cancelation-request')"><i class="mdi mdi-compare text-primary"></i> Approve </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ul class="nav nav-tabs tab-basic" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#whoweare" role="tab" aria-controls="whoweare" aria-selected="true">Req#: &nbsp; <b class="req-number">@ViewData["RequestId"]</b></a>
+            </li>
+        </ul>
+        <div class="tab-content tab-body tab-content-basic">
+            <div class="tab-pane fade pr-3 active show">
+
+                <table class="table table-borderless w-100 mt-4">
+                    <tbody>
+                        <tr>
+                            <td><strong>Request Type :</strong> Leave Cancelation</td>
+                            <td><strong>Creation Date :</strong> 5/11/2019 5:12:14 PM</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Approver :</strong> mathew.job@neudesic.com</td>
+                            <td> <strong>Status :</strong> created </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Leave Start Date :</strong> 05/01/2019.</td>
+                            <td><strong>Leave End Date :</strong> 05/02/2019</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>User Request :</strong> Hello world <br/> hello abc</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="tab-pane fade active show">
+                <div class="horizontal-timeline">
+                    <section class="time-frame">
+                        <h5 class="section-time-frame">Rquest Logs</h5>
+                        <div class="event">
+                            <p class="event-text">Monin Jose</p>
+                            <div class="event-alert">You have added task #26 Successfully to the project “Agile CRM”</div>
+                            <div class="event-info">Added comments - 5/11/2019 5:12:14 PM</div>
+                        </div>
+                        <div class="event">
+                            <p class="event-text">Mathew Job</p>
+                            <div class="event-alert">Approved</div>
+                            <div class="event-info">Added comments - 5/11/2019 5:12:14 PM</div>
+                        </div>
+                        <div class="event">
+                            <p class="event-text">Request Approved by approver 1</p>
+                            <div class="event-alert"><div class="badge badge-outline-success">Approved</div></div>
+                            <div class="event-info">5/11/2019 5:12:14 PM</div>
+                        </div>
+                        <div class="event">
+                            <p class="event-text">Request Approved by approver 1</p>
+                            <div class="event-alert"><div class="badge badge-outline-success">Approved</div></div>
+                            <div class="event-info">5/11/2019 5:12:14 PM</div>
+                        </div>
+                        <div class="event">
+                            <p class="event-text">Request Approved by approver 1</p>
+                            <div class="event-alert"><div class="badge badge-outline-success">Approved</div></div>
+                            <div class="event-info">5/11/2019 5:12:14 PM</div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="section-time-frame">Attachments</h5>
+                    <div class="email-wrapper">
+                        <div class="message-body">
+                            <div class="attachments-sections">
+                                <ul>
+                                    <li>
+                                        <div class="thumb"><i class="mdi mdi-attachment"></i></div>
+                                        <div class="details">
+                                            <p class="file-name">Seminar Reports.pdf</p>
+                                            <div class="buttons">
+                                                <a href="#" class="download">Download</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="thumb"><i class="mdi mdi-attachment"></i></div>
+                                        <div class="details">
+                                            <p class="file-name">Product Design.jpg</p>
+                                            <div class="buttons">
+                                                <a href="#" class="download">Download</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="modal fade" id="commentModal-1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-4" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel-4">Add new comment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add_Leave_Cancelation_Request_Comment_Form" action="/HcmAHDDashboard/AddUserComment" method="post" enctype="multipart/form-data">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Comment</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" id="userComment" name="userComment" rows="4"></textarea>
+                            <input type="hidden" name="requestId" id="requestId" value="@ViewData["RequestId"]" />
+                            <input type="hidden" name="userId" id="userId" value="@userProfileSession.ntplId" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#add_Leave_Cancelation_Request_Comment_Form').submit();">Add Comment</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> 
+@Scripts.Render("~/Rebone/js")
+<script>
+    $(function () {
+
+        $(document).on('click', '.hcm_create_Request', function (e) {
+            var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
+            window.location = target;
+        });
+
+        $()
+
+        $('#request-summary-listing').DataTable({
+            "aLengthMenu": [
+                [5, 10, 15, 20, 50, 100],
+                [5, 10, 15, 20, 50, 100]
+            ],
+            "iDisplayLength": 10,
+            "language": {
+                search: ""
+            }
+        });
+        $('#request-summary-listing').each(function () {
+            var datatable = $(this);
+            // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+            var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+            search_input.attr('placeholder', 'Search');
+            search_input.removeClass('form-control-sm');
+            // LENGTH - Inline-Form control
+            var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+            length_sel.removeClass('form-control-sm');
+        });
+
+        showSwal = function (type) {
+            'use strict';
+            if (type === 'inter-approve-leave-cancelation-request') {
+                swal({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3f51b5',
+                    cancelButtonColor: '#ff4081',
+                    confirmButtonText: 'Great ',
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Approval Comment",
+                            type: "textarea",
+                            class: 'form-control',
+                            id: 'subApprovalComment'
+                        },
+                    },
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            value: null,
+                            visible: true,
+                            className: "btn btn-danger",
+                            closeModal: true,
+                        },
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-primary",
+                            closeModal: true
+                        }
+                    }
+                }).then((value) => {
+                    var reqId = $('#requestId').val();
+                    var usrId = $('#userId').val();
+                    var formData = new FormData();
+                    formData.append("requestId", "" + reqId + "");
+                    formData.append("userId", "" + usrId + "");
+                    formData.append("userComment", $('#subApprovalComment').val());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmAHDDashboard/SubApproveLeaveCancelationRequest",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.Status == 'Ok') {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 2 sec.',
+                                    timer: 2000,
+                                    button: false
+                                });
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            }
+                            else {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                });
+
+            }
+            else if (type === 'withdraw-leave-cancelation-request') {
+                swal({
+                    title: 'Please withdrawal reason',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3f51b5',
+                    cancelButtonColor: '#ff4081',
+                    confirmButtonText: 'Great ',
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Feedback",
+                            type: "textarea",
+                            class: 'form-control',
+                            id: 'withdrawalComment'
+                        },
+                    },
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            value: null,
+                            visible: true,
+                            className: "btn btn-danger",
+                            closeModal: true,
+                        },
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-primary",
+                            closeModal: true
+                        }
+                    }
+                }).then((value) => {
+                    var reqId = $('#requestId').val();
+                    var usrId = $('#userId').val();
+                    var formData = new FormData();
+                    formData.append("requestId", "" + reqId + "");
+                    formData.append("userId", "" + usrId + "");
+                    formData.append("userComment", $('#withdrawalComment').val());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmAHDDashboard/WithdrawLeaveCancelationRequest",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.Status == 'Ok') {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 2 sec.',
+                                    timer: 2000,
+                                    button: false
+                                });
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            }
+                            else {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                });
+            }
+            else if (type === 'close-leave-cancelation-request') {
+                swal({
+                    title: 'Please provide feedback',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3f51b5',
+                    cancelButtonColor: '#ff4081',
+                    confirmButtonText: 'Great ',
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Feedback",
+                            type: "textarea",
+                            class: 'form-control',
+                            id: 'FeedBackComment'
+                        },
+                    },
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            value: null,
+                            visible: true,
+                            className: "btn btn-danger",
+                            closeModal: true,
+                        },
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-primary",
+                            closeModal: true
+                        }
+                    }
+                }).then((value) => {
+                    var reqId = $('#requestId').val();
+                    var usrId = $('#userId').val();
+                    var formData = new FormData();
+                    formData.append("requestId", "" + reqId + "");
+                    formData.append("userId", "" + usrId + "");
+                    formData.append("userComment", $('#FeedBackComment').val());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmAHDDashboard/CloseLeaveCancelationRequest",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.Status == 'Ok') {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 2 sec.',
+                                    timer: 2000,
+                                    button: false
+                                });
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            }
+                            else {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                });
+            }
+            else if (type === 'final-approve-leave-cancelation-request') {
+                swal({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3f51b5',
+                    cancelButtonColor: '#ff4081',
+                    confirmButtonText: 'Great ',
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Approval Comment",
+                            type: "textarea",
+                            class: 'form-control',
+                            id: 'ApprovalComment'
+                        },
+                    },
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            value: null,
+                            visible: true,
+                            className: "btn btn-danger",
+                            closeModal: true,
+                        },
+                        confirm: {
+                            text: "OK",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-primary",
+                            closeModal: true
+                        }
+                    }
+                }).then((value) => {
+                    var reqId = $('#requestId').val();
+                    var usrId = $('#userId').val();
+                    var formData = new FormData();
+                    formData.append("requestId", "" + reqId + "");
+                    formData.append("userId", "" + usrId + "");
+                    formData.append("userComment", $('#ApprovalComment').val());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmAHDDashboard/ApproveLeaveCancelationRequest",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.Status == 'Ok') {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 2 sec.',
+                                    timer: 2000,
+                                    button: false
+                                });
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            }
+                            else {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                });
+            }
+        }
+    });
+</script>

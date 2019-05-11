@@ -207,6 +207,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AttachmentLog.cs" />
     <Compile Include="Models\CarModel.cs" />
     <Compile Include="Models\EmploymentStatus.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -214,9 +215,13 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MongoCommunicator.cs" />
     <Compile Include="Models\NeuLeaveCancelation.cs" />
+    <Compile Include="Models\NueRequestModel.cs" />
     <Compile Include="Models\NueUserProfile.cs" />
     <Compile Include="Models\Practice.cs" />
+    <Compile Include="Models\RequestLog.cs" />
     <Compile Include="Models\RequestStatus.cs" />
+    <Compile Include="Models\RequestType.cs" />
+    <Compile Include="Models\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -1308,6 +1313,7 @@
     <Content Include="Rebone\public\vendors\summernote\dist\font\summernoted41d.eot" />
     <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\LICENSE" />
     <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\README.md" />
+    <Content Include="App_Data\request-number-tracker.db" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -1365,10 +1371,9 @@
     <Content Include="Views\NeuUserManagement\EditNeuUserDetails.cshtml" />
     <Content Include="Views\HcmAHDDashboard\Index.cshtml" />
     <Content Include="Views\HcmAHDDashboard\LeaveCancelationCreate.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\SelfRequestDetails.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

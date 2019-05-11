@@ -1,9 +1,9 @@
 ﻿@using AHD;
 @using AHD.Models;
-
 @{
     NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
     List<NueUserProfile> userMasterList = ViewData["UserMasterList"] as List<NueUserProfile>;
+    LeaveCancelationUiRender leaveCancelationUiRender = ViewData["LeaveCancelationUiRender"] as LeaveCancelationUiRender;
 }
 @{
     ViewBag.Title = "HCM Create New - ";
@@ -23,9 +23,18 @@
                         <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmAHDDashboard/LeaveCancelationCreate" method="POST" enctype="multipart/form-data">
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="leaveDate">Leave Date</label>
-                                    <div id="joing-date-picker" class="input-group date datepicker start-date-picker">
-                                        <input type="text" name="leaveDate" id="leaveDate" class="form-control">
+                                    <label for="leaveDate">Leave Start Date</label>
+                                    <div id="start-date-picker" class="input-group date datepicker start-date-picker">
+                                        <input type="text" name="leaveStartDate" id="leaveStartDate" class="form-control" value="@leaveCancelationUiRender.leaveStartDate">
+                                        <span class="input-group-addon input-group-append border-left">
+                                            <span class="mdi mdi-calendar input-group-text"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="leaveDate">Leave End Date</label>
+                                    <div id="end-date-picker" class="input-group date datepicker start-date-picker">
+                                        <input type="text" name="leaveEndDate" id="leaveEndDate" class="form-control" value="@leaveCancelationUiRender.leaveEndDate">
                                         <span class="input-group-addon input-group-append border-left">
                                             <span class="mdi mdi-calendar input-group-text"></span>
                                         </span>
@@ -33,11 +42,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="leaveCancelationMessage">Message</label>
-                                    <textarea class="form-control" name="leaveCancelationMessage" id="leaveCancelationMessage" rows="3"></textarea>
+                                    <textarea class="form-control" name="message" id="message" rows="3">@leaveCancelationUiRender.message</textarea>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Approver</label>
                                     <div class="col-sm-9">
+                                        <input type="hidden" value="@leaveCancelationUiRender.leaveCancelationApprover" class="dynaLoadSelectContent" data-target="leaveCancelationApprover" />
                                         <select class="js-example-basic-single" id="leaveCancelationApprover" name="leaveCancelationApprover" style="width:100%">
                                             <option value="">-- Select --</option>
                                             @foreach (NueUserProfile item in userMasterList)
@@ -81,7 +91,11 @@
                     required: true,
                     email: false
                 },
-                leaveDate: {
+                leaveStartDate: {
+                    required: true,
+                    date: true
+                },
+                leaveEndDate: {
                     required: true,
                     date: true
                 }
@@ -90,8 +104,11 @@
                 leaveCancelationApprover: {
                     required: "Please select leave approver",
                 },
-                leaveDate: {
-                    required: "Please enter your Date Leave",
+                leaveStartDate: {
+                    required: "Please enter your Leave Start Date",
+                },
+                leaveEndDate: {
+                    required: "Please enter your Leave End Date",
                 }
             },
             errorPlacement: function (label, element) {
@@ -104,11 +121,19 @@
             }
         });
 
-        if ($("#joing-date-picker").length) {
-            $('#joing-date-picker').datepicker({
+        if ($("#start-date-picker").length) {
+            $('#start-date-picker').datepicker({
                 enableOnReadonly: true,
                 todayHighlight: true,
                 endDate: '+d',
+                autoclose: true,
+            });
+        };
+
+        if ($("#end-date-picker").length) {
+            $('#end-date-picker').datepicker({
+                enableOnReadonly: true,
+                todayHighlight: true,
                 autoclose: true,
             });
         };

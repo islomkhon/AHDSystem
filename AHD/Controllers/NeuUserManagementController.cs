@@ -110,12 +110,12 @@ namespace AHD.Controllers
                 }
                 else if (countDup > 0)
                 {
-                    TempData["Message"] = "Information is already in use";
+                    TempData["UiRenderMessage"] = "Information is already in use";
                     return View("EditNeuUserDetails", nueUserProfile);
                 }
                 else
                 {
-                    TempData["Message"] = "User details does not exist";
+                    TempData["UiRenderMessage"] = "User details does not exist";
                     return View("EditNeuUserDetails", nueUserProfile);
                 }
             }

@@ -3,6 +3,7 @@
 
 @{
     NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
+    List<NueRequestModel> userRequests = ViewData["UserMasterList"] as List<NueRequestModel>;
 }
 @{
     ViewBag.Title = "HCM Dashboard - ";
@@ -15,12 +16,13 @@
                 <div class="btn-toolbar">
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-outline-secondary " data-toggle="modal" data-target="#exampleModal-4" data-target1="/NeuUserManagement/AddNewNeuUser"><i class="mdi mdi-gondola text-primary"></i> Add New Request</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary link-action-tiggerX" data-target="/HCMRequestInboxManagement/AddNewNeuUser"><i class="mdi mdi-compare text-primary"></i> Request Inbox</button>
                         @{
                             if (userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Root_Admin")).Count() > 0
                                 || userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Hcm_Admin")).Count() > 0
                                 || userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Hcm_User")).Count() > 0)
                             {
-                                <button type="button" class="btn btn-sm btn-outline-secondary link-action-tiggerX" data-target="/HCMRequestInboxManagement/AddNewNeuUser"><i class="mdi mdi-compare text-primary"></i> Request Inbox</button>
+                                
                             }
                         }
 
@@ -28,7 +30,31 @@
                 </div>
             </div>
         </div>
-
+        <div class="row">
+            <div class="col-12">
+                <table id="request-summary-listing" class="table">
+                    <thead>
+                        <tr>
+                            <th>#Id</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (NueRequestModel item in userRequests)
+                        {
+                        <tr>
+                            <td><a href="/HcmAHDDashboard/SelfRequestDetails?requestId=@item.requestId&userId=@item.ntplId" target="_blank">@Html.DisplayFor(modelItem => item.requestId)</a></td>
+                            <td>@Html.DisplayFor(modelItem => item.requestType)</td>
+                            <td>@Html.DisplayFor(modelItem => item.requestStatus)</td>
+                            <td>@Html.DisplayFor(modelItem => item.getLocalDateTime)</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -76,5 +102,25 @@
             window.location = target;
         });
 
+        $('#request-summary-listing').DataTable({
+            "aLengthMenu": [
+                [5, 10, 15, 20, 50, 100],
+                [5, 10, 15, 20, 50, 100]
+            ],
+            "iDisplayLength": 10,
+            "language": {
+                search: ""
+            }
+        });
+        $('#request-summary-listing').each(function () {
+            var datatable = $(this);
+            // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+            var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+            search_input.attr('placeholder', 'Search');
+            search_input.removeClass('form-control-sm');
+            // LENGTH - Inline-Form control
+            var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+            length_sel.removeClass('form-control-sm');
+        });
     });
 </script>
