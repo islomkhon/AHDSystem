@@ -15,6 +15,8 @@ namespace AHD
         protected void Application_Start()
         {
             BsonClassMap.RegisterClassMap<NeuLeaveCancelation>();
+            BsonClassMap.RegisterClassMap<NeuLeavePastApply>();
+            BsonClassMap.RegisterClassMap<NeuLeaveWFHApply>();
             BsonClassMap.RegisterClassMap<RequestLog>();
             BsonClassMap.RegisterClassMap<AttachmentLog>();
             

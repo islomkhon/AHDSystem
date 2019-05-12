@@ -68,29 +68,4 @@ namespace AHD.Models
         }
     }
 
-    public class ApprovalProcess
-    {
-        [BsonElement("RequestApprovals")]
-        public LinkedList<RequestApproval> requestApprovals { get; set; }
-        [BsonElement("RequestStatusStage")]
-        public RequestStatus requestStatusStage { get; set; }
-        [BsonElement("DateModified")]
-        public DateTime dateApproved { get; set; }
-    }
-
-    public class RequestApproval
-    {
-        [BsonElement("NTPLID")]
-        public string ntplId { get; set; }
-        [BsonElement("UserProfile")]
-        public NueUserProfile nueUserProfile { get; set; }
-        [BsonElement("IsApproved")]
-        public bool isApproved { get; set; }
-        [BsonElement("ApprovalComments")]
-        public string approvalComments { get; set; }
-        [BsonElement("RequestStatusStage")]
-        public RequestStatus requestStatusStage { get; set; }
-        [BsonElement("DateApproved")]
-        public DateTime dateApproved { get; set; }
-    }
 }

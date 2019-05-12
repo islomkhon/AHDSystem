@@ -19,6 +19,8 @@ namespace AHD.Models
         public string fileName { get; set; }
         [BsonElement("FileExt")]
         public string fileExt { get; set; }
+        [BsonElement("VFileName")]
+        public string VFileName { get; set; }
         [BsonElement("DateCreated")]
         public DateTime dateCreated { get; set; }
     }

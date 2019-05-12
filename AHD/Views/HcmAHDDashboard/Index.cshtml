@@ -15,8 +15,9 @@
             <div class="col-md-12 mb-4 mt-4">
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary " data-toggle="modal" data-target="#exampleModal-4" data-target1="/NeuUserManagement/AddNewNeuUser"><i class="mdi mdi-gondola text-primary"></i> Add New Request</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary link-action-tiggerX" data-target="/HCMRequestInboxManagement/AddNewNeuUser"><i class="mdi mdi-compare text-primary"></i> Request Inbox</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary " data-toggle="modal" data-target="#exampleModal-4"><i class="mdi mdi-gondola text-primary"></i> Add New Request</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary link-action-tigger" data-target="/HcmAHDDashboard/RequestHistory"><i class="mdi mdi-compare text-primary"></i> Request History</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary link-action-tigger" data-target="/HcmAHDDashboard/ApprovalInbox"><i class="mdi mdi-compare text-primary"></i> Approval Inbox</button>
                         @{
                             if (userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Root_Admin")).Count() > 0
                                 || userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Hcm_Admin")).Count() > 0
@@ -76,7 +77,8 @@
                             <select id="hcmRequestDepartment" name="hcmRequestDepartment" class="form-control">
                                 <optgroup label="Leaves and Holydays">
                                     <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Leave Cancelation</option>
-                                    <option value="WorkFromHome" data-target="/HcmAHDDashboard/WorkFromHomeCreate">Work From Home</option>
+                                    <option value="LeavePastApply" data-target="/HcmAHDDashboard/LeavePastApplyCreate">Apply Past Leave</option>
+                                    <option value="WorkFromHome" data-target="/HcmAHDDashboard/LeaveWFHApplyCreate">Work From Home</option>
                                     <option value="LeaveBalanceEnquiry" data-target="/HcmAHDDashboard/LeaveBalanceEnquiryCreate">Leave Balance Enquiry</option>
                                     <option value="hcmLeaveOthersRequest" data-target="/HcmAHDDashboard/hcmLeaveOthersRequestCreate">Others</option>
                                 </optgroup>

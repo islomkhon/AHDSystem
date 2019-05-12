@@ -20,6 +20,8 @@ namespace AHD.Models
         public RequestType requestType { get; set; }
         [BsonElement("RequestPayload")]
         public Object requestPayload { get; set; }
+        [BsonElement("AccessLists")]
+        public LinkedList<string> accessLists { get; set; }
         [BsonElement("RequestLogs")]
         public LinkedList<RequestLog> requestLogs { get; set; }
         [BsonElement("AttachmentLogs")]

@@ -203,10 +203,12 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\NeuUserManagementController.cs" />
+    <Compile Include="Controllers\NueRequestAttchment.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApprovalProcess.cs" />
     <Compile Include="Models\AttachmentLog.cs" />
     <Compile Include="Models\CarModel.cs" />
     <Compile Include="Models\EmploymentStatus.cs" />
@@ -214,10 +216,13 @@
     <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MongoCommunicator.cs" />
+    <Compile Include="Models\NeuLeaveWFHApply.cs" />
+    <Compile Include="Models\NeuLeavePastApply.cs" />
     <Compile Include="Models\NeuLeaveCancelation.cs" />
     <Compile Include="Models\NueRequestModel.cs" />
     <Compile Include="Models\NueUserProfile.cs" />
     <Compile Include="Models\Practice.cs" />
+    <Compile Include="Models\RequestApproval.cs" />
     <Compile Include="Models\RequestLog.cs" />
     <Compile Include="Models\RequestStatus.cs" />
     <Compile Include="Models\RequestType.cs" />
@@ -1372,6 +1377,12 @@
     <Content Include="Views\HcmAHDDashboard\Index.cshtml" />
     <Content Include="Views\HcmAHDDashboard\LeaveCancelationCreate.cshtml" />
     <Content Include="Views\HcmAHDDashboard\SelfRequestDetails.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\SelfRequestDetails - Copy.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\ApprovalInbox.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\RequestHistory.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\ApprovalHistory.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\LeavePastApplyCreate.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\LeaveWFHApplyCreate.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
