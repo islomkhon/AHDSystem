@@ -58,64 +58,7 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="commentModal-2" tabindex="-1" role="dialog" aria-labelledby="commentModal-2" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel-4">Add new comment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="add_Leave_Past_Apply_Request_Comment_Form" action="/HcmAHDDashboard/AddUserPastLeaveComment" method="post" enctype="multipart/form-data">
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Comment</label>
-                            <div class="col-sm-9">
-                                <textarea class="form-control" id="userComment" name="userComment" rows="4"></textarea>
-                                <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
-                                <input type="hidden" name="userId" value="@userProfileSession.ntplId" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#add_Leave_Past_Apply_Request_Comment_Form').submit();">Add Comment</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="commentModal-3" tabindex="-1" role="dialog" aria-labelledby="commentModal-3" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel-4">Add new comment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="add_Leave_WFH_Apply_Request_Comment_Form" action="/HcmAHDDashboard/AddUserWFHLeaveComment" method="post" enctype="multipart/form-data">
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Comment</label>
-                            <div class="col-sm-9">
-                                <textarea class="form-control" id="userComment" name="userComment" rows="4"></textarea>
-                                <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
-                                <input type="hidden" name="userId" value="@userProfileSession.ntplId" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#add_Leave_WFH_Apply_Request_Comment_Form').submit();">Add Comment</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <div class="modal fade" id="fileAttchmentModal-1" tabindex="-1" role="dialog" aria-labelledby="fileAttchmentModal-4" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -150,71 +93,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="fileAttchmentModal-2" tabindex="-1" role="dialog" aria-labelledby="fileAttchmentModal-2" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel-4">Add new file</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="attach_Leave_Past_Apply_Request_Comment_Form" action="/HcmAHDDashboard/AddUserPastLeaveAttachment" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label>File</label>
-                            <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
-                            <input type="hidden" name="userId" value="@userProfileSession.ntplId" />
-                            <input type="file" name="requestAtchmentFile" class="file-upload-default">
-                            <div class="input-group col-xs-12">
-                                <input type="text" class="form-control file-upload-info" placeholder="Upload documnet">
-                                <span class="input-group-append">
-                                    <button class="file-upload-browse btn btn-info" type="button">Select</button>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#attach_Leave_Past_Apply_Request_Comment_Form').submit();">Upload</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="fileAttchmentModal-3" tabindex="-1" role="dialog" aria-labelledby="fileAttchmentModal-3" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel-4">Add new file</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="attach_Leave_WFH_Apply_Request_Comment_Form" action="/HcmAHDDashboard/AddUserWFHLeaveAttachment" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label>File</label>
-                            <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
-                            <input type="hidden" name="userId" value="@userProfileSession.ntplId" />
-                            <input type="file" name="requestAtchmentFile" class="file-upload-default">
-                            <div class="input-group col-xs-12">
-                                <input type="text" class="form-control file-upload-info" placeholder="Upload documnet">
-                                <span class="input-group-append">
-                                    <button class="file-upload-browse btn btn-info" type="button">Select</button>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#attach_Leave_WFH_Apply_Request_Comment_Form').submit();">Upload</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     @Scripts.Render("~/Rebone/js")
     <script>

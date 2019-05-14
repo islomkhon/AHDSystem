@@ -4,19 +4,338 @@
 @{
     NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
     List<NueRequestModel> userRequests = ViewData["UserMasterList"] as List<NueRequestModel>;
+    string statusRowString = "";
+    string requestTypeString = "";
 }
 @{
     ViewBag.Title = "HCM Request Approval History - ";
 }
+<style>
+    .custome-render-table-section {
+        font-family: "Nunito Sans",sans-serif;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        background-color: #eef5f9;
+        margin: 0;
+        overflow-x: hidden;
+        color: #3e5569;
+        background: #fff;
+    }
+
+        .custome-render-table-section .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 0 solid transparent;
+            border-radius: 0;
+            margin-bottom: 20px;
+        }
+
+        .custome-render-table-section .card-body {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+
+    @@media (min-width: 768px) {
+        .custome-render-table-section .d-md-flex {
+            display: flex !important;
+        }
+    }
+
+    .custome-render-table-section .align-items-center {
+        align-items: center !important;
+    }
+
+    .custome-render-table-section .h1, .custome-render-table-section .h2,
+    .custome-render-table-section .h3, .custome-render-table-section .h4,
+    .custome-render-table-section .h5,
+    .custome-render-table-section .h6,
+    .custome-render-table-section h1, .custome-render-table-section h2,
+    .custome-render-table-section h3, .custome-render-table-section h4,
+    .custome-render-table-section h5, .custome-render-table-section h6 {
+        margin-bottom: .5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: inherit;
+    }
+
+    .custome-render-table-section .h4, .custome-render-table-section h4 {
+        font-size: 1.125rem;
+    }
+
+    .custome-render-table-section .card-title {
+        margin-bottom: .75rem;
+    }
+
+    .custome-render-table-section .card .card-title {
+        position: relative;
+        font-weight: 400;
+        margin-bottom: 10px;
+    }
+
+    .custome-render-table-section .h5, .custome-render-table-section h5 {
+        font-size: 1rem;
+    }
+
+    .custome-render-table-section .card-header, .custome-render-table-section .card-subtitle, .custome-render-table-section .card-text:last-child {
+        margin-bottom: 0;
+    }
+
+    .custome-render-table-section .card-subtitle {
+        margin-top: -.375rem;
+    }
+
+    .custome-render-table-section .card .card-subtitle {
+        font-weight: 300;
+        margin-bottom: 10px;
+        color: #a1aab2;
+    }
+
+    .custome-render-table-section table {
+        border-collapse: collapse;
+    }
+
+    .custome-render-table-section .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #3e5569;
+    }
+
+    .custome-render-table-section .border-0 {
+        border: 0 !important;
+    }
+
+    .custome-render-table-section th {
+        text-align: inherit;
+    }
+
+    .custome-render-table-section .table td, .custome-render-table-section .table th {
+        padding: 1rem;
+        vertical-align: top;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .custome-render-table-section .cell,
+    .custome-render-table-section .v-middle td,
+    .custome-render-table-section .v-middle th,
+    .custome-render-table-section .vm.table td,
+    .custome-render-table-section .vm.table th,
+    .custome-render-table-section .waves-effect {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section .no-wrap td, .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .custome-render-table-section .table th,
+    .custome-render-table-section .table thead th {
+        font-weight: 400;
+    }
+
+    .custome-render-table-section .cell,
+    .custome-render-table-section .v-middle td, .custome-render-table-section .v-middle th,
+    .custome-render-table-section .vm.table td,
+    .custome-render-table-section .vm.table th, .custome-render-table-section .waves-effect {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section .no-wrap td, .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .d-flex {
+        display: flex !important;
+    }
+
+    .custome-render-table-section .align-items-center {
+        align-items: center !important;
+    }
+
+    .custome-render-table-section .no-wrap td,
+    .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .m-r-10 {
+        margin-right: 10px;
+    }
+
+    .custome-render-table-section .fa-stack, .custome-render-table-section img, .custome-render-table-section svg {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section img {
+        border-style: none;
+    }
+
+    .custome-render-table-section .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .custome-render-table-section .font-medium {
+        font-weight: 500;
+    }
+
+    .custome-render-table-section .font-16 {
+        font-size: 16px;
+    }
+
+    .custome-render-table-section .m-b-0 {
+        margin-bottom: 0;
+    }
+
+    .custome-render-table-section .btn-link, .custome-render-table-section .btn:hover, .custome-render-table-section a {
+        text-decoration: none;
+    }
+
+    .custome-render-table-section .btn,
+    .custome-render-table-section .btn-link,
+    .custome-render-table-section .custom-select,
+    .custome-render-table-section .dropdown-item,
+    .custome-render-table-section .form-control,
+    .custome-render-table-section .input-group-text {
+        font-weight: 400;
+    }
+
+    .custome-render-table-section .btn {
+        display: inline-block;
+        color: #3e5569;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: 2px;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .custome-render-table-section .btn-info {
+        color: #fff;
+        background-color: #2962FF;
+        border-color: #2962FF;
+    }
+
+    .custome-render-table-section .btn-circle {
+        border-radius: 100%;
+        width: 40px;
+        height: 40px;
+        padding: 5px;
+        line-height: 30px;
+    }
+
+    .custome-render-table-section .btn-cyan {
+        color: #212529;
+        background-color: #4fc3f7;
+        border-color: #4fc3f7;
+    }
+
+    .custome-render-table-section .text-white {
+        color: #fff !important;
+    }
+
+    .custome-render-table-section .p-0 {
+        padding: 0 !important;
+    }
+
+    .custome-render-table-section .fa-stack, .custome-render-table-section img, .custome-render-table-section svg {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section img {
+        border-style: none;
+    }
+
+    .custome-render-table-section .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .text-orange {
+        color: #fb8c00 !important;
+    }
+
+    .text-success {
+        color: #36bea6 !important;
+    }
+
+    .custome-render-table-section .table.no-border tr td, .custome-render-table-section .table.no-border tr th {
+        border-width: 0;
+    }
+
+    .custome-render-table-section .table tbody tr {
+        border-bottom: 1px solid #dfdfdf;
+    }
+
+        .custome-render-table-section .table tbody tr:last-of-type {
+            border-bottom: none;
+        }
+
+    .btn-group.inline {
+        border: none !important;
+    }
+
+    .inbox-inline-btn {
+        margin: auto 0.5rem !important;
+        border: 1px solid #f2f2f2 !important;
+    }
+
+    .pagination .page-item.active .page-link, .jsgrid .jsgrid-pager .page-item.active .page-link, .jsgrid .jsgrid-pager .active.jsgrid-pager-nav-button .page-link, .jsgrid .jsgrid-pager .active.jsgrid-pager-page .page-link, .pagination .page-item.active .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item.active .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item.active a, .jsgrid .jsgrid-pager .active.jsgrid-pager-nav-button a, .pagination .page-item.active .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item.active .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item.active a, .jsgrid .jsgrid-pager .active.jsgrid-pager-page a, .pagination .page-item:active .page-link, .jsgrid .jsgrid-pager .page-item:active .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:active .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:active .page-link, .pagination .page-item:active .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:active .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:active a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:active a, .pagination .page-item:active .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:active .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:active a, .jsgrid .jsgrid-pager .jsgrid-pager-page:active a, .pagination .page-item:focus .page-link, .jsgrid .jsgrid-pager .page-item:focus .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:focus .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:focus .page-link, .pagination .page-item:focus .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:focus .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:focus a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:focus a, .pagination .page-item:focus .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:focus .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:focus a, .jsgrid .jsgrid-pager .jsgrid-pager-page:focus a, .pagination .page-item:hover .page-link, .jsgrid .jsgrid-pager .page-item:hover .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:hover .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:hover .page-link, .pagination .page-item:hover .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:hover .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:hover a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:hover a, .pagination .page-item:hover .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:hover .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:hover a, .jsgrid .jsgrid-pager .jsgrid-pager-page:hover a {
+        background: #8862e0b3;
+        border-color: #8862e0b3;
+        color: #ffffff;
+    }
+
+    .page-link {
+        color: #8862e0b3;
+    }
+
+    .btn-inverse-info.inbox-inline-btn:hover {
+        color: #ffffff;
+        background-color: #8862e0b3;
+        border-color: #8862e0b3;
+    }
+
+    @@media (min-width: 992px) {
+        .request-summary-container .col-lg-2.wid-5 {
+            flex: 0 0 19%;
+            max-width: 20.66667%;
+        }
+    }
+
+
+    .hide {
+        display: none !important;
+    }
+</style>
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item"><a href="/HcmAHDDashboard/Index">HCM Request Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/HcmAHDDashboard/ApprovalInbox">HCM Request Approval Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">HCM Approval Requests History</li>
+    </ol>
+</nav>
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">HCM Request Approval History..</h4>
         <div class="row">
             <div class="col-md-12 mb-4 mt-4">
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary link-action-tigger" data-target="/HcmAHDDashboard/Index"><i class="mdi mdi-compare text-primary"></i> Request Inbox</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary link-action-tigger" data-target="/HcmAHDDashboard/ApprovalInbox"><i class="mdi mdi-compare text-primary"></i> Approval Inbox</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn link-action-tigger" data-target="/HcmAHDDashboard/Index"><i class="mdi mdi-compare text-primary"></i> Request Inbox</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn link-action-tigger" data-target="/HcmAHDDashboard/ApprovalInbox"><i class="mdi mdi-compare text-primary"></i> Approval Inbox</button>
                         @{
                             if (userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Root_Admin")).Count() > 0
                                 || userProfileSession.userAccess.Where(stringToCheck => stringToCheck.Contains("Hcm_Admin")).Count() > 0
@@ -30,35 +349,179 @@
                 </div>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-12">
-                <table id="request-summary-listing" class="table">
-                    <thead>
-                        <tr>
-                            <th>#Id</th>
-                            <th>Type</th>
-                            <th>UserId</th>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (NueRequestModel item in userRequests)
-                        {
-                        <tr>
-                            <td><a href="/HcmAHDDashboard/SelfRequestDetails?requestId=@item.requestId&userId=@item.ntplId" target="_blank">@Html.DisplayFor(modelItem => item.requestId)</a></td>
-                            <td>@Html.DisplayFor(modelItem => item.requestType)</td>
-                            <td>@Html.DisplayFor(modelItem => item.ntplId)</td>
-                            <td>@Html.DisplayFor(modelItem => item.nueUserProfile.fullName)</td>
-                            <td>@Html.DisplayFor(modelItem => item.requestStatus)</td>
-                            <td>@Html.DisplayFor(modelItem => item.getLocalDateTime)</td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
+            <div class="col-md-12 mb-4 mt-4">
+
+                <div class="request-summary-container">
+                    <div class="card">
+                        <div class="card-body border-bottom">
+                            <h4 class="card-title">Overview</h4>
+                            <h5 class="card-subtitle">Status of the HCM Approval Requests History</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row m-t-10">
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-orange display-5"><i class="mdi mdi-wallet"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Leave Cancellation</span>
+                                            <h3 class="font-medium m-b-0" id="leavecancelation">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-primary display-5"><i class="mdi mdi-account-convert"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Past Leave Apply</span>
+                                            <h3 class="font-medium m-b-0" id="leavepastapply">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-green display-5"><i class="mdi mdi-home"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Work From Home</span>
+                                            <h3 class="font-medium m-b-0" id="leavewfhapply">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-blue display-5"><i class="mdi mdi-checkerboard"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Balance Enquiry</span>
+                                            <h3 class="font-medium m-b-0" id="leavebalReq">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-deep-blue display-5"><i class="mdi mdi-developer-board"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Other</span>
+                                            <h3 class="font-medium m-b-0" id="otherReq">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
+
+        @{
+            int leavecancelation = 0;
+            int leavepastapply = 0;
+            int leavewfhapply = 0;
+            int leavebalReq = 0;
+            int otherReq = 0;
+        }
+
+        <div class="custome-render-table-section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-md-flex align-items-center">
+                                <div>
+                                    <h4 class="card-title">HCM Request Approval History Inbox..</h4>
+                                    <h5 class="card-subtitle">&nbsp;</h5>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="request-summary-listing" class="table no-border no-wrap v-middle">
+                                    <thead>
+                                        <tr class="border-0">
+                                            <th class="border-0">#Id</th>
+                                            <th class="border-0">Type</th>
+                                            <th class="border-0">UserId</th>
+                                            <th class="border-0">Name</th>
+                                            <th class="border-0">Status</th>
+                                            <th class="border-0">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (NueRequestModel item in userRequests)
+                                        {
+                                            statusRowString = "";
+                                            requestTypeString = "";
+
+                                            if (item.requestStatus.ToString().ToLower() == "close")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-dark\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                            }
+                                            else if (item.requestStatus.ToString().ToLower() == "withdraw")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-danger\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                            }
+                                            else if (item.requestStatus.ToString().ToLower() == "created")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-primary\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                            }
+                                            else if (item.requestStatus.ToString().ToLower() == "in_approval")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-warning\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                            }
+                                            else if (item.requestStatus.ToString().ToLower() == "completed")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-success\"  title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                            }
+
+                                            if (item.requestType.ToString().ToLower() == "leavecancelation")
+                                            {
+                                                requestTypeString = "Leave Cancelation";
+                                                leavecancelation++;
+                                            }
+                                            else if (item.requestType.ToString().ToLower() == "leavepastapply")
+                                            {
+                                                requestTypeString = "Past Leave Apply";
+                                                leavepastapply++;
+                                            }
+                                            else if (item.requestType.ToString().ToLower() == "leavewfhapply")
+                                            {
+                                                requestTypeString = "WFH Leave Apply";
+                                                leavewfhapply++;
+                                            }
+
+                                            <tr style="">
+
+                                                <td><a style="text-decoration: none;" href="/HcmAHDDashboard/SelfRequestDetails?requestId=@item.requestId&userId=@item.ntplId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.requestId)</span></a></td>
+                                                <td>@Html.Raw(@requestTypeString)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.ntplId)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.nueUserProfile.fullName)</td>
+                                                <td>@Html.Raw(@statusRowString)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.getLocalDateTime)</td>
+
+                                            </tr>
+                                        }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 </div>
@@ -100,6 +563,12 @@
 @Scripts.Render("~/Rebone/js")
 <script>
     $(function () {
+
+        $('#leavecancelation').html(@leavecancelation);
+        $('#leavepastapply').html(@leavepastapply);
+        $('#leavewfhapply').html(@leavewfhapply);
+        $('#leavebalReq').html(@leavebalReq);
+        $('#otherReq').html(@otherReq);
 
         $(document).on('click', '.hcm_create_Request', function (e) {
             var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');

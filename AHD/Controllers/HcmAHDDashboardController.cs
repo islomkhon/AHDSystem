@@ -76,14 +76,14 @@ namespace AHD.Controllers
             if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
             {
                 userAdmin = true;
-                var filterFind = ((Builders<NueRequestModel>.Filter.Ne("NTPLID", user.ntplId)
+                var filterFind = ((Builders<NueRequestModel>.Filter.Eq("NTPLID", user.ntplId)
                     & Builders<NueRequestModel>.Filter.Ne("RequestStatus", RequestStatus.close)
                     & Builders<NueRequestModel>.Filter.Ne("RequestStatus", RequestStatus.withdraw)));
                 userRequests = document.Find<NueRequestModel>(filterFind).ToList<NueRequestModel>();
             }
             else
             {
-                var filterFind = ((Builders<NueRequestModel>.Filter.Ne("NTPLID", user.ntplId)
+                var filterFind = ((Builders<NueRequestModel>.Filter.Eq("NTPLID", user.ntplId)
                     & Builders<NueRequestModel>.Filter.Ne("RequestStatus", RequestStatus.close)
                     & Builders<NueRequestModel>.Filter.Ne("RequestStatus", RequestStatus.withdraw)));
                 List<NueRequestModel> userRequestsTemp = document.Find<NueRequestModel>(filterFind).ToList<NueRequestModel>();
@@ -108,14 +108,14 @@ namespace AHD.Controllers
             if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
             {
                 userAdmin = true;
-                var filterFind = ((Builders<NueRequestModel>.Filter.Ne("NTPLID", user.ntplId)
+                var filterFind = ((Builders<NueRequestModel>.Filter.Eq("NTPLID", user.ntplId)
                     &( Builders<NueRequestModel>.Filter.Eq("RequestStatus", RequestStatus.close)
                     | Builders<NueRequestModel>.Filter.Eq("RequestStatus", RequestStatus.withdraw))));
                 userRequests = document.Find<NueRequestModel>(filterFind).ToList<NueRequestModel>();
             }
             else
             {
-                var filterFind = ((Builders<NueRequestModel>.Filter.Ne("NTPLID", user.ntplId)
+                var filterFind = ((Builders<NueRequestModel>.Filter.Eq("NTPLID", user.ntplId)
                     & (Builders<NueRequestModel>.Filter.Eq("RequestStatus", RequestStatus.close)
                     | Builders<NueRequestModel>.Filter.Eq("RequestStatus", RequestStatus.withdraw))));
                 List<NueRequestModel> userRequestsTemp = document.Find<NueRequestModel>(filterFind).ToList<NueRequestModel>();
@@ -1481,6 +1481,7 @@ namespace AHD.Controllers
                 NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
                 if (userRequest != null && userRequest.requestType == RequestType.LeavePastApply)
                 {
+
                     NeuLeavePastApply neuLeavePastApplyReq = (NeuLeavePastApply)userRequest.requestPayload;
                     var app = neuLeavePastApplyReq.isApprovalProcess;
                     ApprovalProcess approvalProcess = neuLeavePastApplyReq.approvalProcess;
@@ -1658,7 +1659,7 @@ namespace AHD.Controllers
                 var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
 
                 NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
-                if (userRequest != null && userRequest.requestType == RequestType.LeaveCancelation)
+                if (userRequest != null)
                 {
                     if (userRequest.requestStatus == RequestStatus.close
                         || userRequest.requestStatus == RequestStatus.withdraw)
@@ -1673,277 +1674,45 @@ namespace AHD.Controllers
                         }
                         else
                         {//check is user approver
-                            NeuLeaveCancelation neuLeaveCancelationReq = (NeuLeaveCancelation)userRequest.requestPayload;
-                            var app = neuLeaveCancelationReq.isApprovalProcess;
-                            ApprovalProcess approvalProcess = neuLeaveCancelationReq.approvalProcess;
-                            var approvals = approvalProcess.requestApprovals;
-                            if (app && approvals != null && approvals.Count > 0)
+                            if(userRequest.requestType == RequestType.LeaveCancelation)
                             {
-                                for (int i = 0; i < approvals.Count; i++)
+                                NeuLeaveCancelation neuLeaveCancelationReq = (NeuLeaveCancelation)userRequest.requestPayload;
+                                var app = neuLeaveCancelationReq.isApprovalProcess;
+                                ApprovalProcess approvalProcess = neuLeaveCancelationReq.approvalProcess;
+                                var approvals = approvalProcess.requestApprovals;
+                                if (app && approvals != null && approvals.Count > 0)
                                 {
-                                    RequestApproval requestApproval = approvals.ElementAt(i);
-                                    if (requestApproval.ntplId == user.ntplId)
+                                    for (int i = 0; i < approvals.Count; i++)
                                     {
-                                        userAccess = true;
-                                        break;
+                                        RequestApproval requestApproval = approvals.ElementAt(i);
+                                        if (requestApproval.ntplId == user.ntplId)
+                                        {
+                                            userAccess = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else if (userRequest.requestType == RequestType.LeavePastApply)
+                            {
+                                NeuLeavePastApply neuLeavePastApplyReq = (NeuLeavePastApply)userRequest.requestPayload;
+                                var app = neuLeavePastApplyReq.isApprovalProcess;
+                                ApprovalProcess approvalProcess = neuLeavePastApplyReq.approvalProcess;
+                                var approvals = approvalProcess.requestApprovals;
+                                if (app && approvals != null && approvals.Count > 0)
+                                {
+                                    for (int i = 0; i < approvals.Count; i++)
+                                    {
+                                        RequestApproval requestApproval = approvals.ElementAt(i);
+                                        if (requestApproval.ntplId == user.ntplId)
+                                        {
+                                            userAccess = true;
+                                            break;
+                                        }
                                     }
                                 }
                             }
                         }
-                        if (userAccess)
-                        {
-
-                            string FileName = Path.GetFileNameWithoutExtension(nueRequestAttchment.requestAtchmentFile.FileName);
-                            string FileExtension = Path.GetExtension(nueRequestAttchment.requestAtchmentFile.FileName);
-                            string VFileName = DateTime.UtcNow.ToString("yyyyMMddhhmmss") + "_" + FileExtension;
-
-                            AttachmentLog attachmentLog = new AttachmentLog();
-                            attachmentLog.requestId = requestId;
-                            attachmentLog.ntplId = user.ntplId;
-                            attachmentLog.nueUserProfile = user;
-                            attachmentLog.fileName = FileName;
-                            attachmentLog.fileExt = FileExtension;
-                            attachmentLog.VFileName = VFileName;
-                            attachmentLog.dateCreated = DateTime.UtcNow;
-
-                            string UploadPath = ConfigurationManager.AppSettings["UserFilePath"].ToString();
-                            //var tempUPath = Server.MapPath(UploadPath + requestId).Replace(@"\", "/");
-                            var tempUPath = (UploadPath + requestId).Replace(@"\", "/");
-
-                            bool exists = System.IO.Directory.Exists(tempUPath);
-                            if (!exists)
-                                System.IO.Directory.CreateDirectory(tempUPath);
-
-                            string vFilePath = UploadPath + requestId + "/" + VFileName;
-                            nueRequestAttchment.requestAtchmentFile.SaveAs(vFilePath);
-
-
-                            RequestLog requestLog = new RequestLog();
-                            requestLog.requestId = requestId;
-                            requestLog.ntplId = user.ntplId;
-                            requestLog.nueUserProfile = user;
-                            requestLog.userComment = "User attached " + FileName + " file";
-                            requestLog.dateCreated = DateTime.UtcNow;
-
-                            userRequest.requestLogs.AddLast(requestLog);
-                            userRequest.attachmentLogs.AddLast(attachmentLog);
-                            var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
-                            ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
-                            if (dbResponse.ModifiedCount > 0)
-                            {
-                                retrunResponse = "File added successfully.";
-                            }
-                            else
-                            {
-                                retrunResponse = "An error occerd while adding file.";
-                            }
-                        }
-                        else
-                        {
-                            retrunResponse = "Invalid request";
-                        }
-                    }
-                }
-                else
-                {
-                    retrunResponse = "Invalid request";
-                }
-
-            }
-            catch (Exception e)
-            {
-                retrunResponse = "An error occerd.";
-            }
-            finally
-            {
-
-            }
-            return RedirectToAction("SelfRequestDetails", new { requestId = requestId, userId = ntplId, message = retrunResponse });
-        }
-
-        [HttpPost]
-        public ActionResult AddUserPastLeaveAttachment(NueRequestAttchment nueRequestAttchment)
-        {
-            string retrunResponse = "";
-            string requestId = nueRequestAttchment.requestId;
-            string ntplId = nueRequestAttchment.userId;
-            try
-            {
-
-                if (requestId == null || ntplId == null
-                    || requestId.Trim() == "" || ntplId.Trim() == "")
-                {
-                    throw new Exception("Invalid request");
-                }
-
-                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
-
-                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
-                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
-
-                bool userAdmin = false;
-                if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
-                {
-                    userAdmin = true;
-                }
-
-                bool userAccess = false;
-
-                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
-
-                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
-
-                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
-                if (userRequest != null && userRequest.requestType == RequestType.LeavePastApply)
-                {
-                    if (userRequest.requestStatus == RequestStatus.close
-                        || userRequest.requestStatus == RequestStatus.withdraw)
-                    {
-                        retrunResponse = "Invalid request, Request is in " + userRequest.requestStatus + " stage";
-                    }
-                    else
-                    {
-                        if (userAdmin && userRequest.ntplId == user.ntplId)
-                        {//self req comment
-                            userAccess = true;
-                        }
-                        else
-                        {//check is user approver
-                            NeuLeavePastApply neuLeavePastApplyReq = (NeuLeavePastApply)userRequest.requestPayload;
-                            var app = neuLeavePastApplyReq.isApprovalProcess;
-                            ApprovalProcess approvalProcess = neuLeavePastApplyReq.approvalProcess;
-                            var approvals = approvalProcess.requestApprovals;
-                            if (app && approvals != null && approvals.Count > 0)
-                            {
-                                for (int i = 0; i < approvals.Count; i++)
-                                {
-                                    RequestApproval requestApproval = approvals.ElementAt(i);
-                                    if (requestApproval.ntplId == user.ntplId)
-                                    {
-                                        userAccess = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (userAccess)
-                        {
-
-                            string FileName = Path.GetFileNameWithoutExtension(nueRequestAttchment.requestAtchmentFile.FileName);
-                            string FileExtension = Path.GetExtension(nueRequestAttchment.requestAtchmentFile.FileName);
-                            string VFileName = DateTime.UtcNow.ToString("yyyyMMddhhmmss") + "_" + FileExtension;
-
-                            AttachmentLog attachmentLog = new AttachmentLog();
-                            attachmentLog.requestId = requestId;
-                            attachmentLog.ntplId = user.ntplId;
-                            attachmentLog.nueUserProfile = user;
-                            attachmentLog.fileName = FileName;
-                            attachmentLog.fileExt = FileExtension;
-                            attachmentLog.VFileName = VFileName;
-                            attachmentLog.dateCreated = DateTime.UtcNow;
-
-                            string UploadPath = ConfigurationManager.AppSettings["UserFilePath"].ToString();
-                            //var tempUPath = Server.MapPath(UploadPath + requestId).Replace(@"\", "/");
-                            var tempUPath = (UploadPath + requestId).Replace(@"\", "/");
-
-                            bool exists = System.IO.Directory.Exists(tempUPath);
-                            if (!exists)
-                                System.IO.Directory.CreateDirectory(tempUPath);
-
-                            string vFilePath = UploadPath + requestId + "/" + VFileName;
-                            nueRequestAttchment.requestAtchmentFile.SaveAs(vFilePath);
-
-
-                            RequestLog requestLog = new RequestLog();
-                            requestLog.requestId = requestId;
-                            requestLog.ntplId = user.ntplId;
-                            requestLog.nueUserProfile = user;
-                            requestLog.userComment = "User attached " + FileName + " file";
-                            requestLog.dateCreated = DateTime.UtcNow;
-
-                            userRequest.requestLogs.AddLast(requestLog);
-                            userRequest.attachmentLogs.AddLast(attachmentLog);
-                            var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
-                            ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
-                            if (dbResponse.ModifiedCount > 0)
-                            {
-                                retrunResponse = "File added successfully.";
-                            }
-                            else
-                            {
-                                retrunResponse = "An error occerd while adding file.";
-                            }
-                        }
-                        else
-                        {
-                            retrunResponse = "Invalid request";
-                        }
-                    }
-                }
-                else
-                {
-                    retrunResponse = "Invalid request";
-                }
-
-            }
-            catch (Exception e)
-            {
-                retrunResponse = "An error occerd.";
-            }
-            finally
-            {
-
-            }
-            return RedirectToAction("SelfRequestDetails", new { requestId = requestId, userId = ntplId, message = retrunResponse });
-        }
-
-        [HttpPost]
-        public ActionResult AddUserWFHLeaveAttachment(NueRequestAttchment nueRequestAttchment)
-        {
-            string retrunResponse = "";
-            string requestId = nueRequestAttchment.requestId;
-            string ntplId = nueRequestAttchment.userId;
-            try
-            {
-
-                if (requestId == null || ntplId == null
-                    || requestId.Trim() == "" || ntplId.Trim() == "")
-                {
-                    throw new Exception("Invalid request");
-                }
-
-                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
-
-                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
-                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
-
-                bool userAdmin = false;
-                if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
-                {
-                    userAdmin = true;
-                }
-
-                bool userAccess = false;
-
-                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
-
-                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
-
-                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
-                if (userRequest != null && userRequest.requestType == RequestType.LeaveWFHApply)
-                {
-                    if (userRequest.requestStatus == RequestStatus.close
-                        || userRequest.requestStatus == RequestStatus.withdraw)
-                    {
-                        retrunResponse = "Invalid request, Request is in " + userRequest.requestStatus + " stage";
-                    }
-                    else
-                    {
-                        if (userAdmin && userRequest.ntplId == user.ntplId)
-                        {//self req comment
-                            userAccess = true;
-                        }
-                        
                         if (userAccess)
                         {
 
@@ -2058,7 +1827,7 @@ namespace AHD.Controllers
                 var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
 
                 NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
-                if(userRequest != null && userRequest.requestType == RequestType.LeaveCancelation)
+                if(userRequest != null)
                 {
                     if (userRequest.requestStatus == RequestStatus.close
                         || userRequest.requestStatus == RequestStatus.withdraw)
@@ -2073,22 +1842,48 @@ namespace AHD.Controllers
                         }
                         else
                         {//check is user approver
-                            NeuLeaveCancelation neuLeaveCancelationReq = (NeuLeaveCancelation)userRequest.requestPayload;
-                            var app = neuLeaveCancelationReq.isApprovalProcess;
-                            ApprovalProcess approvalProcess = neuLeaveCancelationReq.approvalProcess;
-                            var approvals = approvalProcess.requestApprovals;
-                            if (app && approvals != null && approvals.Count > 0)
+
+                            //userRequest.requestType == RequestType.LeaveCancelation
+
+                            if(userRequest.requestType == RequestType.LeaveCancelation)
                             {
-                                for (int i = 0; i < approvals.Count; i++)
+                                NeuLeaveCancelation neuLeaveCancelationReq = (NeuLeaveCancelation)userRequest.requestPayload;
+                                var app = neuLeaveCancelationReq.isApprovalProcess;
+                                ApprovalProcess approvalProcess = neuLeaveCancelationReq.approvalProcess;
+                                var approvals = approvalProcess.requestApprovals;
+                                if (app && approvals != null && approvals.Count > 0)
                                 {
-                                    RequestApproval requestApproval = approvals.ElementAt(i);
-                                    if (requestApproval.ntplId == user.ntplId)
+                                    for (int i = 0; i < approvals.Count; i++)
                                     {
-                                        userAccess = true;
-                                        break;
+                                        RequestApproval requestApproval = approvals.ElementAt(i);
+                                        if (requestApproval.ntplId == user.ntplId)
+                                        {
+                                            userAccess = true;
+                                            break;
+                                        }
                                     }
                                 }
                             }
+                            else if (userRequest.requestType == RequestType.LeavePastApply)
+                            {
+                                NeuLeavePastApply neuLeavePastApplyReq = (NeuLeavePastApply)userRequest.requestPayload;
+                                var app = neuLeavePastApplyReq.isApprovalProcess;
+                                ApprovalProcess approvalProcess = neuLeavePastApplyReq.approvalProcess;
+                                var approvals = approvalProcess.requestApprovals;
+                                if (app && approvals != null && approvals.Count > 0)
+                                {
+                                    for (int i = 0; i < approvals.Count; i++)
+                                    {
+                                        RequestApproval requestApproval = approvals.ElementAt(i);
+                                        if (requestApproval.ntplId == user.ntplId)
+                                        {
+                                            userAccess = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
                         }
                         if (userAccess)
                         {
@@ -2127,210 +1922,6 @@ namespace AHD.Controllers
             return RedirectToAction("SelfRequestDetails", new { requestId = requestId, userId = ntplId, message = retrunResponse });
         }
 
-        [HttpPost]
-        public ActionResult AddUserPastLeaveComment(FormCollection formCollection)
-        {
-            string retrunResponse = "";
-            string userComment = formCollection["userComment"];
-            string requestId = formCollection["requestId"];
-            string ntplId = formCollection["userId"];
-            try
-            {
-
-                if (userComment == null || requestId == null || ntplId == null
-                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
-                {
-                    throw new Exception("Invalid request");
-                }
-                userComment = userComment.Trim();
-
-
-                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
-
-                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
-                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
-
-                bool userAdmin = false;
-                if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
-                {
-                    userAdmin = true;
-                }
-
-                bool userAccess = false;
-
-                RequestLog requestLog = new RequestLog();
-                requestLog.requestId = requestId;
-                requestLog.ntplId = user.ntplId;
-                requestLog.nueUserProfile = user;
-                requestLog.userComment = userComment;
-                requestLog.dateCreated = DateTime.UtcNow;
-
-                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
-
-                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
-
-                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
-                if (userRequest != null && userRequest.requestType == RequestType.LeavePastApply)
-                {
-                    if (userRequest.requestStatus == RequestStatus.close
-                        || userRequest.requestStatus == RequestStatus.withdraw)
-                    {
-                        retrunResponse = "Invalid request, Request is in " + userRequest.requestStatus + " stage";
-                    }
-                    else
-                    {
-                        if (userAdmin && userRequest.ntplId == user.ntplId)
-                        {//self req comment
-                            userAccess = true;
-                        }
-                        else
-                        {//check is user approver
-                            NeuLeavePastApply neuLeavePastApplyReq = (NeuLeavePastApply)userRequest.requestPayload;
-                            var app = neuLeavePastApplyReq.isApprovalProcess;
-                            ApprovalProcess approvalProcess = neuLeavePastApplyReq.approvalProcess;
-                            var approvals = approvalProcess.requestApprovals;
-                            if (app && approvals != null && approvals.Count > 0)
-                            {
-                                for (int i = 0; i < approvals.Count; i++)
-                                {
-                                    RequestApproval requestApproval = approvals.ElementAt(i);
-                                    if (requestApproval.ntplId == user.ntplId)
-                                    {
-                                        userAccess = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (userAccess)
-                        {
-                            userRequest.requestLogs.AddLast(requestLog);
-                            var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
-                            ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
-                            if (dbResponse.ModifiedCount > 0)
-                            {
-                                retrunResponse = "Comment added successfully.";
-                            }
-                            else
-                            {
-                                retrunResponse = "An error occerd while adding comment.";
-                            }
-                        }
-                        else
-                        {
-                            retrunResponse = "Invalid request";
-                        }
-                    }
-                }
-                else
-                {
-                    retrunResponse = "Invalid request";
-                }
-
-            }
-            catch (Exception e)
-            {
-                retrunResponse = "An error occerd.";
-            }
-            finally
-            {
-
-            }
-            return RedirectToAction("SelfRequestDetails", new { requestId = requestId, userId = ntplId, message = retrunResponse });
-        }
-
-        [HttpPost]
-        public ActionResult AddUserWFHLeaveComment(FormCollection formCollection)
-        {
-            string retrunResponse = "";
-            string userComment = formCollection["userComment"];
-            string requestId = formCollection["requestId"];
-            string ntplId = formCollection["userId"];
-            try
-            {
-
-                if (userComment == null || requestId == null || ntplId == null
-                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
-                {
-                    throw new Exception("Invalid request");
-                }
-                userComment = userComment.Trim();
-
-
-                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
-
-                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
-                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
-
-                bool userAdmin = false;
-                if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
-                {
-                    userAdmin = true;
-                }
-
-                bool userAccess = false;
-
-                RequestLog requestLog = new RequestLog();
-                requestLog.requestId = requestId;
-                requestLog.ntplId = user.ntplId;
-                requestLog.nueUserProfile = user;
-                requestLog.userComment = userComment;
-                requestLog.dateCreated = DateTime.UtcNow;
-
-                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
-
-                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
-
-                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
-                if (userRequest != null && userRequest.requestType == RequestType.LeaveWFHApply)
-                {
-                    if (userRequest.requestStatus == RequestStatus.close
-                        || userRequest.requestStatus == RequestStatus.withdraw)
-                    {
-                        retrunResponse = "Invalid request, Request is in " + userRequest.requestStatus + " stage";
-                    }
-                    else
-                    {
-                        if (userAdmin && userRequest.ntplId == user.ntplId)
-                        {//self req comment
-                            userAccess = true;
-                        }
-                        if (userAccess)
-                        {
-                            userRequest.requestLogs.AddLast(requestLog);
-                            var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
-                            ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
-                            if (dbResponse.ModifiedCount > 0)
-                            {
-                                retrunResponse = "Comment added successfully.";
-                            }
-                            else
-                            {
-                                retrunResponse = "An error occerd while adding comment.";
-                            }
-                        }
-                        else
-                        {
-                            retrunResponse = "Invalid request";
-                        }
-                    }
-                }
-                else
-                {
-                    retrunResponse = "Invalid request";
-                }
-
-            }
-            catch (Exception e)
-            {
-                retrunResponse = "An error occerd.";
-            }
-            finally
-            {
-
-            }
-            return RedirectToAction("SelfRequestDetails", new { requestId = requestId, userId = ntplId, message = retrunResponse });
-        }
 
         // GET: HcmAHDDashboard/Details/5
         public ActionResult Details(int id)

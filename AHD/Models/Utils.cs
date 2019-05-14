@@ -238,22 +238,22 @@ namespace AHD.Models
             {
                 if (isOwner)
                 {
-                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-2\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
-                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-2\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
                     uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" onclick=\"showSwal('close-leave-past-apply-request')\"><i class=\"mdi mdi-close-circle-outline text-primary\"></i> Close </button>\r\n";
                 }
                 else if (isApprover || ishcm)
                 {
-                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-2\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
-                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-2\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
                 }
             }
             else
             {
                 if (isOwner)
                 {
-                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-2\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
-                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-2\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
                     uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" onclick=\"showSwal('withdraw-leave-past-apply-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
 
                 }
@@ -373,22 +373,22 @@ namespace AHD.Models
             {
                 if (isOwner)
                 {
-                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-3\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
-                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-3\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
                     uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" onclick=\"showSwal('close-leave-wfh-apply-request')\"><i class=\"mdi mdi-close-circle-outline text-primary\"></i> Close </button>\r\n";
                 }
                 else if (ishcm)
                 {
-                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-3\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
-                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-3\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
                 }
             }
             else
             {
                 if (isOwner)
                 {
-                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-3\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
-                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-3\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
                     uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-outline-secondary\" onclick=\"showSwal('withdraw-leave-wfh-apply-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
                 }
                 if (ishcm)
