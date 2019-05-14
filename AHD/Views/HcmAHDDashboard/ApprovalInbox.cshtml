@@ -315,7 +315,6 @@
         }
     }
 
-
     .hide {
         display: none !important;
     }
@@ -450,7 +449,8 @@
                                             <th class="border-0">UserId</th>
                                             <th class="border-0">Name</th>
                                             <th class="border-0">Status</th>
-                                            <th class="border-0">Date</th>
+                                            <th class="border-0">Date Created</th>
+                                            <th class="border-0">Date Modified</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -462,23 +462,23 @@
 
                                             if (item.requestStatus.ToString().ToLower() == "close")
                                             {
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-dark\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-dark\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">Close</span>";
                                             }
                                             else if (item.requestStatus.ToString().ToLower() == "withdraw")
                                             {
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-danger\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-danger\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">Withdraw</span>";
                                             }
                                             else if (item.requestStatus.ToString().ToLower() == "created")
                                             {
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-primary\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-primary\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">Created</span>";
                                             }
                                             else if (item.requestStatus.ToString().ToLower() == "in_approval")
                                             {
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-warning\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-warning\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">In Approval</span>";
                                             }
                                             else if (item.requestStatus.ToString().ToLower() == "completed")
                                             {
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-success\"  title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-success\"  data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">Completed</span>";
                                             }
 
                                             if (item.requestType.ToString().ToLower() == "leavecancelation")
@@ -505,6 +505,7 @@
                                             <td>@Html.DisplayFor(modelItem => item.nueUserProfile.fullName)</td>
                                             <td>@Html.Raw(@statusRowString)</td>
                                             <td>@Html.DisplayFor(modelItem => item.getLocalDateTime)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.getLocalDateTimeModified)</td>
 
                                         </tr>
                                         }
@@ -520,7 +521,7 @@
             </div>
         </div>
 
-        
+
 
     </div>
 </div>
@@ -560,6 +561,7 @@
 </div>
 
 @Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/tooltips.js")
 <script>
     $(function () {
 

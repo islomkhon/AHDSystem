@@ -302,6 +302,7 @@ namespace AHD.Controllers
                     nueRequestModel.requestPayload = neuLeaveCancelation;
                     nueRequestModel.requestStatus = RequestStatus.created;
                     nueRequestModel.dateCreated = dateCreated;
+                    nueRequestModel.dateModified = dateCreated;
                     nueRequestModel.requestLogs = new LinkedList<RequestLog>();
                     nueRequestModel.attachmentLogs = new LinkedList<AttachmentLog>();
                     nueRequestModel.accessLists = new LinkedList<string>();
@@ -382,6 +383,7 @@ namespace AHD.Controllers
                     nueRequestModel.requestPayload = neuLeavePastApply;
                     nueRequestModel.requestStatus = RequestStatus.created;
                     nueRequestModel.dateCreated = dateCreated;
+                    nueRequestModel.dateModified = dateCreated;
                     nueRequestModel.requestLogs = new LinkedList<RequestLog>();
                     nueRequestModel.attachmentLogs = new LinkedList<AttachmentLog>();
                     nueRequestModel.accessLists = new LinkedList<string>();
@@ -457,6 +459,7 @@ namespace AHD.Controllers
                     nueRequestModel.requestPayload = neuLeaveWFHApply;
                     nueRequestModel.requestStatus = RequestStatus.created;
                     nueRequestModel.dateCreated = dateCreated;
+                    nueRequestModel.dateModified = dateCreated;
                     nueRequestModel.requestLogs = new LinkedList<RequestLog>();
                     nueRequestModel.attachmentLogs = new LinkedList<AttachmentLog>();
 
@@ -536,6 +539,7 @@ namespace AHD.Controllers
                     {
                         userRequest.requestStatus = RequestStatus.withdraw;
                         ((NeuLeaveCancelation)userRequest.requestPayload).requestStatus = RequestStatus.withdraw;
+                        userRequest.dateModified = DateTime.UtcNow;
                         userRequest.requestLogs.AddLast(requestLog);
                         userRequest.requestLogs.AddLast(requestLogCommand);
                         var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
@@ -618,6 +622,7 @@ namespace AHD.Controllers
                         ((NeuLeavePastApply)userRequest.requestPayload).requestStatus = RequestStatus.withdraw;
                         userRequest.requestLogs.AddLast(requestLog);
                         userRequest.requestLogs.AddLast(requestLogCommand);
+                        userRequest.dateModified = DateTime.UtcNow;
                         var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
                         ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
                         if (dbResponse.ModifiedCount > 0)
@@ -698,6 +703,7 @@ namespace AHD.Controllers
                         ((NeuLeaveWFHApply)userRequest.requestPayload).requestStatus = RequestStatus.withdraw;
                         userRequest.requestLogs.AddLast(requestLog);
                         userRequest.requestLogs.AddLast(requestLogCommand);
+                        userRequest.dateModified = DateTime.UtcNow;
                         var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
                         ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
                         if (dbResponse.ModifiedCount > 0)
@@ -795,6 +801,7 @@ namespace AHD.Controllers
                         if (!able)
                         {
                             userRequest.requestLogs.AddLast(requestLogCommand);
+                            userRequest.dateModified = DateTime.UtcNow;
                             approvalProcess.requestStatusStage = RequestStatus.completed;
                             approvalProcess.dateApproved = DateTime.UtcNow;
                             neuLeaveCancelationReq.requestStatus = RequestStatus.completed;
@@ -911,6 +918,7 @@ namespace AHD.Controllers
                         return Json(new JsonResponse("Failed", "Invalid request, Request is not approved by all approvers"), JsonRequestBehavior.AllowGet);
                     }
                     userRequest.requestStatus = RequestStatus.close;
+                    userRequest.dateModified = DateTime.UtcNow;
                     neuLeavePastApplyReq.requestStatus = RequestStatus.close;
 
                     var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
@@ -1015,6 +1023,7 @@ namespace AHD.Controllers
                     {
                         return Json(new JsonResponse("Failed", "Invalid request, Request is not approved by all approvers"), JsonRequestBehavior.AllowGet);
                     }
+                    userRequest.dateModified = DateTime.UtcNow;
                     userRequest.requestStatus = RequestStatus.close;
                     neuLeaveWFHApplyReq.requestStatus = RequestStatus.close;
 
@@ -1124,6 +1133,7 @@ namespace AHD.Controllers
                     {
                         return Json(new JsonResponse("Failed", "Invalid request, Request is not approved by all approvers"), JsonRequestBehavior.AllowGet);
                     }
+                    userRequest.dateModified = DateTime.UtcNow;
                     userRequest.requestLogs.AddLast(requestLog);
                     userRequest.requestLogs.AddLast(requestLogCommand);
                     var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
@@ -1234,6 +1244,7 @@ namespace AHD.Controllers
                     {
                         return Json(new JsonResponse("Failed", "Invalid request, Request is not approved by all approvers"), JsonRequestBehavior.AllowGet);
                     }
+                    userRequest.dateModified = DateTime.UtcNow;
                     userRequest.requestLogs.AddLast(requestLog);
                     userRequest.requestLogs.AddLast(requestLogCommand);
                     var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
@@ -1324,6 +1335,7 @@ namespace AHD.Controllers
                     neuLeaveWFHApplyReq.requestStatus = RequestStatus.completed;
                     userRequest.requestStatus = RequestStatus.completed;
 
+                    userRequest.dateModified = DateTime.UtcNow;
                     userRequest.requestLogs.AddLast(requestLog);
                     userRequest.requestLogs.AddLast(requestLogCommand);
                     var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
@@ -1424,6 +1436,8 @@ namespace AHD.Controllers
                     requestLogCommand.userComment = "<neulog>Pre Approve "+ rtTemp.ToString()+ "</neulog>";
                     requestLogCommand.dateCreated = DateTime.UtcNow;
                     userRequest.requestLogs.AddLast(requestLogCommand);
+                    userRequest.dateModified = DateTime.UtcNow;
+
                     var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
                     ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
                     if (dbResponse.ModifiedCount > 0)
@@ -1522,6 +1536,7 @@ namespace AHD.Controllers
                     requestLogCommand.nueUserProfile = user;
                     requestLogCommand.userComment = "<neulog>Pre Approve " + rtTemp.ToString() + "</neulog>";
                     requestLogCommand.dateCreated = DateTime.UtcNow;
+                    userRequest.dateModified = DateTime.UtcNow;
                     userRequest.requestLogs.AddLast(requestLogCommand);
                     var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
                     ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);

@@ -452,7 +452,8 @@
                                             <th class="border-0">#Id</th>
                                             <th class="border-0">Type</th>
                                             <th class="border-0">Status</th>
-                                            <th class="border-0">Date</th>
+                                            <th class="border-0">Date Created</th>
+                                            <th class="border-0">Date Modified</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -464,28 +465,23 @@
 
                                             if (item.requestStatus.ToString().ToLower() == "close")
                                             {
-                                                //statusRowString = "<div class=\"badge badge-pill badge-outline-dark\" title=\"" + item.requestStatus.ToString() + "\"><i class=\"mdi mdi-account-check\"></i></div>";
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-dark\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-dark\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">Close</span>";
                                             }
                                             else if (item.requestStatus.ToString().ToLower() == "withdraw")
                                             {
-                                                //statusRowString = "<div class=\"badge badge-pill badge-outline-danger\" title=\"" + item.requestStatus.ToString() + "\"><i class=\"mdi mdi-block-helper\"></i></div>";
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-danger\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-danger\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">Withdraw</span>";
                                             }
                                             else if (item.requestStatus.ToString().ToLower() == "created")
                                             {
-                                                //statusRowString = "<div class=\"badge badge-pill badge-outline-primary\" title=\"" + item.requestStatus.ToString() + "\"><i class=\"mdi mdi-account-search\"></i></div>";
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-primary\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-primary\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">Created</span>";
                                             }
                                             else if (item.requestStatus.ToString().ToLower() == "in_approval")
                                             {
-                                                //statusRowString = "<div class=\"badge badge-pill badge-outline-warning\" title=\"" + item.requestStatus.ToString() + "\"><i class=\"mdi mdi-account\"></i></div>";
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-warning\" title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-warning\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">In Approval</span>";
                                             }
                                             else if (item.requestStatus.ToString().ToLower() == "completed")
                                             {
-                                                //statusRowString = "<div class=\"badge badge-pill badge-outline-success\" title=\"" + item.requestStatus.ToString() + "\"><i class=\"mdi mdi-check\"></i></div>";
-                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-success\"  title=\"" + item.requestStatus.ToString() + "\"></i>";
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-success\"  data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.requestStatus.ToString() + "\"></i> <span class=\"hide\">Completed</span>";
                                             }
 
                                             if (item.requestType.ToString().ToLower() == "leavecancelation")
@@ -504,12 +500,13 @@
                                                 leavewfhapply++;
                                             }
 
-                                            <tr style="">
-                                                <td><a style="text-decoration: none;" href="/HcmAHDDashboard/SelfRequestDetails?requestId=@item.requestId&userId=@item.ntplId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.requestId)</span></a></td>
-                                                <td>@Html.Raw(@requestTypeString)</td>
-                                                <td>@Html.Raw(@statusRowString)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.getLocalDateTime)</td>
-                                            </tr>
+                                        <tr style="">
+                                            <td><a style="text-decoration: none;" href="/HcmAHDDashboard/SelfRequestDetails?requestId=@item.requestId&userId=@item.ntplId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.requestId)</span></a></td>
+                                            <td>@Html.Raw(@requestTypeString)</td>
+                                            <td>@Html.Raw(@statusRowString)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.getLocalDateTime)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.getLocalDateTimeModified)</td>
+                                        </tr>
                                         }
 
                                         <!--<tr>

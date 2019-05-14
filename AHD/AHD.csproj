@@ -226,6 +226,7 @@
     <Compile Include="Models\RequestLog.cs" />
     <Compile Include="Models\RequestStatus.cs" />
     <Compile Include="Models\RequestType.cs" />
+    <Compile Include="Models\Utils - Copy.cs" />
     <Compile Include="Models\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -1383,6 +1384,7 @@
     <Content Include="Views\HcmAHDDashboard\ApprovalHistory.cshtml" />
     <Content Include="Views\HcmAHDDashboard\LeavePastApplyCreate.cshtml" />
     <Content Include="Views\HcmAHDDashboard\LeaveWFHApplyCreate.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\SelfRequestDetails - Copy %282%29.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

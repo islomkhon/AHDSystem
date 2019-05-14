@@ -12,6 +12,15 @@
     @Styles.Render("~/Rebone/css")
     <link rel="shortcut icon" href="~/Rebone/public/images/favicon.png" />
     <style>
+        .navbar.default-layout.neu {
+            background: linear-gradient(120deg, #5e8cfb, #00467f);
+        }
+        .navbar.default-layout .navbar-brand-wrapper .navbar-brand.brand-logo img {
+            width: calc(255px - 110px);
+        }
+        .navbar.default-layout .navbar-brand-wrapper .brand-logo-mini img {
+            width: calc(70px - 40px);
+        }
         .main-panel {
             width: 100%;
         }
@@ -255,12 +264,15 @@
         .inline-breadcrumb, .inline-breadcrumb .breadcrumb {
             margin-bottom: 0;
         }
+        .inline-breadcrumb a:hover, .inline-breadcrumb .breadcrumb a:hover {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <div class="container-scroller">
         <!-- partial:../../partials/_navbar.html -->
-        <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <nav class="navbar default-layout neu col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
                 <a class="navbar-brand brand-logo" href="/Home/Index"><img src="~/Rebone/public/images/logo.png" alt="logo" /></a>
                 <a class="navbar-brand brand-logo-mini" href="/Home/Index"><img src="~/Rebone/public/images/favicon.png" alt="logo" /></a>
@@ -273,7 +285,7 @@
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item dropdown d-none d-xl-inline-block">
                         <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <span class="profile-text">Hello, @userProfileSession.fullName !</span><img class="img-xs rounded-circle" src="~/Rebone/public/images/faces-clipart/pic-1.png" alt="Profile image">
+                            <span class="profile-text">Hello, @userProfileSession.fullName !</span><img class="img-xs rounded-circle" src="~/Rebone/public/images/profile/profileImg.png" alt="Profile image">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <a class="dropdown-item p-0">
@@ -309,7 +321,7 @@
                             <div class="card">
                                 <div class="card-body text-center">
                                     <div class="profile-pic m-b-20 m-t-20">
-                                        <img src="~/Rebone/public/images/faces-clipart/pic-1.png" width="110" class="rounded-circle" alt="user">
+                                        <img src="~/Rebone/public/images/profile/profileImg.png" width="110" class="rounded-circle" alt="user">
                                         <h4 class="m-t-20 m-b-0">@userProfileSession.fullName</h4>
                                         <div>
                                             <small class="designation text-muted">@userProfileSession.designation</small>

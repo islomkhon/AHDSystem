@@ -1,0 +1,1671 @@
+﻿@using AHD;
+@using AHD.Models;
+
+@{
+    NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
+    NueRequestModel userRequest = ViewData["UserRequest"] as NueRequestModel;
+}
+@{
+    ViewBag.Title = "Request Details - " + ViewData["RequestId"];
+}
+<style>
+    .tab-basic .nav-item .nav-link.active {
+        color: #383838;
+    }
+    .tab-basic .nav-item .nav-link.active .req-number {
+       color: #383838;
+       font-size: medium;
+       position: relative;
+       bottom: 3px;
+    }
+</style>
+<style>
+    .custome-render-table-section {
+        font-family: "Nunito Sans",sans-serif;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        background-color: #eef5f9;
+        margin: 0;
+        overflow-x: hidden;
+        color: #3e5569;
+        background: #fff;
+    }
+
+        .custome-render-table-section .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 0 solid transparent;
+            border-radius: 0;
+            margin-bottom: 20px;
+        }
+
+        .custome-render-table-section .card-body {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+
+    @@media (min-width: 768px) {
+        .custome-render-table-section .d-md-flex {
+            display: flex !important;
+        }
+    }
+
+    .custome-render-table-section .align-items-center {
+        align-items: center !important;
+    }
+
+    .custome-render-table-section .h1, .custome-render-table-section .h2,
+    .custome-render-table-section .h3, .custome-render-table-section .h4,
+    .custome-render-table-section .h5,
+    .custome-render-table-section .h6,
+    .custome-render-table-section h1, .custome-render-table-section h2,
+    .custome-render-table-section h3, .custome-render-table-section h4,
+    .custome-render-table-section h5, .custome-render-table-section h6 {
+        margin-bottom: .5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: inherit;
+    }
+
+    .custome-render-table-section .h4, .custome-render-table-section h4 {
+        font-size: 1.125rem;
+    }
+
+    .custome-render-table-section .card-title {
+        margin-bottom: .75rem;
+    }
+
+    .custome-render-table-section .card .card-title {
+        position: relative;
+        font-weight: 400;
+        margin-bottom: 10px;
+    }
+
+    .custome-render-table-section .h5, .custome-render-table-section h5 {
+        font-size: 1rem;
+    }
+
+    .custome-render-table-section .card-header, .custome-render-table-section .card-subtitle, .custome-render-table-section .card-text:last-child {
+        margin-bottom: 0;
+    }
+
+    .custome-render-table-section .card-subtitle {
+        margin-top: -.375rem;
+    }
+
+    .custome-render-table-section .card .card-subtitle {
+        font-weight: 300;
+        margin-bottom: 10px;
+        color: #a1aab2;
+    }
+
+    .custome-render-table-section table {
+        border-collapse: collapse;
+    }
+
+    .custome-render-table-section .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #3e5569;
+    }
+
+    .custome-render-table-section .border-0 {
+        border: 0 !important;
+    }
+
+    .custome-render-table-section th {
+        text-align: inherit;
+    }
+
+    .custome-render-table-section .table td, .custome-render-table-section .table th {
+        padding: 1rem;
+        vertical-align: top;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .custome-render-table-section .cell,
+    .custome-render-table-section .v-middle td,
+    .custome-render-table-section .v-middle th,
+    .custome-render-table-section .vm.table td,
+    .custome-render-table-section .vm.table th,
+    .custome-render-table-section .waves-effect {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section .no-wrap td, .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .custome-render-table-section .table th,
+    .custome-render-table-section .table thead th {
+        font-weight: 400;
+    }
+
+    .custome-render-table-section .cell,
+    .custome-render-table-section .v-middle td, .custome-render-table-section .v-middle th,
+    .custome-render-table-section .vm.table td,
+    .custome-render-table-section .vm.table th, .custome-render-table-section .waves-effect {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section .no-wrap td, .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .d-flex {
+        display: flex !important;
+    }
+
+    .custome-render-table-section .align-items-center {
+        align-items: center !important;
+    }
+
+    .custome-render-table-section .no-wrap td,
+    .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .m-r-10 {
+        margin-right: 10px;
+    }
+
+    .custome-render-table-section .fa-stack, .custome-render-table-section img, .custome-render-table-section svg {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section img {
+        border-style: none;
+    }
+
+    .custome-render-table-section .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .custome-render-table-section .font-medium {
+        font-weight: 500;
+    }
+
+    .custome-render-table-section .font-16 {
+        font-size: 16px;
+    }
+
+    .custome-render-table-section .m-b-0 {
+        margin-bottom: 0;
+    }
+
+    .custome-render-table-section .btn-link, .custome-render-table-section .btn:hover, .custome-render-table-section a {
+        text-decoration: none;
+    }
+
+    .custome-render-table-section .btn,
+    .custome-render-table-section .btn-link,
+    .custome-render-table-section .custom-select,
+    .custome-render-table-section .dropdown-item,
+    .custome-render-table-section .form-control,
+    .custome-render-table-section .input-group-text {
+        font-weight: 400;
+    }
+
+    .custome-render-table-section .btn {
+        display: inline-block;
+        color: #3e5569;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: 2px;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .custome-render-table-section .btn-info {
+        color: #fff;
+        background-color: #2962FF;
+        border-color: #2962FF;
+    }
+
+    .custome-render-table-section .btn-circle {
+        border-radius: 100%;
+        width: 40px;
+        height: 40px;
+        padding: 5px;
+        line-height: 30px;
+    }
+
+    .custome-render-table-section .btn-cyan {
+        color: #212529;
+        background-color: #4fc3f7;
+        border-color: #4fc3f7;
+    }
+
+    .custome-render-table-section .text-white {
+        color: #fff !important;
+    }
+
+    .custome-render-table-section .p-0 {
+        padding: 0 !important;
+    }
+
+    .custome-render-table-section .fa-stack, .custome-render-table-section img, .custome-render-table-section svg {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section img {
+        border-style: none;
+    }
+
+    .custome-render-table-section .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .text-orange {
+        color: #fb8c00 !important;
+    }
+
+    .text-success {
+        color: #36bea6 !important;
+    }
+
+    .custome-render-table-section .table.no-border tr td, .custome-render-table-section .table.no-border tr th {
+        border-width: 0;
+    }
+
+    .custome-render-table-section .table tbody tr {
+        border-bottom: 1px solid #dfdfdf;
+    }
+
+        .custome-render-table-section .table tbody tr:last-of-type {
+            border-bottom: none;
+        }
+
+    .btn-group.inline {
+        border: none !important;
+    }
+
+    .inbox-inline-btn {
+        margin: auto 0.5rem !important;
+        border: 1px solid #f2f2f2 !important;
+    }
+
+    .pagination .page-item.active .page-link, .jsgrid .jsgrid-pager .page-item.active .page-link, .jsgrid .jsgrid-pager .active.jsgrid-pager-nav-button .page-link, .jsgrid .jsgrid-pager .active.jsgrid-pager-page .page-link, .pagination .page-item.active .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item.active .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item.active a, .jsgrid .jsgrid-pager .active.jsgrid-pager-nav-button a, .pagination .page-item.active .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item.active .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item.active a, .jsgrid .jsgrid-pager .active.jsgrid-pager-page a, .pagination .page-item:active .page-link, .jsgrid .jsgrid-pager .page-item:active .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:active .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:active .page-link, .pagination .page-item:active .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:active .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:active a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:active a, .pagination .page-item:active .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:active .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:active a, .jsgrid .jsgrid-pager .jsgrid-pager-page:active a, .pagination .page-item:focus .page-link, .jsgrid .jsgrid-pager .page-item:focus .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:focus .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:focus .page-link, .pagination .page-item:focus .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:focus .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:focus a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:focus a, .pagination .page-item:focus .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:focus .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:focus a, .jsgrid .jsgrid-pager .jsgrid-pager-page:focus a, .pagination .page-item:hover .page-link, .jsgrid .jsgrid-pager .page-item:hover .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:hover .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:hover .page-link, .pagination .page-item:hover .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:hover .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:hover a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:hover a, .pagination .page-item:hover .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:hover .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:hover a, .jsgrid .jsgrid-pager .jsgrid-pager-page:hover a {
+        background: #8862e0b3;
+        border-color: #8862e0b3;
+        color: #ffffff;
+    }
+
+    .page-link {
+        color: #8862e0b3;
+    }
+
+    .btn-inverse-info.inbox-inline-btn:hover {
+        color: #ffffff;
+        background-color: #8862e0b3;
+        border-color: #8862e0b3;
+    }
+
+    @@media (min-width: 992px) {
+        .request-summary-container .col-lg-2.wid-5 {
+            flex: 0 0 19%;
+            max-width: 20.66667%;
+        }
+    }
+
+    .ahd-service-container {
+        font-family: "Nunito Sans",sans-serif;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        background-color: #eef5f9;
+        margin: 0;
+        overflow-x: hidden;
+        color: #3e5569;
+        background: #fff;
+    }
+
+        .ahd-service-container .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 0 solid transparent;
+            border-radius: 0;
+        }
+
+        .ahd-service-container .card {
+            /*box-shadow: 0 1px 0px rgba(0,0,0,0.12), 0 1px 2px 0px rgba(0,0,0,0.24);
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);*/
+        }
+
+        .ahd-service-container .card {
+            margin-bottom: 20px;
+        }
+        .ahd-service-container .card-body {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+        .ahd-service-container dl, .ahd-service-container h1, .ahd-service-container h2,
+        .ahd-service-container h3, .ahd-service-container h4, .ahd-service-container h5,
+        .ahd-service-container h6, .ahd-service-container ol, .ahd-service-container p,
+        .ahd-service-container pre, .ahd-service-container ul {
+            margin-top: 0;
+        }
+        .ahd-service-container dd, .ahd-service-container h1, .ahd-service-container h2, .ahd-service-container h3,
+        .ahd-service-container h4, .ahd-service-container h5, .ahd-service-container h6, .ahd-service-container label {
+            margin-bottom: .5rem;
+        }
+        .ahd-service-container .h1, .ahd-service-container .h2, .ahd-service-container .h3, .ahd-service-container .h4,
+        .ahd-service-container .h5, .ahd-service-container .h6, .ahd-service-container h1, .ahd-service-container h2,
+        .ahd-service-container h3, .ahd-service-container h4, .ahd-service-container h5, .ahd-service-container h6 {
+            margin-bottom: .5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: inherit;
+        }
+        .ahd-service-container .h4, .ahd-service-container h4 {
+            font-size: 1.125rem;
+        }
+        .ahd-service-container .card-title {
+            margin-bottom: .75rem;
+        }
+        .ahd-service-container .card .card-title {
+            position: relative;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+        .ahd-service-container .card .card-title.Ticket_number {
+            /*color: #a1aab2*/
+        }
+        .ahd-service-container .card .card-title.Ticket_number .editable {
+            cursor: pointer;
+            color: #0088cc;
+            cursor: default;
+        }
+        .ahd-service-container .user-message{
+            padding-top: 1rem;
+        }
+        .ahd-service-container .bg-light {
+            background-color: #f8f9fa !important;
+        }
+
+        .ahd-service-container .bg-light {
+            background-color: #e9ecef;
+        }
+        .ahd-service-container .text-center {
+            text-align: center !important;
+        }
+        .ahd-service-container .m-t-10 {
+            margin-top: 10px;
+        }
+        .ahd-service-container .m-b-10 {
+            margin-bottom: 10px;
+        }
+        .ahd-service-container .label {
+            padding: 3px 10px;
+            line-height: 13px;
+            color: #fff;
+            font-weight: 400;
+            border-radius: 2px;
+            font-size: 75%;
+        }
+        .ahd-service-container .label-warning {
+            background-color: #ffbc34;
+        }
+        .ahd-service-container .h5, .ahd-service-container h5 {
+            font-size: 1rem;
+        }
+        .ahd-service-container .p-t-20 {
+            padding-top: 20px;
+        }
+        .ahd-service-container .m-t-30 {
+            margin-top: 30px;
+        }
+        .ahd-service-container .card-body {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+        .ahd-service-container .card .card-body + .card-body {
+            padding-top: 1.25rem;
+        }
+        .ahd-service-container .card.thin-border{
+            border: solid 1px rgba(51,51,51,0.12);
+        }
+        .ahd-service-container .email-wrapper .message-body .attachments-sections ul {
+            border-top: none;
+        }
+        .hide {
+            display: none !important;
+        }
+
+</style>
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item"><a href="/HcmAHDDashboard/Index">HCM Request Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">HCM Requests Details</li>
+    </ol>
+</nav>
+<div class="card">
+    <div class="card-body">
+
+
+
+        <div class="row">
+            <div class="col-md-12 mb-4 mt-4">
+                <div class="btn-toolbar">
+                    <div class="btn-group inline">
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" data-toggle="modal" data-target="#commentModal-1"><i class="mdi mdi-comment-outline"></i> Comment </button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" data-toggle="modal" data-target="#fileAttchmentModal-1"><i class="mdi mdi-attachment"></i> Attach File </button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" onclick="showSwal('close-leave-past-apply-request')"><i class="mdi mdi-close-circle-outline"></i> Close </button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" onclick="showSwal('inter-approve-leave-past-apply-request')"><i class="mdi mdi-compare"></i> Approve </button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" onclick="showSwal('final-approve-leave-past-apply-request')"><i class="mdi mdi-compare"></i> Approve Request </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ahd-service-container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card thin-border">
+                        <div class="card-body">
+                            <h4 class="card-title Ticket_number">Req: <span class="editable editable-click">1000000000000000001</span></h4>
+                            <div class="user-message">
+                                <strong>User Request :</strong> Hi There, i was wondering, do you provide a service to build custom pages.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card thin-border">
+                        <div class="card-body">
+                            <h4 class="card-title">Request Logs</h4>
+                            <div class="horizontal-timeline">
+                                <section class="time-frame">
+                                    <h5 class="section-time-frame">Rquest Logs</h5>
+                                    <div class="event">
+                                        <p class="event-text">Monin Jose</p>
+                                        <div class="event-alert">Test f1 cmt</div>
+                                        <div class="event-info">5/12/2019 10:03:26 PM</div>
+                                    </div>
+                                    <div class="event">
+                                        <p class="event-text">Monin Jose</p>
+                                        <div class="event-alert">test f1</div>
+                                        <div class="event-info">5/12/2019 10:07:14 PM</div>
+                                    </div>
+                                    <div class="event">
+                                        <p class="event-text">Monin Jose</p>
+                                        <div class="event-alert">User attached logo file</div>
+                                        <div class="event-info">5/12/2019 10:07:58 PM</div>
+                                    </div>
+                                    <div class="event">
+                                        <p class="event-text">Monin Jose</p>
+                                        <div class="event-alert">test cmt</div>
+                                        <div class="event-info">5/13/2019 8:16:39 PM</div>
+                                    </div>
+                                    <div class="event">
+                                        <p class="event-text">Monin Jose</p>
+                                        <div class="event-alert">User attached logo file</div>
+                                        <div class="event-info">5/13/2019 8:23:14 PM</div>
+                                    </div>
+                                    <div class="event">
+                                        <p class="event-text">Monin Jose</p>
+                                        <div class="event-alert">User attached favicon file</div>
+                                        <div class="event-info">5/13/2019 8:24:13 PM</div>
+                                    </div>
+                                </section>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="card thin-border">
+                        <div class="card-body">
+                            <h4 class="card-title">Attachments</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="email-wrapper">
+                                <div class="message-body">
+                                    <div class="attachments-sections">
+                                        <ul class="pt-0">
+                                            <li>
+                                                <div class="thumb"><i class="mdi mdi-attachment"></i></div>
+                                                <div class="details">
+                                                    <p class="file-name">logo.png</p>
+                                                    <div class="buttons">
+                                                        <a href="/HcmAHDDashboard/DownloadAttachment?requestId=1000000000000000001&amp;vFile=20190512043758_.png" target="_blank" class="download">Download</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="thumb"><i class="mdi mdi-attachment"></i></div>
+                                                <div class="details">
+                                                    <p class="file-name">logo.png</p>
+                                                    <div class="buttons">
+                                                        <a href="/HcmAHDDashboard/DownloadAttachment?requestId=1000000000000000001&amp;vFile=20190513025314_.png" target="_blank" class="download">Download</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="thumb"><i class="mdi mdi-attachment"></i></div>
+                                                <div class="details">
+                                                    <p class="file-name">favicon.png</p>
+                                                    <div class="buttons">
+                                                        <a href="/HcmAHDDashboard/DownloadAttachment?requestId=1000000000000000001&amp;vFile=20190513025413_.png" target="_blank" class="download">Download</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-lg-4">
+
+                    <div class="card thin-border">
+                        <div class="card-body">
+                            <h4 class="card-title">Leave Cancelation Request</h4>
+                        </div>
+
+                        <div class="card-body bg-light">
+                            <div class="row text-center">
+                                <div class="col-6 m-t-10 m-b-10">
+                                    <span class="label label-warning">In Progress</span>
+                                </div>
+                                <div class="col-6 m-t-10 m-b-10">
+                                    May 2, 2018 9:49
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="p-t-20">Ticket Creator</h5>
+                            <span>Monin Jose (0790)</span>
+                            <br>
+                            <h5 class="m-t-30">Approver(L1)</h5>
+                            <span>Mathew Job</span>
+                            <br>
+                            <h5 class="m-t-30">Leave Start Date</h5>
+                            <span>05/01/2019</span>
+                            <br>
+                            <h5 class="m-t-30">Leave End Date</h5>
+                            <span>05/02/2019</span>
+                            <br>
+                        </div>
+
+                    </div>
+
+                    
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    <div class="card-body hide">
+        @if (TempData["Message"] != null)
+        {
+            @TempData["Message"]
+        }
+        @Html.Raw(@ViewData["UiRender"])
+    </div>
+
+    <div class="modal fade" id="commentModal-1" tabindex="-1" role="dialog" aria-labelledby="commentModal-4" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4">Add new comment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="add_Leave_Cancelation_Request_Comment_Form" action="/HcmAHDDashboard/AddUserComment" method="post" enctype="multipart/form-data">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Comment</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" id="userComment" name="userComment" rows="4"></textarea>
+                                <input type="hidden" name="requestId" id="requestId" value="@ViewData["RequestId"]" />
+                                <input type="hidden" name="userId" id="userId" value="@userProfileSession.ntplId" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#add_Leave_Cancelation_Request_Comment_Form').submit();">Add Comment</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="modal fade" id="fileAttchmentModal-1" tabindex="-1" role="dialog" aria-labelledby="fileAttchmentModal-4" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4">Add new file</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="attach_Leave_Cancelation_Request_Comment_Form" action="/HcmAHDDashboard/AddUserAttachment" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label>File</label>
+                            <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
+                            <input type="hidden" name="userId" value="@userProfileSession.ntplId" />
+                            <input type="file" name="requestAtchmentFile" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <input type="text" class="form-control file-upload-info" placeholder="Upload documnet">
+                                <span class="input-group-append">
+                                    <button class="file-upload-browse btn btn-info" type="button">Select</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#attach_Leave_Cancelation_Request_Comment_Form').submit();">Upload</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/Rebone/js")
+    <script>
+        $(function () {
+
+            $(document).on('click', '.hcm_create_Request', function (e) {
+                var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
+                window.location = target;
+            });
+
+            $()
+
+            $('#request-summary-listing').DataTable({
+                "aLengthMenu": [
+                    [5, 10, 15, 20, 50, 100],
+                    [5, 10, 15, 20, 50, 100]
+                ],
+                "iDisplayLength": 10,
+                "language": {
+                    search: ""
+                }
+            });
+            $('#request-summary-listing').each(function () {
+                var datatable = $(this);
+                // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+                var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+                search_input.attr('placeholder', 'Search');
+                search_input.removeClass('form-control-sm');
+                // LENGTH - Inline-Form control
+                var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+                length_sel.removeClass('form-control-sm');
+            });
+
+            showSwal = function (type) {
+                'use strict';
+                if (type === 'inter-approve-leave-cancelation-request') {
+                    swal({
+                        title: 'Are you sure?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Approval Comment",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'subApprovalComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#subApprovalComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/SubApproveLeaveCancelationRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+
+                }
+                else if (type === 'inter-approve-leave-past-apply-request') {
+                    swal({
+                        title: 'Are you sure?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Approval Comment",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'subApprovalComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#subApprovalComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/SubApproveLeavePastApplyRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+
+                }
+                else if (type === 'withdraw-leave-cancelation-request') {
+                    swal({
+                        title: 'Please withdrawal reason',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Feedback",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'withdrawalComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#withdrawalComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/WithdrawLeaveCancelationRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+                else if (type === 'withdraw-leave-past-apply-request') {
+                    swal({
+                        title: 'Please withdrawal reason',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Feedback",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'withdrawalComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#withdrawalComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/WithdrawLeavePastApplyRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+                else if (type === 'withdraw-leave-wfh-apply-request') {
+                    swal({
+                        title: 'Please withdrawal reason',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Feedback",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'withdrawalComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#withdrawalComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/WithdrawLeaveWFHApplyRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+                else if (type === 'close-leave-cancelation-request') {
+                    swal({
+                        title: 'Please provide feedback',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Feedback",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'FeedBackComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#FeedBackComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/CloseLeaveCancelationRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+                else if (type === 'close-leave-past-apply-request') {
+                    swal({
+                        title: 'Please provide feedback',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Feedback",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'FeedBackComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#FeedBackComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/CloseLeavePastApplyRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+                else if (type === 'close-leave-wfh-apply-request') {
+                    swal({
+                        title: 'Please provide feedback',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Feedback",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'FeedBackComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#FeedBackComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/CloseWFHLeaveApplyRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+                else if (type === 'final-approve-leave-cancelation-request') {
+                    swal({
+                        title: 'Are you sure?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Approval Comment",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'ApprovalComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#ApprovalComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/ApproveLeaveCancelationRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+                else if (type === 'final-approve-leave-past-apply-request') {
+                    swal({
+                        title: 'Are you sure?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Approval Comment",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'ApprovalComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#ApprovalComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/ApproveLeavePastApplyRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+                else if (type === 'final-approve-leave-wfh-apply-request') {
+                    swal({
+                        title: 'Are you sure?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Approval Comment",
+                                type: "textarea",
+                                class: 'form-control',
+                                id: 'ApprovalComment'
+                            },
+                        },
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                            confirm: {
+                                text: "OK",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true
+                            }
+                        }
+                    }).then((value) => {
+                        if (value) {
+                            var reqId = $('#requestId').val();
+                            var usrId = $('#userId').val();
+                            var formData = new FormData();
+                            formData.append("requestId", "" + reqId + "");
+                            formData.append("userId", "" + usrId + "");
+                            formData.append("userComment", $('#ApprovalComment').val());
+                            $.ajax({
+                                type: "POST",
+                                dataType: 'json',
+                                enctype: 'multipart/form-data',
+                                url: "/HcmAHDDashboard/ApproveWFHLeaveRequest",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                timeout: 600000,
+                                success: function (data) {
+                                    if (data.Status == 'Ok') {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 2 sec.',
+                                            timer: 2000,
+                                            button: false
+                                        });
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                    else {
+                                        swal({
+                                            title: data.message,
+                                            text: 'Data refresh in 4 sec.',
+                                            timer: 4000,
+                                            button: false
+                                        });
+
+                                        setTimeout(function () {
+                                            location.reload();
+                                        }, 4000);
+                                    }
+                                },
+                                error: function (e) {
+                                    console.log("ERROR : ", e);
+                                }
+                            });
+                        }
+                    });
+                }
+
+                //
+            }
+
+            $('.file-upload-browse').on('click', function () {
+                var file = $(this).parent().parent().parent().find('.file-upload-default');
+                file.trigger('click');
+            });
+            $('.file-upload-default').on('change', function () {
+                $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+            });
+        });
+    </script>

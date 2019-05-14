@@ -30,6 +30,9 @@ namespace AHD.Models
         public RequestStatus requestStatus { get; set; }
         [BsonElement("DateCreated")]
         public DateTime dateCreated { get; set; }
+        [BsonElement("DateModified")]
+        public DateTime dateModified { get; set; }
         public DateTime getLocalDateTime { get { return this.dateCreated.ToLocalTime(); } }
+        public DateTime getLocalDateTimeModified { get { return this.dateModified.ToLocalTime(); } }
     }
 }
