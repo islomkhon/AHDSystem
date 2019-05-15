@@ -795,6 +795,543 @@ namespace AHD.Models
             return uiRender;
         }
 
+        public string generateLeaveBalanceEnquiryUiRender(bool isOwner, bool ishcm, bool isApprover, NueRequestModel userRequest, NueUserProfile user, List<NueUserProfile> userList)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+
+            NeuLeaveBalanceEnquiryApply neuLeaveBalanceEnquiryApplyReq = (NeuLeaveBalanceEnquiryApply)userRequest.requestPayload;
+            ApprovalProcess approvalProcess = neuLeaveBalanceEnquiryApplyReq.approvalProcess;
+
+            if (userRequest.requestStatus == RequestStatus.close)
+            {
+
+            }
+            else if (userRequest.requestStatus == RequestStatus.withdraw)
+            {
+
+            }
+            else if (userRequest.requestStatus == RequestStatus.completed)
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-leave-bal-enq-request')\"><i class=\"mdi mdi-close-circle-outline text-primary\"></i> Close </button>\r\n";
+                }
+                else if (ishcm)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-leave-bal-enq-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-approve-leave-bal-enq-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.requestStatus == RequestStatus.close)
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.completed)
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.withdraw)
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.In_Approval)
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.created)
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-lg-8\">\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title Ticket_number\">Req: <span class=\"editable editable-click\">" + userRequest.requestId + "</span></h4>\r\n" +
+                    "                            <div class=\"user-message\">\r\n" +
+                    "                                <strong>User Request :</strong> " + neuLeaveBalanceEnquiryApplyReq.message + "\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request Logs</h4>\r\n" +
+                    "                            <div class=\"horizontal-timeline\">\r\n" +
+                    "                                <section class=\"time-frame\">\r\n" +
+                    "                                    <h5 class=\"section-time-frame\">Rquest Logs</h5>\r\n";
+            foreach (RequestLog requestLog in userRequest.requestLogs)
+            {
+                var userApp = userList.Where(x => x.ntplId == requestLog.ntplId).First<NueUserProfile>();
+                uiRender += "                        <div class=\"event\">\r\n" +
+                "                            <p class=\"event-text\">" + userApp.fullName + "</p>\r\n" +
+                "                            <div class=\"event-alert\">" + cleanLogMessage(requestLog.userComment) + "</div>\r\n" +
+                "                            <div class=\"event-info\">" + requestLog.dateCreated.ToLocalTime() + "</div>\r\n" +
+                "                        </div>\r\n";
+            }
+            uiRender += "</section>\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Attachments</h4>\r\n" +
+                    "                        </div>\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <div class=\"email-wrapper\">\r\n" +
+                    "                                <div class=\"message-body\">\r\n" +
+                    "                                    <div class=\"attachments-sections\">\r\n" +
+                    "                                        <ul class=\"pt-0\">\r\n";
+            foreach (AttachmentLog attachmentLog in userRequest.attachmentLogs)
+            {
+                uiRender += "                                    <li>\r\n" +
+                "                                        <div class=\"thumb\"><i class=\"mdi mdi-attachment\"></i></div>\r\n" +
+                "                                        <div class=\"details\">\r\n" +
+                "                                            <p class=\"file-name\">" + attachmentLog.fileName + attachmentLog.fileExt + "</p>\r\n" +
+                "                                            <div class=\"buttons\">\r\n" +
+                "                                                <a href=\"/HcmAHDDashboard/DownloadAttachment?requestId=" + userRequest.requestId + "&vFile=" + attachmentLog.VFileName + "\" target=\"_blank\" class=\"download\">Download</a>\r\n" +
+                "                                            </div>\r\n" +
+                "                                        </div>\r\n" +
+                "                                    </li>\r\n";
+            }
+            uiRender += " </ul>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                </div>\r\n" +
+                    "                <div class=\"col-lg-4\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card thin-border side-details-summary\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Leave Balance Enquiry Request</h4>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-body bg-light\">\r\n" +
+                    "                            <div class=\"row text-center\">\r\n" +
+                    "                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+                    requestStatusStr +
+                    "                                </div>\r\n" +
+                    "                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+                    "                                   " + userRequest.dateCreated.ToLocalTime() + "\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+                    "                            <span>" + userRequest.nueUserProfile.fullName + " (" + userRequest.ntplId + ")</span>\r\n" +
+                    "                            <br>\r\n" +
+                    "                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
+                    "                            <span>" + neuLeaveBalanceEnquiryApplyReq.leaveStartDate + "</span>\r\n" +
+                    "                            <br>\r\n" +
+                    "                            <h5 class=\"m-t-30\">Leave End Date</h5>\r\n" +
+                    "                            <span>" + neuLeaveBalanceEnquiryApplyReq.leaveEndDate + "</span>\r\n" +
+                    "                            <br>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    \r\n" +
+                    "\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>";
+
+
+            return uiRender;
+        }
+
+        public string generateHCMAddressProofRequestUiRender(bool isOwner, bool ishcm, bool isApprover, NueRequestModel userRequest, NueUserProfile user, List<NueUserProfile> userList)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+
+            NeuHCMAddressProofReqApply neuHCMAddressProofReqApplyReq = (NeuHCMAddressProofReqApply)userRequest.requestPayload;
+            ApprovalProcess approvalProcess = neuHCMAddressProofReqApplyReq.approvalProcess;
+
+            if (userRequest.requestStatus == RequestStatus.close)
+            {
+
+            }
+            else if (userRequest.requestStatus == RequestStatus.withdraw)
+            {
+
+            }
+            else if (userRequest.requestStatus == RequestStatus.completed)
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-address-proof-request')\"><i class=\"mdi mdi-close-circle-outline text-primary\"></i> Close </button>\r\n";
+                }
+                else if (ishcm)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-address-proof-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-address-proof-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.requestStatus == RequestStatus.close)
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.completed)
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.withdraw)
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.In_Approval)
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.created)
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-lg-8\">\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title Ticket_number\">Req: <span class=\"editable editable-click\">" + userRequest.requestId + "</span></h4>\r\n" +
+                    "                            <div class=\"user-message\">\r\n" +
+                    "                                <strong>User Request :</strong> " + neuHCMAddressProofReqApplyReq.message + "\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request Logs</h4>\r\n" +
+                    "                            <div class=\"horizontal-timeline\">\r\n" +
+                    "                                <section class=\"time-frame\">\r\n" +
+                    "                                    <h5 class=\"section-time-frame\">Rquest Logs</h5>\r\n";
+            foreach (RequestLog requestLog in userRequest.requestLogs)
+            {
+                var userApp = userList.Where(x => x.ntplId == requestLog.ntplId).First<NueUserProfile>();
+                uiRender += "                        <div class=\"event\">\r\n" +
+                "                            <p class=\"event-text\">" + userApp.fullName + "</p>\r\n" +
+                "                            <div class=\"event-alert\">" + cleanLogMessage(requestLog.userComment) + "</div>\r\n" +
+                "                            <div class=\"event-info\">" + requestLog.dateCreated.ToLocalTime() + "</div>\r\n" +
+                "                        </div>\r\n";
+            }
+            uiRender += "</section>\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Attachments</h4>\r\n" +
+                    "                        </div>\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <div class=\"email-wrapper\">\r\n" +
+                    "                                <div class=\"message-body\">\r\n" +
+                    "                                    <div class=\"attachments-sections\">\r\n" +
+                    "                                        <ul class=\"pt-0\">\r\n";
+            foreach (AttachmentLog attachmentLog in userRequest.attachmentLogs)
+            {
+                uiRender += "                                    <li>\r\n" +
+                "                                        <div class=\"thumb\"><i class=\"mdi mdi-attachment\"></i></div>\r\n" +
+                "                                        <div class=\"details\">\r\n" +
+                "                                            <p class=\"file-name\">" + attachmentLog.fileName + attachmentLog.fileExt + "</p>\r\n" +
+                "                                            <div class=\"buttons\">\r\n" +
+                "                                                <a href=\"/HcmAHDDashboard/DownloadAttachment?requestId=" + userRequest.requestId + "&vFile=" + attachmentLog.VFileName + "\" target=\"_blank\" class=\"download\">Download</a>\r\n" +
+                "                                            </div>\r\n" +
+                "                                        </div>\r\n" +
+                "                                    </li>\r\n";
+            }
+            uiRender += " </ul>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                </div>\r\n" +
+                    "                <div class=\"col-lg-4\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card thin-border side-details-summary\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Address Proof Request</h4>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-body bg-light\">\r\n" +
+                    "                            <div class=\"row text-center\">\r\n" +
+                    "                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+                    requestStatusStr +
+                    "                                </div>\r\n" +
+                    "                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+                    "                                   " + userRequest.dateCreated.ToLocalTime() + "\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+                    "                            <span>" + userRequest.nueUserProfile.fullName + " (" + userRequest.ntplId + ")</span>\r\n" +
+                    "                            <br>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    \r\n" +
+                    "\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>";
+
+
+            return uiRender;
+        }
+
+        public string generateHCMEmployeeVerificationUiRender(bool isOwner, bool ishcm, bool isApprover, NueRequestModel userRequest, NueUserProfile user, List<NueUserProfile> userList)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+
+            NeuHCMEmployeeVerificationReqApply neuHCMEmployeeVerificationReqApply = (NeuHCMEmployeeVerificationReqApply)userRequest.requestPayload;
+            ApprovalProcess approvalProcess = neuHCMEmployeeVerificationReqApply.approvalProcess;
+
+            if (userRequest.requestStatus == RequestStatus.close)
+            {
+
+            }
+            else if (userRequest.requestStatus == RequestStatus.withdraw)
+            {
+
+            }
+            else if (userRequest.requestStatus == RequestStatus.completed)
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-employee-verification-request')\"><i class=\"mdi mdi-close-circle-outline text-primary\"></i> Close </button>\r\n";
+                }
+                else if (ishcm)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "<button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline text-primary\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment text-primary\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-employee-verification-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-employee-verification-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.requestStatus == RequestStatus.close)
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.completed)
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.withdraw)
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.In_Approval)
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.requestStatus == RequestStatus.created)
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-lg-8\">\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title Ticket_number\">Req: <span class=\"editable editable-click\">" + userRequest.requestId + "</span></h4>\r\n" +
+                    "                            <div class=\"user-message\">\r\n" +
+                    "                                <strong>User Request :</strong> " + neuHCMEmployeeVerificationReqApply.message + "\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request Logs</h4>\r\n" +
+                    "                            <div class=\"horizontal-timeline\">\r\n" +
+                    "                                <section class=\"time-frame\">\r\n" +
+                    "                                    <h5 class=\"section-time-frame\">Rquest Logs</h5>\r\n";
+            foreach (RequestLog requestLog in userRequest.requestLogs)
+            {
+                var userApp = userList.Where(x => x.ntplId == requestLog.ntplId).First<NueUserProfile>();
+                uiRender += "                        <div class=\"event\">\r\n" +
+                "                            <p class=\"event-text\">" + userApp.fullName + "</p>\r\n" +
+                "                            <div class=\"event-alert\">" + cleanLogMessage(requestLog.userComment) + "</div>\r\n" +
+                "                            <div class=\"event-info\">" + requestLog.dateCreated.ToLocalTime() + "</div>\r\n" +
+                "                        </div>\r\n";
+            }
+            uiRender += "</section>\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card thin-border\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Attachments</h4>\r\n" +
+                    "                        </div>\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <div class=\"email-wrapper\">\r\n" +
+                    "                                <div class=\"message-body\">\r\n" +
+                    "                                    <div class=\"attachments-sections\">\r\n" +
+                    "                                        <ul class=\"pt-0\">\r\n";
+            foreach (AttachmentLog attachmentLog in userRequest.attachmentLogs)
+            {
+                uiRender += "                                    <li>\r\n" +
+                "                                        <div class=\"thumb\"><i class=\"mdi mdi-attachment\"></i></div>\r\n" +
+                "                                        <div class=\"details\">\r\n" +
+                "                                            <p class=\"file-name\">" + attachmentLog.fileName + attachmentLog.fileExt + "</p>\r\n" +
+                "                                            <div class=\"buttons\">\r\n" +
+                "                                                <a href=\"/HcmAHDDashboard/DownloadAttachment?requestId=" + userRequest.requestId + "&vFile=" + attachmentLog.VFileName + "\" target=\"_blank\" class=\"download\">Download</a>\r\n" +
+                "                                            </div>\r\n" +
+                "                                        </div>\r\n" +
+                "                                    </li>\r\n";
+            }
+            uiRender += " </ul>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                </div>\r\n" +
+                    "                <div class=\"col-lg-4\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card thin-border side-details-summary\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Employee Verification Request</h4>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-body bg-light\">\r\n" +
+                    "                            <div class=\"row text-center\">\r\n" +
+                    "                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+                    requestStatusStr +
+                    "                                </div>\r\n" +
+                    "                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+                    "                                   " + userRequest.dateCreated.ToLocalTime() + "\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+                    "                            <span>" + userRequest.nueUserProfile.fullName + " (" + userRequest.ntplId + ")</span>\r\n" +
+                    "                            <br>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    \r\n" +
+                    "\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>";
+
+
+            return uiRender;
+        }
+
+
+
+
         public string cleanLogMessage(string message)
         {
             string messageReturn = "";

@@ -216,6 +216,9 @@
     <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MongoCommunicator.cs" />
+    <Compile Include="Models\NeuHCMEmployeeVerificationReqApply.cs" />
+    <Compile Include="Models\NeuHCMAddressProofReqApply.cs" />
+    <Compile Include="Models\NeuLeaveBalanceEnquiryApply.cs" />
     <Compile Include="Models\NeuLeaveWFHApply.cs" />
     <Compile Include="Models\NeuLeavePastApply.cs" />
     <Compile Include="Models\NeuLeaveCancelation.cs" />
@@ -240,6 +243,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="NeuUi\css\NeuBase - Copy.css" />
+    <Content Include="NeuUi\css\NeuBase.css" />
+    <Content Include="NeuUi\js\NeuBase.js" />
     <Content Include="Rebone\public\css\base.css" />
     <Content Include="Rebone\public\css\base2.css" />
     <Content Include="Rebone\public\css\style.css" />
@@ -1385,6 +1391,9 @@
     <Content Include="Views\HcmAHDDashboard\LeavePastApplyCreate.cshtml" />
     <Content Include="Views\HcmAHDDashboard\LeaveWFHApplyCreate.cshtml" />
     <Content Include="Views\HcmAHDDashboard\SelfRequestDetails - Copy %282%29.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\LeaveBalanceEnquiryCreate.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\HCMAddressProofReqCreate.cshtml" />
+    <Content Include="Views\HcmAHDDashboard\HCMEmployeeVerificationReqCreate.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

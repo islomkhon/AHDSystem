@@ -34,7 +34,7 @@ namespace AHD.Models
         public DateTime dateCreated { get; set; }
         [BsonElement("DateApproved")]
         public DateTime dateApproved { get; set; }
-        [BsonElement("LeaveCancelationUiRender")]
+        [BsonElement("LeaveWFHApplyUiRender")]
         public LeaveWFHApplyUiRender leaveCancelationUiRender { get; set; }
 
     }

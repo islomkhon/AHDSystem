@@ -17,9 +17,14 @@ namespace AHD
             BsonClassMap.RegisterClassMap<NeuLeaveCancelation>();
             BsonClassMap.RegisterClassMap<NeuLeavePastApply>();
             BsonClassMap.RegisterClassMap<NeuLeaveWFHApply>();
-            BsonClassMap.RegisterClassMap<RequestLog>();
-            BsonClassMap.RegisterClassMap<AttachmentLog>();
+            BsonClassMap.RegisterClassMap<NeuLeaveBalanceEnquiryApply>();
+            BsonClassMap.RegisterClassMap<NeuHCMAddressProofReqApply>();
+            BsonClassMap.RegisterClassMap<NeuHCMEmployeeVerificationReqApply>();
             
+
+            BsonClassMap.RegisterClassMap<RequestLog>();
+            BsonClassMap.RegisterClassMap<AttachmentLog>(); 
+           
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

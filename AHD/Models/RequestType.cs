@@ -2,6 +2,6 @@
 {
     public enum RequestType
     {
-        LeaveCancelation, LeavePastApply, LeaveWFHApply
+        LeaveCancelation, LeavePastApply, LeaveWFHApply, LeaveBalanceEnquiry, HCMAddressProof, HCMEmployeeVerification
     }
 }

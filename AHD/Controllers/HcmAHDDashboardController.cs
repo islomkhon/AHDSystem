@@ -174,7 +174,11 @@ namespace AHD.Controllers
                     ishcm = true;
                 }
 
-                if (userRequest.requestType != RequestType.LeaveWFHApply && userRequest.accessLists.Contains(user.ntplId))
+                if ((userRequest.requestType != RequestType.LeaveWFHApply 
+                    && userRequest.requestType != RequestType.LeaveBalanceEnquiry
+                    && userRequest.requestType != RequestType.HCMAddressProof
+                    && userRequest.requestType != RequestType.HCMEmployeeVerification) 
+                    && userRequest.accessLists.Contains(user.ntplId))
                 {
                     isApprover = true;
                 }
@@ -208,6 +212,36 @@ namespace AHD.Controllers
                     ViewData["UserRequest"] = userRequest;
 
                     ViewData["RequestType"] = "Work From Home";
+                }
+                else if (userRequest.requestType == RequestType.LeaveBalanceEnquiry)
+                {
+                    string viewRender = new Utils().generateLeaveBalanceEnquiryUiRender(isOwner, ishcm, isApprover, userRequest, user, userListTemp);
+
+                    ViewData["UiRender"] = viewRender;
+
+                    ViewData["UserRequest"] = userRequest;
+
+                    ViewData["RequestType"] = "Leave Balance Enquiry";
+                }
+                else if (userRequest.requestType == RequestType.HCMAddressProof)
+                {
+                    string viewRender = new Utils().generateHCMAddressProofRequestUiRender(isOwner, ishcm, isApprover, userRequest, user, userListTemp);
+
+                    ViewData["UiRender"] = viewRender;
+
+                    ViewData["UserRequest"] = userRequest;
+
+                    ViewData["RequestType"] = "Address Proof Request";
+                }
+                else if (userRequest.requestType == RequestType.HCMEmployeeVerification)
+                {
+                    string viewRender = new Utils().generateHCMEmployeeVerificationUiRender(isOwner, ishcm, isApprover, userRequest, user, userListTemp);
+
+                    ViewData["UiRender"] = viewRender;
+
+                    ViewData["UserRequest"] = userRequest;
+
+                    ViewData["RequestType"] = "Employee Verification Request";
                 }
             }
             else
@@ -252,6 +286,44 @@ namespace AHD.Controllers
 
             return View(returnUserList);
         }
+
+        
+        public ActionResult LeaveBalanceEnquiryCreate()
+        {
+            List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+            returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+            ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+            ViewData["UserMasterList"] = returnUserList;
+            ViewData["NeuLeaveBalanceEnquiryUiRender"] = new NeuLeaveBalanceEnquiryUiRender();
+
+            return View(returnUserList);
+        }
+
+        public ActionResult HCMAddressProofReqCreate()
+        {
+            List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+            returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+            ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+            ViewData["UserMasterList"] = returnUserList;
+            ViewData["NeuHCMAddressProofReqUiRender"] = new NeuHCMAddressProofReqUiRender();
+
+            return View(returnUserList);
+        }
+
+        public ActionResult HCMEmployeeVerificationReqCreate()
+        {
+            List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+            returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+            ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+            ViewData["UserMasterList"] = returnUserList;
+            ViewData["NeuHCMEmployeeVerificationReqUiRender"] = new NeuHCMEmployeeVerificationReqUiRender();
+
+            return View(returnUserList);
+        }
+
+
+
+
 
         [HttpPost]
         public ActionResult LeaveCancelationCreate(LeaveCancelationUiRender leaveCancelationUiRender)
@@ -488,6 +560,231 @@ namespace AHD.Controllers
                 return View(returnUserList);
             }
         }
+
+        [HttpPost]
+        public ActionResult LeaveBalanceEnquiryCreate(NeuLeaveBalanceEnquiryUiRender leaveBalanceEnquiryUiRender)
+        {
+            try
+            {
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                List<NueUserProfile> returnUserListTemp = returnUserList.ToList<NueUserProfile>();
+                returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                if (leaveBalanceEnquiryUiRender.isValid())
+                {
+
+                    //NueUserProfile approver1 = returnUserListTemp.Where(x => x.ntplId == leaveWFHApplyUiRender.leaveCancelationApprover).First();
+                    var dateCreated = DateTime.UtcNow;
+                    NeuLeaveBalanceEnquiryApply neuLeaveBalanceEnquiryApply = new NeuLeaveBalanceEnquiryApply();
+                    NueUserProfile owner = (Session["userProfileSession"] as NueUserProfile);
+                    neuLeaveBalanceEnquiryApply.ntplId = owner.ntplId;
+                    neuLeaveBalanceEnquiryApply.nueUserProfile = owner;
+                    neuLeaveBalanceEnquiryApply.leaveStartDate = leaveBalanceEnquiryUiRender.leaveStartDate;
+                    neuLeaveBalanceEnquiryApply.leaveEndDate = leaveBalanceEnquiryUiRender.leaveEndDate;
+                    neuLeaveBalanceEnquiryApply.message = leaveBalanceEnquiryUiRender.message;
+                    neuLeaveBalanceEnquiryApply.isApprovalProcess = false;
+                    neuLeaveBalanceEnquiryApply.approvalProcess = new ApprovalProcess();
+                    neuLeaveBalanceEnquiryApply.requestStatus = RequestStatus.created;
+                    neuLeaveBalanceEnquiryApply.dateCreated = dateCreated;
+                    neuLeaveBalanceEnquiryApply.leaveCancelationUiRender = leaveBalanceEnquiryUiRender;
+                    neuLeaveBalanceEnquiryApply.approvalProcess.requestStatusStage = neuLeaveBalanceEnquiryApply.requestStatus;
+                    neuLeaveBalanceEnquiryApply.approvalProcess.requestApprovals = null;
+
+                    //craete and add requestApprovals NA for wfh
+
+
+                    var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
+                    string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
+                    neuLeaveBalanceEnquiryApply.requestId = newRequestId;
+
+                    NueRequestModel nueRequestModel = new NueRequestModel();
+                    nueRequestModel.ntplId = owner.ntplId;
+                    nueRequestModel.requestId = newRequestId;
+                    nueRequestModel.nueUserProfile = owner;
+                    nueRequestModel.requestType = RequestType.LeaveBalanceEnquiry;
+                    nueRequestModel.requestPayload = neuLeaveBalanceEnquiryApply;
+                    nueRequestModel.requestStatus = RequestStatus.created;
+                    nueRequestModel.dateCreated = dateCreated;
+                    nueRequestModel.dateModified = dateCreated;
+                    nueRequestModel.requestLogs = new LinkedList<RequestLog>();
+                    nueRequestModel.attachmentLogs = new LinkedList<AttachmentLog>();
+
+                    document.InsertOne(nueRequestModel);
+                    System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                    ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+                    ViewData["UserMasterList"] = returnUserList;
+                    ViewData["NeuLeaveBalanceEnquiryUiRender"] = leaveBalanceEnquiryUiRender;
+                    TempData["Message"] = "Invalid request";
+                    return View(returnUserList); ;
+                }
+            }
+            catch (Exception e)
+            {
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+                ViewData["UserMasterList"] = returnUserList;
+                ViewData["NeuLeaveBalanceEnquiryUiRender"] = new NeuLeaveBalanceEnquiryUiRender();
+                TempData["Message"] = "Invalid request";
+                return View(returnUserList);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult HCMAddressProofReqCreate(NeuHCMAddressProofReqUiRender neuHCMAddressProofReqUiRender)
+        {
+            try
+            {
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                List<NueUserProfile> returnUserListTemp = returnUserList.ToList<NueUserProfile>();
+                returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                if (neuHCMAddressProofReqUiRender.isValid())
+                {
+
+                    //NueUserProfile approver1 = returnUserListTemp.Where(x => x.ntplId == leaveWFHApplyUiRender.leaveCancelationApprover).First();
+                    var dateCreated = DateTime.UtcNow;
+                    NeuHCMAddressProofReqApply neuHCMAddressProofReqApply = new NeuHCMAddressProofReqApply();
+                    NueUserProfile owner = (Session["userProfileSession"] as NueUserProfile);
+                    neuHCMAddressProofReqApply.ntplId = owner.ntplId;
+                    neuHCMAddressProofReqApply.nueUserProfile = owner;
+                    neuHCMAddressProofReqApply.message = neuHCMAddressProofReqUiRender.message;
+                    neuHCMAddressProofReqApply.isApprovalProcess = false;
+                    neuHCMAddressProofReqApply.approvalProcess = new ApprovalProcess();
+                    neuHCMAddressProofReqApply.requestStatus = RequestStatus.created;
+                    neuHCMAddressProofReqApply.dateCreated = dateCreated;
+                    neuHCMAddressProofReqApply.leaveCancelationUiRender = neuHCMAddressProofReqUiRender;
+                    neuHCMAddressProofReqApply.approvalProcess.requestStatusStage = neuHCMAddressProofReqApply.requestStatus;
+                    neuHCMAddressProofReqApply.approvalProcess.requestApprovals = null;
+
+                    //craete and add requestApprovals NA for wfh
+
+
+                    var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
+                    string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
+                    neuHCMAddressProofReqApply.requestId = newRequestId;
+
+                    NueRequestModel nueRequestModel = new NueRequestModel();
+                    nueRequestModel.ntplId = owner.ntplId;
+                    nueRequestModel.requestId = newRequestId;
+                    nueRequestModel.nueUserProfile = owner;
+                    nueRequestModel.requestType = RequestType.HCMAddressProof;
+                    nueRequestModel.requestPayload = neuHCMAddressProofReqApply;
+                    nueRequestModel.requestStatus = RequestStatus.created;
+                    nueRequestModel.dateCreated = dateCreated;
+                    nueRequestModel.dateModified = dateCreated;
+                    nueRequestModel.requestLogs = new LinkedList<RequestLog>();
+                    nueRequestModel.attachmentLogs = new LinkedList<AttachmentLog>();
+
+                    document.InsertOne(nueRequestModel);
+                    System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                    ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+                    ViewData["UserMasterList"] = returnUserList;
+                    ViewData["NeuHCMAddressProofReqUiRender"] = neuHCMAddressProofReqUiRender;
+                    TempData["Message"] = "Invalid request";
+                    return View(returnUserList); ;
+                }
+            }
+            catch (Exception e)
+            {
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+                ViewData["UserMasterList"] = returnUserList;
+                ViewData["NeuHCMAddressProofReqUiRender"] = new NeuHCMAddressProofReqUiRender();
+                TempData["Message"] = "Invalid request";
+                return View(returnUserList);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult HCMEmployeeVerificationReqCreate(NeuHCMEmployeeVerificationReqUiRender neuHCMEmployeeVerificationReqUiRender)
+        {
+            try
+            {
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                List<NueUserProfile> returnUserListTemp = returnUserList.ToList<NueUserProfile>();
+                returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                if (neuHCMEmployeeVerificationReqUiRender.isValid())
+                {
+
+                    //NueUserProfile approver1 = returnUserListTemp.Where(x => x.ntplId == leaveWFHApplyUiRender.leaveCancelationApprover).First();
+                    var dateCreated = DateTime.UtcNow;
+                    NeuHCMEmployeeVerificationReqApply neuHCMEmployeeVerificationReqApply = new NeuHCMEmployeeVerificationReqApply();
+                    NueUserProfile owner = (Session["userProfileSession"] as NueUserProfile);
+                    neuHCMEmployeeVerificationReqApply.ntplId = owner.ntplId;
+                    neuHCMEmployeeVerificationReqApply.nueUserProfile = owner;
+                    neuHCMEmployeeVerificationReqApply.message = neuHCMEmployeeVerificationReqUiRender.message;
+                    neuHCMEmployeeVerificationReqApply.isApprovalProcess = false;
+                    neuHCMEmployeeVerificationReqApply.approvalProcess = new ApprovalProcess();
+                    neuHCMEmployeeVerificationReqApply.requestStatus = RequestStatus.created;
+                    neuHCMEmployeeVerificationReqApply.dateCreated = dateCreated;
+                    neuHCMEmployeeVerificationReqApply.leaveCancelationUiRender = neuHCMEmployeeVerificationReqUiRender;
+                    neuHCMEmployeeVerificationReqApply.approvalProcess.requestStatusStage = neuHCMEmployeeVerificationReqApply.requestStatus;
+                    neuHCMEmployeeVerificationReqApply.approvalProcess.requestApprovals = null;
+
+                    //craete and add requestApprovals NA for wfh
+
+
+                    var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
+                    string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
+                    neuHCMEmployeeVerificationReqApply.requestId = newRequestId;
+
+                    NueRequestModel nueRequestModel = new NueRequestModel();
+                    nueRequestModel.ntplId = owner.ntplId;
+                    nueRequestModel.requestId = newRequestId;
+                    nueRequestModel.nueUserProfile = owner;
+                    nueRequestModel.requestType = RequestType.HCMEmployeeVerification;
+                    nueRequestModel.requestPayload = neuHCMEmployeeVerificationReqApply;
+                    nueRequestModel.requestStatus = RequestStatus.created;
+                    nueRequestModel.dateCreated = dateCreated;
+                    nueRequestModel.dateModified = dateCreated;
+                    nueRequestModel.requestLogs = new LinkedList<RequestLog>();
+                    nueRequestModel.attachmentLogs = new LinkedList<AttachmentLog>();
+
+                    document.InsertOne(nueRequestModel);
+                    System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                    ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+                    ViewData["UserMasterList"] = returnUserList;
+                    ViewData["NeuHCMEmployeeVerificationReqUiRender"] = neuHCMEmployeeVerificationReqUiRender;
+                    TempData["Message"] = "Invalid request";
+                    return View(returnUserList); ;
+                }
+            }
+            catch (Exception e)
+            {
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                returnUserList.Remove(returnUserList.Where(x => x.email == (Session["userProfileSession"] as NueUserProfile).email).First());
+                ViewData["NueUserProfile"] = (Session["userProfileSession"] as NueUserProfile);
+                ViewData["UserMasterList"] = returnUserList;
+                ViewData["NeuHCMEmployeeVerificationReqUiRender"] = new NeuHCMEmployeeVerificationReqUiRender();
+                TempData["Message"] = "Invalid request";
+                return View(returnUserList);
+            }
+        }
+
+
+
+
+
+
+
 
         [HttpPost]
         public JsonResult WithdrawLeaveCancelationRequest(FormCollection formCollection)
@@ -731,6 +1028,261 @@ namespace AHD.Controllers
             }
 
         }
+
+        [HttpPost]
+        public JsonResult WithdrawLeaveBalanceEnqRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Withdrawn";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Withdrawn</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userRequest.ntplId == user.ntplId && userRequest.requestType == RequestType.LeaveBalanceEnquiry)
+                {
+                    if (userRequest.requestStatus != RequestStatus.close && userRequest.requestStatus != RequestStatus.completed)
+                    {
+                        userRequest.requestStatus = RequestStatus.withdraw;
+                        ((NeuLeaveBalanceEnquiryApply)userRequest.requestPayload).requestStatus = RequestStatus.withdraw;
+                        userRequest.requestLogs.AddLast(requestLog);
+                        userRequest.requestLogs.AddLast(requestLogCommand);
+                        userRequest.dateModified = DateTime.UtcNow;
+                        var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                        ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                        if (dbResponse.ModifiedCount > 0)
+                        {
+                            return Json(new JsonResponse("Failed", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Unabele to withdraw request now, Request is in " + userRequest.requestStatus + " stage"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        [HttpPost]
+        public JsonResult WithdrawHCMAddressProofReqRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Withdrawn";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Withdrawn</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userRequest.ntplId == user.ntplId && userRequest.requestType == RequestType.HCMAddressProof)
+                {
+                    if (userRequest.requestStatus != RequestStatus.close && userRequest.requestStatus != RequestStatus.completed)
+                    {
+                        userRequest.requestStatus = RequestStatus.withdraw;
+                        ((NeuHCMAddressProofReqApply)userRequest.requestPayload).requestStatus = RequestStatus.withdraw;
+                        userRequest.requestLogs.AddLast(requestLog);
+                        userRequest.requestLogs.AddLast(requestLogCommand);
+                        userRequest.dateModified = DateTime.UtcNow;
+                        var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                        ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                        if (dbResponse.ModifiedCount > 0)
+                        {
+                            return Json(new JsonResponse("Failed", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Unabele to withdraw request now, Request is in " + userRequest.requestStatus + " stage"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        [HttpPost]
+        public JsonResult WithdrawHCMEmployeeVerificationRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Withdrawn";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Withdrawn</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userRequest.ntplId == user.ntplId && userRequest.requestType == RequestType.HCMEmployeeVerification)
+                {
+                    if (userRequest.requestStatus != RequestStatus.close && userRequest.requestStatus != RequestStatus.completed)
+                    {
+                        userRequest.requestStatus = RequestStatus.withdraw;
+                        ((NeuHCMEmployeeVerificationReqApply)userRequest.requestPayload).requestStatus = RequestStatus.withdraw;
+                        userRequest.requestLogs.AddLast(requestLog);
+                        userRequest.requestLogs.AddLast(requestLogCommand);
+                        userRequest.dateModified = DateTime.UtcNow;
+                        var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                        ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                        if (dbResponse.ModifiedCount > 0)
+                        {
+                            return Json(new JsonResponse("Failed", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Unabele to withdraw request now, Request is in " + userRequest.requestStatus + " stage"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         public JsonResult CloseLeaveCancelationRequest(FormCollection formCollection)
@@ -1050,6 +1602,334 @@ namespace AHD.Controllers
         }
 
         [HttpPost]
+        public JsonResult CloseBalanceEnqLeaveRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Closed";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Closed</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userRequest.ntplId == user.ntplId && userRequest.requestType == RequestType.LeaveBalanceEnquiry)
+                {
+                    NeuLeaveBalanceEnquiryApply neuLeaveBalanceEnquiryApplyReq = (NeuLeaveBalanceEnquiryApply)userRequest.requestPayload;
+                    var app = neuLeaveBalanceEnquiryApplyReq.isApprovalProcess;
+                    ApprovalProcess approvalProcess = neuLeaveBalanceEnquiryApplyReq.approvalProcess;
+                    if (userRequest.requestStatus != RequestStatus.completed
+                        && neuLeaveBalanceEnquiryApplyReq.requestStatus != RequestStatus.completed
+                        && approvalProcess.requestStatusStage != RequestStatus.completed)
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid request, Request is not in approved stage"), JsonRequestBehavior.AllowGet);
+                    }
+                    var approvals = approvalProcess.requestApprovals;
+                    bool able = false;
+                    if (app && approvals != null && approvals.Count > 0)
+                    {
+                        for (int i = 0; i < approvals.Count; i++)
+                        {
+                            RequestApproval requestApproval = approvals.ElementAt(i);
+                            if (requestApproval.isApproved != true)
+                            {
+                                able = true;
+                                break;
+                            }
+                        }
+                        if (!able)
+                        {
+                            userRequest.requestLogs.AddLast(requestLogCommand);
+                            approvalProcess.requestStatusStage = RequestStatus.completed;
+                            approvalProcess.dateApproved = DateTime.UtcNow;
+                            neuLeaveBalanceEnquiryApplyReq.requestStatus = RequestStatus.completed;
+                            userRequest.requestStatus = RequestStatus.completed;
+                        }
+                    }
+                    if (able)
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid request, Request is not approved by all approvers"), JsonRequestBehavior.AllowGet);
+                    }
+                    userRequest.dateModified = DateTime.UtcNow;
+                    userRequest.requestStatus = RequestStatus.close;
+                    neuLeaveBalanceEnquiryApplyReq.requestStatus = RequestStatus.close;
+
+                    var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                    if (dbResponse.ModifiedCount > 0)
+                    {
+                        return Json(new JsonResponse("Failed", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult CloseHCMAddressProofRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Closed";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Closed</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userRequest.ntplId == user.ntplId && userRequest.requestType == RequestType.HCMAddressProof)
+                {
+                    NeuHCMAddressProofReqApply neuHCMAddressProofReqApplyReq = (NeuHCMAddressProofReqApply)userRequest.requestPayload;
+                    var app = neuHCMAddressProofReqApplyReq.isApprovalProcess;
+                    ApprovalProcess approvalProcess = neuHCMAddressProofReqApplyReq.approvalProcess;
+                    if (userRequest.requestStatus != RequestStatus.completed
+                        && neuHCMAddressProofReqApplyReq.requestStatus != RequestStatus.completed
+                        && approvalProcess.requestStatusStage != RequestStatus.completed)
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid request, Request is not in approved stage"), JsonRequestBehavior.AllowGet);
+                    }
+                    var approvals = approvalProcess.requestApprovals;
+                    bool able = false;
+                    if (app && approvals != null && approvals.Count > 0)
+                    {
+                        for (int i = 0; i < approvals.Count; i++)
+                        {
+                            RequestApproval requestApproval = approvals.ElementAt(i);
+                            if (requestApproval.isApproved != true)
+                            {
+                                able = true;
+                                break;
+                            }
+                        }
+                        if (!able)
+                        {
+                            userRequest.requestLogs.AddLast(requestLogCommand);
+                            approvalProcess.requestStatusStage = RequestStatus.completed;
+                            approvalProcess.dateApproved = DateTime.UtcNow;
+                            neuHCMAddressProofReqApplyReq.requestStatus = RequestStatus.completed;
+                            userRequest.requestStatus = RequestStatus.completed;
+                        }
+                    }
+                    if (able)
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid request, Request is not approved by all approvers"), JsonRequestBehavior.AllowGet);
+                    }
+                    userRequest.dateModified = DateTime.UtcNow;
+                    userRequest.requestStatus = RequestStatus.close;
+                    neuHCMAddressProofReqApplyReq.requestStatus = RequestStatus.close;
+
+                    var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                    if (dbResponse.ModifiedCount > 0)
+                    {
+                        return Json(new JsonResponse("Failed", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult CloseHCMEmployeeVerificationRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Closed";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Closed</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userRequest.ntplId == user.ntplId && userRequest.requestType == RequestType.HCMEmployeeVerification)
+                {
+                    NeuHCMEmployeeVerificationReqApply neuHCMEmployeeVerificationReq = (NeuHCMEmployeeVerificationReqApply)userRequest.requestPayload;
+                    var app = neuHCMEmployeeVerificationReq.isApprovalProcess;
+                    ApprovalProcess approvalProcess = neuHCMEmployeeVerificationReq.approvalProcess;
+                    if (userRequest.requestStatus != RequestStatus.completed
+                        && neuHCMEmployeeVerificationReq.requestStatus != RequestStatus.completed
+                        && approvalProcess.requestStatusStage != RequestStatus.completed)
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid request, Request is not in approved stage"), JsonRequestBehavior.AllowGet);
+                    }
+                    var approvals = approvalProcess.requestApprovals;
+                    bool able = false;
+                    if (app && approvals != null && approvals.Count > 0)
+                    {
+                        for (int i = 0; i < approvals.Count; i++)
+                        {
+                            RequestApproval requestApproval = approvals.ElementAt(i);
+                            if (requestApproval.isApproved != true)
+                            {
+                                able = true;
+                                break;
+                            }
+                        }
+                        if (!able)
+                        {
+                            userRequest.requestLogs.AddLast(requestLogCommand);
+                            approvalProcess.requestStatusStage = RequestStatus.completed;
+                            approvalProcess.dateApproved = DateTime.UtcNow;
+                            neuHCMEmployeeVerificationReq.requestStatus = RequestStatus.completed;
+                            userRequest.requestStatus = RequestStatus.completed;
+                        }
+                    }
+                    if (able)
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid request, Request is not approved by all approvers"), JsonRequestBehavior.AllowGet);
+                    }
+                    userRequest.dateModified = DateTime.UtcNow;
+                    userRequest.requestStatus = RequestStatus.close;
+                    neuHCMEmployeeVerificationReq.requestStatus = RequestStatus.close;
+
+                    var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                    if (dbResponse.ModifiedCount > 0)
+                    {
+                        return Json(new JsonResponse("Failed", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpPost]
         public JsonResult ApproveLeaveCancelationRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -1360,6 +2240,291 @@ namespace AHD.Controllers
             }
 
         }
+
+        [HttpPost]
+        public JsonResult ApproveBalanceEnqLeaveRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                bool userAccess = false;
+                if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
+                {
+                    userAccess = true;
+                }
+
+                if (!userAccess)
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to perform hcm approvals"), JsonRequestBehavior.AllowGet);
+                }
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Approved";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Approved</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userAccess && userRequest.requestType == RequestType.LeaveBalanceEnquiry)
+                {
+                    NeuLeaveBalanceEnquiryApply neuLeaveBalanceEnquiryApplyReq = (NeuLeaveBalanceEnquiryApply)userRequest.requestPayload;
+                    var app = neuLeaveBalanceEnquiryApplyReq.isApprovalProcess;
+                    ApprovalProcess approvalProcess = neuLeaveBalanceEnquiryApplyReq.approvalProcess;
+                    approvalProcess.requestStatusStage = RequestStatus.completed;
+                    approvalProcess.dateApproved = DateTime.UtcNow;
+                    neuLeaveBalanceEnquiryApplyReq.requestStatus = RequestStatus.completed;
+                    userRequest.requestStatus = RequestStatus.completed;
+
+                    userRequest.dateModified = DateTime.UtcNow;
+                    userRequest.requestLogs.AddLast(requestLog);
+                    userRequest.requestLogs.AddLast(requestLogCommand);
+                    var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                    if (dbResponse.ModifiedCount > 0)
+                    {
+                        return Json(new JsonResponse("Failed", "Request approved successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        [HttpPost]
+        public JsonResult ApproveHCMAddressProofRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                bool userAccess = false;
+                if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
+                {
+                    userAccess = true;
+                }
+
+                if (!userAccess)
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to perform hcm approvals"), JsonRequestBehavior.AllowGet);
+                }
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Approved";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Approved</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userAccess && userRequest.requestType == RequestType.HCMAddressProof)
+                {
+                    NeuHCMAddressProofReqApply neuHCMAddressProofReqApplyReq = (NeuHCMAddressProofReqApply)userRequest.requestPayload;
+                    var app = neuHCMAddressProofReqApplyReq.isApprovalProcess;
+                    ApprovalProcess approvalProcess = neuHCMAddressProofReqApplyReq.approvalProcess;
+                    approvalProcess.requestStatusStage = RequestStatus.completed;
+                    approvalProcess.dateApproved = DateTime.UtcNow;
+                    neuHCMAddressProofReqApplyReq.requestStatus = RequestStatus.completed;
+                    userRequest.requestStatus = RequestStatus.completed;
+
+                    userRequest.dateModified = DateTime.UtcNow;
+                    userRequest.requestLogs.AddLast(requestLog);
+                    userRequest.requestLogs.AddLast(requestLogCommand);
+                    var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                    if (dbResponse.ModifiedCount > 0)
+                    {
+                        return Json(new JsonResponse("Failed", "Request approved successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        [HttpPost]
+        public JsonResult ApproveHCMEmployeeVerificationRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            string ntplId = formCollection["userId"];
+            try
+            {
+
+                if (userComment == null || requestId == null || ntplId == null
+                    || userComment.Trim() == "" || requestId.Trim() == "" || ntplId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                userComment = userComment.Trim();
+
+                NueUserProfile nueUserProfile = (Session["userProfileSession"] as NueUserProfile);
+
+                List<NueUserProfile> returnUserList = new MongoCommunicator().getUserList();
+                NueUserProfile user = returnUserList.Where(x => x.ntplId == nueUserProfile.ntplId).First();
+
+                bool userAccess = false;
+                if (user.userAccess.Contains("Root_Admin") || user.userAccess.Contains("Hcm_Admin") || user.userAccess.Contains("Hcm_User"))
+                {
+                    userAccess = true;
+                }
+
+                if (!userAccess)
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to perform hcm approvals"), JsonRequestBehavior.AllowGet);
+                }
+
+                if (userComment.Trim() == "")
+                {
+                    userComment = "Request Approved";
+                }
+                RequestLog requestLog = new RequestLog();
+                requestLog.requestId = requestId;
+                requestLog.ntplId = user.ntplId;
+                requestLog.nueUserProfile = user;
+                requestLog.userComment = userComment;
+                requestLog.dateCreated = DateTime.UtcNow;
+
+                RequestLog requestLogCommand = new RequestLog();
+                requestLogCommand.requestId = requestId;
+                requestLogCommand.ntplId = user.ntplId;
+                requestLogCommand.nueUserProfile = user;
+                requestLogCommand.userComment = "<neulog>Approved</neulog>";
+                requestLogCommand.dateCreated = DateTime.UtcNow;
+
+                var document = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+
+                var filterFind = (Builders<NueRequestModel>.Filter.Eq("RequestId", requestId));
+
+                NueRequestModel userRequest = document.Find<NueRequestModel>(filterFind).First<NueRequestModel>();
+                if (userRequest != null && userAccess && userRequest.requestType == RequestType.HCMEmployeeVerification)
+                {
+                    NeuHCMEmployeeVerificationReqApply neuHCMEmployeeVerificationReqApplyReq = (NeuHCMEmployeeVerificationReqApply)userRequest.requestPayload;
+                    var app = neuHCMEmployeeVerificationReqApplyReq.isApprovalProcess;
+                    ApprovalProcess approvalProcess = neuHCMEmployeeVerificationReqApplyReq.approvalProcess;
+                    approvalProcess.requestStatusStage = RequestStatus.completed;
+                    approvalProcess.dateApproved = DateTime.UtcNow;
+                    neuHCMEmployeeVerificationReqApplyReq.requestStatus = RequestStatus.completed;
+                    userRequest.requestStatus = RequestStatus.completed;
+
+                    userRequest.dateModified = DateTime.UtcNow;
+                    userRequest.requestLogs.AddLast(requestLog);
+                    userRequest.requestLogs.AddLast(requestLogCommand);
+                    var collection = _dbContext._database.GetCollection<NueRequestModel>("NueRequestModel");
+                    ReplaceOneResult dbResponse = collection.ReplaceOne(filterFind, userRequest);
+                    if (dbResponse.ModifiedCount > 0)
+                    {
+                        return Json(new JsonResponse("Failed", "Request approved successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "An error occerd while approving request"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "Invalid request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         public JsonResult SubApproveLeaveCancelationRequest(FormCollection formCollection)
