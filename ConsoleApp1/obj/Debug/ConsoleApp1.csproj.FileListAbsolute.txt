@@ -1,0 +1,12 @@
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\obj\Debug\ConsoleApp1.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\bin\Debug\EntityFramework.dll
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\bin\Debug\EntityFramework.xml
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Monin.Jose\source\repos\NAHD\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CopyComplete

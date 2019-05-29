@@ -215,3 +215,6 @@ C:\Users\Monin.Jose\source\repos\NAHD\AHD\obj\Debug\AHD.csproj.CopyComplete
 C:\Users\Monin.Jose\source\repos\NAHD\AHD\obj\Debug\AHD.dll
 C:\Users\Monin.Jose\source\repos\NAHD\AHD\obj\Debug\AHD.pdb
 C:\Users\Monin.Jose\source\repos\NAHD\AHD\obj\Debug\AHD.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\AHD\bin\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\Users\Monin.Jose\source\repos\NAHD\AHD\bin\Microsoft.IdentityModel.Clients.ActiveDirectory.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\AHD\bin\Microsoft.IdentityModel.Clients.ActiveDirectory.xml

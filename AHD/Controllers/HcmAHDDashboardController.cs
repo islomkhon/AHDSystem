@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Configuration;
+using System.DirectoryServices;
 
 namespace AHD.Controllers
 {
@@ -37,6 +38,38 @@ namespace AHD.Controllers
                     & Builders<NueRequestModel>.Filter.Ne("RequestStatus", RequestStatus.withdraw))));
 
             List<NueRequestModel> userRequests = document.Find<NueRequestModel>(filterDup).ToList<NueRequestModel>();
+
+            int j = 0;
+            DirectoryEntry enTry = new DirectoryEntry("LDAP://OU=MyUsers,DC=Steve,DC=Schofield,DC=com");
+            DirectorySearcher mySearcher = new DirectorySearcher(enTry);
+
+            mySearcher.Filter = "(&(objectClass=user)(anr=monin))";
+
+            try
+            {
+
+                foreach (SearchResult resEnt in mySearcher.FindAll())
+                {
+
+                    /*Console.WriteLine(resEnt.GetDirectoryEntry.Properties.Item("cn").Value);
+
+                    Console.WriteLine(resEnt.GetDirectoryEntry.Properties.Item("distinguishedName").Value);
+
+                    Console.WriteLine(resEnt.GetDirectoryEntry.Properties.Item("name").Value);
+
+                    Console.WriteLine(resEnt.GetDirectoryEntry.Properties.Item("givenName").Value);
+
+                    Console.WriteLine(resEnt.GetDirectoryEntry.Properties.Item("displayName").Value);*/
+
+                }
+
+            }
+            catch (Exception f)
+            {
+
+                Console.WriteLine(f.Message);
+
+            }
 
             ViewData["UserMasterList"] = userRequests;
             return View();

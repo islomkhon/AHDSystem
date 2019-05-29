@@ -1,0 +1,129 @@
+﻿@using NeuRequest;
+@{
+    ViewBag.Title = "HCM - ";
+
+    //Layout = null;
+}
+<!--<a href="/NeuUserManagement/Index">User Management</a>-->
+<style>
+    .update-card {
+        background-color: #f3f3f3;
+        font-size: .875em;
+        overflow-x: hidden;
+        color: #353c4e;
+        font-family: "Open Sans",sans-serif;
+        background-attachment: fixed;
+        color: #fff;
+        cursor: pointer;
+    }
+
+        .update-card.card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+
+        .update-card.card {
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 20px 0 rgba(69,90,100,0.08);
+            box-shadow: 0 1px 20px 0 rgba(69,90,100,0.08);
+            border: none;
+            margin-bottom: 30px;
+        }
+
+        .update-card .card-block {
+            padding: 1.25rem;
+        }
+
+            .update-card .card-block h6 {
+                font-size: 14px;
+            }
+
+        .update-card i.main-icon {
+            font-size: xx-large;
+            position: relative;
+            z-index: 1;
+        }
+
+        .update-card .card-block .m-b-0 {
+            margin-bottom: 0px;
+        }
+
+    .bg-c-yellow {
+        background: -webkit-gradient(linear, left top, right top, from(#fe9365), to(#feb798));
+        background: linear-gradient(to right, #fe9365, #feb798);
+    }
+
+    .bg-c-green {
+        background: -webkit-gradient(linear, left top, right top, from(#0ac282), to(#0df3a3));
+        background: linear-gradient(to right, #0ac282, #0df3a3);
+    }
+
+    .bg-c-pink {
+        background: -webkit-gradient(linear, left top, right top, from(#fe5d70), to(#fe909d));
+        background: linear-gradient(to right, #fe5d70, #fe909d);
+    }
+
+    .bg-c-lite-green {
+        background: -webkit-gradient(linear, left top, right top, from(#01a9ac), to(#01dbdf));
+        background: linear-gradient(to right, #01a9ac, #01dbdf);
+    }
+</style>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="card bg-c-yellow update-card link-action-tigger" data-target="/HcmDashboard/Index">
+                    <div class="card-block">
+                        <div class="row align-items-end">
+                            <div class="col-8">
+                                <h4 class="text-white">&nbsp;</h4>
+                                <h6 class="text-white m-b-0">HCM Request</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="mdi mdi-spotlight main-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="card bg-c-green update-card link-action-tigger" data-target="/NeuUserManagement/Index">
+                    <div class="card-block">
+                        <div class="row align-items-end">
+                            <div class="col-8">
+                                <h4 class="text-white">&nbsp;</h4>
+                                <h6 class="text-white m-b-0">Update User Data</h6>
+                            </div>
+                            <div class="col-4 text-right">
+                                <i class="mdi mdi-account-card-details main-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Rebone/js")
+<script>
+    $(function () {
+
+    });
+
+</script>
