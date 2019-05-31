@@ -14,6 +14,7 @@ namespace NeuRequest.Models
         public int RequestStatus { get; set; }
         public int PayloadId { get; set; }
         public int RequestCatType { get; set; }
-        public string AddedOn { get; set; }
+        public DateTime AddedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
     }
 }

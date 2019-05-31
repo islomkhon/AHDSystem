@@ -18,8 +18,16 @@ namespace NeuRequest.Controllers
             {
                 return RedirectToAction("SignIn", "Account");
             }
-            
-            ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if(currentUser == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+
+            List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getUserHcmActiveRequests(currentUser.Id);
+            ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
+            ViewData["UserProfileSession"] = currentUser;
+
             return View();
         }
 
@@ -40,20 +48,23 @@ namespace NeuRequest.Controllers
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
             try
             {
+                var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leaveCancelationUiRender.isValid())
                 {
-                    
+                    var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
+                    string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
                     NeuLeaveCancelation neuLeaveCancelation = new NeuLeaveCancelation();
                     neuLeaveCancelation.UserId = currentUser.Id;
+                    neuLeaveCancelation.RequestId = newRequestId;
                     neuLeaveCancelation.Message = leaveCancelationUiRender.message;
                     neuLeaveCancelation.StartDate = leaveCancelationUiRender.leaveStartDate;
                     neuLeaveCancelation.EndDate = leaveCancelationUiRender.leaveEndDate;
+                    neuLeaveCancelation.AddedOn = dateCreated;
+                    neuLeaveCancelation.ModifiedOn = dateCreated;
                     int newRequestInternId = new DataAccess().addNewLeaveCancelation(neuLeaveCancelation);
                     if(newRequestInternId != -1)
                     {
-                        var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
-                        string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
                         NueRequestMaster nueRequestMaster = new NueRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
@@ -61,6 +72,8 @@ namespace NeuRequest.Controllers
                         nueRequestMaster.RequestStatus = 1;
                         nueRequestMaster.PayloadId = newRequestInternId;
                         nueRequestMaster.RequestCatType = 1;
+                        nueRequestMaster.AddedOn = dateCreated;
+                        nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if(newRequestTempInternId != -1)
                         {
@@ -69,16 +82,23 @@ namespace NeuRequest.Controllers
                             NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
+                            nueRequestAceessLog.OwnerId = currentUser.Id;
                             nueRequestAceessLog.Completed = 0;
+                            nueRequestAceessLog.AddedOn = dateCreated;
+                            nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
                             nueRequestAceessLog = new NueRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = int.Parse(leaveCancelationUiRender.leaveCancelationApprover);
+                            nueRequestAceessLog.OwnerId = currentUser.Id;
                             nueRequestAceessLog.Completed = 0;
+                            nueRequestAceessLog.AddedOn = dateCreated;
+                            nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
 
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
 
+                            System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
                             return RedirectToAction("Index");
                         }
                         else

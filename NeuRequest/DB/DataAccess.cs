@@ -16,6 +16,51 @@ namespace NeuRequest.DB
             this.connectionString = ConfigurationManager.ConnectionStrings["DB"].ConnectionString;
         }
 
+
+        public List<UserRequestUiGridRender> getUserHcmActiveRequests(int uid)
+        {
+            List<UserRequestUiGridRender> userRequestUiGridRenders = new List<UserRequestUiGridRender>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"select nrm.Id as NueRequestMasterId, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                                                        nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
+                                                        NueRequestMaster nrm 
+                                                        join NueRequestAceessLog nral on nrm.Id = nral.RequestId
+                                                        join NueRequestSubType nrst on nrm.RequestCatType = nrst.id
+                                                        join NueRequestType nrt on nrst.RequestType = nrt.Id
+                                                        join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
+                                                        where nral.Completed = @Completed 
+                                                        and nral.UserId = @UserId 
+                                                        and nral.OwnerId= @OwnerId 
+                                                        and nrt.RequestType= @RequestType", connection))
+                {
+                    cmd.Parameters.AddWithValue("@Completed", 0);
+                    cmd.Parameters.AddWithValue("@UserId", uid);
+                    cmd.Parameters.AddWithValue("@OwnerId", uid);
+                    cmd.Parameters.AddWithValue("@RequestType", "HCM");
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            UserRequestUiGridRender userRequestUiGridRender = new UserRequestUiGridRender();
+                            userRequestUiGridRender.NueRequestMasterId = ConvertFromDBVal<int>(dataReader["NueRequestMasterId"]);
+                            userRequestUiGridRender.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            userRequestUiGridRender.NueRequestSubTypeId = ConvertFromDBVal<int>(dataReader["NueRequestSubTypeId"]);
+                            userRequestUiGridRender.RequestSubType = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
+                            userRequestUiGridRender.NueRequestStatusId = ConvertFromDBVal<int>(dataReader["NueRequestStatusId"]);
+                            userRequestUiGridRender.RequestStatus = ConvertFromDBVal<string>(dataReader["RequestStatus"]);
+                            userRequestUiGridRender.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            userRequestUiGridRender.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            userRequestUiGridRenders.Add(userRequestUiGridRender);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return userRequestUiGridRenders;
+        }
+
         public int addNeuRequestAccessLogs(List<NueRequestAceessLog> nueRequestAceessLogs)
         {
             int modified = -1;
@@ -24,13 +69,16 @@ namespace NeuRequest.DB
                 connection.Open();
                 foreach (var item in nueRequestAceessLogs)
                 {
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO NueRequestAceessLog (RequestId, UserId, Completed) " +
-                                       "output INSERTED.ID VALUES(@RequestId,@UserId,@Completed)", connection))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO NueRequestAceessLog (RequestId, UserId, Completed, OwnerId, AddedOn, ModifiedOn) " +
+                                       "output INSERTED.ID VALUES(@RequestId,@UserId,@Completed,@OwnerId,@AddedOn,@ModifiedOn)", connection))
                     {
 
                         cmd.Parameters.AddWithValue("@RequestId", item.RequestId);
                         cmd.Parameters.AddWithValue("@UserId", item.UserId);
                         cmd.Parameters.AddWithValue("@Completed", item.Completed);
+                        cmd.Parameters.AddWithValue("@OwnerId", item.OwnerId);
+                        cmd.Parameters.AddWithValue("@AddedOn", item.AddedOn);
+                        cmd.Parameters.AddWithValue("@ModifiedOn", item.ModifiedOn);
                         modified = (int)cmd.ExecuteScalar();
                     }
                 }
@@ -45,8 +93,8 @@ namespace NeuRequest.DB
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueRequestMaster (RequestId, IsApprovalProcess, CreatedBy, RequestStatus, PayloadId, RequestCatType) " +
-                                       "output INSERTED.ID VALUES(@RequestId,@IsApprovalProcess,@CreatedBy,@RequestStatus,@PayloadId,@RequestCatType)", connection))
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueRequestMaster (RequestId, IsApprovalProcess, CreatedBy, RequestStatus, PayloadId, RequestCatType, AddedOn, ModifiedOn) " +
+                                       "output INSERTED.ID VALUES(@RequestId,@IsApprovalProcess,@CreatedBy,@RequestStatus,@PayloadId,@RequestCatType,@AddedOn,@ModifiedOn)", connection))
                 {
                     cmd.Parameters.AddWithValue("@RequestId", nueRequestMaster.RequestId);
                     cmd.Parameters.AddWithValue("@IsApprovalProcess", nueRequestMaster.IsApprovalProcess);
@@ -54,6 +102,8 @@ namespace NeuRequest.DB
                     cmd.Parameters.AddWithValue("@RequestStatus", nueRequestMaster.RequestStatus);
                     cmd.Parameters.AddWithValue("@PayloadId", nueRequestMaster.PayloadId);
                     cmd.Parameters.AddWithValue("@RequestCatType", nueRequestMaster.RequestCatType);
+                    cmd.Parameters.AddWithValue("@AddedOn", nueRequestMaster.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", nueRequestMaster.ModifiedOn);
                     modified = (int)cmd.ExecuteScalar();
                 }
                 connection.Close();
@@ -67,12 +117,15 @@ namespace NeuRequest.DB
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueLeaveCancelationRequest (UserId, StartDate, EndDate, Message) output INSERTED.ID VALUES(@UserId,@StartDate,@EndDate,@Message)", connection))
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueLeaveCancelationRequest (UserId, RequestId, StartDate, EndDate, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@StartDate,@EndDate,@Message,@AddedOn,@ModifiedOn)", connection))
                 {
                     cmd.Parameters.AddWithValue("@UserId", neuLeaveCancelation.UserId);
+                    cmd.Parameters.AddWithValue("@RequestId", neuLeaveCancelation.RequestId);
                     cmd.Parameters.AddWithValue("@StartDate", neuLeaveCancelation.StartDate);
                     cmd.Parameters.AddWithValue("@EndDate", neuLeaveCancelation.EndDate);
                     cmd.Parameters.AddWithValue("@Message", neuLeaveCancelation.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", neuLeaveCancelation.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", neuLeaveCancelation.ModifiedOn);
                     modified = (int)cmd.ExecuteScalar();
                 }
                 connection.Close();

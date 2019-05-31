@@ -10,8 +10,9 @@ namespace NeuRequest.Models
         public int Id { get; set; }
         public int RequestId { get; set; }
         public int UserId { get; set; }
+        public int OwnerId { get; set; }
         public int Completed { get; set; }
-        public string AddedOn { get; set; }
-        public string AddedModified { get; set; }
+        public DateTime AddedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
     }
 }

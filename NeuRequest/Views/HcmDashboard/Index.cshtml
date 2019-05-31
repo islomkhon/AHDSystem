@@ -1,6 +1,11 @@
 ﻿@using NeuRequest;
+@using NeuRequest.Models;
 
 @{
+    List<UserRequestUiGridRender> userRequests = ViewData["userRequestUiGridRenders"] as List<UserRequestUiGridRender>;
+    string statusRowString = "";
+    string requestTypeString = "";
+
     ViewBag.Title = "HCM Dashboard - ";
 }
 <style>
@@ -137,30 +142,94 @@
                                     </thead>
                                     <tbody>
 
+                                        @foreach (UserRequestUiGridRender item in userRequests)
+                                        {
+                                            statusRowString = "";
+                                            requestTypeString = "";
 
+                                            if (item.RequestStatus.ToString().ToLower() == "close")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-dark\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">Close</span>";
+                                            }
+                                            else if (item.RequestStatus.ToString().ToLower() == "withdraw")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-danger\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">Withdraw</span>";
+                                            }
+                                            else if (item.RequestStatus.ToString().ToLower() == "created")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-primary\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">Created</span>";
+                                            }
+                                            else if (item.RequestStatus.ToString().ToLower() == "in_approval")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-warning\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">In Approval</span>";
+                                            }
+                                            else if (item.RequestStatus.ToString().ToLower() == "completed")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-success\"  data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">Completed</span>";
+                                            }
+
+                                            if (item.RequestSubType.ToString().ToLower() == "leavecancelation")
+                                            {
+                                                requestTypeString = "Leave Cancelation";
+                                                leavecancelation++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "leavepastapply")
+                                            {
+                                                requestTypeString = "Past Leave Apply";
+                                                leavepastapply++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "leavewfhapply")
+                                            {
+                                                requestTypeString = "WFH Leave Apply";
+                                                leavewfhapply++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "leavebalanceenquiry")
+                                            {
+                                                requestTypeString = "Leave Balance Enquiry";
+                                                leavebalReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmaddressproof")
+                                            {
+                                                requestTypeString = "Address Proof Request";
+                                                addressProofReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmemployeeverification")
+                                            {
+                                                requestTypeString = "Employee Verification";
+                                                employeeVerificationReq++;
+                                            }
+
+                                            <tr style="">
+                                                <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)</span></a></td>
+                                                <td>@Html.Raw(@requestTypeString)</td>
+                                                <td>@Html.Raw(@statusRowString)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.getLocalAddedOn)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.getLocalModifiedOn)</td>
+                                            </tr>
+                                        }
 
                                         <!--<tr>
-                                            <td>
-                                                <div class="d-flex no-block align-items-center">
-                                                    <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
-                                                    <div class="">
-                                                        <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Elite Admin</td>
-                                            <td>
-                                                <div class="popover-icon">
-                                                    <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
-                                                    <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
-                                                    <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
-                                                    <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
-                                                </div>
-                                            </td>
-                                            <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
-                                            <td>35</td>
-                                            <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
-                                        </tr>-->
+        <td>
+            <div class="d-flex no-block align-items-center">
+                <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
+                <div class="">
+                    <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
+                </div>
+            </div>
+        </td>
+        <td>Elite Admin</td>
+        <td>
+            <div class="popover-icon">
+                <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
+                <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
+                <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
+                <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
+            </div>
+        </td>
+        <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
+        <td>35</td>
+        <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
+    </tr>-->
 
 
                                     </tbody>
