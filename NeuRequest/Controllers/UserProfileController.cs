@@ -12,6 +12,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using NeuRequest.Models;
+using NeuRequest.DB;
 
 namespace NeuRequest.Controllers
 {
@@ -24,6 +25,73 @@ namespace NeuRequest.Controllers
         private string aadInstance = EnsureTrailingSlash(ConfigurationManager.AppSettings["ida:AADInstance"]);
         private string graphResourceID = "https://graph.windows.net";
 
+
+        public async Task<ActionResult> Update()
+        {
+            string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
+            string userObjectID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
+            try
+            {
+                Uri servicePointUri = new Uri(graphResourceID);
+                Uri serviceRoot = new Uri(servicePointUri, tenantID);
+                ActiveDirectoryClient activeDirectoryClient = new ActiveDirectoryClient(serviceRoot,
+                      async () => await GetTokenForApplication());
+
+                // use the token for querying the graph to get the user details
+
+                var result = await activeDirectoryClient.Users
+                    .Where(u => u.ObjectId.Equals(userObjectID))
+                    .ExecuteAsync();
+                IUser user = result.CurrentPage.ToList().First();
+
+                UserProfile userProfile = new DataAccess().getUserProfile(user.Mail.ToLower());
+
+                if(userProfile == null)
+                {
+                    userProfile = new UserProfile();
+                    userProfile.Email = user.Mail.ToLower();
+                    userProfile.FullName = user.DisplayName;
+                }
+                ViewData["UserProfile"] = userProfile;
+                return View();
+            }
+            catch (AdalException)
+            {
+                // Return to error page.
+                return View("Error");
+            }
+            // if the above failed, the user needs to explicitly re-authenticate for the app to obtain the required token
+            catch (Exception)
+            {
+                return View("Relogin");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Update(UserProfile userProfile)
+        {
+            try
+            {
+                if (userProfile.isValid())
+                {
+                    userProfile = new DataAccess().saveUserProfile(userProfile);
+                    TempData["Message"] = "Data updated, relogin to take changes effect.";
+                    ViewData["UserProfile"] = userProfile;
+                    return View();
+                }
+                else
+                {
+                    throw new Exception("Invalid request");
+                }
+            }
+            catch (Exception e)
+            {
+                TempData["Message"] = "Invalid request "+e.Message;
+                ViewData["UserProfile"] = userProfile;
+                return View();
+            }
+        }
+        
         // GET: UserProfile
         public async Task<ActionResult> Index()
         {

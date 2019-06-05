@@ -148,3 +148,10 @@ C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.csproj.Cor
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.csproj.CopyComplete
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.dll
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\IKVM.OpenJDK.Charsets.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\IKVM.OpenJDK.Core.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\IKVM.OpenJDK.SwingAWT.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\IKVM.OpenJDK.Text.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\IKVM.OpenJDK.Util.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\IKVM.OpenJDK.XML.API.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\IKVM.Runtime.dll

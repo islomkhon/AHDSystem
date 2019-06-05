@@ -47,16 +47,21 @@ namespace NeuRequest.Controllers
                     .ExecuteAsync();
                 IUser user = result.CurrentPage.ToList().First();
 
-                if (!isAuth())
+                if (user != null)
                 {
-                    UserProfile userProfile = new DataAccess().getUserProfile(user.Mail.ToLower());
-                    if(userProfile != null)
+                    bool isAuthenticated = isAuth();
+                    if (isAuthenticated == false)
                     {
-                        Session["UserProfileSession"] = userProfile;
-                    }
-                    else
-                    {
-                        return RedirectToAction("SignIn", "Account");
+                        UserProfile userProfile = new DataAccess().getUserProfile(user.Mail.ToLower());
+                        //userProfile = null;
+                        if (userProfile != null)
+                        {
+                            Session["UserProfileSession"] = userProfile;
+                        }
+                        else
+                        {
+                            return RedirectToAction("Update", "UserProfile");
+                        }
                     }
                 }
                 ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);

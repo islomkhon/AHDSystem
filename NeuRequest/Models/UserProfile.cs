@@ -28,5 +28,35 @@ namespace NeuRequest.Models
         public string AddedOn { get; set; }
         public List<UserAccess> userAccess { get; set; }
 
+        public bool isValid()
+        {
+            if (this.NTPLID != null
+                && this.Email != null
+                && this.FullName != null
+                && this.FirstName != null
+                && this.LastName != null
+                && this.DateofJoining != null
+                && this.EmpStatusId != 0
+                && this.PracticeId != 0
+                && this.JLId != 0
+                && this.DSId != 0
+                && this.Location != null
+                && this.NTPLID.Trim() != ""
+                && this.Email.Trim() != ""
+                && this.FullName.Trim() != ""
+                && this.FirstName.Trim() != ""
+                && this.LastName.Trim() != ""
+                && this.DateofJoining.Trim() != ""
+                && this.Location.Trim() != "")
+            {
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
+        }
+
     }
 }
