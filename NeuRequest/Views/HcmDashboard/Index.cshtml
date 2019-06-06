@@ -6,14 +6,14 @@
     string statusRowString = "";
     string requestTypeString = "";
 
-    ViewBag.Title = "HCM Dashboard - ";
+    ViewBag.Title = "HCM Request Inbox ";
 }
 <style>
 </style>
 <nav class="inline-breadcrumb" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark">
         <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">HCM Request Dashboard</li>
+        <li class="breadcrumb-item active" aria-current="page">HCM Request Inbox</li>
     </ol>
 </nav>
 
@@ -24,8 +24,8 @@
                 <div class="btn-toolbar">
                     <div class="btn-group inline">
                         <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" data-toggle="modal" data-target="#exampleModal-4"><i class="mdi mdi-gondola"></i> Add New Request</button>
-                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmAHDDashboard/RequestHistory"><i class="mdi mdi-compare"></i> Request History</button>
-                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmAHDDashboard/ApprovalInbox"><i class="mdi mdi-compare"></i> Approval Inbox</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmDashboard/RequestHistory"><i class="mdi mdi-compare"></i> Request History</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmDashboard/ApprovalInbox"><i class="mdi mdi-compare"></i> Approval Inbox</button>
 
 
                     </div>

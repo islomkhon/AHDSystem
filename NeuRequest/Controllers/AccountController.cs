@@ -11,18 +11,26 @@ namespace NeuRequest.Controllers
 {
     public class AccountController : Controller
     {
-        public void SignIn()
+        public ActionResult SignIn()
         {
             // Send an OpenID Connect sign-in request.
             if (!Request.IsAuthenticated)
             {
                 HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "/" },
                     OpenIdConnectAuthenticationDefaults.AuthenticationType);
+               return Redirect("/");
             }
             else
             {
-                RedirectToAction("Index", "Home");
+                //Redirect("Home", "Index");
+                return Redirect("/Home/Index");
             }
+            //return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access" });
+        }
+
+        public ActionResult Redirect(string controler, string action)
+        {
+            return RedirectToAction(action, controler);
         }
 
         public void SignOut()

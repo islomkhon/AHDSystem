@@ -1,8 +1,12 @@
 ﻿@using NeuRequest;
+@using NeuRequest.Models;
 @{
-    ViewBag.Title = "HCM - ";
+    
+    UserProfile userProfileSession = ViewData["UserProfileSession"] as UserProfile;
+    var userAceess = userProfileSession.userAccess;
+    int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
 
-    //Layout = null;
+    ViewBag.Title = "HCM - ";
 }
 <!--<a href="/NeuUserManagement/Index">User Management</a>-->
 <style>
@@ -99,23 +103,50 @@
 
             </div>
 
-            <div class="col-xl-3 col-md-6">
+            @if (adminUsers > 0)
+            {
 
-                <div class="card bg-c-green update-card link-action-tigger" data-target="/NeuUserManagement/Index">
-                    <div class="card-block">
-                        <div class="row align-items-end">
-                            <div class="col-8">
-                                <h4 class="text-white">&nbsp;</h4>
-                                <h6 class="text-white m-b-0">Update User Data</h6>
-                            </div>
-                            <div class="col-4 text-right">
-                                <i class="mdi mdi-account-card-details main-icon"></i>
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="card bg-c-pink update-card link-action-tigger" data-target="/HcmDashboard/HCMApprovalInbox">
+                        <div class="card-block">
+                            <div class="row align-items-end">
+                                <div class="col-8">
+                                    <h4 class="text-white">&nbsp;</h4>
+                                    <h6 class="text-white m-b-0">HCM Approval Inbox</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="mdi mdi-altimeter main-icon"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
-            </div>
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="card bg-c-green update-card link-action-tigger" data-target="/NeuUserManagement/Index">
+                        <div class="card-block">
+                            <div class="row align-items-end">
+                                <div class="col-8">
+                                    <h4 class="text-white">&nbsp;</h4>
+                                    <h6 class="text-white m-b-0">Update User Data</h6>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <i class="mdi mdi-account-card-details main-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+            }
+
+
+
 
         </div>
     </div>

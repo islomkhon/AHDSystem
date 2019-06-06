@@ -33,6 +33,119 @@ namespace NeuRequest.Controllers
             return View();
         }
 
+        public ActionResult RequestHistory()
+        {
+            if (Session["UserProfileSession"] == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+
+            List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getUserHcmInactiveRequests(currentUser.Id);
+            ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
+            ViewData["UserProfileSession"] = currentUser;
+
+            return View();
+        }
+
+        public ActionResult ApprovalInbox()
+        {
+            if (Session["UserProfileSession"] == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+
+            List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getHcmActiveApproverRequests(currentUser.Id);
+            ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
+            ViewData["UserProfileSession"] = currentUser;
+
+            return View();
+        }
+
+        public ActionResult ApprovalHistory()
+        {
+            if (Session["UserProfileSession"] == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+
+            List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getHcmInactiveApproverRequests(currentUser.Id);
+            ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
+            ViewData["UserProfileSession"] = currentUser;
+
+            return View();
+        }
+
+        public ActionResult HCMApprovalInbox()
+        {
+            if (Session["UserProfileSession"] == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+
+            var userAceess = currentUser.userAccess;
+            int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
+            if (adminUsers > 0)
+            {
+                List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getHcmActiveApproverFinalRequests(currentUser.Id);
+                ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
+                ViewData["UserProfileSession"] = currentUser;
+
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access" });
+            }
+        }
+
+        public ActionResult ApprovalHCMHistory()
+        {
+            if (Session["UserProfileSession"] == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+
+            var userAceess = currentUser.userAccess;
+            int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
+            if (adminUsers > 0)
+            {
+                List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getHcmInactiveApproverFinalRequests(currentUser.Id);
+                ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
+                ViewData["UserProfileSession"] = currentUser;
+
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access" });
+            }
+        }
+
         public ActionResult SelfRequestDetails(String requestId, String message = null)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);

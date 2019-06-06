@@ -52,7 +52,7 @@ namespace NeuRequest.Controllers
                     bool isAuthenticated = isAuth();
                     if (isAuthenticated == false)
                     {
-                        UserProfile userProfile = new DataAccess().getUserProfile(user.Mail.ToLower());
+                        UserProfile userProfile = new DataAccess().getUserProfile(/*"priya.ignatius@neudesic.com"*/user.Mail.ToLower());
                         //userProfile = null;
                         if (userProfile != null)
                         {
@@ -65,6 +65,7 @@ namespace NeuRequest.Controllers
                     }
                 }
                 ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+
                 return View();
             }
             catch (AdalException)

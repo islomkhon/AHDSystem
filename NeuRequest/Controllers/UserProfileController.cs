@@ -44,7 +44,7 @@ namespace NeuRequest.Controllers
                     .ExecuteAsync();
                 IUser user = result.CurrentPage.ToList().First();
 
-                UserProfile userProfile = new DataAccess().getUserProfile(user.Mail.ToLower());
+                UserProfile userProfile = new DataAccess().getUserProfile(/*"priya.ignatius@neudesic.com"*/user.Mail.ToLower());
 
                 if(userProfile == null)
                 {

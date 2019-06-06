@@ -27,6 +27,16 @@
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                     <span class="mdi mdi-menu"></span>
                 </button>
+                <form class="col-4" action="/SearchResults/Request" method="get" enctype="multipart/form-data" autocomplete="off">
+                    <div class="form-group mb-0 ml-5">
+                        <div class="input-group search-field">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="mdi mdi-magnify"></i></span>
+                            </div>
+                            <input type="text" autocomplete="off" name="q" placeholder="Search Here" class="form-control">
+                        </div>
+                    </div>
+                </form>
                 <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex"></ul>
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item dropdown d-none d-xl-inline-block">

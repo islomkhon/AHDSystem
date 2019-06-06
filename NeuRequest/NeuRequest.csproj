@@ -209,6 +209,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HcmDashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NeuUserManagementController.cs" />
+    <Compile Include="Controllers\SearchResultsController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="DB\DataAccess.cs" />
     <Compile Include="Global.asax.cs">
@@ -223,6 +225,7 @@
     <Compile Include="Models\NueRequestActivityMaster.cs" />
     <Compile Include="Models\NueRequestAttchment.cs" />
     <Compile Include="Models\NueRequestMaster.cs" />
+    <Compile Include="Models\RequestSearchRender.cs" />
     <Compile Include="Models\UserAccess.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\UserRequestUiGridRender.cs" />
@@ -1357,6 +1360,15 @@
     <Content Include="Views\HcmDashboard\LeaveCancelation.cshtml" />
     <Content Include="Views\UserProfile\Update.cshtml" />
     <Content Include="Views\HcmDashboard\SelfRequestDetails.cshtml" />
+    <Content Include="Views\HcmDashboard\ApprovalInbox.cshtml" />
+    <Content Include="Views\HcmDashboard\HCMApprovalInbox.cshtml" />
+    <Content Include="Views\HcmDashboard\RequestHistory.cshtml" />
+    <Content Include="Views\HcmDashboard\ApprovalHistory.cshtml" />
+    <Content Include="Views\HcmDashboard\ApprovalHCMHistory.cshtml" />
+    <Content Include="Views\NeuUserManagement\Index.cshtml" />
+    <Content Include="Views\NeuUserManagement\EditNeuUserDetails.cshtml" />
+    <Content Include="Views\NeuUserManagement\AddNewNeuUser.cshtml" />
+    <Content Include="Views\SearchResults\Request.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

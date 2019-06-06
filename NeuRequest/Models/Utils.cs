@@ -7,6 +7,71 @@ namespace NeuRequest.Models
 {
     public class Utils
     {
+
+        public string generateRequestSearchUiRender(List<RequestSearchRender> requestSearchRenders, List<UserProfile> userProfiles)
+        {
+            string uiRender = "";
+            if(requestSearchRenders != null && requestSearchRenders.Count > 0)
+            {
+                for (int i = 0; i < requestSearchRenders.Count; i++)
+                {
+                    RequestSearchRender requestSearchRender = requestSearchRenders[i];
+                    UserRequest userRequest = requestSearchRender.userRequest;
+                    UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+                    string requestStatusStr = "";
+                    string heading = "";
+                    if (userRequest.RequestSubType == "LeaveCancelation")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Leave Cancelation";
+                    }
+
+                    if (userRequest.RequestStatus == "close")
+                    {
+                        requestStatusStr = "                                    <span class=\"label label-dark mr-2\">Close</span>\r\n";
+                    }
+                    else if (userRequest.RequestStatus == "completed")
+                    {
+                        requestStatusStr = "                                    <span class=\"label label-success mr-2\">Completed</span>\r\n";
+                    }
+                    else if (userRequest.RequestStatus == "withdraw")
+                    {
+                        requestStatusStr = "                                    <span class=\"label label-danger mr-2\">Withdraw</span>\r\n";
+                    }
+                    else if (userRequest.RequestStatus == "In_Approval")
+                    {
+                        requestStatusStr = "                                    <span class=\"label label-warning mr-2\">In Approval</span>\r\n";
+                    }
+                    else if (userRequest.RequestStatus == "created")
+                    {
+                        requestStatusStr = "                                    <span class=\"label label-primary mr-2\">Created</span>\r\n";
+                    }
+                    uiRender += "<div class=\"col-12 results\">\r\n" +
+                    "                        <div class=\"pt-4 border-bottom\">\r\n" +
+                    "                            <a class=\"d-block link h4 mb-0\" href=\"/HcmDashboard/SelfRequestDetails?requestId="+ userRequest.RequestId + "\" target=\"_blank\"><i class=\"mdi mdi-apple-keyboard-command\"></i> " + heading + "</a>\r\n" +
+                    "                            <a class=\"page-url text-primary\" href=\"javascript:void(0)\">#" + userRequest.RequestId + "</a>\r\n" +
+                    "                            <p class=\"page-description mt-1 w-75 text-muted\">\r\n" +
+                    requestStatusStr +
+                    "                                <span class=\"ml-2 mr-2\">" + requestOwner.FullName + " (" + requestOwner.NTPLID + ")</span>\r\n" +
+                    "                                <span class=\"text-muted\">\r\n" +
+                    "                                    <i class=\"mdi mdi-clock\"></i>\r\n" +
+                    userRequest.AddedOn.ToLocalTime()  +
+                    "                                </span>\r\n" +
+                    "                            </p>\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>";
+                }
+            }
+            if(uiRender.Trim() == "")
+            {
+                uiRender = "<div class=\"col-12 results\">\r\n" +
+                    "                        <div class=\"pt-4 border-bottom\">\r\n" +
+                    "                            <p class=\"page-description mt-1 w-75 text-muted\"> No data avilable for search query</p>\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>";
+            }
+            return uiRender;
+        }
+
         public string generateLeaveCancelationUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeuLeaveCancelationModal neuLeaveCancelationModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
