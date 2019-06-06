@@ -1,0 +1,169 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+@{
+    //List<NueUserProfile> userDetails = ViewData["userDetails"] as List<NueUserProfile>;
+    UserProfile currentUser = ViewData["UserProfileSession"] as UserProfile;
+    List<UserProfile> userProfiles = ViewData["userProfiles"] as List<UserProfile>;
+}
+@{
+    ViewBag.Title = "User Management";
+}
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Manage User Details</li>
+    </ol>
+</nav>
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title hide">Manage User Details..</h4>
+        <div class="row">
+            <div class="col-md-12 mb-4 mt-4">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn link-action-tigger" data-target="/NeuUserManagement/AddNewNeuUser"><i class="mdi mdi-account-plus text-primary"></i> Add New User</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary link-action-tigger hide" data-target="/NeuUserManagement/AddNewNeuUser"><i class="mdi mdi-account-plus text-primary"></i> Add New User</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <table id="user-summary-listing" class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>NTPL ID</th>
+                            <th>Email</th>
+                            <th>FullName</th>
+                            <th>Practice</th>
+                            <th>Employment Status</th>
+                            <th>Active</th>
+                            <th>Edit</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (UserProfile item in userProfiles)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.NTPLID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PracticeDesc)</td>
+                                <td>@Html.DisplayFor(modelItem => item.EmpStatusDesc)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Active)</td>
+                                <td>
+                                    <button class="btn btn-outline-info link-action-tigger" title="Edit" data-target="/NeuUserManagement/EditNeuUserDetails/@item.Id"><i class="mdi mdi-pencil"></i></button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-warning user-delete-tigger" data-target="@item.Id" title="Activate/Deactivate"><i class="mdi mdi-amplifier"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/Rebone/js")
+<script>
+    $(function () {
+        $(document).on('click', '.user-delete-tigger', function (e) {
+            var dataId = $(this).data('target');
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3f51b5',
+                cancelButtonColor: '#ff4081',
+                confirmButtonText: 'Great ',
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "OK",
+                        value: dataId,
+                        visible: true,
+                        className: "btn btn-primary confirm-user-remove",
+                        closeModal: true
+                    }
+                }
+            }).then((value) => {
+                if (value != null) {
+                    var formData = new FormData();
+                    formData.append("id", value);
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/NeuUserManagement/DeleteNeuUserDetails",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.Status == 'Ok') {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                            else {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+
+                }
+            });
+        });
+
+
+        $('#user-summary-listing').DataTable({
+            "aLengthMenu": [
+                [5, 10, 15, 20, 50, 100],
+                [5, 10, 15, 20, 50, 100]
+            ],
+            "iDisplayLength": 10,
+            "language": {
+                search: ""
+            }
+        });
+        $('#user-summary-listing').each(function () {
+            var datatable = $(this);
+            // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+            var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+            search_input.attr('placeholder', 'Search');
+            search_input.removeClass('form-control-sm');
+            // LENGTH - Inline-Form control
+            var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+            length_sel.removeClass('form-control-sm');
+        });
+    });
+</script>
