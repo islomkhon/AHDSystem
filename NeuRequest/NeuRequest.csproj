@@ -251,6 +251,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="defaultError.html" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -1388,6 +1389,7 @@
     <Content Include="Views\Shared\_MessagesList.cshtml" />
     <Content Include="Views\ProcessNotification\Process.cshtml" />
     <Content Include="Views\ProcessNotification\Index.cshtml" />
+    <Content Include="Views\Shared\InternalError.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

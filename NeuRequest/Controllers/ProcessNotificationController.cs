@@ -32,8 +32,8 @@ namespace NeuRequest.Controllers
             return View();
         }
 
-        // GET: ProcessNotification
-        public ActionResult Process(int notificationId)
+        [HandleError(View = "InternalError")]
+        public ActionResult Process(string notificationId)
         {
             try
             {
@@ -49,7 +49,16 @@ namespace NeuRequest.Controllers
                 ViewData["UserProfileSession"] = currentUser;
 
                 MessagesModel messagesModel = new MessagesModel();
-                messagesModel.MessageID = notificationId;
+                int notificationIdInt = 0;
+                try
+                {
+                    notificationIdInt = int.Parse(notificationId);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Invalid Request");
+                }
+                messagesModel.MessageID = notificationIdInt;
 
                 MessagesModel messagesModelUpdated = new DataAccess().updateNotification(messagesModel);
                 if(messagesModelUpdated != null)
@@ -65,13 +74,17 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("OpError", "ErrorHandilar", new { message = "Invalid Opration" });
+                    throw new Exception("Invalid Opration");
+                    //TempData["Message"] = "Invalid Opration";
+                    //return RedirectToAction("OpError", "ErrorHandilar", new { message = "Invalid Opration" });
                 }
                 return View();
             }
             catch (Exception e)
             {
-                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access" });
+                TempData["Message"] = e.Message;
+                throw new Exception(e.Message);
+                //return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access" });
             }
         }
     }
