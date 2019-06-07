@@ -1078,6 +1078,96 @@ namespace NeuRequest.DB
             return modified;
         }
 
+        public List<MessagesModel> getAllNotification(MessagesModel messagesModel)
+        {
+            List<MessagesModel> messages = new List<MessagesModel>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT MessageID, Message, EmptyMessage, Processed, UserId, nup.FullName, nup.NTPLID , " +
+                    "Target, Date FROM Messages m join NueUserProfile nup on m.UserId = nup.Id WHERE UserId = @UserId ORDER BY [Date] DESC;", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", messagesModel.UserId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            MessagesModel message = new MessagesModel();
+                            //var nt = dataReader["NTPLID"];
+                            message.MessageID = ConvertFromDBVal<int>(dataReader["MessageID"]);
+                            message.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            message.EmptyMessage = ConvertFromDBVal<string>(dataReader["EmptyMessage"]);
+                            message.Processed = ConvertFromDBVal<int>(dataReader["Processed"]);
+                            message.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            message.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            message.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
+                            message.Target = ConvertFromDBVal<string>(dataReader["Target"]);
+                            message.MessageDate = ConvertFromDBVal<DateTime>(dataReader["Date"]);
+                            messages.Add(message);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return messages;
+        }
+
+        public MessagesModel updateNotification(MessagesModel messagesModel)
+        {
+            MessagesModel messagesModelRet = null;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT MessageID, Message, EmptyMessage, Processed, UserId, nup.FullName, nup.NTPLID , " +
+                    "Target, Date FROM Messages m join NueUserProfile nup on m.UserId = nup.Id where MessageID = @MessageID", connection))
+                {
+                    cmd.Parameters.AddWithValue("@MessageID", messagesModel.MessageID);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            messagesModelRet = new MessagesModel();
+                            //var nt = dataReader["NTPLID"];
+                            messagesModelRet.MessageID = ConvertFromDBVal<int>(dataReader["MessageID"]);
+                            messagesModelRet.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            messagesModelRet.EmptyMessage = ConvertFromDBVal<string>(dataReader["EmptyMessage"]);
+                            messagesModelRet.Processed = ConvertFromDBVal<int>(dataReader["Processed"]);
+                            messagesModelRet.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            messagesModelRet.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            messagesModelRet.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
+                            messagesModelRet.Target = ConvertFromDBVal<string>(dataReader["Target"]);
+                            messagesModelRet.MessageDate = ConvertFromDBVal<DateTime>(dataReader["Date"]);
+                            break;
+                        }
+                    }
+
+                    if(messagesModelRet != null && messagesModelRet.MessageID == messagesModel.MessageID)
+                    {
+                        using (SqlCommand cmd1 = new SqlCommand("UPDATE Messages SET Processed = @Processed where MessageID = @MessageID", connection))
+                        {
+                            cmd1.Parameters.AddWithValue("@Processed", 1);
+                            cmd1.Parameters.AddWithValue("@MessageID", messagesModel.MessageID);
+                            int modified = (int)cmd1.ExecuteNonQuery();
+                            if(modified != -1)
+                            {
+                                messagesModelRet.Processed = 1;
+                            }
+                            else
+                            {
+                                messagesModelRet = null;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        messagesModelRet = null;
+                    }
+                }
+                connection.Close();
+            }
+            return messagesModelRet;
+        }
+
         private int updateUserProfile(UserProfile userProfile)
         {
             userProfile.Email = userProfile.Email.ToLower();

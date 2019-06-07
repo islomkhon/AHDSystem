@@ -154,3 +154,11 @@ C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.csproj.Cor
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.csproj.CopyComplete
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.dll
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Debug\NeuRequest.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.Core.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.Core.xml
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\TimeAgo.dll

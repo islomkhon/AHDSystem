@@ -39,6 +39,11 @@
                 </form>
                 <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex"></ul>
                 <ul class="navbar-nav navbar-nav-right">
+
+                    <li class="nav-item dropdown" id="notificationContainer">
+                        
+                    </li>
+
                     <li class="nav-item dropdown d-none d-xl-inline-block">
                         <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
                             <span class="profile-text">Hello, @userProfileSession.FullName !</span><img class="img-xs rounded-circle" src="~/Rebone/public/images/profile/profileImg.png" alt="Profile image">
@@ -134,10 +139,52 @@
     <!-- container-scroller -->
     <!-- plugins:js -->
     <!-- End custom js for this page-->
+    @Scripts.Render("~/Scripts/jquery.signalR-2.4.1.js")
+    @Scripts.Render("~/signalr/hubs")
+
     <script>
+
+        function getAllMessages() {
+            var tbl = $('#notificationContainer');
+            $.ajax({
+                type: "GET",
+                dataType: 'html',
+                url: '/home/GetMessages',
+                processData: false,
+                contentType: 'application/html ; charset:utf-8',
+                cache: false,
+                timeout: 600000,
+                success: function (result) {
+                    tbl.empty().append(result);
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+
+        }
+
+        
+
         $(function () {
             $(document).on('click', '.link-action-tigger', function (e) {
                 window.location = $(this).data('target');
+            });
+
+            var notifications = $.connection.messagesHub;
+
+            //debugger;
+            // Create a function that the hub can call to broadcast messages.
+            notifications.client.updateMessages = function () {
+                getAllMessages()
+
+            };
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                console.log("connection started")
+                getAllMessages();
+            }).fail(function (e) {
+                console.log(e);
             });
         });
     </script>

@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TimeAgo;
 
 namespace NeuRequest.Models
 {
     public class Utils
     {
+
+        public string RelativeDate(DateTime theDate)
+        {
+            string result = theDate.TimeAgo();
+            return result;
+        }
 
         public string generateRequestSearchUiRender(List<RequestSearchRender> requestSearchRenders, List<UserProfile> userProfiles)
         {

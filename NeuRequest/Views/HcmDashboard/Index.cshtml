@@ -209,27 +209,27 @@
                                         }
 
                                         <!--<tr>
-        <td>
-            <div class="d-flex no-block align-items-center">
-                <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
-                <div class="">
-                    <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
-                </div>
-            </div>
-        </td>
-        <td>Elite Admin</td>
-        <td>
-            <div class="popover-icon">
-                <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
-                <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
-                <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
-                <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
-            </div>
-        </td>
-        <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
-        <td>35</td>
-        <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
-    </tr>-->
+                                            <td>
+                                                <div class="d-flex no-block align-items-center">
+                                                    <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
+                                                    <div class="">
+                                                        <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>Elite Admin</td>
+                                            <td>
+                                                <div class="popover-icon">
+                                                    <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
+                                                    <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
+                                                    <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
+                                                    <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
+                                                </div>
+                                            </td>
+                                            <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
+                                            <td>35</td>
+                                            <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
+                                        </tr>-->
 
 
                                     </tbody>
@@ -243,6 +243,12 @@
         </div>
 
 
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="messagesTable"></div>
     </div>
 </div>
 
@@ -291,9 +297,13 @@
 
 @Scripts.Render("~/Rebone/js")
 @Scripts.Render("~/Rebone/public/js/tooltips.js")
-<script>
-    $(function () {
 
+
+<script>
+
+    
+
+    $(function () {
         $('#leavecancelation').html(@leavecancelation);
         $('#leavepastapply').html(@leavepastapply);
         $('#leavewfhapply').html(@leavewfhapply);
@@ -327,5 +337,8 @@
             var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
             length_sel.removeClass('form-control-sm');
         });
+
+        
+
     });
 </script>

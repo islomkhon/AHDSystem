@@ -67,6 +67,12 @@
     <Reference Include="IKVM.Runtime, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
       <HintPath>..\packages\IKVM.Runtime.7.2.4630.5\lib\IKVM.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -126,6 +132,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="TimeAgo, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TimeAgo.1.0.8\lib\portable-net4+sl5\TimeAgo.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -210,17 +219,21 @@
     <Compile Include="Controllers\HcmDashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NeuUserManagementController.cs" />
+    <Compile Include="Controllers\ProcessNotificationController.cs" />
     <Compile Include="Controllers\SearchResultsController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="DB\DataAccess.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\MessagesHub.cs" />
     <Compile Include="Models\AdalTokenCache.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\AttachmentLog.cs" />
     <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\LeaveCancelationUiRender.cs" />
+    <Compile Include="Models\Messages.cs" />
+    <Compile Include="Models\MessagesRepository.cs" />
     <Compile Include="Models\NueRequestAceessLog.cs" />
     <Compile Include="Models\NueRequestActivityMaster.cs" />
     <Compile Include="Models\NueRequestAttchment.cs" />
@@ -1334,6 +1347,8 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -1370,6 +1385,9 @@
     <Content Include="Views\NeuUserManagement\EditNeuUserDetails.cshtml" />
     <Content Include="Views\NeuUserManagement\AddNewNeuUser.cshtml" />
     <Content Include="Views\SearchResults\Request.cshtml" />
+    <Content Include="Views\Shared\_MessagesList.cshtml" />
+    <Content Include="Views\ProcessNotification\Process.cshtml" />
+    <Content Include="Views\ProcessNotification\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -80,6 +80,13 @@ namespace NeuRequest.Controllers
             }
         }
 
+        public ActionResult GetMessages()
+        {
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            MessagesRepository _messageRepository = new MessagesRepository();
+            return PartialView("_MessagesList", _messageRepository.GetAllUnreadMessages(currentUser.Id));
+        }
+
         public void RefreshSession()
         {
             HttpContext.GetOwinContext().Authentication.Challenge(

@@ -143,6 +143,7 @@ C:\Users\Monin.Jose\source\repos\NAHD\NeuAHD\bin\ko\System.Spatial.resources.dll
 C:\Users\Monin.Jose\source\repos\NAHD\NeuAHD\bin\ru\System.Spatial.resources.dll
 C:\Users\Monin.Jose\source\repos\NAHD\NeuAHD\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\Monin.Jose\source\repos\NAHD\NeuAHD\bin\zh-Hant\System.Spatial.resources.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuAHD\obj\Debug\NeuAHD.csprojAssemblyReference.cache
 C:\Users\Monin.Jose\source\repos\NAHD\NeuAHD\obj\Debug\NeuAHD.csproj.CoreCompileInputs.cache
 C:\Users\Monin.Jose\source\repos\NAHD\NeuAHD\obj\Debug\NeuAHD.csproj.CopyComplete
 C:\Users\Monin.Jose\source\repos\NAHD\NeuAHD\obj\Debug\NeuAHD.dll
