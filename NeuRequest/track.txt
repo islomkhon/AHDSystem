@@ -1964,6 +1964,11 @@ ALTER DATABASE BlogDemos SET ENABLE_BROKER WITH ROLLBACK IMMEDIATE ;
 ALTER DATABASE NueRequest SET ENABLE_BROKER WITH ROLLBACK IMMEDIATE ;
 
 
+----------------------------------------------------------------------
+
+https://angular.architectui.com/architectui-angular-pro/elements/cards
+file:///D:/data/Linearicons-Free-v1.0.0/Web%20Font/demo.html
+https://angular.architectui.com/architectui-angular-pro/elements/cards
 
 
 

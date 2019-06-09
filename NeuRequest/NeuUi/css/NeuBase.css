@@ -2499,6 +2499,194 @@
 .cursor-pointer {
     cursor:pointer;
 }
+
 .hide {
     display: none !important;
 }
+
+.card.action-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(26, 54, 126, 0.125);
+    border-radius: 0.25rem;
+}
+
+.card.action-card .mb-3, .my-3 {
+    margin-bottom: 1rem !important;
+}
+
+.card.action-card {
+    box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+    border-width: 0;
+    transition: all .2s;
+}
+
+    .card.action-card.mb-3 {
+        margin-bottom: 30px !important;
+    }
+
+    .card.action-card .card-header {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 0;
+        color: inherit;
+        background-color: #fff;
+        border-bottom: 1px solid rgba(26, 54, 126, 0.125);
+    }
+
+    .card.action-card .card-header, .card.action-card .card-title {
+        text-transform: uppercase;
+        color: rgba(13, 27, 62, 0.7);
+        font-weight: bold;
+        font-size: 0.88rem;
+    }
+
+    .card.action-card .card-header {
+        display: flex;
+        align-items: center;
+        border-bottom-width: 1px;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-right: 0.625rem;
+        height: 3.5rem;
+    }
+
+        .card.action-card .card-header:first-child {
+            border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+        }
+
+    .card.action-card .icon-gradient {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+
+    .card.action-card .card-header .header-icon {
+        font-size: 1.65rem;
+        margin-right: 0.625rem;
+    }
+
+    .card.action-card  .btn-actions-pane-right {
+        margin-left: auto;
+        white-space: nowrap;
+    }
+    .card.action-card .card-body {
+        flex: 1 1 auto;
+        padding: 1.25rem;
+    }
+    .card.action-card .card-footer {
+        padding: 0.75rem 1.25rem;
+        background-color: #fff;
+        border-top: 1px solid rgba(26, 54, 126, 0.125);
+    }
+    .card.action-card .d-block {
+        display: block !important;
+    }
+    .card.action-card .text-right {
+        text-align: right !important;
+    }
+    .card.action-card .card-footer:last-child {
+        border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+    }
+    .card.action-card .card-footer {
+        display: flex;
+        align-items: center;
+    }
+        .card.action-card .card-footer button {
+            border-radius: 0;
+        }
+        .card.action-card .card-footer input, .card.action-card .card-footer button, .card.action-card .card-footer select,
+        .card.action-card .card-footer optgroup, .card.action-card .card-footer textarea {
+            margin: 0;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+        .card.action-card .card-footer button, input {
+            overflow: visible;
+        }
+        .card.action-card .card-footer button, .card.action-card .card-footer select {
+            text-transform: none;
+        }
+        .card.action-card .card-footer button,
+        .card.action-card .card-footer [type="button"],
+        .card.action-card .card-footer [type="reset"],
+        .card.action-card .card-footer [type="submit"] {
+            -webkit-appearance: button;
+        }
+        .card.action-card .card-footer .btn {
+            display: inline-block;
+            font-weight: 400;
+            color: #495057;
+            text-align: center;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+        }
+        .card.action-card .card-footer .btn-link {
+            font-weight: 400;
+            color: #3f6ad8;
+        }
+        .card.action-card .card-footer .btn-sm,
+        .card.action-card .card-footer .btn-group-sm > .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+        }
+        .card.action-card .card-footer .mr-2,
+        .card.action-card .card-footer .mx-2 {
+            margin-right: 0.5rem !important;
+        }
+        .card.action-card .card-footer a,
+        .card.action-card .card-footer button,
+        .card.action-card .card-footer .btn {
+            outline: none !important;
+        }
+        .card.action-card .card-footer .btn {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .card.action-card .card-footer .btn {
+            position: relative;
+            transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+        }
+            .card.action-card .card-footer .btn:not(:disabled):not(.disabled) {
+                cursor: pointer;
+            }
+
+        .card.action-card .card-footer .btn-lg,
+        .card.action-card .card-footer .btn-group-lg > .btn {
+            padding: 0.5rem 1rem;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            border-radius: 0.3rem;
+        }
+
+        .card.action-card .card-footer .btn {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .card.action-card .card-footer .btn-success {
+            color: #fff;
+            background-color: #3ac47d;
+            border-color: #3ac47d;
+        }
+        .card.action-card .card-footer .btn {
+            position: relative;
+            transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+        }

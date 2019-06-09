@@ -273,6 +273,8 @@
     <Content Include="Rebone\public\css\style.css" />
     <Content Include="Rebone\public\css\style2.css" />
     <Content Include="Rebone\public\favicon.ico" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.svg" />
+    <Content Include="Rebone\public\fonts\linear.css" />
     <Content Include="Rebone\public\images\1.jpg" />
     <Content Include="Rebone\public\images\auth\login_1.jpg" />
     <Content Include="Rebone\public\images\auth\login_2.jpg" />
@@ -1351,6 +1353,10 @@
     <Content Include="Rebone\public\vendors\summernote\dist\font\summernoted41d.eot" />
     <Content Include="App_Data\request-number-tracker.db" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.eot" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.ttf" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.woff" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.woff2" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

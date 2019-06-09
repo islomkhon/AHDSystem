@@ -14,7 +14,8 @@ namespace NeuRequest
                        "~/Rebone/public/vendors/iconfonts/puse-icons-feather/feather.css",
                        "~/Rebone/public/vendors/css/vendor.bundle.base.css",
                        "~/Rebone/public/vendors/css/vendor.bundle.addons.css",
-                       "~/Rebone/public/css/style.css"));
+                       "~/Rebone/public/css/style.css",
+                       "~/Rebone/public/fonts/linear.css"));
 
             bundles.Add(new ScriptBundle("~/Rebone/js").Include(
                       "~/Rebone/public/vendors/js/vendor.bundle.base.js",

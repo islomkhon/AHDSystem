@@ -1,12 +1,21 @@
 ﻿@model IEnumerable<NeuRequest.Models.Messages>
 @{
     var unreadCount = Model.Where(x => x.Processed == 0).Count();
+    var unreadCountStr = "";
+    if(unreadCount > 99)
+    {
+        unreadCountStr = "99+";
+    }
+    else
+    {
+        unreadCountStr = unreadCount.ToString();
+    }
     int counter = 0;
     List<NeuRequest.Models.Messages> messages  = Model.Take(5).ToList();
 }
 <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
     <i class="mdi mdi-file-document-box"></i>
-    <span class="count">@unreadCount</span>
+    <span class="count">@unreadCountStr</span>
 </a>
 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
     <div class="dropdown-item">

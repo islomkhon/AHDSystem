@@ -398,6 +398,57 @@
     .widget .dropdown-toggle {
         font-size: large;
     }
+    .shadow-overflow {
+        position: relative;
+    }
+    .shadow-overflow::after, .shadow-overflow::before {
+            width: 100%;
+            bottom: auto;
+            top: 0;
+            left: 0;
+            height: 1.5rem;
+            position: absolute;
+            z-index: 13;
+            content: '';
+            background: linear-gradient(to bottom, white 20%, rgba(255, 255, 255, 0) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#00ffffff', GradientType=0);
+    }
+
+    .widget .card-footer {
+        padding: 0.75rem 1.25rem;
+        background-color: #fff;
+        border-top: 1px solid rgba(26, 54, 126, 0.125);
+    }
+        .widget .card-footer:last-child {
+            border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+        }
+    .widget.card .card-footer {
+        display: flex;
+        align-items: center;
+    }
+    .widget .card-header .header-icon {
+        font-size: 1.85rem;
+        margin-right: 0.625rem;
+    }
+    .icon-gradient {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+
+    .bg-malibu-beach {
+        background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%) !important;
+    }
+
+    .bg-amy-crisp {
+        background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%) !important;
+    }
+
+    .bg-happy-itmeo {
+        background-image: linear-gradient(180deg, #2af598 0%, #009efd 100%) !important;
+    }
+
 
 </style>
 <div class="card">
@@ -493,7 +544,7 @@
 
                     <div class="card-header-tab card-header">
                         <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
-                            <i class="mdi mdi-airballoon icon-gradient bg-malibu-beach mr-2"></i>
+                            <i class="lnr lnr-inbox header-icon icon-gradient bg-malibu-beach mr-2"></i>
                             Your Requests
                         </div>
                         <div class="btn-actions-pane-right text-capitalize actions-icon-btn dropdown">
@@ -504,8 +555,8 @@
                     </div>
 
                     <div class="scroll-area-lg">
-                        <perfect-scrollbar class="ps-show-limits">
-                            <div class="ps ps--active-y">
+                        <perfect-scrollbar class="ps-show-limits shadow-overflow">
+                            <div class="ps ps--active-y ">
                                 <div class="ps-content">
                                     <ul class="todo-list-wrapper list-group list-group-flush">
 
@@ -599,6 +650,7 @@
                         </perfect-scrollbar>
                     </div>
 
+                    <div class="card-footer"></div>
 
                 </div>
             </div>
@@ -607,7 +659,7 @@
 
                     <div class="card-header-tab card-header">
                         <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
-                            <i class="mdi mdi-city icon-gradient bg-malibu-beach mr-2"></i>
+                            <i class="lnr lnr-enter header-icon icon-gradient bg-sunny-morning mr-2"></i>
                             For Your Approval
                         </div>
                         <div class="btn-actions-pane-right text-capitalize actions-icon-btn dropdown">
@@ -618,7 +670,7 @@
                     </div>
 
                     <div class="scroll-area-lg">
-                        <perfect-scrollbar class="ps-show-limits">
+                        <perfect-scrollbar class="ps-show-limits shadow-overflow">
                             <div class="ps ps--active-y">
                                 <div class="ps-content">
                                     <ul class="todo-list-wrapper list-group list-group-flush">
@@ -697,8 +749,10 @@
                                                 <div class="todo-indicator bg-@sideBarClass"></div>
                                                 <div class="widget-content p-0">
                                                     <div class="widget-content-wrapper">
-                                                        <div class="widget-content-left flex2"><div class="widget-heading">@requestTypeString</div>
-                                                            <div class="widget-subheading">by @item.FullName (@item.NTPLID) - @item.RequestId</div></div>
+                                                        <div class="widget-content-left flex2">
+                                                            <div class="widget-heading">@requestTypeString</div>
+                                                            <div class="widget-subheading">by @item.FullName (@item.NTPLID) - @item.RequestId</div>
+                                                        </div>
                                                         <div class="widget-content-right ml-3">@Html.Raw(@statusRowString)</div>
                                                     </div>
                                                 </div>
@@ -714,6 +768,7 @@
                         </perfect-scrollbar>
                     </div>
 
+                    <div class="card-footer"></div>
 
                 </div>
             </div>
