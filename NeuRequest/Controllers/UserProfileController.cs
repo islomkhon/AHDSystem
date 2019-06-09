@@ -28,6 +28,10 @@ namespace NeuRequest.Controllers
 
         public async Task<ActionResult> Update()
         {
+            Session["ErrorMessage"] = null;
+            Session["ErrorCode"] = null;
+            Session["ErrorType"] = null;
+
             string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
             string userObjectID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
             try
@@ -46,12 +50,20 @@ namespace NeuRequest.Controllers
 
                 UserProfile userProfile = new DataAccess().getUserProfile(/*"priya.ignatius@neudesic.com"*/user.Mail.ToLower());
 
-                if(userProfile == null)
+                if(userProfile == null || userProfile.Email == null || userProfile.Email.Trim() == "")
                 {
                     userProfile = new UserProfile();
                     userProfile.Email = user.Mail.ToLower();
                     userProfile.FullName = user.DisplayName;
                 }
+                else if (userProfile.Active != 1)
+                {
+                    Session["ErrorType"] = "InactiveUser";
+                    Session["ErrorMessage"] = "Your account is disabled. <br/> Please contact HCM";
+                    Session["ErrorCode"] = "500";
+                    return RedirectToAction("OpError", "ErrorHandilar");
+                }
+
                 ViewData["UserProfile"] = userProfile;
                 return View();
             }

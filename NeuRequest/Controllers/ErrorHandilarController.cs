@@ -11,6 +11,12 @@ namespace NeuRequest.Controllers
         // GET: ErrorHandilar
         public ActionResult OpError(String message, String errorCode)
         {
+            if(message == null && (Session["ErrorType"] != null && Session["ErrorType"] as string == "InactiveUser"))
+            {
+                message = Session["ErrorMessage"] as string;
+                errorCode = Session["ErrorCode"] as string;
+            }
+
             TempData["Message"] = message;
             TempData["ErrorCode"] = errorCode;
             return View("~/Views/ErrorHandilar/OpError.cshtml");

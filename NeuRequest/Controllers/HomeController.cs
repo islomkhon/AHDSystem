@@ -28,11 +28,14 @@ namespace NeuRequest.Controllers
 
         public async Task<ActionResult> Index()
         {
+            Session["ErrorMessage"] = null;
+            Session["ErrorCode"] = null;
+            Session["ErrorType"] = null;
             if (!Request.IsAuthenticated)
             {
                 return RedirectToAction("SignIn", "Account");
             }
-
+            int authUser = -1;
             string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
             string userObjectID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
             try
@@ -53,16 +56,23 @@ namespace NeuRequest.Controllers
                     if (isAuthenticated == false)
                     {
                         UserProfile userProfile = new DataAccess().getUserProfile(/*"priya.ignatius@neudesic.com"*/user.Mail.ToLower());
-                        //userProfile = null;
-                        if (userProfile != null)
-                        {
-                            Session["UserProfileSession"] = userProfile;
-                        }
-                        else
+                        if (userProfile == null || userProfile.Email == null || userProfile.Email.Trim() == "")
                         {
                             return RedirectToAction("Update", "UserProfile");
                         }
+                        else if (userProfile.Active != 1)
+                        {
+                            Session["ErrorType"] = "InactiveUser";
+                            Session["ErrorMessage"] = "Your account is disabled. <br/> Please contact HCM";
+                            Session["ErrorCode"] = "500";
+                            return RedirectToAction("OpError", "ErrorHandilar");
+                        }
+                        Session["UserProfileSession"] = userProfile;
                     }
+                }
+                else
+                {
+                    throw new Exception("Invalid opration");
                 }
                 ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                 List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getUserHcmActiveRequests((Session["UserProfileSession"] as UserProfile).Id, 5);
@@ -71,6 +81,7 @@ namespace NeuRequest.Controllers
                 ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
 
                 return View();
+
             }
             catch (AdalException)
             {
@@ -83,7 +94,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
         }
-
+        
         public ActionResult GetMessages()
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
