@@ -891,7 +891,8 @@ namespace NeuRequest.DB
                                 FROM NueUserProfile as NP join EmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
                                 join Practice as pc on NP.Practice = pc.Id 
                                 join JobLevel as jl on NP.JobLevel = jl.Id 
-                                join Designation as ds on NP.Designation = ds.Id";
+                                join Designation as ds on NP.Designation = ds.Id
+                                WHERE NP.Active = 1";
                 SqlCommand command = new SqlCommand(sql, connection);
                 using (SqlDataReader dataReader = command.ExecuteReader())
                 {
@@ -965,7 +966,8 @@ namespace NeuRequest.DB
                                 join Practice as pc on NP.Practice = pc.Id 
                                 join JobLevel as jl on NP.JobLevel = jl.Id 
                                 join Designation as ds on NP.Designation = ds.Id 
-                                where Email != @Email";
+                                where Email != @Email
+                                AND Active = 1";
                 SqlCommand command = new SqlCommand(sql, connection);
                 SqlParameter param = new SqlParameter();
                 param.ParameterName = "@Email";
