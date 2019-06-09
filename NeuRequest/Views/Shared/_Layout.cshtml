@@ -41,7 +41,7 @@
                 <ul class="navbar-nav navbar-nav-right">
 
                     <li class="nav-item dropdown" id="notificationContainer">
-                        
+
                     </li>
 
                     <li class="nav-item dropdown d-none d-xl-inline-block">
@@ -164,9 +164,15 @@
 
         }
 
-        
+
 
         $(function () {
+
+            $(document).on('click', '.link-action-tigger-tab', function (e) {
+                var win = window.open($(this).data('target'), '_blank');
+                win.focus();
+            });
+
             $(document).on('click', '.link-action-tigger', function (e) {
                 window.location = $(this).data('target');
             });
@@ -187,6 +193,20 @@
                 console.log(e);
             });
         });
+    </script>
+    <script type="text/javascript">
+        var _paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "http://localhost:9090/matomo/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            _paq.push(['setUserId', '@userProfileSession.FullName']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
     </script>
 </body>
 </html>

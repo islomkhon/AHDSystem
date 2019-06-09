@@ -114,7 +114,7 @@ namespace NeuRequest.Controllers
             }
             else
             {
-                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access" });
+                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access", errorCode = "404" });
             }
         }
 
@@ -142,7 +142,7 @@ namespace NeuRequest.Controllers
             }
             else
             {
-                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access" });
+                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access", errorCode = "404" });
             }
         }
 
@@ -167,9 +167,9 @@ namespace NeuRequest.Controllers
             NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
             List<NueRequestActivityModel> nueRequestActivityModels = new DataAccess().getRequestLogs(requestId);
             List<AttachmentLogModel> attachmentLogModels = new DataAccess().getAttachmentLogs(requestId);
-            if (userRequest == null)
+            if (userRequest == null || userRequest.RequestId == null)
             {
-                throw new Exception("Invalid request");
+                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid Request", errorCode = "404" });
             }
             
             if (adminUsers > 0)
@@ -177,7 +177,7 @@ namespace NeuRequest.Controllers
                 userAccess = true;
             }
 
-            if(nueRequestAceessLogs.Where(x => (x.UserId == currentUser.Id && x.OwnerId != currentUser.Id)).Count() > 0)
+            if(nueRequestAceessLogs.Where(x => (x.UserId == currentUser.Id)).Count() > 0)
             {
                 userAccess = true;
             }
@@ -219,12 +219,15 @@ namespace NeuRequest.Controllers
 
                     ViewData["RequestType"] = "Leave Cancelation";
                 }
-                
+                else
+                {
+                    return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Coming soon", errorCode = "404" });
+                }
 
             }
             else
             {
-
+                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access", errorCode = "404" });
             }
 
             return View();
@@ -349,6 +352,7 @@ namespace NeuRequest.Controllers
                         if(newRequestTempInternId != -1)
                         {
                             List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<MessagesModel> messages = new List<MessagesModel>();
 
                             NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
@@ -367,7 +371,18 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
 
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = "Leave Cancelation";
+                            messagesModel.EmptyMessage = currentUser.FullName + " submitted leave cancellation request";
+                            messagesModel.Processed = 0;
+                            messagesModel.UserId = int.Parse(leaveCancelationUiRender.leaveCancelationApprover);
+                            messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId="+ newRequestId;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
+                            new DataAccess().addNeuMessagess(messages);
+
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
                             return RedirectToAction("Index");
@@ -619,6 +634,8 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
+                            List<MessagesModel> messages = new List<MessagesModel>();
+
                             NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                             if (userComment != null && userComment.Trim() != "")
@@ -644,6 +661,17 @@ namespace NeuRequest.Controllers
                             nueRequestActivity2.AddedOn = dateCreated;
                             nueRequestActivity2.ModifiedOn = dateCreated;
                             new DataAccess().addRequestComment(nueRequestActivity2);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = "Leave Cancelation";
+                            messagesModel.EmptyMessage = currentUser.FullName + " approved(HCM) leave cancellation request";
+                            messagesModel.Processed = 0;
+                            messagesModel.UserId = userRequest.OwnerId;
+                            messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + userRequest.RequestId;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
+                            new DataAccess().addNeuMessagess(messages);
 
                             return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                         }
@@ -727,6 +755,8 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if(newRequestTempInternId != -1)
                         {
+                            List<MessagesModel> messages = new List<MessagesModel>();
+
                             NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") approved the request.";
                             if (userComment != null && userComment.Trim() != "")
@@ -752,7 +782,36 @@ namespace NeuRequest.Controllers
                             nueRequestActivity2.AddedOn = dateCreated;
                             nueRequestActivity2.ModifiedOn = dateCreated;
                             new DataAccess().addRequestComment(nueRequestActivity2);
-                            
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = "Leave Cancelation";
+                            messagesModel.EmptyMessage = currentUser.FullName + " approved leave cancellation request";
+                            messagesModel.Processed = 0;
+                            messagesModel.UserId = userRequest.OwnerId;
+                            messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + userRequest.RequestId;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
+                            List<NueRequestAceessLog> nueRequestAceessLogsTemp = new DataAccess().getRequestAccessList(requestId);
+                            if(nueRequestAceessLogsTemp.Where(x => x.Completed == 0).Count() <= 0)
+                            {
+                                List<UserProfile> userProfilesTemp = userProfiles.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+                                foreach (var item in userProfilesTemp)
+                                {
+                                    messagesModel = new MessagesModel();
+                                    messagesModel.Message = "Leave Cancelation";
+                                    messagesModel.EmptyMessage = userRequest.FullName + " submited leave cancellation request";
+                                    messagesModel.Processed = 0;
+                                    messagesModel.UserId = item.Id;
+                                    messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + userRequest.RequestId;
+                                    messagesModel.MessageDate = dateCreated;
+                                    messages.Add(messagesModel);
+                                }
+
+                            }
+
+                            new DataAccess().addNeuMessagess(messages);
+
                             return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                         }
                         else

@@ -383,31 +383,31 @@ namespace NeuRequest.Models
                     if(nueRequestActivityModel.PayloadTypeDesc == "Comment")
                     {
                         able = true;
-                        body = "                                                        <p>" + nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") " + nueRequestActivityModel.Payload + "</p>\r\n";
+                        body = "                                                        <p>" + nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") - " + nueRequestActivityModel.Payload + "</p>\r\n";
                         heading = "                                                        <h6 class=\"timeline-title\">Comment Added</h6>\r\n";
                     }
                     else if (nueRequestActivityModel.PayloadTypeDesc == "L1 Approval")
                     {
                         able = true;
-                        body = "                                                        <p>" + nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") " + nueRequestActivityModel.Payload + "</p>\r\n";
+                        body = "                                                        <p>" + nueRequestActivityModel.Payload + "</p>\r\n";
                         heading = "                                                        <h6 class=\"timeline-title\">Level 1 Approval</h6>\r\n";
                     }
                     else if (nueRequestActivityModel.PayloadTypeDesc == "HCM Approval")
                     {
                         able = true;
-                        body = "                                                        <p>" + nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") " + nueRequestActivityModel.Payload + "</p>\r\n";
+                        body = "                                                        <p>" + nueRequestActivityModel.Payload + "</p>\r\n";
                         heading = "                                                        <h6 class=\"timeline-title\">HCM Approval</h6>\r\n";
                     }
                     else if (nueRequestActivityModel.PayloadTypeDesc == "Close")
                     {
                         able = true;
-                        body = "                                                        <p>" + nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") " + nueRequestActivityModel.Payload + "</p>\r\n";
+                        body = "                                                        <p>" + nueRequestActivityModel.Payload + "</p>\r\n";
                         heading = "                                                        <h6 class=\"timeline-title\">Request Closed</h6>\r\n";
                     }
                     else if (nueRequestActivityModel.PayloadTypeDesc == "Withdraw")
                     {
                         able = true;
-                        body = "                                                        <p>" + nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") " + nueRequestActivityModel.Payload + "</p>\r\n";
+                        body = "                                                        <p>" + nueRequestActivityModel.Payload + "</p>\r\n";
                         heading = "                                                        <h6 class=\"timeline-title\">Request Withdrawn </h6>\r\n";
                     }
                     else if (nueRequestActivityModel.PayloadTypeDesc == "File")
@@ -422,7 +422,7 @@ namespace NeuRequest.Models
                             body = "                                                        <div>\r\n" +
                                             "                                                            <div class=\"thumb hide\"><i class=\"mdi mdi-attachment\"></i></div>\r\n" +
                                             "                                                            <div class=\"details\">\r\n" +
-                                            "                                                                <p class=\"file-name hide\">"+ attachmentLogModel.FileName+""+ attachmentLogModel.FileExt + "</p>\r\n" +
+                                            "                                                                <p class=\"file-name\">"+ nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") </p>\r\n" +
                                             "                                                                <div class=\"buttons\">\r\n" +
                                             "                                                                    <a href=\"/HcmDashboard/DownloadAttachment?requestId="+ attachmentLogModel.Request + "&amp;vFile="+ attachmentLogModel.VFileName + "\" target=\"_blank\" class=\"download\">" + attachmentLogModel.FileName + "" + attachmentLogModel.FileExt + "</a>\r\n" +
                                             "                                                                </div>\r\n" +

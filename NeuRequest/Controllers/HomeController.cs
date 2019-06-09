@@ -65,6 +65,10 @@ namespace NeuRequest.Controllers
                     }
                 }
                 ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+                List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getUserHcmActiveRequests((Session["UserProfileSession"] as UserProfile).Id, 5);
+                List<UserRequestUiGridRender> userRequestApproverUiGridRenders = new DataAccess().getHcmActiveApproverRequests((Session["UserProfileSession"] as UserProfile).Id, 5);
+                ViewData["userRequestApproverUiGridRenders"] = userRequestApproverUiGridRenders;
+                ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
 
                 return View();
             }

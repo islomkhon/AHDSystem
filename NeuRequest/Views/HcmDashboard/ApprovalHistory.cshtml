@@ -132,6 +132,7 @@
                                     <thead>
                                         <tr class="border-0">
                                             <th class="border-0">#Id</th>
+                                            <th class="border-0">User</th>
                                             <th class="border-0">Type</th>
                                             <th class="border-0">Status</th>
                                             <th class="border-0">Date Created</th>
@@ -198,7 +199,8 @@
                                             }
 
                                             <tr style="">
-                                                <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)</span></a></td>
+                                                <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)<span class="hide">item.RequestId</span></span></a></td>
+                                                <td>@item.FullName (@item.NTPLID)</td>
                                                 <td>@Html.Raw(@requestTypeString)</td>
                                                 <td>@Html.Raw(@statusRowString)</td>
                                                 <td>@Html.DisplayFor(modelItem => item.getLocalAddedOn)</td>

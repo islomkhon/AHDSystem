@@ -31,7 +31,49 @@ namespace NeuRequest.DB
                                                         join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
                                                         where nral.OwnerId = @OwnerId
 														and (nrs.RequestStatus != 'withdraw' and nrs.RequestStatus != 'close')
-                                                        and nrt.RequestType = @RequestType", connection))
+                                                        and nrt.RequestType = @RequestType ORDER BY nrm.AddedOn DESC;", connection))
+                {
+                    cmd.Parameters.AddWithValue("@OwnerId", uid);
+                    cmd.Parameters.AddWithValue("@RequestType", "HCM");
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            UserRequestUiGridRender userRequestUiGridRender = new UserRequestUiGridRender();
+                            userRequestUiGridRender.NueRequestMasterId = ConvertFromDBVal<int>(dataReader["NueRequestMasterId"]);
+                            userRequestUiGridRender.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            userRequestUiGridRender.NueRequestSubTypeId = ConvertFromDBVal<int>(dataReader["NueRequestSubTypeId"]);
+                            userRequestUiGridRender.RequestSubType = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
+                            userRequestUiGridRender.NueRequestStatusId = ConvertFromDBVal<int>(dataReader["NueRequestStatusId"]);
+                            userRequestUiGridRender.RequestStatus = ConvertFromDBVal<string>(dataReader["RequestStatus"]);
+                            userRequestUiGridRender.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            userRequestUiGridRender.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            userRequestUiGridRenders.Add(userRequestUiGridRender);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return userRequestUiGridRenders;
+        }
+
+
+        public List<UserRequestUiGridRender> getUserHcmActiveRequests(int uid, int limit)
+        {
+            List<UserRequestUiGridRender> userRequestUiGridRenders = new List<UserRequestUiGridRender>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT TOP "+limit+@" nrm.Id as NueRequestMasterId, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                                                        nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
+                                                        NueRequestMaster nrm 
+                                                        join NueRequestAceessLog nral on nrm.Id = nral.RequestId
+                                                        join NueRequestSubType nrst on nrm.RequestCatType = nrst.id
+                                                        join NueRequestType nrt on nrst.RequestType = nrt.Id
+                                                        join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
+                                                        where nral.OwnerId = @OwnerId
+														and (nrs.RequestStatus != 'withdraw' and nrs.RequestStatus != 'close')
+                                                        and nrt.RequestType = @RequestType ORDER BY nrm.AddedOn DESC;", connection))
                 {
                     cmd.Parameters.AddWithValue("@OwnerId", uid);
                     cmd.Parameters.AddWithValue("@RequestType", "HCM");
@@ -104,13 +146,14 @@ namespace NeuRequest.DB
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nup.Id as UserId, nup.FullName as FullName, nup.NTPLID as NTPLID, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
                                                         nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
                                                         NueRequestMaster nrm 
                                                         join NueRequestAceessLog nral on nrm.Id = nral.RequestId
                                                         join NueRequestSubType nrst on nrm.RequestCatType = nrst.id
                                                         join NueRequestType nrt on nrst.RequestType = nrt.Id
                                                         join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
+                                                        join NueUserProfile nup on nrm.CreatedBy = nup.Id
                                                         where (nrs.RequestStatus != 'withdraw' and nrs.RequestStatus != 'close')
                                                         and nrt.RequestType = @RequestType
 														and nral.Completed = @Completed
@@ -126,6 +169,57 @@ namespace NeuRequest.DB
                         {
                             UserRequestUiGridRender userRequestUiGridRender = new UserRequestUiGridRender();
                             userRequestUiGridRender.NueRequestMasterId = ConvertFromDBVal<int>(dataReader["NueRequestMasterId"]);
+                            userRequestUiGridRender.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            userRequestUiGridRender.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            userRequestUiGridRender.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
+                            userRequestUiGridRender.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            userRequestUiGridRender.NueRequestSubTypeId = ConvertFromDBVal<int>(dataReader["NueRequestSubTypeId"]);
+                            userRequestUiGridRender.RequestSubType = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
+                            userRequestUiGridRender.NueRequestStatusId = ConvertFromDBVal<int>(dataReader["NueRequestStatusId"]);
+                            userRequestUiGridRender.RequestStatus = ConvertFromDBVal<string>(dataReader["RequestStatus"]);
+                            userRequestUiGridRender.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            userRequestUiGridRender.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            userRequestUiGridRenders.Add(userRequestUiGridRender);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return userRequestUiGridRenders;
+        }
+
+        public List<UserRequestUiGridRender> getHcmActiveApproverRequests(int uid, int limit)
+        {
+            List<UserRequestUiGridRender> userRequestUiGridRenders = new List<UserRequestUiGridRender>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT TOP "+limit+@" nrm.Id as NueRequestMasterId, nup.Id as UserId, nup.FullName as FullName, nup.NTPLID as NTPLID, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                                                        nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
+                                                        NueRequestMaster nrm 
+                                                        join NueRequestAceessLog nral on nrm.Id = nral.RequestId
+                                                        join NueRequestSubType nrst on nrm.RequestCatType = nrst.id
+                                                        join NueRequestType nrt on nrst.RequestType = nrt.Id
+                                                        join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
+                                                        join NueUserProfile nup on nrm.CreatedBy = nup.Id
+                                                        where (nrs.RequestStatus != 'withdraw' and nrs.RequestStatus != 'close')
+                                                        and nrt.RequestType = @RequestType
+														and nral.Completed = @Completed
+														and nral.OwnerId != nral.UserId
+														and nral.UserId = @OwnerId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@OwnerId", uid);
+                    cmd.Parameters.AddWithValue("@Completed", 0);
+                    cmd.Parameters.AddWithValue("@RequestType", "HCM");
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            UserRequestUiGridRender userRequestUiGridRender = new UserRequestUiGridRender();
+                            userRequestUiGridRender.NueRequestMasterId = ConvertFromDBVal<int>(dataReader["NueRequestMasterId"]);
+                            userRequestUiGridRender.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            userRequestUiGridRender.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            userRequestUiGridRender.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
                             userRequestUiGridRender.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
                             userRequestUiGridRender.NueRequestSubTypeId = ConvertFromDBVal<int>(dataReader["NueRequestSubTypeId"]);
                             userRequestUiGridRender.RequestSubType = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
@@ -148,13 +242,14 @@ namespace NeuRequest.DB
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nup.Id as UserId, nup.FullName as FullName, nup.NTPLID as NTPLID, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
                                                         nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
                                                         NueRequestMaster nrm 
                                                         join NueRequestAceessLog nral on nrm.Id = nral.RequestId
                                                         join NueRequestSubType nrst on nrm.RequestCatType = nrst.id
                                                         join NueRequestType nrt on nrst.RequestType = nrt.Id
                                                         join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
+                                                        join NueUserProfile nup on nrm.CreatedBy = nup.Id       
                                                         where nrt.RequestType = @RequestType
 														and nral.Completed = @Completed
 														and nral.OwnerId != nral.UserId
@@ -169,6 +264,9 @@ namespace NeuRequest.DB
                         {
                             UserRequestUiGridRender userRequestUiGridRender = new UserRequestUiGridRender();
                             userRequestUiGridRender.NueRequestMasterId = ConvertFromDBVal<int>(dataReader["NueRequestMasterId"]);
+                            userRequestUiGridRender.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            userRequestUiGridRender.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            userRequestUiGridRender.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
                             userRequestUiGridRender.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
                             userRequestUiGridRender.NueRequestSubTypeId = ConvertFromDBVal<int>(dataReader["NueRequestSubTypeId"]);
                             userRequestUiGridRender.RequestSubType = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
@@ -191,13 +289,14 @@ namespace NeuRequest.DB
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nup.Id as UserId, nup.FullName as FullName, nup.NTPLID as NTPLID, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
                                                         nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
                                                         NueRequestMaster nrm 
                                                         join NueRequestAceessLog nral on nrm.Id = nral.RequestId
                                                         join NueRequestSubType nrst on nrm.RequestCatType = nrst.id
                                                         join NueRequestType nrt on nrst.RequestType = nrt.Id
                                                         join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
+                                                        join NueUserProfile nup on nrm.CreatedBy = nup.Id
                                                         where (nrs.RequestStatus != 'withdraw' and nrs.RequestStatus != 'close'  and nrs.RequestStatus != 'completed')
                                                         and nrt.RequestType = @RequestType
 														and nrm.Id in (SELECT RequestId
@@ -213,6 +312,9 @@ namespace NeuRequest.DB
                         {
                             UserRequestUiGridRender userRequestUiGridRender = new UserRequestUiGridRender();
                             userRequestUiGridRender.NueRequestMasterId = ConvertFromDBVal<int>(dataReader["NueRequestMasterId"]);
+                            userRequestUiGridRender.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            userRequestUiGridRender.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            userRequestUiGridRender.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
                             userRequestUiGridRender.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
                             userRequestUiGridRender.NueRequestSubTypeId = ConvertFromDBVal<int>(dataReader["NueRequestSubTypeId"]);
                             userRequestUiGridRender.RequestSubType = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
@@ -235,13 +337,14 @@ namespace NeuRequest.DB
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nup.Id as UserId, nup.FullName as FullName, nup.NTPLID as NTPLID, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
                                                         nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
                                                         NueRequestMaster nrm 
                                                         join NueRequestAceessLog nral on nrm.Id = nral.RequestId
                                                         join NueRequestSubType nrst on nrm.RequestCatType = nrst.id
                                                         join NueRequestType nrt on nrst.RequestType = nrt.Id
                                                         join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
+														join NueUserProfile nup on nrm.CreatedBy = nup.Id
                                                         where (nrs.RequestStatus = 'close' or nrs.RequestStatus != 'completed')
                                                         and nrt.RequestType = @RequestType
 														and nrm.Id in (SELECT RequestId
@@ -258,6 +361,9 @@ namespace NeuRequest.DB
                             UserRequestUiGridRender userRequestUiGridRender = new UserRequestUiGridRender();
                             userRequestUiGridRender.NueRequestMasterId = ConvertFromDBVal<int>(dataReader["NueRequestMasterId"]);
                             userRequestUiGridRender.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            userRequestUiGridRender.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            userRequestUiGridRender.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            userRequestUiGridRender.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
                             userRequestUiGridRender.NueRequestSubTypeId = ConvertFromDBVal<int>(dataReader["NueRequestSubTypeId"]);
                             userRequestUiGridRender.RequestSubType = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
                             userRequestUiGridRender.NueRequestStatusId = ConvertFromDBVal<int>(dataReader["NueRequestStatusId"]);
@@ -271,6 +377,31 @@ namespace NeuRequest.DB
                 connection.Close();
             }
             return userRequestUiGridRenders;
+        }
+        
+        public int addNeuMessagess(List<MessagesModel> messages)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                foreach (var item in messages)
+                {
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Messages (Message, EmptyMessage, Processed, UserId, Target, Date) " +
+                                      "output INSERTED.MessageID VALUES(@Message, @EmptyMessage, @Processed, @UserId, @Target, @Date)", connection))
+                    {
+                        cmd.Parameters.AddWithValue("@Message", item.Message);
+                        cmd.Parameters.AddWithValue("@EmptyMessage", item.EmptyMessage);
+                        cmd.Parameters.AddWithValue("@Processed", item.Processed);
+                        cmd.Parameters.AddWithValue("@UserId", item.UserId);
+                        cmd.Parameters.AddWithValue("@Target", item.Target);
+                        cmd.Parameters.AddWithValue("@Date", item.MessageDate);
+                        modified = (int)cmd.ExecuteScalar();
+                    }
+                }
+                connection.Close();
+            }
+            return modified;
         }
 
         public int addNeuRequestAccessLogs(List<NueRequestAceessLog> nueRequestAceessLogs)

@@ -1,0 +1,21 @@
+List<MessagesModel> messages = new List<MessagesModel>();
+
+MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = "Leave Cancelation";
+                            messagesModel.EmptyMessage = currentUser.FullName + " submitted leave cancellation request";
+                            messagesModel.Processed = 0;
+                            messagesModel.UserId = int.Parse(leaveCancelationUiRender.leaveCancelationApprover);
+                            messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId="+ newRequestId;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
+
+
+
+new DataAccess().addNeuMessagess(messages);
+
+y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User")
+
+
+return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access", errorCode = "404" });
+

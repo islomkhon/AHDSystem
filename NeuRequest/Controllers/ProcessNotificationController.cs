@@ -74,9 +74,9 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
-                    throw new Exception("Invalid Opration");
+                    //throw new Exception("Invalid Opration");
                     //TempData["Message"] = "Invalid Opration";
-                    //return RedirectToAction("OpError", "ErrorHandilar", new { message = "Invalid Opration" });
+                    return RedirectToAction("OpError", "ErrorHandilar", new { message = "Invalid Opration", errorCode = "401" });
                 }
                 return View();
             }

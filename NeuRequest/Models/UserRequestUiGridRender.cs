@@ -9,6 +9,9 @@ namespace NeuRequest.Models
     {
         public int NueRequestMasterId { get; set; }
         public string RequestId { get; set; }
+        public int UserId { get; set; }
+        public string FullName { get; set; }
+        public string NTPLID { get; set; }
         public int NueRequestSubTypeId { get; set; }
         public string RequestSubType { get; set; }
         public int NueRequestStatusId { get; set; }
