@@ -31,6 +31,35 @@ namespace NeuRequest.Models
                     {
                         heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Leave Cancelation";
                     }
+                    else if (userRequest.RequestSubType == "LeavePastApply")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Leave Past Apply";
+                    }
+                    else if (userRequest.RequestSubType == "LeaveWFHApply")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Work From Home";
+                    }
+                    else if (userRequest.RequestSubType == "LeaveBalanceEnquiry")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Leave Balance Enquiry";
+                    }
+                    else if (userRequest.RequestSubType == "HCMAddressProof")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Address Proof";
+                    }
+                    else if (userRequest.RequestSubType == "HCMEmployeeVerification")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Employee Verification Enquiry";
+                    }
+                    else if (userRequest.RequestSubType == "SalaryCertificate")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Salary Certificate";
+                    }
+                    else if (userRequest.RequestSubType == "HCMGeneral")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Common Request";
+                    }
+
 
                     if (userRequest.RequestStatus == "close")
                     {
@@ -350,6 +379,1234 @@ namespace NeuRequest.Models
 
             return uiRender;
         }
+
+        public string generateLeavePastApplyUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeuLeavePastApplyModal neuLeavePastApplyModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+
+            foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-leave-past-apply-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-leave-past-apply-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('inter-approve-leave-past-apply-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-approve-leave-past-apply-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n" +
+                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
+                    "                                    <div class=\"mt-4\">\r\n" +
+                    "                                        <div class=\"vertical-timeline\">\r\n";
+
+            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((neuLeavePastApplyModal.Message != null && neuLeavePastApplyModal.Message.Trim() != "") ? neuLeavePastApplyModal.Message.Trim() : "has created new Leave Cancelation Request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + neuLeavePastApplyModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+           "                                    </div>\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n" +
+           "\r\n" +
+           "                                    <div class=\"card thin-border\">\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h4 class=\"card-title\">Leave Past Apply Request</h4>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body bg-light\">\r\n" +
+           "                                            <div class=\"row text-center\">\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+          requestStatusStr +
+           "                                                </div>\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+           neuLeavePastApplyModal.AddedOn.ToLocalTime() +
+           "                                                </div>\r\n" +
+           "                                            </div>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           "                                            <br>\r\n" +
+           approverStr +
+           "                                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
+           "                                            <span>" + neuLeavePastApplyModal.StartDate + "</span>\r\n" +
+           "                                            <br>\r\n" +
+           "                                            <h5 class=\"m-t-30\">Leave End Date</h5>\r\n" +
+           "                                            <span>" + neuLeavePastApplyModal.EndDate + "</span>\r\n" +
+           "                                            <br>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                    </div>\r\n" +
+           "\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                            </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                        </div>\r\n" +
+           "                    </div>\r\n" +
+           "                </div>\r\n" +
+           "            </div>\r\n" +
+           "\r\n" +
+           "        </div>";
+
+            return uiRender;
+        }
+
+        public string generateLeaveWFHApplyUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeuLeaveWFHApplyModal neuLeaveWFHApplyModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+
+            foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-leave-wfh-apply-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-leave-wfh-apply-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('inter-approve-wfh-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-approve-leave-wfh-apply-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n" +
+                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
+                    "                                    <div class=\"mt-4\">\r\n" +
+                    "                                        <div class=\"vertical-timeline\">\r\n";
+
+            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((neuLeaveWFHApplyModal.Message != null && neuLeaveWFHApplyModal.Message.Trim() != "") ? neuLeaveWFHApplyModal.Message.Trim() : "has created new Work From Request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + neuLeaveWFHApplyModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+            
+            uiRender += "                                        </div>\r\n" +
+           "                                    </div>\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n" +
+           "\r\n" +
+           "                                    <div class=\"card thin-border\">\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h4 class=\"card-title\">Work From Home Request</h4>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body bg-light\">\r\n" +
+           "                                            <div class=\"row text-center\">\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+          requestStatusStr +
+           "                                                </div>\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+           neuLeaveWFHApplyModal.AddedOn.ToLocalTime() +
+           "                                                </div>\r\n" +
+           "                                            </div>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           "                                            <br>\r\n" +
+           approverStr +
+           "                                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
+           "                                            <span>" + neuLeaveWFHApplyModal.StartDate + "</span>\r\n" +
+           "                                            <br>\r\n" +
+           "                                            <h5 class=\"m-t-30\">Leave End Date</h5>\r\n" +
+           "                                            <span>" + neuLeaveWFHApplyModal.EndDate + "</span>\r\n" +
+           "                                            <br>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                    </div>\r\n" +
+           "\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                            </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                        </div>\r\n" +
+           "                    </div>\r\n" +
+           "                </div>\r\n" +
+           "            </div>\r\n" +
+           "\r\n" +
+           "        </div>";
+
+            return uiRender;
+        }
+
+        public string generateLeaveBalanceEnquiryUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, LeaveBalanceEnquiryModal leaveBalanceEnquiryModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-leave-bal-enq-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-leave-bal-enq-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-leave-bal-enq-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-approve-leave-bal-enq-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n" +
+                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
+                    "                                    <div class=\"mt-4\">\r\n" +
+                    "                                        <div class=\"vertical-timeline\">\r\n";
+
+            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((leaveBalanceEnquiryModal.Message != null && leaveBalanceEnquiryModal.Message.Trim() != "") ? leaveBalanceEnquiryModal.Message.Trim() : "has created new Leave Balance Enquiry Request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + leaveBalanceEnquiryModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+           "                                    </div>\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n" +
+           "\r\n" +
+           "                                    <div class=\"card thin-border\">\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h4 class=\"card-title\">Leave Balance Enquiry Request</h4>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body bg-light\">\r\n" +
+           "                                            <div class=\"row text-center\">\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+          requestStatusStr +
+           "                                                </div>\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+           leaveBalanceEnquiryModal.AddedOn.ToLocalTime() +
+           "                                                </div>\r\n" +
+           "                                            </div>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           "                                            <br>\r\n" +
+           approverStr +
+           "                                            <h5 class=\"m-t-30\">Start Date</h5>\r\n" +
+           "                                            <span>" + leaveBalanceEnquiryModal.StartDate + "</span>\r\n" +
+           "                                            <br>\r\n" +
+           "                                            <h5 class=\"m-t-30\">End Date</h5>\r\n" +
+           "                                            <span>" + leaveBalanceEnquiryModal.EndDate + "</span>\r\n" +
+           "                                            <br>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                    </div>\r\n" +
+           "\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                            </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                        </div>\r\n" +
+           "                    </div>\r\n" +
+           "                </div>\r\n" +
+           "            </div>\r\n" +
+           "\r\n" +
+           "        </div>";
+
+            return uiRender;
+        }
+
+        public string generateAddressProofUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, AddressProofModal addressProofModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-address-proof-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-address-proof-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-address-proof-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-address-proof-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n" +
+                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
+                    "                                    <div class=\"mt-4\">\r\n" +
+                    "                                        <div class=\"vertical-timeline\">\r\n";
+
+            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((addressProofModal.Message != null && addressProofModal.Message.Trim() != "") ? addressProofModal.Message.Trim() : "has created new Address Proof Request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + addressProofModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+           "                                    </div>\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n" +
+           "\r\n" +
+           "                                    <div class=\"card thin-border\">\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h4 class=\"card-title\">Address Proof Request</h4>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body bg-light\">\r\n" +
+           "                                            <div class=\"row text-center\">\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+          requestStatusStr +
+           "                                                </div>\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+           addressProofModal.AddedOn.ToLocalTime() +
+           "                                                </div>\r\n" +
+           "                                            </div>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           "                                            <br>\r\n" +
+           approverStr +
+           "                                            <br>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                    </div>\r\n" +
+           "\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                            </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                        </div>\r\n" +
+           "                    </div>\r\n" +
+           "                </div>\r\n" +
+           "            </div>\r\n" +
+           "\r\n" +
+           "        </div>";
+
+            return uiRender;
+        }
+
+        public string generateEmployeeVerificationReqUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, EmployeeVerificationReqModal employeeVerificationReqModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-employee-verification-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-employee-verification-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-employee-verification-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-employee-verification-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n" +
+                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
+                    "                                    <div class=\"mt-4\">\r\n" +
+                    "                                        <div class=\"vertical-timeline\">\r\n";
+
+            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((employeeVerificationReqModal.Message != null && employeeVerificationReqModal.Message.Trim() != "") ? employeeVerificationReqModal.Message.Trim() : "has created new Employee Verification Request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + employeeVerificationReqModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+           "                                    </div>\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n" +
+           "\r\n" +
+           "                                    <div class=\"card thin-border\">\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h4 class=\"card-title\">Employee Verification Request</h4>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body bg-light\">\r\n" +
+           "                                            <div class=\"row text-center\">\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+          requestStatusStr +
+           "                                                </div>\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+           employeeVerificationReqModal.AddedOn.ToLocalTime() +
+           "                                                </div>\r\n" +
+           "                                            </div>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           "                                            <br>\r\n" +
+           approverStr +
+           "                                            <br>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                    </div>\r\n" +
+           "\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                            </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                        </div>\r\n" +
+           "                    </div>\r\n" +
+           "                </div>\r\n" +
+           "            </div>\r\n" +
+           "\r\n" +
+           "        </div>";
+
+            return uiRender;
+        }
+
+        public string generateSalaryCertificateUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, SalaryCertificateModal salaryCertificateModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-salary-certificate-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-salary-certificate-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-salary-certificate-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-salary-certificate-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n" +
+                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
+                    "                                    <div class=\"mt-4\">\r\n" +
+                    "                                        <div class=\"vertical-timeline\">\r\n";
+
+            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((salaryCertificateModal.Message != null && salaryCertificateModal.Message.Trim() != "") ? salaryCertificateModal.Message.Trim() : "has created new Salary Certificate Request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + salaryCertificateModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+           "                                    </div>\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n" +
+           "\r\n" +
+           "                                    <div class=\"card thin-border\">\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h4 class=\"card-title\">Salary Certificate Request</h4>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body bg-light\">\r\n" +
+           "                                            <div class=\"row text-center\">\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+          requestStatusStr +
+           "                                                </div>\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+           salaryCertificateModal.AddedOn.ToLocalTime() +
+           "                                                </div>\r\n" +
+           "                                            </div>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           "                                            <br>\r\n" +
+           approverStr +
+           "                                            <br>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                    </div>\r\n" +
+           "\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                            </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                        </div>\r\n" +
+           "                    </div>\r\n" +
+           "                </div>\r\n" +
+           "            </div>\r\n" +
+           "\r\n" +
+           "        </div>";
+
+            return uiRender;
+        }
+
+        public string generateGeneralRequestUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, GeneralRequestModal generalRequestModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-general-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-general-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-general-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-general-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n" +
+                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
+                    "                                    <div class=\"mt-4\">\r\n" +
+                    "                                        <div class=\"vertical-timeline\">\r\n";
+
+            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((generalRequestModal.Message != null && generalRequestModal.Message.Trim() != "") ? generalRequestModal.Message.Trim() : "has created new Common Request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + generalRequestModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+           "                                    </div>\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n" +
+           "\r\n" +
+           "                                    <div class=\"card thin-border\">\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h4 class=\"card-title\">Common Request</h4>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body bg-light\">\r\n" +
+           "                                            <div class=\"row text-center\">\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+          requestStatusStr +
+           "                                                </div>\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+           generalRequestModal.AddedOn.ToLocalTime() +
+           "                                                </div>\r\n" +
+           "                                            </div>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           "                                            <br>\r\n" +
+           approverStr +
+           "                                            <br>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                    </div>\r\n" +
+           "\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                            </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                        </div>\r\n" +
+           "                    </div>\r\n" +
+           "                </div>\r\n" +
+           "            </div>\r\n" +
+           "\r\n" +
+           "        </div>";
+
+            return uiRender;
+        }
+
+
         static Random rnd = new Random();
         public string generateRequestLog(List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {

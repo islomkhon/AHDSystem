@@ -55,7 +55,9 @@ namespace NeuRequest.Controllers
                     bool isAuthenticated = isAuth();
                     if (isAuthenticated == false)
                     {
-                        UserProfile userProfile = new DataAccess().getUserProfile(/*"priya.ignatius@neudesic.com"*/user.Mail.ToLower());
+                        UserProfile userProfile = new DataAccess().getUserProfile(user.Mail.ToLower());
+                        //UserProfile userProfile = new DataAccess().getUserProfile("bhavani.kannan@neudesic.com");
+                        //UserProfile userProfile = new DataAccess().getUserProfile("priya.ignatius@neudesic.com");
                         if (userProfile == null || userProfile.Email == null || userProfile.Email.Trim() == "")
                         {
                             return RedirectToAction("Update", "UserProfile");

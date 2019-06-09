@@ -191,12 +191,26 @@
                                             {
                                                 requestTypeString = "Address Proof Request";
                                                 addressProofReq++;
+                                                otherReq++;
                                             }
                                             else if (item.RequestSubType.ToString().ToLower() == "hcmemployeeverification")
                                             {
                                                 requestTypeString = "Employee Verification";
                                                 employeeVerificationReq++;
+                                                otherReq++;
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "salarycertificate")
+                                            {
+                                                requestTypeString = "Salary Certificate";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmgeneral")
+                                            {
+                                                requestTypeString = "General";
+                                                otherReq++;
+                                            }
+
+
 
                                             <tr style="">
                                                 <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)<span class="hide">item.RequestId</span></span></a></td>

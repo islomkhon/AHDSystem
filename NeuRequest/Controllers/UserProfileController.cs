@@ -48,9 +48,11 @@ namespace NeuRequest.Controllers
                     .ExecuteAsync();
                 IUser user = result.CurrentPage.ToList().First();
 
-                UserProfile userProfile = new DataAccess().getUserProfile(/*"priya.ignatius@neudesic.com"*/user.Mail.ToLower());
+                UserProfile userProfile = new DataAccess().getUserProfile(user.Mail.ToLower());
+                //UserProfile userProfile = new DataAccess().getUserProfile("bhavani.kannan@neudesic.com");
+                //UserProfile userProfile = new DataAccess().getUserProfile("priya.ignatius@neudesic.com");
 
-                if(userProfile == null || userProfile.Email == null || userProfile.Email.Trim() == "")
+                if (userProfile == null || userProfile.Email == null || userProfile.Email.Trim() == "")
                 {
                     userProfile = new UserProfile();
                     userProfile.Email = user.Mail.ToLower();

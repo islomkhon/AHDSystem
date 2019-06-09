@@ -230,9 +230,16 @@
     </Compile>
     <Compile Include="Hubs\MessagesHub.cs" />
     <Compile Include="Models\AdalTokenCache.cs" />
+    <Compile Include="Models\GeneralRequestUiRender.cs" />
+    <Compile Include="Models\SalaryCertificateUiRender.cs" />
+    <Compile Include="Models\EmployeeVerificationReqUiRender.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\AttachmentLog.cs" />
     <Compile Include="Models\JsonResponse.cs" />
+    <Compile Include="Models\AddressProofUiRender.cs" />
+    <Compile Include="Models\LeaveBalanceEnquiryUiRender.cs" />
+    <Compile Include="Models\LeaveLeaveWFHApplyUiRender.cs" />
+    <Compile Include="Models\LeavePastApplyUiRender.cs" />
     <Compile Include="Models\LeaveCancelationUiRender.cs" />
     <Compile Include="Models\Messages.cs" />
     <Compile Include="Models\MessagesRepository.cs" />
@@ -1393,6 +1400,13 @@
     <Content Include="Views\ProcessNotification\Index.cshtml" />
     <Content Include="Views\Shared\InternalError.cshtml" />
     <Content Include="Views\ErrorHandilar\OpError.cshtml" />
+    <Content Include="Views\HcmDashboard\LeavePastApply.cshtml" />
+    <Content Include="Views\HcmDashboard\LeaveWFHApply.cshtml" />
+    <Content Include="Views\HcmDashboard\LeaveBalanceEnquiry.cshtml" />
+    <Content Include="Views\HcmDashboard\AddressProof.cshtml" />
+    <Content Include="Views\HcmDashboard\EmployeeVerificationReq.cshtml" />
+    <Content Include="Views\HcmDashboard\SalaryCertificate.cshtml" />
+    <Content Include="Views\HcmDashboard\GeneralRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Analytics\" />

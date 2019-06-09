@@ -192,12 +192,25 @@
                                             {
                                                 requestTypeString = "Address Proof Request";
                                                 addressProofReq++;
+                                                otherReq++;
                                             }
                                             else if (item.RequestSubType.ToString().ToLower() == "hcmemployeeverification")
                                             {
                                                 requestTypeString = "Employee Verification";
                                                 employeeVerificationReq++;
+                                                otherReq++;
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "salarycertificate")
+                                            {
+                                                requestTypeString = "Salary Certificate";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmgeneral")
+                                            {
+                                                requestTypeString = "General";
+                                                otherReq++;
+                                            }
+                                            
 
                                             <tr style="">
                                                 <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)<span class="hide">item.RequestId</span></span></a></td>
@@ -269,17 +282,17 @@
                             <select id="hcmRequestDepartment" name="hcmRequestDepartment" class="form-control">
                                 <optgroup label="Leaves and Holydays">
                                     <option value="LeaveCancelation" data-target="/HcmDashboard/LeaveCancelation">Leave Cancelation</option>
-                                    <option value="LeavePastApply" data-target="/HcmAHDDashboard/LeavePastApplyCreate">Apply Past Leave</option>
-                                    <option value="WorkFromHome" data-target="/HcmAHDDashboard/LeaveWFHApplyCreate">Work From Home</option>
-                                    <option value="LeaveBalanceEnquiry" data-target="/HcmAHDDashboard/LeaveBalanceEnquiryCreate">Leave Balance Enquiry</option>
+                                    <option value="LeavePastApply" data-target="/HcmDashboard/LeavePastApply">Past Leave Apply</option>
+                                    <option value="LeaveWFHApply" data-target="/HcmDashboard/LeaveWFHApply">Work From Home</option>
+                                    <option value="LeaveBalanceEnquiry" data-target="/HcmDashboard/LeaveBalanceEnquiry">Leave Balance Enquiry</option>
                                 </optgroup>
                                 <optgroup label="Letter">
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/HCMAddressProofReqCreate">Address Proof</option>
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/HCMEmployeeVerificationReqCreate">Employee Verification</option>
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Salary Certificate</option>
+                                    <option value="AddressProof" data-target="/HcmDashboard/AddressProof">Address Proof</option>
+                                    <option value="EmployeeVerificationReq" data-target="/HcmDashboard/EmployeeVerificationReq">Employee Verification</option>
+                                    <option value="SalaryCertificate" data-target="/HcmDashboard/SalaryCertificate">Salary Certificate</option>
                                 </optgroup>
                                 <optgroup label="General">
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Other</option>
+                                    <option value="GeneralRequest" data-target="/HcmDashboard/GeneralRequest">Other</option>
                                 </optgroup>
                             </select>
                         </div>

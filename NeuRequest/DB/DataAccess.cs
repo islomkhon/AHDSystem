@@ -194,7 +194,7 @@ namespace NeuRequest.DB
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT TOP "+limit+@" nrm.Id as NueRequestMasterId, nup.Id as UserId, nup.FullName as FullName, nup.NTPLID as NTPLID, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT TOP "+limit+ @" nrm.Id as NueRequestMasterId, nup.Id as UserId, nup.FullName as FullName, nup.NTPLID as NTPLID, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
                                                         nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
                                                         NueRequestMaster nrm 
                                                         join NueRequestAceessLog nral on nrm.Id = nral.RequestId
@@ -206,7 +206,7 @@ namespace NeuRequest.DB
                                                         and nrt.RequestType = @RequestType
 														and nral.Completed = @Completed
 														and nral.OwnerId != nral.UserId
-														and nral.UserId = @OwnerId", connection))
+														and nral.UserId = @OwnerId ORDER BY nrm.AddedOn DESC;", connection))
                 {
                     cmd.Parameters.AddWithValue("@OwnerId", uid);
                     cmd.Parameters.AddWithValue("@Completed", 0);
@@ -494,6 +494,156 @@ namespace NeuRequest.DB
             return modified;
         }
 
+        public int addLeaveBalanceEnquiry(LeaveBalanceEnquiry leaveBalanceEnquiry)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueLeaveBalanceEnquiryRequest (UserId, RequestId, StartDate, EndDate, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@StartDate,@EndDate,@Message,@AddedOn,@ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", leaveBalanceEnquiry.UserId);
+                    cmd.Parameters.AddWithValue("@RequestId", leaveBalanceEnquiry.RequestId);
+                    cmd.Parameters.AddWithValue("@StartDate", leaveBalanceEnquiry.StartDate);
+                    cmd.Parameters.AddWithValue("@EndDate", leaveBalanceEnquiry.EndDate);
+                    cmd.Parameters.AddWithValue("@Message", leaveBalanceEnquiry.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", leaveBalanceEnquiry.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", leaveBalanceEnquiry.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+        }
+
+        public int addGeneralRequest(GeneralRequest generalRequest)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueGeneralRequest (UserId, RequestId, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@Message,@AddedOn,@ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", generalRequest.UserId);
+                    cmd.Parameters.AddWithValue("@RequestId", generalRequest.RequestId);
+                    cmd.Parameters.AddWithValue("@Message", generalRequest.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", generalRequest.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", generalRequest.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
+
+        public int addSalaryCertificateRequest(SalaryCertificate salaryCertificate)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueSalaryCertificateRequest (UserId, RequestId, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@Message,@AddedOn,@ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", salaryCertificate.UserId);
+                    cmd.Parameters.AddWithValue("@RequestId", salaryCertificate.RequestId);
+                    cmd.Parameters.AddWithValue("@Message", salaryCertificate.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", salaryCertificate.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", salaryCertificate.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
+
+        public int addEmployeeVerificationRequest(EmployeeVerificationReq employeeVerificationReq)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO EmployeeVerificationRequest (UserId, RequestId, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@Message,@AddedOn,@ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", employeeVerificationReq.UserId);
+                    cmd.Parameters.AddWithValue("@RequestId", employeeVerificationReq.RequestId);
+                    cmd.Parameters.AddWithValue("@Message", employeeVerificationReq.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", employeeVerificationReq.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", employeeVerificationReq.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
+
+
+        public int addAddressProofRequest(AddressProof addressProof)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueAddressProofRequest (UserId, RequestId, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@Message,@AddedOn,@ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", addressProof.UserId);
+                    cmd.Parameters.AddWithValue("@RequestId", addressProof.RequestId);
+                    cmd.Parameters.AddWithValue("@Message", addressProof.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", addressProof.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", addressProof.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+        }
+
+        public int addNewLeaveWFHApply(LeaveWFHApply leaveWFHApply)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueLeaveWFHApplyRequest (UserId, RequestId, StartDate, EndDate, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@StartDate,@EndDate,@Message,@AddedOn,@ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", leaveWFHApply.UserId);
+                    cmd.Parameters.AddWithValue("@RequestId", leaveWFHApply.RequestId);
+                    cmd.Parameters.AddWithValue("@StartDate", leaveWFHApply.StartDate);
+                    cmd.Parameters.AddWithValue("@EndDate", leaveWFHApply.EndDate);
+                    cmd.Parameters.AddWithValue("@Message", leaveWFHApply.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", leaveWFHApply.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", leaveWFHApply.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+        }
+
+        public int addNewLeavePastApply(NeuLeavePastApply neuLeavePastApply)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueLeavePastApplyRequest (UserId, RequestId, StartDate, EndDate, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@StartDate,@EndDate,@Message,@AddedOn,@ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", neuLeavePastApply.UserId);
+                    cmd.Parameters.AddWithValue("@RequestId", neuLeavePastApply.RequestId);
+                    cmd.Parameters.AddWithValue("@StartDate", neuLeavePastApply.StartDate);
+                    cmd.Parameters.AddWithValue("@EndDate", neuLeavePastApply.EndDate);
+                    cmd.Parameters.AddWithValue("@Message", neuLeavePastApply.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", neuLeavePastApply.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", neuLeavePastApply.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+        }
+
         public int addNewLeaveCancelation(NeuLeaveCancelation neuLeaveCancelation)
         {
             int modified = -1;
@@ -560,6 +710,243 @@ namespace NeuRequest.DB
                 connection.Close();
             }
             return modified;
+        }
+
+        public NeuLeavePastApplyModal getNeuLeavePastApplyDetails(string requestId)
+        {
+            NeuLeavePastApplyModal neuLeavePastApplyModal = new NeuLeavePastApplyModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.StartDate, nucr.EndDate, nucr.Message, nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueLeavePastApplyRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId=@RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            neuLeavePastApplyModal = new NeuLeavePastApplyModal();
+                            neuLeavePastApplyModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            neuLeavePastApplyModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            neuLeavePastApplyModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            neuLeavePastApplyModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            neuLeavePastApplyModal.StartDate = ConvertFromDBVal<string>(dataReader["StartDate"]);
+                            neuLeavePastApplyModal.EndDate = ConvertFromDBVal<string>(dataReader["EndDate"]);
+                            neuLeavePastApplyModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            neuLeavePastApplyModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            neuLeavePastApplyModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return neuLeavePastApplyModal;
+        }
+
+        public GeneralRequestModal getNeuGeneralRequestModalDetails(string requestId)
+        {
+            GeneralRequestModal generalRequestModal = new GeneralRequestModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueGeneralRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId=@RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            generalRequestModal = new GeneralRequestModal();
+                            generalRequestModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            generalRequestModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            generalRequestModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            generalRequestModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            generalRequestModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            generalRequestModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            generalRequestModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return generalRequestModal;
+        }
+
+        public SalaryCertificateModal getNeuSalaryCertificateModalDetails(string requestId)
+        {
+            SalaryCertificateModal salaryCertificateModal = new SalaryCertificateModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueSalaryCertificateRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId=@RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            salaryCertificateModal = new SalaryCertificateModal();
+                            salaryCertificateModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            salaryCertificateModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            salaryCertificateModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            salaryCertificateModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            salaryCertificateModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            salaryCertificateModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            salaryCertificateModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return salaryCertificateModal;
+        }
+
+        public EmployeeVerificationReqModal getNeuEmployeeVerificationReqModalDetails(string requestId)
+        {
+            EmployeeVerificationReqModal employeeVerificationReqModal = new EmployeeVerificationReqModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.AddedOn, nucr.ModifiedOn 
+                                                        from EmployeeVerificationRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId=@RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            employeeVerificationReqModal = new EmployeeVerificationReqModal();
+                            employeeVerificationReqModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            employeeVerificationReqModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            employeeVerificationReqModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            employeeVerificationReqModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            employeeVerificationReqModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            employeeVerificationReqModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            employeeVerificationReqModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return employeeVerificationReqModal;
+        }
+
+        public AddressProofModal getNeuAddressProofModalDetails(string requestId)
+        {
+            AddressProofModal addressProofModal = new AddressProofModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueAddressProofRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId=@RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            addressProofModal = new AddressProofModal();
+                            addressProofModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            addressProofModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            addressProofModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            addressProofModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            addressProofModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            addressProofModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            addressProofModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return addressProofModal;
+        }
+
+        public LeaveBalanceEnquiryModal getNeuLeaveBalanceEnquiryDetails(string requestId)
+        {
+            LeaveBalanceEnquiryModal leaveBalanceEnquiryModal = new LeaveBalanceEnquiryModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.StartDate, nucr.EndDate, nucr.Message, nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueLeaveBalanceEnquiryRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId=@RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            leaveBalanceEnquiryModal = new LeaveBalanceEnquiryModal();
+                            leaveBalanceEnquiryModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            leaveBalanceEnquiryModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            leaveBalanceEnquiryModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            leaveBalanceEnquiryModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            leaveBalanceEnquiryModal.StartDate = ConvertFromDBVal<string>(dataReader["StartDate"]);
+                            leaveBalanceEnquiryModal.EndDate = ConvertFromDBVal<string>(dataReader["EndDate"]);
+                            leaveBalanceEnquiryModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            leaveBalanceEnquiryModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            leaveBalanceEnquiryModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return leaveBalanceEnquiryModal;
+        }
+
+        public NeuLeaveWFHApplyModal getNeuLeaveWFHApplyDetails(string requestId)
+        {
+            NeuLeaveWFHApplyModal neuLeaveWFHApplyModal = new NeuLeaveWFHApplyModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.StartDate, nucr.EndDate, nucr.Message, nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueLeaveWFHApplyRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId=@RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            neuLeaveWFHApplyModal = new NeuLeaveWFHApplyModal();
+                            neuLeaveWFHApplyModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            neuLeaveWFHApplyModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            neuLeaveWFHApplyModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            neuLeaveWFHApplyModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            neuLeaveWFHApplyModal.StartDate = ConvertFromDBVal<string>(dataReader["StartDate"]);
+                            neuLeaveWFHApplyModal.EndDate = ConvertFromDBVal<string>(dataReader["EndDate"]);
+                            neuLeaveWFHApplyModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            neuLeaveWFHApplyModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            neuLeaveWFHApplyModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return neuLeaveWFHApplyModal;
         }
 
         public NeuLeaveCancelationModal getNeuLeaveCancelationDetails(string requestId)
@@ -826,6 +1213,35 @@ namespace NeuRequest.DB
                 connection.Close();
             }
             return userRequest;
+        }
+
+        public NueRequestActivityMaster getRequestType(string requestMainType, string requestSubType)
+        {
+            NueRequestActivityMaster nueRequestActivityMaster = new NueRequestActivityMaster();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nrst.Id, RequestSubType
+                                                          FROM NueRequestSubType nrst 
+                                                          join NueRequestType nrt on nrst.RequestType = nrt.Id
+                                                          WHERE nrt.RequestType = @RequestType and nrst.RequestSubType = @RequestSubType", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestType", requestMainType);
+                    cmd.Parameters.AddWithValue("@RequestSubType", requestSubType);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            nueRequestActivityMaster = new NueRequestActivityMaster();
+                            nueRequestActivityMaster.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            nueRequestActivityMaster.ActivityDesc = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return nueRequestActivityMaster;
         }
 
         public NueRequestActivityMaster getRequestStatus(string statusType)

@@ -570,6 +570,14 @@
                                             {
                                                 requestTypeString = "Employee Verification";
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "salarycertificate")
+                                            {
+                                                requestTypeString = "Salary Certificate";
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmgeneral")
+                                            {
+                                                requestTypeString = "General";
+                                            }
 
                                             <li class="list-group-item cursor-pointer link-action-tigger-tab" data-target="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId">
                                                 <div class="todo-indicator bg-@sideBarClass"></div>
@@ -675,6 +683,14 @@
                                             else if (item.RequestSubType.ToString().ToLower() == "hcmemployeeverification")
                                             {
                                                 requestTypeString = "Employee Verification";
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "salarycertificate")
+                                            {
+                                                requestTypeString = "Salary Certificate";
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmgeneral")
+                                            {
+                                                requestTypeString = "General";
                                             }
 
                                             <li class="list-group-item cursor-pointer link-action-tigger-tab" data-target="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId">
