@@ -340,11 +340,6 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    @if (TempData["Message"] != null)
-                                    {
-                                        @TempData["Message"]
-                                    }
-
                                     <fieldset>
                                         <div class="form-group">
                                             <label for="leaveDate">Leave Start Date</label>
@@ -390,7 +385,7 @@
                     </div>
                 </div>
 
-                <div class="d-block text-right card-footer"><button class="mr-2 btn btn-link btn-sm">Cancel</button><input class="btn btn btn-success btn-lg" type="submit" value="Submit"></div>
+                <div class="d-block text-right card-footer"><button class="mr-2 btn btn-link btn-sm link-action-tigger" data-target="/HcmDashboard/Index">Cancel</button><input class="btn btn btn-success btn-lg" type="submit" value="Submit"></div>
 
             </form>
 
@@ -399,14 +394,29 @@
     </div>
     <div class="col-5">
         <div class="main-card mb-3 mt-3 card action-card">
-            <div class="card-header"> &nbsp; <div class="btn-actions-pane-right actions-icon-btn"></div></div>
+            <div class="card-header">  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
             <div class="card-body">
                <div class="row">
                    <div class="col-12">
-                       <div class="pt-5 pb-5 pl-3 pr-3">
+                       <div class="pt-3 pb-2 pl-3 pr-3">
+
+                           <div class="app-page-title"><div class="page-title-wrapper"><div class="page-title-heading"><div class="page-title-icon"><i class="icon pe-7s-pin icon-gradient bg-tempting-azure"></i></div><div> Guidelines </div></div></div></div>
+
                            <p><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave Start Date.<span class="text-danger">*</span> <span class="text-muted">should be on or before today's date</span></p>
                            <p><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave End Date. <span class="text-danger">*</span></p>
                            <p><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Approver. <span class="text-danger">*</span> <span class="text-muted">should be your manager</span></p>
+
+                           @if (TempData["Message"] != null)
+                           {
+                               <div class="row">
+                                   <div class="col-md-10 server-error-container mt-4">
+                                       <div class="card-shadow-danger border mb-3 card card-body border-danger server-error">
+                                           @TempData["Message"]
+                                       </div>
+                                   </div>
+                               </div>
+                           }
+
                        </div>
                    </div>
                </div>

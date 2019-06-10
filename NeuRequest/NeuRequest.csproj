@@ -275,6 +275,9 @@
     <Content Include="Rebone\public\favicon.ico" />
     <Content Include="Rebone\public\fonts\Linearicons-Free.svg" />
     <Content Include="Rebone\public\fonts\linear.css" />
+    <Content Include="Rebone\public\fonts\peicon\css\helper.css" />
+    <Content Include="Rebone\public\fonts\peicon\css\pe-icon-7-stroke.css" />
+    <Content Include="Rebone\public\fonts\peicon\fonts\Pe-icon-7-stroke.svg" />
     <Content Include="Rebone\public\images\1.jpg" />
     <Content Include="Rebone\public\images\auth\login_1.jpg" />
     <Content Include="Rebone\public\images\auth\login_2.jpg" />
@@ -1357,6 +1360,9 @@
     <Content Include="Rebone\public\fonts\Linearicons-Free.ttf" />
     <Content Include="Rebone\public\fonts\Linearicons-Free.woff" />
     <Content Include="Rebone\public\fonts\Linearicons-Free.woff2" />
+    <Content Include="Rebone\public\fonts\peicon\fonts\Pe-icon-7-stroke.eot" />
+    <Content Include="Rebone\public\fonts\peicon\fonts\Pe-icon-7-stroke.ttf" />
+    <Content Include="Rebone\public\fonts\peicon\fonts\Pe-icon-7-stroke.woff" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

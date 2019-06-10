@@ -327,32 +327,79 @@
     </ol>
 </nav>
 
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">Create New Employee Verification Request </h4>
-        <div class="row">
-            <div class="col-7">
-                <div class="card">
-                    <div class="card-body">
-                        @if (TempData["Message"] != null)
-                        {
-                            @TempData["Message"]
-                        }
-                        <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmDashboard/EmployeeVerificationReq" method="POST" enctype="multipart/form-data">
-                            <fieldset>
-                                <div class="form-group">
-                                    <label for="leaveCancelationMessage">Message</label>
-                                    <textarea class="form-control" name="message" id="message" rows="3">@employeeVerificationReqUiRender.message</textarea>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="main-card mb-3 mt-3 card action-card">
+
+            <div class="card-header"><i class="lnr lnr-train header-icon icon-gradient bg-plum-plate"></i> New Employee Verification Request  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
+
+            <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmDashboard/EmployeeVerificationReq" method="POST" enctype="multipart/form-data">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label for="leaveCancelationMessage">Purpose</label>
+                                            <textarea class="form-control" name="message" id="message" rows="3">@employeeVerificationReqUiRender.message</textarea>
+                                        </div>
+                                    </fieldset>
+
                                 </div>
-                                <input class="btn btn-primary" type="submit" value="Submit">
-                            </fieldset>
-                        </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="d-block text-right card-footer"><button class="mr-2 btn btn-link btn-sm link-action-tigger" data-target="/HcmDashboard/Index">Cancel</button><input class="btn btn btn-success btn-lg" type="submit" value="Submit"></div>
+
+            </form>
+
+
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="main-card mb-3 mt-3 card action-card">
+            <div class="card-header">  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="pt-3 pb-2 pl-3 pr-3">
+
+                            <div class="app-page-title"><div class="page-title-wrapper"><div class="page-title-heading"><div class="page-title-icon"><i class="icon pe-7s-pin icon-gradient bg-tempting-azure"></i></div><div> Guidelines </div></div></div></div>
+
+                            <p class=""><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Purpose<span class="text-danger">*</span> <span class="text-muted">of employee verification</span></p>
+
+                            <p class="hide"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave Start Date.<span class="text-danger">*</span> <span class="text-muted">should be on or before today's date</span></p>
+                            <p class="hide"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave End Date. <span class="text-danger">*</span></p>
+                            <p class="hide"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Approver. <span class="text-danger">*</span> <span class="text-muted">should be your manager</span></p>
+
+                            @if (TempData["Message"] != null)
+                            {
+                                <div class="row">
+                                    <div class="col-md-10 server-error-container mt-4">
+                                        <div class="card-shadow-danger border mb-3 card card-body border-danger server-error">
+                                            @TempData["Message"]
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="d-block text-right card-footer">&nbsp; </div>
         </div>
     </div>
 </div>
+
+
 @Scripts.Render("~/Rebone/js")
 @Scripts.Render("~/Rebone/public/js/formpickers.js")
 @Scripts.Render("~/Rebone/public/js/x-editable.js")

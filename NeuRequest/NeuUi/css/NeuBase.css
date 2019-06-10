@@ -2690,3 +2690,82 @@
             position: relative;
             transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
         }
+
+    .card.action-card .app-page-title {
+        padding: 30px;
+        margin: -30px -30px 30px;
+        position: relative;
+    }
+
+    .card.action-card .app-page-title {
+        background: rgba(255, 255, 255, 0.45);
+    }
+
+        .card.action-card .app-page-title .page-title-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .card.action-card .app-page-title .page-title-heading, .card.action-card .app-page-title .page-title-subheading {
+            margin: 0;
+            padding: 0;
+        }
+
+        .card.action-card .app-page-title .page-title-heading {
+            font-size: 1.25rem;
+            font-weight: 400;
+            display: flex;
+            align-content: center;
+            align-items: center;
+        }
+
+        .card.action-card .app-page-title .page-title-icon {
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            align-content: center;
+            text-align: center;
+            padding: 0.83333333rem;
+            margin: 0 30px 0 0;
+            background: #fff;
+            box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+            border-radius: 0.25rem;
+            width: 60px;
+            height: 60px;
+        }
+
+            .card.action-card .app-page-title .page-title-icon i {
+                margin: auto;
+            }
+
+    .card.action-card .server-error.border {
+        border: 1px solid #dee2e6 !important;
+    }
+
+    .card.action-card .server-error.border-danger {
+        border-color: #d92550 !important;
+    }
+
+    .card.action-card .server-error.mb-3,
+    .card.action-card .server-error.my-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .card.action-card .server-error.card {
+        box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+        border-width: 0;
+        transition: all .2s;
+    }
+
+    .card.action-card .server-error.card-shadow-danger {
+        box-shadow: 0 0.46875rem 2.1875rem rgba(217, 37, 80, 0.03), 0 0.9375rem 1.40625rem rgba(217, 37, 80, 0.03), 0 0.25rem 0.53125rem rgba(217, 37, 80, 0.05), 0 0.125rem 0.1875rem rgba(217, 37, 80, 0.03);
+    }
+
+    .card.action-card .server-error.card.mb-3 {
+        margin-bottom: 30px !important;
+    }
+
+.server-error-container {
+    margin: 0 auto;
+}

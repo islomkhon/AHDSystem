@@ -15,7 +15,9 @@ namespace NeuRequest
                        "~/Rebone/public/vendors/css/vendor.bundle.base.css",
                        "~/Rebone/public/vendors/css/vendor.bundle.addons.css",
                        "~/Rebone/public/css/style.css",
-                       "~/Rebone/public/fonts/linear.css"));
+                       "~/Rebone/public/fonts/linear.css",
+                       "~/Rebone/public/fonts/peicon/css/pe-icon-7-stroke.css",
+                       "~/Rebone/public/fonts/peicon/css/helper.css"));
 
             bundles.Add(new ScriptBundle("~/Rebone/js").Include(
                       "~/Rebone/public/vendors/js/vendor.bundle.base.js",
