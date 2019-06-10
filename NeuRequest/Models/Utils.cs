@@ -1,13 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Web;
+using System.Web.Hosting;
 using TimeAgo;
 
 namespace NeuRequest.Models
 {
     public class Utils
     {
+
+        public void mailHandilar(List<MailItem> mailItems)
+        {
+            try
+            {
+                foreach (var item in mailItems)
+                {
+                    HostingEnvironment.QueueBackgroundWorkItem(ct => SendMailAsync(item));
+                }
+            }
+            catch (Exception)
+            {
+                
+            }
+        }
+
+        public static void SendMailAsync(MailItem mailItem)
+        {
+            try
+            {
+                string smtpServer = ConfigurationManager.AppSettings["smtp-server"].ToString();
+                int smtpPort = int.Parse(ConfigurationManager.AppSettings["smtp-port"].ToString());
+                string smtpEmail = ConfigurationManager.AppSettings["smtp-email"].ToString();
+                string smtpPassword = ConfigurationManager.AppSettings["smtp-password"].ToString();
+                var message = new MailMessage(new MailAddress(smtpEmail), new MailAddress(mailItem.To));
+                message.Subject = mailItem.Subject;
+                message.Body = mailItem.Body;
+                message.IsBodyHtml = true;
+                message.HeadersEncoding = Encoding.UTF8;
+                message.SubjectEncoding = Encoding.UTF8;
+                message.Headers.Add("From", "test@nudesic.com");
+                message.BodyEncoding = Encoding.UTF8;
+                if (mailItem.Priority) message.Priority = MailPriority.High;
+
+                SmtpClient client = new SmtpClient(smtpServer, smtpPort);
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.EnableSsl = true;
+                client.UseDefaultCredentials = false;
+
+                NetworkCredential smtpUserInfo = new NetworkCredential(smtpEmail, smtpPassword);
+                client.Credentials = smtpUserInfo;
+                client.Send(message);
+                client.Dispose();
+                message.Dispose();
+
+            }
+            catch (Exception e1)
+            {
+
+            } 
+        }
+
 
         public string RelativeDate(DateTime theDate)
         {

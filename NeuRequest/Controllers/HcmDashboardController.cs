@@ -1961,6 +1961,8 @@ namespace NeuRequest.Controllers
             TempData["Message"] = null;
             try
             {
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leaveBalanceEnquiryUiRender.isValid())
@@ -1996,6 +1998,7 @@ namespace NeuRequest.Controllers
                         {
                             List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
+                            List<MailItem> mailItems = new List<MailItem>();
 
                             NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
@@ -2018,11 +2021,19 @@ namespace NeuRequest.Controllers
                                 messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + newRequestId;
                                 messagesModel.MessageDate = dateCreated;
                                 messages.Add(messagesModel);
+
+
+                                MailItem mailItem = new MailItem();
+                                mailItem.Subject = messagesModel.EmptyMessage;
+                                mailItem.Body = mailTemplate;
+                                mailItem.To = "monin.jose@neudesic.com";
+                                mailItem.Priority = true;
+                                mailItems.Add(mailItem);
                             }
 
                             
                             new DataAccess().addNeuMessagess(messages);
-
+                            new Utils().mailHandilar(mailItems);
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
                             return RedirectToAction("Index");

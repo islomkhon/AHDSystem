@@ -1,0 +1,9 @@
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\bin\Debug\MailTest.exe.config
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\bin\Debug\MailTest.exe
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\bin\Debug\MailTest.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\obj\Debug\MailTest.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\obj\Debug\MailTest.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\obj\Debug\MailTest.exe
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\obj\Debug\MailTest.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\bin\Debug\EASendMail.dll
+C:\Users\Monin.Jose\source\repos\NAHD\MailTest\obj\Debug\MailTest.csproj.CopyComplete

@@ -231,6 +231,7 @@
     <Compile Include="Hubs\MessagesHub.cs" />
     <Compile Include="Models\AdalTokenCache.cs" />
     <Compile Include="Models\GeneralRequestUiRender.cs" />
+    <Compile Include="Models\MailItem.cs" />
     <Compile Include="Models\SalaryCertificateUiRender.cs" />
     <Compile Include="Models\EmployeeVerificationReqUiRender.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\MailTemplate.txt" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
