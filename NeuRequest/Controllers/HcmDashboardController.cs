@@ -6,6 +6,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace NeuRequest.Controllers
@@ -407,6 +408,9 @@ namespace NeuRequest.Controllers
             TempData["Message"] = null;
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (generalRequestUiRender.isValid())
@@ -470,6 +474,9 @@ namespace NeuRequest.Controllers
 
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
                             return RedirectToAction("Index");
                         }
                         else
@@ -681,6 +688,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -754,6 +764,8 @@ namespace NeuRequest.Controllers
 
                         new DataAccess().addNeuMessagess(messages);
 
+                        HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+                        
                         return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                     }
                     else
@@ -795,6 +807,9 @@ namespace NeuRequest.Controllers
             TempData["Message"] = null;
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (salaryCertificateUiRender.isValid())
@@ -858,6 +873,9 @@ namespace NeuRequest.Controllers
 
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
                             return RedirectToAction("Index");
                         }
                         else
@@ -1069,6 +1087,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -1142,6 +1163,8 @@ namespace NeuRequest.Controllers
 
                         new DataAccess().addNeuMessagess(messages);
 
+                        HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                         return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                     }
                     else
@@ -1183,6 +1206,9 @@ namespace NeuRequest.Controllers
             TempData["Message"] = null;
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (employeeVerificationReqUiRender.isValid())
@@ -1246,6 +1272,9 @@ namespace NeuRequest.Controllers
 
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
                             return RedirectToAction("Index");
                         }
                         else
@@ -1457,6 +1486,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+                
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -1530,6 +1562,8 @@ namespace NeuRequest.Controllers
 
                         new DataAccess().addNeuMessagess(messages);
 
+                        HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                         return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                     }
                     else
@@ -1572,6 +1606,9 @@ namespace NeuRequest.Controllers
             TempData["Message"] = null;
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (addressProofUiRender.isValid())
@@ -1635,6 +1672,9 @@ namespace NeuRequest.Controllers
 
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
                             return RedirectToAction("Index");
                         }
                         else
@@ -1846,6 +1886,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+                
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -1919,6 +1962,8 @@ namespace NeuRequest.Controllers
 
                         new DataAccess().addNeuMessagess(messages);
 
+                        HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                         return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                     }
                     else
@@ -1961,6 +2006,7 @@ namespace NeuRequest.Controllers
             TempData["Message"] = null;
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
@@ -1998,7 +2044,7 @@ namespace NeuRequest.Controllers
                         {
                             List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
-                            List<MailItem> mailItems = new List<MailItem>();
+                            //List<MailItem> mailItems = new List<MailItem>();
 
                             NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
@@ -2011,6 +2057,7 @@ namespace NeuRequest.Controllers
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
                             List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
                             List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+
                             foreach (var item in userProfilesTemp)
                             {
                                 MessagesModel messagesModel = new MessagesModel();
@@ -2022,20 +2069,22 @@ namespace NeuRequest.Controllers
                                 messagesModel.MessageDate = dateCreated;
                                 messages.Add(messagesModel);
 
-
-                                MailItem mailItem = new MailItem();
-                                mailItem.Subject = messagesModel.EmptyMessage;
+                                /*MailItem mailItem = new MailItem();
+                                mailItem.Subject = messagesModel.Message;
                                 mailItem.Body = mailTemplate;
                                 mailItem.To = "monin.jose@neudesic.com";
                                 mailItem.Priority = true;
-                                mailItems.Add(mailItem);
+                                mailItems.Add(mailItem);*/
                             }
 
                             
                             new DataAccess().addNeuMessagess(messages);
-                            new Utils().mailHandilar(mailItems);
-
+                            //new Utils().mailHandilar(mailItems);
+                            
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
                             return RedirectToAction("Index");
                         }
                         else
@@ -2247,6 +2296,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -2320,6 +2372,8 @@ namespace NeuRequest.Controllers
 
                         new DataAccess().addNeuMessagess(messages);
 
+                        HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                         return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                     }
                     else
@@ -2362,6 +2416,9 @@ namespace NeuRequest.Controllers
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leaveWFHApplyUiRender.isValid())
@@ -2429,6 +2486,9 @@ namespace NeuRequest.Controllers
 
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+                            
                             return RedirectToAction("Index");
                         }
                         else
@@ -2640,6 +2700,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -2715,6 +2778,8 @@ namespace NeuRequest.Controllers
 
                             new DataAccess().addNeuMessagess(messages);
 
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                             return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -2746,6 +2811,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -2854,6 +2922,8 @@ namespace NeuRequest.Controllers
 
                             new DataAccess().addNeuMessagess(messages);
 
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                             return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -2900,6 +2970,9 @@ namespace NeuRequest.Controllers
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leavePastApplyUiRender.isValid())
@@ -2967,6 +3040,9 @@ namespace NeuRequest.Controllers
 
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
                             return RedirectToAction("Index");
                         }
                         else
@@ -3178,6 +3254,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -3253,6 +3332,8 @@ namespace NeuRequest.Controllers
 
                             new DataAccess().addNeuMessagess(messages);
 
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                             return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -3284,6 +3365,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -3392,6 +3476,8 @@ namespace NeuRequest.Controllers
 
                             new DataAccess().addNeuMessagess(messages);
 
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                             return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -3436,6 +3522,9 @@ namespace NeuRequest.Controllers
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 var dateCreated = DateTime.UtcNow;
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leaveCancelationUiRender.isValid())
@@ -3503,6 +3592,9 @@ namespace NeuRequest.Controllers
 
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+                            
                             return RedirectToAction("Index");
                         }
                         else
@@ -3714,6 +3806,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -3789,6 +3884,8 @@ namespace NeuRequest.Controllers
 
                             new DataAccess().addNeuMessagess(messages);
 
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
                             return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -3820,6 +3917,9 @@ namespace NeuRequest.Controllers
             string requestId = formCollection["requestId"];
             try
             {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
                 if (currentUser == null || requestId == null
                    || requestId.Trim() == "")
@@ -3927,6 +4027,8 @@ namespace NeuRequest.Controllers
                             }
 
                             new DataAccess().addNeuMessagess(messages);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
 
                             return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
                         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeuRequest.DB;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -70,6 +71,344 @@ namespace NeuRequest.Models
         {
             string result = theDate.TimeAgo();
             return result;
+        }
+
+        
+
+        public void renderGenerateMailItem(string domainName, string mailTemplate, string requestId, List<MessagesModel> messages)
+        {
+            
+            string mailBody = "";
+            try
+            {
+                UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
+                List<NueRequestActivityModel> nueRequestActivityModels = new DataAccess().getRequestLogs(requestId);
+                List<AttachmentLogModel> attachmentLogModels = new DataAccess().getAttachmentLogs(requestId);
+                List<MailItem> mailItems = new List<MailItem>();
+
+                string requestStatusStr = "";
+                if (userRequest.RequestStatus == "close")
+                {
+                    requestStatusStr = "Close";
+                }
+                else if (userRequest.RequestStatus == "completed")
+                {
+                    requestStatusStr = "Completed";
+                }
+                else if (userRequest.RequestStatus == "withdraw")
+                {
+                    requestStatusStr = "Withdraw";
+                }
+                else if (userRequest.RequestStatus == "In_Approval")
+                {
+                    requestStatusStr = "In Approval";
+                }
+                else if (userRequest.RequestStatus == "created")
+                {
+                    requestStatusStr = "Created";
+                }
+
+                if (userRequest.RequestSubType == "LeaveCancelation")
+                {
+                    NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Start Date", neuLeaveCancelationModal.StartDate);
+                    messageData.Add("End Date", neuLeaveCancelationModal.EndDate);
+                    messageData.Add("Request Status", requestStatusStr);
+                    string userMessage = neuLeaveCancelationModal.Message;
+                    int approverC = 0;
+                    foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+                    {
+                        if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                        {
+                            approverC++;
+                            string isSpproved = "Pending";
+                            if(nueRequestAceessLog.Completed == 1)
+                            {
+                                isSpproved = "Completed";
+                            }
+                            var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                            messageData.Add("Request Approver_"+ approverC.ToString(), userApp.FullName + " (" + userApp.NTPLID + ") - "+ isSpproved);
+                        }
+                    }
+                    messageData.Add("Created On", neuLeaveCancelationModal.AddedOn.ToLocalTime().ToString());
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        string mailTemplateGen = mailTemplate;
+                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                        MailItem mailItem = new MailItem();
+                        mailItem.Subject = messagesModel.Message;
+                        mailItem.Body = mailTemplateGen;
+                        mailItem.To = "monin.jose@neudesic.com";
+                        mailItem.Priority = true;
+                        mailItems.Add(mailItem);
+                    }
+                }
+                else if (userRequest.RequestSubType == "LeavePastApply")
+                {
+                    NeuLeavePastApplyModal neuLeavePastApplyModal = new DataAccess().getNeuLeavePastApplyDetails(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Start Date", neuLeavePastApplyModal.StartDate);
+                    messageData.Add("End Date", neuLeavePastApplyModal.EndDate);
+                    messageData.Add("Request Status", requestStatusStr);
+                    string userMessage = neuLeavePastApplyModal.Message;
+                    int approverC = 0;
+                    foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+                    {
+                        if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                        {
+                            approverC++;
+                            string isSpproved = "Pending";
+                            if (nueRequestAceessLog.Completed == 1)
+                            {
+                                isSpproved = "Completed";
+                            }
+                            var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                            messageData.Add("Request Approver_" + approverC.ToString(), userApp.FullName + " (" + userApp.NTPLID + ") - " + isSpproved);
+                        }
+                    }
+                    messageData.Add("Created On", neuLeavePastApplyModal.AddedOn.ToLocalTime().ToString());
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        string mailTemplateGen = mailTemplate;
+                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                        MailItem mailItem = new MailItem();
+                        mailItem.Subject = messagesModel.Message;
+                        mailItem.Body = mailTemplateGen;
+                        mailItem.To = "monin.jose@neudesic.com";
+                        mailItem.Priority = true;
+                        mailItems.Add(mailItem);
+                    }
+                }
+                else if (userRequest.RequestSubType == "LeaveWFHApply")
+                {
+                    NeuLeaveWFHApplyModal neuLeaveWFHApplyModal = new DataAccess().getNeuLeaveWFHApplyDetails(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Start Date", neuLeaveWFHApplyModal.StartDate);
+                    messageData.Add("End Date", neuLeaveWFHApplyModal.EndDate);
+                    messageData.Add("Request Status", requestStatusStr);
+                    string userMessage = neuLeaveWFHApplyModal.Message;
+                    int approverC = 0;
+                    foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+                    {
+                        if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                        {
+                            approverC++;
+                            string isSpproved = "Pending";
+                            if (nueRequestAceessLog.Completed == 1)
+                            {
+                                isSpproved = "Completed";
+                            }
+                            var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                            messageData.Add("Request Approver_" + approverC.ToString(), userApp.FullName + " (" + userApp.NTPLID + ") - " + isSpproved);
+                        }
+                    }
+                    messageData.Add("Created On", neuLeaveWFHApplyModal.AddedOn.ToLocalTime().ToString());
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        string mailTemplateGen = mailTemplate;
+                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                        MailItem mailItem = new MailItem();
+                        mailItem.Subject = messagesModel.Message;
+                        mailItem.Body = mailTemplateGen;
+                        mailItem.To = "monin.jose@neudesic.com";
+                        mailItem.Priority = true;
+                        mailItems.Add(mailItem);
+                    }
+                }
+                else if (userRequest.RequestSubType == "LeaveBalanceEnquiry")
+                {
+                    LeaveBalanceEnquiryModal leaveBalanceEnquiryModal = new DataAccess().getNeuLeaveBalanceEnquiryDetails(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Start Date", leaveBalanceEnquiryModal.StartDate);
+                    messageData.Add("End Date", leaveBalanceEnquiryModal.EndDate);
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", leaveBalanceEnquiryModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = leaveBalanceEnquiryModal.Message;
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        string mailTemplateGen = mailTemplate;
+                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                        MailItem mailItem = new MailItem();
+                        mailItem.Subject = messagesModel.Message;
+                        mailItem.Body = mailTemplateGen;
+                        mailItem.To = "monin.jose@neudesic.com";
+                        mailItem.Priority = true;
+                        mailItems.Add(mailItem);
+                    }
+                }
+                else if (userRequest.RequestSubType == "HCMAddressProof")
+                {
+                    AddressProofModal addressProofModal = new DataAccess().getNeuAddressProofModalDetails(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", addressProofModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = addressProofModal.Message;
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        string mailTemplateGen = mailTemplate;
+                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                        MailItem mailItem = new MailItem();
+                        mailItem.Subject = messagesModel.Message;
+                        mailItem.Body = mailTemplateGen;
+                        mailItem.To = "monin.jose@neudesic.com";
+                        mailItem.Priority = true;
+                        mailItems.Add(mailItem);
+                    }
+                }
+                else if (userRequest.RequestSubType == "HCMEmployeeVerification")
+                {
+                    EmployeeVerificationReqModal employeeVerificationReqModal = new DataAccess().getNeuEmployeeVerificationReqModalDetails(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", employeeVerificationReqModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = employeeVerificationReqModal.Message;
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        string mailTemplateGen = mailTemplate;
+                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                        MailItem mailItem = new MailItem();
+                        mailItem.Subject = messagesModel.Message;
+                        mailItem.Body = mailTemplateGen;
+                        mailItem.To = "monin.jose@neudesic.com";
+                        mailItem.Priority = true;
+                        mailItems.Add(mailItem);
+                    }
+                }
+                else if (userRequest.RequestSubType == "SalaryCertificate")
+                {
+                    SalaryCertificateModal salaryCertificateModal = new DataAccess().getNeuSalaryCertificateModalDetails(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", salaryCertificateModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = salaryCertificateModal.Message;
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        string mailTemplateGen = mailTemplate;
+                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                        MailItem mailItem = new MailItem();
+                        mailItem.Subject = messagesModel.Message;
+                        mailItem.Body = mailTemplateGen;
+                        mailItem.To = "monin.jose@neudesic.com";
+                        mailItem.Priority = true;
+                        mailItems.Add(mailItem);
+                    }
+                }
+                else if (userRequest.RequestSubType == "HCMGeneral")
+                {
+                    GeneralRequestModal generalRequestModal = new DataAccess().getNeuGeneralRequestModalDetails(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", generalRequestModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = generalRequestModal.Message;
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        string mailTemplateGen = mailTemplate;
+                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                        MailItem mailItem = new MailItem();
+                        mailItem.Subject = messagesModel.Message;
+                        mailItem.Body = mailTemplateGen;
+                        mailItem.To = "monin.jose@neudesic.com";
+                        mailItem.Priority = true;
+                        mailItems.Add(mailItem);
+                    }
+                }
+
+                mailHandilar(mailItems);
+
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
+
+        private string generateMailDataRow(Dictionary<string, string> messageData)
+        {
+            string returnVal = "";
+            foreach (var item in messageData)
+            {
+                returnVal += "<tr>\r\n" +
+                    "                              <td align=\"left\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;\">\r\n" +
+                    item.Key +
+                    "                              </td>\r\n" +
+                    "                              <td align=\"left\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;\">\r\n" +
+                    item.Value +
+                    "                              </td>\r\n" +
+                    "                            </tr>";
+            }
+            return returnVal;
         }
 
         public string generateRequestSearchUiRender(List<RequestSearchRender> requestSearchRenders, List<UserProfile> userProfiles)
