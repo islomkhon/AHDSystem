@@ -266,6 +266,36 @@
         </div>
     </div>
 
+    <div class="modal fade" id="directMessageModel" tabindex="-1" role="dialog" aria-labelledby="directMessageModel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4">Send Direct Mail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="Direct_Mail_Form" action="/HcmDashboard/DirectMail" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="Direct_Mail_Request_Id" id="Direct_Mail_Request_Id" value="@ViewData["RequestId"]"/>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                            <input type="text" class="form-control" id="Direct_Mail_Request_Recipient" name="Direct_Mail_Request_Recipient">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="Direct_Mail_Request_Comment" name="Direct_Mail_Request_Comment" rows="4"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success directMessageModel_trigger">Send</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <div class="modal fade" id="fileAttchmentModal-1" tabindex="-1" role="dialog" aria-labelledby="fileAttchmentModal-4" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -309,7 +339,63 @@
                 window.location = target;
             });
 
-            $()
+            if ($(".mail-tigger").length) {
+                $(document).on('click', '.mail-tigger', function (e) {
+                    var target = $(this).data('target');
+                    var id = $(this).data('id');
+
+                    $('#Direct_Mail_Request_Recipient').val(target+";");
+                    $('#Direct_Mail_Request_Comment').val('');
+
+                    $('#directMessageModel').modal('show');
+                    
+                });
+            }
+
+            $(document).on('click', '.directMessageModel_trigger', function (e) {
+                var formData = new FormData();
+                formData.append("Direct_Mail_Request_Id", "" + $('#Direct_Mail_Request_Id').val() + "");
+                formData.append("Direct_Mail_Request_Recipient", "" + $('#Direct_Mail_Request_Recipient').val() + "");
+                formData.append("Direct_Mail_Request_Comment", $('#Direct_Mail_Request_Comment').val());
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    enctype: 'multipart/form-data',
+                    url: "/HcmDashboard/DirectMail",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function (data) {
+                        if (data.status == 'Ok') {
+                            $.toast({
+                                heading: '...',
+                                text: data.message,
+                                showHideTransition: 'slide',
+                                icon: 'info',
+                                loaderBg: '#46c35f',
+                                position: 'top-right'
+                            });
+                            $('#directMessageModel').modal('hide');
+                        }
+                        else {
+                            $.toast({
+                                heading: '...',
+                                text: data.message,
+                                showHideTransition: 'slide',
+                                icon: 'info',
+                                loaderBg: '#46c35f',
+                                position: 'top-right'
+                            });
+                        }
+                    },
+                    error: function (e) {
+                        console.log("ERROR : ", e);
+                    }
+                });
+                
+            });
 
             $('#request-summary-listing').DataTable({
                 "aLengthMenu": [

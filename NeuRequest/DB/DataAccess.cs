@@ -140,6 +140,52 @@ namespace NeuRequest.DB
             return userRequestUiGridRenders;
         }
 
+        public List<UserRequestUiGridRender> getHcmActivePreApproverRequests()
+        {
+            List<UserRequestUiGridRender> userRequestUiGridRenders = new List<UserRequestUiGridRender>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"select DISTINCT nrm.Id as NueRequestMasterId, nup.Id as UserId, nup.FullName as FullName, nup.NTPLID as NTPLID, nrm.RequestId as RequestId, nrst.Id as NueRequestSubTypeId, nrst.RequestSubType as RequestSubType, 
+                                                        nrs.Id as NueRequestStatusId, nrs.RequestStatus as RequestStatus, nrm.AddedOn as AddedOn, nrm.ModifiedOn as ModifiedOn from
+                                                        NueRequestMaster nrm 
+                                                        join NueRequestAceessLog nral on nrm.Id = nral.RequestId
+                                                        join NueRequestSubType nrst on nrm.RequestCatType = nrst.id
+                                                        join NueRequestType nrt on nrst.RequestType = nrt.Id
+                                                        join NueRequestStatus nrs on nrm.RequestStatus = nrs.Id
+                                                        join NueUserProfile nup on nrm.CreatedBy = nup.Id
+                                                        where (nrs.RequestStatus != 'withdraw' and nrs.RequestStatus != 'close')
+                                                        and nrt.RequestType = @RequestType
+														and nral.Completed = @Completed
+														and nral.OwnerId != nral.UserId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@Completed", 0);
+                    cmd.Parameters.AddWithValue("@RequestType", "HCM");
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            UserRequestUiGridRender userRequestUiGridRender = new UserRequestUiGridRender();
+                            userRequestUiGridRender.NueRequestMasterId = ConvertFromDBVal<int>(dataReader["NueRequestMasterId"]);
+                            userRequestUiGridRender.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            userRequestUiGridRender.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            userRequestUiGridRender.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
+                            userRequestUiGridRender.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            userRequestUiGridRender.NueRequestSubTypeId = ConvertFromDBVal<int>(dataReader["NueRequestSubTypeId"]);
+                            userRequestUiGridRender.RequestSubType = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
+                            userRequestUiGridRender.NueRequestStatusId = ConvertFromDBVal<int>(dataReader["NueRequestStatusId"]);
+                            userRequestUiGridRender.RequestStatus = ConvertFromDBVal<string>(dataReader["RequestStatus"]);
+                            userRequestUiGridRender.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            userRequestUiGridRender.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            userRequestUiGridRenders.Add(userRequestUiGridRender);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return userRequestUiGridRenders;
+        }
+
         public List<UserRequestUiGridRender> getHcmActiveApproverRequests(int uid)
         {
             List<UserRequestUiGridRender> userRequestUiGridRenders = new List<UserRequestUiGridRender>();
@@ -1359,6 +1405,32 @@ namespace NeuRequest.DB
                             }
                         }
 
+                        if (userProfile != null)
+                        {
+                            userProfile.userPreference = new UserPreference();
+                            string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication
+                                          FROM NeuUserPreference nup 
+                                          join NueUserProfile as np on nup.UserId = np.Id
+                                          where np.Id = @UserId";
+                            SqlCommand command1 = new SqlCommand(sql1, connection);
+                            SqlParameter param1 = new SqlParameter();
+                            param1.ParameterName = "@UserId";
+                            param1.Value = userProfile.Id;
+                            command1.Parameters.Add(param1);
+                            using (SqlDataReader dataReader1 = command1.ExecuteReader())
+                            {
+                                while (dataReader1.Read())
+                                {
+                                    UserPreference userPreference = new UserPreference();
+                                    userPreference.Id = ConvertFromDBVal<int>(dataReader1["Id"]);
+                                    userPreference.UserId = ConvertFromDBVal<int>(dataReader1["UserId"]);
+                                    userPreference.IsMailCommunication = ConvertFromDBVal<int>(dataReader1["IsMailCommunication"]);
+                                    userProfile.userPreference = userPreference;
+                                }
+                            }
+                        }
+
+
                         userProfiles.Add(userProfile);
                     }
                 }
@@ -1525,6 +1597,10 @@ namespace NeuRequest.DB
                 int rowsAffected = updateUserProfile(userProfileOld);
                 if(rowsAffected != -1)
                 {
+                    //update user pref
+                    UserPreference userPreference = userProfile.userPreference;
+                    userPreference.UserId = userProfileOld.Id;
+                    updateUserPreference(userPreference);
                     userProfile = getUserProfile(userProfile.Email);
                 }
                 else
@@ -1537,6 +1613,11 @@ namespace NeuRequest.DB
                 int rowsAffected = addNewUserProfile(userProfile);
                 if (rowsAffected != -1)
                 {
+                    userProfile = getUserProfile(userProfile.Email);
+                    UserPreference userPreference = new UserPreference();
+                    userPreference.UserId = userProfile.Id;
+                    userPreference.IsMailCommunication = 1;
+                    addUserPreference(userPreference);
                     userProfile = getUserProfile(userProfile.Email);
                 }
                 else
@@ -1621,6 +1702,47 @@ namespace NeuRequest.DB
                         cmd.Parameters.AddWithValue("@AccessId", item.AccessItemId);
                         modified = (int)cmd.ExecuteScalar();
                     }
+                }
+                connection.Close();
+            }
+            return modified;
+        }
+
+        public int addUserPreference(UserPreference userPreference)
+        {
+            var dateCreated = DateTime.UtcNow;
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NeuUserPreference (UserId, IsMailCommunication, AddedOn, ModifiedOn) " +
+                                      "output INSERTED.ID VALUES(@UserId, @IsMailCommunication, @AddedOn, @ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userPreference.UserId);
+                    cmd.Parameters.AddWithValue("@IsMailCommunication", userPreference.IsMailCommunication);
+                    cmd.Parameters.AddWithValue("@AddedOn", dateCreated);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", dateCreated);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+        }
+
+        public int updateUserPreference(UserPreference userPreference)
+        {
+            var dateCreated = DateTime.UtcNow;
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("UPDATE NeuUserPreference SET IsMailCommunication = @IsMailCommunication, " +
+                        "ModifiedOn = @ModifiedOn  WHERE UserId = @UserId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userPreference.UserId);
+                    cmd.Parameters.AddWithValue("@IsMailCommunication", userPreference.IsMailCommunication);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", dateCreated);
+                    modified = (int)cmd.ExecuteNonQuery();
                 }
                 connection.Close();
             }
@@ -1830,6 +1952,31 @@ namespace NeuRequest.DB
                     }
                 }
 
+                if (userProfile != null)
+                {
+                    userProfile.userPreference = new UserPreference();
+                    string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication
+                                          FROM NeuUserPreference nup 
+                                          join NueUserProfile as np on nup.UserId = np.Id
+                                          where np.Id = @UserId";
+                    SqlCommand command1 = new SqlCommand(sql1, connection);
+                    SqlParameter param1 = new SqlParameter();
+                    param1.ParameterName = "@UserId";
+                    param1.Value = userProfile.Id;
+                    command1.Parameters.Add(param1);
+                    using (SqlDataReader dataReader1 = command1.ExecuteReader())
+                    {
+                        while (dataReader1.Read())
+                        {
+                            UserPreference userPreference = new UserPreference();
+                            userPreference.Id = ConvertFromDBVal<int>(dataReader1["Id"]);
+                            userPreference.UserId = ConvertFromDBVal<int>(dataReader1["UserId"]);
+                            userPreference.IsMailCommunication = ConvertFromDBVal<int>(dataReader1["IsMailCommunication"]);
+                            userProfile.userPreference = userPreference;
+                        }
+                    }
+                }
+
                 connection.Close();
             }
             return userProfile;
@@ -1906,6 +2053,33 @@ namespace NeuRequest.DB
                         }
                     }
                 }
+
+                if (userProfile != null)
+                {
+                    userProfile.userPreference = new UserPreference();
+                    string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication
+                                          FROM NeuUserPreference nup 
+                                          join NueUserProfile as np on nup.UserId = np.Id
+                                          where np.Id = @UserId";
+                    SqlCommand command1 = new SqlCommand(sql1, connection);
+                    SqlParameter param1 = new SqlParameter();
+                    param1.ParameterName = "@UserId";
+                    param1.Value = userProfile.Id;
+                    command1.Parameters.Add(param1);
+                    using (SqlDataReader dataReader1 = command1.ExecuteReader())
+                    {
+                        while (dataReader1.Read())
+                        {
+                            UserPreference userPreference = new UserPreference();
+                            userPreference.Id = ConvertFromDBVal<int>(dataReader1["Id"]);
+                            userPreference.UserId = ConvertFromDBVal<int>(dataReader1["UserId"]);
+                            userPreference.IsMailCommunication = ConvertFromDBVal<int>(dataReader1["IsMailCommunication"]);
+                            userProfile.userPreference = userPreference;
+                        }
+                    }
+                }
+
+
 
                 connection.Close();
             }

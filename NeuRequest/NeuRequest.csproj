@@ -250,6 +250,7 @@
     <Compile Include="Models\NueRequestMaster.cs" />
     <Compile Include="Models\RequestSearchRender.cs" />
     <Compile Include="Models\UserAccess.cs" />
+    <Compile Include="Models\UserPreference.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\UserRequestUiGridRender.cs" />
     <Compile Include="Models\Utils.cs" />
@@ -1421,6 +1422,7 @@
     <Content Include="Views\HcmDashboard\EmployeeVerificationReq.cshtml" />
     <Content Include="Views\HcmDashboard\SalaryCertificate.cshtml" />
     <Content Include="Views\HcmDashboard\GeneralRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\PreApprovalHCMHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Analytics\" />

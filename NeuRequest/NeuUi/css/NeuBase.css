@@ -2785,3 +2785,18 @@ select[readonly].select2 + .select2-container {
     display: none;
 }
 }
+
+.im-tigger {
+    font-size: large;
+    color: #0389fb;
+    margin: 0 10px;
+    position: relative;
+    float: right;
+}
+
+.mail-tigger {
+    font-size: large;
+    color: #fb0353;
+    position: relative;
+    float: right;
+}

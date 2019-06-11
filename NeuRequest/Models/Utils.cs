@@ -131,7 +131,9 @@ namespace NeuRequest.Models
                             {
                                 isSpproved = "Completed";
                             }
+
                             var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                            
                             messageData.Add("Request Approver_"+ approverC.ToString(), userApp.FullName + " (" + userApp.NTPLID + ") - "+ isSpproved);
                         }
                     }
@@ -142,17 +144,19 @@ namespace NeuRequest.Models
                         string messageTitle = messagesModel.EmptyMessage;
                         string requestUrl = domainName + messagesModel.Target;
                         var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+                        if(mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
 
-                        string mailTemplateGen = mailTemplate;
-                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
-                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
-
-                        MailItem mailItem = new MailItem();
-                        mailItem.Subject = messagesModel.Message;
-                        mailItem.Body = mailTemplateGen;
-                        mailItem.To = "monin.jose@neudesic.com";
-                        mailItem.Priority = true;
-                        mailItems.Add(mailItem);
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
                     }
                 }
                 else if (userRequest.RequestSubType == "LeavePastApply")
@@ -188,16 +192,19 @@ namespace NeuRequest.Models
                         string requestUrl = domainName + messagesModel.Target;
                         var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
 
-                        string mailTemplateGen = mailTemplate;
-                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
-                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+                        if(mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
 
-                        MailItem mailItem = new MailItem();
-                        mailItem.Subject = messagesModel.Message;
-                        mailItem.Body = mailTemplateGen;
-                        mailItem.To = "monin.jose@neudesic.com";
-                        mailItem.Priority = true;
-                        mailItems.Add(mailItem);
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
                     }
                 }
                 else if (userRequest.RequestSubType == "LeaveWFHApply")
@@ -233,16 +240,19 @@ namespace NeuRequest.Models
                         string requestUrl = domainName + messagesModel.Target;
                         var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
 
-                        string mailTemplateGen = mailTemplate;
-                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
-                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+                        if(mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
 
-                        MailItem mailItem = new MailItem();
-                        mailItem.Subject = messagesModel.Message;
-                        mailItem.Body = mailTemplateGen;
-                        mailItem.To = "monin.jose@neudesic.com";
-                        mailItem.Priority = true;
-                        mailItems.Add(mailItem);
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
                     }
                 }
                 else if (userRequest.RequestSubType == "LeaveBalanceEnquiry")
@@ -262,16 +272,19 @@ namespace NeuRequest.Models
                         string requestUrl = domainName + messagesModel.Target;
                         var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
 
-                        string mailTemplateGen = mailTemplate;
-                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
-                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+                        if(mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
 
-                        MailItem mailItem = new MailItem();
-                        mailItem.Subject = messagesModel.Message;
-                        mailItem.Body = mailTemplateGen;
-                        mailItem.To = "monin.jose@neudesic.com";
-                        mailItem.Priority = true;
-                        mailItems.Add(mailItem);
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
                     }
                 }
                 else if (userRequest.RequestSubType == "HCMAddressProof")
@@ -289,16 +302,19 @@ namespace NeuRequest.Models
                         string requestUrl = domainName + messagesModel.Target;
                         var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
 
-                        string mailTemplateGen = mailTemplate;
-                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
-                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+                        if(mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
 
-                        MailItem mailItem = new MailItem();
-                        mailItem.Subject = messagesModel.Message;
-                        mailItem.Body = mailTemplateGen;
-                        mailItem.To = "monin.jose@neudesic.com";
-                        mailItem.Priority = true;
-                        mailItems.Add(mailItem);
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
                     }
                 }
                 else if (userRequest.RequestSubType == "HCMEmployeeVerification")
@@ -316,16 +332,19 @@ namespace NeuRequest.Models
                         string requestUrl = domainName + messagesModel.Target;
                         var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
 
-                        string mailTemplateGen = mailTemplate;
-                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
-                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+                        if(mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
 
-                        MailItem mailItem = new MailItem();
-                        mailItem.Subject = messagesModel.Message;
-                        mailItem.Body = mailTemplateGen;
-                        mailItem.To = "monin.jose@neudesic.com";
-                        mailItem.Priority = true;
-                        mailItems.Add(mailItem);
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
                     }
                 }
                 else if (userRequest.RequestSubType == "SalaryCertificate")
@@ -344,16 +363,19 @@ namespace NeuRequest.Models
                         string requestUrl = domainName + messagesModel.Target;
                         var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
 
-                        string mailTemplateGen = mailTemplate;
-                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
-                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+                        if(mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
 
-                        MailItem mailItem = new MailItem();
-                        mailItem.Subject = messagesModel.Message;
-                        mailItem.Body = mailTemplateGen;
-                        mailItem.To = "monin.jose@neudesic.com";
-                        mailItem.Priority = true;
-                        mailItems.Add(mailItem);
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
                     }
                 }
                 else if (userRequest.RequestSubType == "HCMGeneral")
@@ -372,16 +394,19 @@ namespace NeuRequest.Models
                         string requestUrl = domainName + messagesModel.Target;
                         var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
 
-                        string mailTemplateGen = mailTemplate;
-                        mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
-                            .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+                        if(mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
 
-                        MailItem mailItem = new MailItem();
-                        mailItem.Subject = messagesModel.Message;
-                        mailItem.Body = mailTemplateGen;
-                        mailItem.To = "monin.jose@neudesic.com";
-                        mailItem.Priority = true;
-                        mailItems.Add(mailItem);
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
                     }
                 }
 
@@ -510,15 +535,34 @@ namespace NeuRequest.Models
             string uiMenuRender = "";
             string approverStr = "";
 
+            string communicaterOwnerLink = "";
+
             UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\""+ userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
 
             foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
                 if(nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                 {
+
                     var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+
+                    string communicaterLink = "";
+
+                    if (userApp.userPreference.IsMailCommunication == 1)
+                    {
+                        communicaterLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                        communicaterLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                    }
+
                     approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
                     "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    communicaterLink+
                     "                            <br>\r\n";
                 }
             }
@@ -747,6 +791,7 @@ namespace NeuRequest.Models
                     "                                        <div class=\"card-body\">\r\n" +
                     "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
                     "                                            <span>"+ requestOwner.FullName +" ("+ requestOwner.NTPLID+ ") </span>\r\n" +
+                    communicaterOwnerLink +
                     "                                            <br>\r\n" +
                     approverStr +
                     "                                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
@@ -782,15 +827,31 @@ namespace NeuRequest.Models
             string uiMenuRender = "";
             string approverStr = "";
 
+            string communicaterOwnerLink = "";
+
             UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
 
             foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
                 if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                 {
                     var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+
+                    string communicaterLink = "";
+
+                    if(userApp.userPreference.IsMailCommunication == 1)
+                    {
+                        communicaterLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                        communicaterLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                    }
                     approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
                     "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    communicaterLink+
                     "                            <br>\r\n";
                 }
             }
@@ -925,6 +986,7 @@ namespace NeuRequest.Models
            "                                        <div class=\"card-body\">\r\n" +
            "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
            "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           communicaterOwnerLink+
            "                                            <br>\r\n" +
            approverStr +
            "                                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
@@ -960,15 +1022,30 @@ namespace NeuRequest.Models
             string uiMenuRender = "";
             string approverStr = "";
 
+            string communicaterOwnerLink = "";
+
             UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
 
             foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
                 if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                 {
                     var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    string communicaterLink = "";
+
+                    if (userApp.userPreference.IsMailCommunication == 1)
+                    {
+                        communicaterLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                        communicaterLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                    }
                     approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
                     "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    communicaterLink+
                     "                            <br>\r\n";
                 }
             }
@@ -1103,6 +1180,7 @@ namespace NeuRequest.Models
            "                                        <div class=\"card-body\">\r\n" +
            "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
            "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           communicaterOwnerLink+
            "                                            <br>\r\n" +
            approverStr +
            "                                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
@@ -1138,8 +1216,15 @@ namespace NeuRequest.Models
             string uiMenuRender = "";
             string approverStr = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            string communicaterOwnerLink = "";
 
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+            
             /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
                 if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
@@ -1281,6 +1366,7 @@ namespace NeuRequest.Models
            "                                        <div class=\"card-body\">\r\n" +
            "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
            "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           communicaterOwnerLink +
            "                                            <br>\r\n" +
            approverStr +
            "                                            <h5 class=\"m-t-30\">Start Date</h5>\r\n" +
@@ -1316,7 +1402,15 @@ namespace NeuRequest.Models
             string uiMenuRender = "";
             string approverStr = "";
 
+            string communicaterOwnerLink = "";
+
             UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
 
             /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
@@ -1459,6 +1553,7 @@ namespace NeuRequest.Models
            "                                        <div class=\"card-body\">\r\n" +
            "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
            "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           communicaterOwnerLink +
            "                                            <br>\r\n" +
            approverStr +
            "                                            <br>\r\n" +
@@ -1489,7 +1584,15 @@ namespace NeuRequest.Models
             string uiMenuRender = "";
             string approverStr = "";
 
+            string communicaterOwnerLink = "";
+
             UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
 
             /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
@@ -1632,6 +1735,7 @@ namespace NeuRequest.Models
            "                                        <div class=\"card-body\">\r\n" +
            "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
            "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           communicaterOwnerLink +
            "                                            <br>\r\n" +
            approverStr +
            "                                            <br>\r\n" +
@@ -1662,7 +1766,15 @@ namespace NeuRequest.Models
             string uiMenuRender = "";
             string approverStr = "";
 
+            string communicaterOwnerLink = "";
+
             UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
 
             /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
@@ -1805,6 +1917,7 @@ namespace NeuRequest.Models
            "                                        <div class=\"card-body\">\r\n" +
            "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
            "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           communicaterOwnerLink +
            "                                            <br>\r\n" +
            approverStr +
            "                                            <br>\r\n" +
@@ -1835,7 +1948,15 @@ namespace NeuRequest.Models
             string uiMenuRender = "";
             string approverStr = "";
 
+            string communicaterOwnerLink = "";
+
             UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
 
             /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
@@ -1978,6 +2099,7 @@ namespace NeuRequest.Models
            "                                        <div class=\"card-body\">\r\n" +
            "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
            "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           communicaterOwnerLink +
            "                                            <br>\r\n" +
            approverStr +
            "                                            <br>\r\n" +

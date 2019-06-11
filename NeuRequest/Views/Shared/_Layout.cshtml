@@ -177,6 +177,34 @@
                 window.location = $(this).data('target');
             });
 
+            if ($(".im-tigger").length) {
+                $(document).on('click', '.im-tigger', function (e) {
+                    var target = $(this).data('target');
+                    var id = $(this).data('id');
+
+                    var el = document.createElement('textarea');
+                    // Set value (string to be copied)
+                    el.value = "Request Id: #"+id;
+                    // Set non-editable to avoid focus and move outside of view
+                    el.setAttribute('readonly', '');
+                    el.style = { position: 'absolute', left: '-9999px' };
+                    document.body.appendChild(el);
+                    // Select text inside element
+                    el.select();
+                    // Copy text to clipboard
+                    document.execCommand('copy');
+                    // Remove temporary element
+                    document.body.removeChild(el);
+
+                    var link = document.createElement('a');
+                    link.href = "im:<sip:" + target + ">";
+                    link.className = "tempLink";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
+
             var notifications = $.connection.messagesHub;
 
             //debugger;

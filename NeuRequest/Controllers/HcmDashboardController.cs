@@ -119,6 +119,35 @@ namespace NeuRequest.Controllers
             }
         }
 
+
+        public ActionResult PreApprovalHCMHistory()
+        {
+            if (Session["UserProfileSession"] == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+
+            var userAceess = currentUser.userAccess;
+            int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
+            if (adminUsers > 0)
+            {
+                List<UserRequestUiGridRender> userRequestUiGridRenders = new DataAccess().getHcmActivePreApproverRequests();
+                ViewData["userRequestUiGridRenders"] = userRequestUiGridRenders;
+                ViewData["UserProfileSession"] = currentUser;
+
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Invalid access", errorCode = "404" });
+            }
+        }
+
         public ActionResult ApprovalHCMHistory()
         {
             if (Session["UserProfileSession"] == null)
@@ -4253,6 +4282,99 @@ namespace NeuRequest.Controllers
 
             }
             return RedirectToAction("SelfRequestDetails", new { requestId = requestId, message = retrunResponse });
+        }
+
+        [HttpPost]
+        public JsonResult DirectMail(FormCollection formCollection)
+        {
+            var dateCreated = DateTime.UtcNow;
+            string userComment = formCollection["Direct_Mail_Request_Comment"];
+            string recipient = formCollection["Direct_Mail_Request_Recipient"];
+            string requestId = formCollection["Direct_Mail_Request_Id"];
+            try
+            {
+
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (currentUser == null || userComment == null || recipient == null || requestId == null
+                   || userComment.Trim() == "" || recipient.Trim() == "" || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+                List<MessagesModel> messages = new List<MessagesModel>();
+
+                if (!recipient.EndsWith(";"))
+                {
+                    recipient += ";";
+                }
+                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
+                UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                if(userRequest == null || userRequest.RequestId != requestId)
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                var userAceess = currentUser.userAccess;
+                bool userAccess = false;
+
+                int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
+                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                if (userRequest == null)
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (adminUsers > 0)
+                {
+                    userAccess = true;
+                }
+
+                if (nueRequestAceessLogs.Where(x => (x.UserId == currentUser.Id && x.OwnerId != currentUser.Id)).Count() > 0)
+                {
+                    userAccess = true;
+                }
+
+                if (userRequest.OwnerId == currentUser.Id)
+                {
+                    userAccess = true;
+                }
+
+                if (!userAccess)
+                {
+                    return Json(new JsonResponse("Failed", "You are not autharised to perform this action"), JsonRequestBehavior.AllowGet);
+                }
+
+                var toUsers = recipient.Split(';').ToList();
+
+                foreach (var item in toUsers)
+                {
+                    var user = userProfiles.Where(x => x.Email == item);
+                    if(user != null && user.Count() > 0 && user.First().Email != null && user.First().Email.Trim() != "")
+                    {
+                        MessagesModel messagesModel = new MessagesModel();
+                        messagesModel.Message = currentUser.FullName +" send you a message";
+                        messagesModel.EmptyMessage = "<div style=\"font-size: 15px; font-weight: 500; text-align: left; line-height: 17px;\">" + userComment+"</div>";
+                        messagesModel.Processed = 0;
+                        messagesModel.UserId = user.First().Id;
+                        messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + userRequest.RequestId;
+                        messagesModel.MessageDate = dateCreated;
+                        messages.Add(messagesModel);
+                    }
+                }
+                
+
+                HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, requestId, messages));
+
+
+                return Json(new JsonResponse("Ok", "Message send successfully."), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while sending mail"), JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

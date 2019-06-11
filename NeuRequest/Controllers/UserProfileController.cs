@@ -82,10 +82,40 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
-        public ActionResult Update(UserProfile userProfile)
+        public ActionResult Update(FormCollection formCollection)
         {
+            string NTPLID = formCollection["NTPLID"];
+            string Email = formCollection["Email"];
+            string FullName = formCollection["FullName"];
+            string FirstName = formCollection["FirstName"];
+            string MiddleName = formCollection["MiddleName"];
+            string LastName = formCollection["LastName"];
+            string DateofJoining = formCollection["DateofJoining"];
+            string EmpStatusId = formCollection["EmpStatusId"];
+            string PracticeId = formCollection["PracticeId"];
+            string JLId = formCollection["JLId"];
+            string DSId = formCollection["DSId"];
+            string Location = formCollection["Location"];
+            string Active = formCollection["Active"];
+            string IsMailCommunication = formCollection["IsMailCommunication"];
+            UserProfile userProfile = new UserProfile();
             try
             {
+                userProfile.NTPLID = NTPLID;
+                userProfile.Email = Email;
+                userProfile.FullName = FullName;
+                userProfile.FirstName = FirstName;
+                userProfile.MiddleName = MiddleName;
+                userProfile.LastName = LastName;
+                userProfile.DateofJoining = DateofJoining;
+                userProfile.EmpStatusId = int.Parse(EmpStatusId);
+                userProfile.PracticeId = int.Parse(PracticeId);
+                userProfile.JLId = int.Parse(JLId);
+                userProfile.DSId = int.Parse(DSId);
+                userProfile.Location = Location;
+                userProfile.Active = int.Parse(Active);
+                userProfile.userPreference = new UserPreference();
+                userProfile.userPreference.IsMailCommunication = int.Parse(IsMailCommunication);
                 if (userProfile.isValid())
                 {
                     userProfile = new DataAccess().saveUserProfile(userProfile);

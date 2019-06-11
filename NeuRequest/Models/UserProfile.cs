@@ -27,6 +27,7 @@ namespace NeuRequest.Models
         public int Active { get; set; }
         public string AddedOn { get; set; }
         public List<UserAccess> userAccess { get; set; }
+        public UserPreference userPreference { get; set; }
 
         public bool isValid()
         {

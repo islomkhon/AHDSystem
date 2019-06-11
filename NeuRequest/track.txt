@@ -1977,3 +1977,9 @@ port: 25
 
 add ondemand mail to user from hcm
 
+when using smtp with mail.neudesic.com, are you using your email id as "From" email address? In that case, it may not work. You can use a generic email like hcmtool@neudesic.com
+
+It is still not working, you can try with Office 365, but you will need to use your email id as From Address and use your password. Please find below links for reference.
+https://docs.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-office-3 
+
+<a href="im:<sip:Robin.Abraham@neudesic.com>">Call Me</a>
