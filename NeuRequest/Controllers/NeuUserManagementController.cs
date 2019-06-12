@@ -18,7 +18,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -28,7 +28,7 @@ namespace NeuRequest.Controllers
             int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
             if (adminUsers > 0)
             {
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
+                List<UserProfile> userProfiles = new DataAccess().getAllUserProfilesAll();
                 ViewData["userProfiles"] = userProfiles;
                 ViewData["UserProfileSession"] = currentUser;
                 return View();
@@ -47,7 +47,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -90,7 +90,7 @@ namespace NeuRequest.Controllers
                     return RedirectToAction("SignIn", "Account");
                 }
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null)
+                if (!Utils.isValidUserObject(currentUser))
                 {
                     return RedirectToAction("SignIn", "Account");
                 }
@@ -172,6 +172,52 @@ namespace NeuRequest.Controllers
             }
         }
 
+        
+        [HttpPost]
+        public JsonResult ChangeUserActivate(FormCollection formCollection)
+        {
+            string userId = formCollection["id"];
+            try
+            {
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || userId == null
+                   || userId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+                List<UserProfile> userProfiles = new DataAccess().getAllUserProfilesAll();
+                var userTemp = userProfiles.Where(x => x.Id == int.Parse(userId));
+                if(userTemp == null || userTemp.Count() <= 0)
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                var targetUser = userTemp.First();
+                if(targetUser.Active == 0)
+                {
+                    targetUser.Active = 1;
+                }
+                else
+                {
+                    targetUser.Active = 0;
+                }
+
+                var isUpdated = new DataAccess().updateUserProfileActiveState(targetUser);
+                if (isUpdated != -1)
+                {
+                    return Json(new JsonResponse("Ok", "Data updated successfully."), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    throw new Exception("Invalid request");
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public ActionResult EditNeuUserDetails(string id)
         {
             if (Session["UserProfileSession"] == null)
@@ -179,7 +225,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -225,7 +271,7 @@ namespace NeuRequest.Controllers
                     return RedirectToAction("SignIn", "Account");
                 }
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null)
+                if (!Utils.isValidUserObject(currentUser))
                 {
                     return RedirectToAction("SignIn", "Account");
                 }

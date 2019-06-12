@@ -1340,6 +1340,105 @@ namespace NeuRequest.DB
             return nueRequestActivityMaster;
         }
 
+        public List<UserProfile> getAllUserProfilesAll()
+        {
+            List<UserProfile> userProfiles = new List<UserProfile>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql = @"SELECT NP.Id, NTPLID, Email, FullName, FirstName, MiddleName, LastName
+	                           ,ems.Id as EmpStatusId, ems.Status as EmpStatusDesc, DateofJoining, pc.Id as PracticeId, 
+                                pc.Practice as PracticeDesc, Location, jl.Id as JLId, jl.[LEVEL] as JLDesc, 
+                                ds.Id as DSId, ds.Desig as DSDesc, Active, NP.AddedOn
+                                FROM NueUserProfile as NP join EmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
+                                join Practice as pc on NP.Practice = pc.Id 
+                                join JobLevel as jl on NP.JobLevel = jl.Id 
+                                join Designation as ds on NP.Designation = ds.Id";
+                SqlCommand command = new SqlCommand(sql, connection);
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        UserProfile userProfile = new UserProfile();
+                        //var nt = dataReader["NTPLID"];
+                        userProfile.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                        userProfile.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
+                        userProfile.Email = ConvertFromDBVal<string>(dataReader["Email"]);
+                        userProfile.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                        userProfile.FirstName = ConvertFromDBVal<string>(dataReader["FirstName"]);
+                        userProfile.MiddleName = ConvertFromDBVal<string>(dataReader["MiddleName"]);
+                        userProfile.LastName = ConvertFromDBVal<string>(dataReader["LastName"]);
+                        userProfile.EmpStatusId = ConvertFromDBVal<int>(dataReader["EmpStatusId"]);
+                        userProfile.EmpStatusDesc = ConvertFromDBVal<string>(dataReader["EmpStatusDesc"]);
+                        userProfile.DateofJoining = ConvertFromDBVal<string>(dataReader["DateofJoining"]);
+                        userProfile.PracticeId = ConvertFromDBVal<int>(dataReader["PracticeId"]);
+                        userProfile.PracticeDesc = ConvertFromDBVal<string>(dataReader["PracticeDesc"]);
+                        userProfile.Location = ConvertFromDBVal<string>(dataReader["Location"]);
+                        userProfile.JLId = ConvertFromDBVal<int>(dataReader["JLId"]);
+                        userProfile.JLDesc = ConvertFromDBVal<string>(dataReader["JLDesc"]);
+                        userProfile.DSId = ConvertFromDBVal<int>(dataReader["DSId"]);
+                        userProfile.DSDesc = ConvertFromDBVal<string>(dataReader["DSDesc"]);
+                        userProfile.Active = ConvertFromDBVal<int>(dataReader["Active"]);
+                        userProfile.AddedOn = ConvertFromDBVal<string>(dataReader["AddedOn"].ToString());
+
+                        if (userProfile != null)
+                        {
+                            userProfile.userAccess = new List<UserAccess>();
+                            string sql1 = @"select num.id as MapperId, nam.id as AccessItemId, nam.AccessDesc from NueAccessMapper num 
+                                    join NueAccessMaster nam on num.AccessId = nam.Id where num.UserId=@UserId";
+                            SqlCommand command1 = new SqlCommand(sql1, connection);
+                            SqlParameter param1 = new SqlParameter();
+                            param1.ParameterName = "@UserId";
+                            param1.Value = userProfile.Id;
+                            command1.Parameters.Add(param1);
+                            using (SqlDataReader dataReader1 = command1.ExecuteReader())
+                            {
+                                while (dataReader1.Read())
+                                {
+                                    UserAccess userAccess = new UserAccess();
+                                    userAccess.MapperId = ConvertFromDBVal<int>(dataReader1["MapperId"]);
+                                    userAccess.AccessItemId = ConvertFromDBVal<int>(dataReader1["AccessItemId"]);
+                                    userAccess.AccessDesc = ConvertFromDBVal<string>(dataReader1["AccessDesc"]);
+                                    userProfile.userAccess.Add(userAccess);
+                                }
+                            }
+                        }
+
+                        if (userProfile != null)
+                        {
+                            userProfile.userPreference = new UserPreference();
+                            string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication
+                                          FROM NeuUserPreference nup 
+                                          join NueUserProfile as np on nup.UserId = np.Id
+                                          where np.Id = @UserId";
+                            SqlCommand command1 = new SqlCommand(sql1, connection);
+                            SqlParameter param1 = new SqlParameter();
+                            param1.ParameterName = "@UserId";
+                            param1.Value = userProfile.Id;
+                            command1.Parameters.Add(param1);
+                            using (SqlDataReader dataReader1 = command1.ExecuteReader())
+                            {
+                                while (dataReader1.Read())
+                                {
+                                    UserPreference userPreference = new UserPreference();
+                                    userPreference.Id = ConvertFromDBVal<int>(dataReader1["Id"]);
+                                    userPreference.UserId = ConvertFromDBVal<int>(dataReader1["UserId"]);
+                                    userPreference.IsMailCommunication = ConvertFromDBVal<int>(dataReader1["IsMailCommunication"]);
+                                    userProfile.userPreference = userPreference;
+                                }
+                            }
+                        }
+
+
+                        userProfiles.Add(userProfile);
+                    }
+                }
+
+                connection.Close();
+            }
+            return userProfiles;
+        }
+
         public List<UserProfile> getAllUserProfiles()
         {
             List<UserProfile> userProfiles = new List<UserProfile>();
@@ -1837,6 +1936,26 @@ namespace NeuRequest.DB
                 connection.Close();
             }
             return messagesModelRet;
+        }
+
+        public int updateUserProfileActiveState(UserProfile userProfile)
+        {
+            userProfile.Email = userProfile.Email.ToLower();
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("UPDATE NueUserProfile SET Active = @Active " +
+                                                        " WHERE Id = @Id", connection))
+                {
+
+                    cmd.Parameters.AddWithValue("@Id", userProfile.Id);
+                    cmd.Parameters.AddWithValue("@Active", userProfile.Active);
+                    modified = (int)cmd.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+            return modified;
         }
 
         private int updateUserProfile(UserProfile userProfile)

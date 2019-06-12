@@ -52,7 +52,7 @@ namespace NeuRequest.Controllers
                 //UserProfile userProfile = new DataAccess().getUserProfile("bhavani.kannan@neudesic.com");
                 //UserProfile userProfile = new DataAccess().getUserProfile("priya.ignatius@neudesic.com");
 
-                if (userProfile == null || userProfile.Email == null || userProfile.Email.Trim() == "")
+                if (!Models.Utils.isValidUserObject(userProfile))
                 {
                     userProfile = new UserProfile();
                     userProfile.Email = user.Mail.ToLower();

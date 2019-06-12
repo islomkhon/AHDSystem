@@ -30,6 +30,35 @@ namespace NeuRequest.Models
             }
         }
 
+        public static bool isValidUserObject(UserProfile userProfile)
+        {
+            try
+            {
+                if(userProfile == null)
+                {
+                    throw new Exception();
+                }
+
+                if(userProfile.Email == null || userProfile.Email.Trim() == "")
+                {
+                    throw new Exception();
+                }
+
+                if (userProfile.FullName == null || userProfile.FullName.Trim() == "")
+                {
+                    throw new Exception();
+                }
+
+                return true;
+
+
+            }
+            catch (Exception e1)
+            {
+                return false;
+            }
+        }
+
         public static void SendMailAsync(MailItem mailItem)
         {
             try

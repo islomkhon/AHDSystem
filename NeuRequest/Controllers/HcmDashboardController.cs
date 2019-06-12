@@ -3,8 +3,11 @@ using NeuRequest.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.OleDb;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -22,7 +25,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if(currentUser == null)
+            if(!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -41,7 +44,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -60,7 +63,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -79,7 +82,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -98,7 +101,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -127,7 +130,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -155,7 +158,7 @@ namespace NeuRequest.Controllers
                 return RedirectToAction("SignIn", "Account");
             }
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-            if (currentUser == null)
+            if (!Utils.isValidUserObject(currentUser))
             {
                 return RedirectToAction("SignIn", "Account");
             }
@@ -179,6 +182,11 @@ namespace NeuRequest.Controllers
         public ActionResult SelfRequestDetails(String requestId, String message = null)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+
             ViewData["UserProfileSession"] = currentUser;
             ViewData["RequestId"] = requestId;
 
@@ -338,7 +346,7 @@ namespace NeuRequest.Controllers
             {
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -403,7 +411,127 @@ namespace NeuRequest.Controllers
             }
         }
 
+        private ActionResult PrcessUserImportDb()
+        {
 
+            string conn = string.Empty;
+            DataTable dtexcel = new DataTable();
+            conn = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + @"C:\Users\Monin.Jose\Desktop\em1.xlsx1" + ";Extended Properties='Excel 12.0;HDR=NO';";
+            using (OleDbConnection con = new OleDbConnection(conn))
+            {
+                try
+                {
+                    OleDbDataAdapter oleAdpt = new OleDbDataAdapter("select * from [Sheet1$]", con); //here we read data from sheet1  
+                    oleAdpt.Fill(dtexcel); //fill excel data into dataTable  
+                }
+                catch { }
+            }
+            if(dtexcel.Rows.Count > 0)
+            {
+                dtexcel.Rows.RemoveAt(0);
+            }
+            List<UserProfile> userProfiles = new List<UserProfile>();
+            foreach (DataRow item in dtexcel.Rows)
+            {
+                try
+                {
+                    UserProfile userProfile = new UserProfile();
+                    userProfile.NTPLID = item[0].ToString();
+                    userProfile.Email = item[1].ToString();
+                    userProfile.FullName = item[2].ToString();
+                    userProfile.FirstName = item[3].ToString();
+                    userProfile.MiddleName = item[4].ToString();
+                    userProfile.LastName = item[5].ToString();
+                    userProfile.EmpStatusId = int.Parse(item[6].ToString());
+                    userProfile.DateofJoining = item[7].ToString();
+                    userProfile.PracticeId = int.Parse(item[8].ToString());
+                    userProfile.Location = item[9].ToString();
+                    userProfile.JLId = int.Parse(item[10].ToString());
+                    userProfile.DSId = int.Parse(item[11].ToString());
+                    userProfile.Active = int.Parse(item[12].ToString());
+                    userProfile.AddedOn = DateTime.UtcNow.ToString();
+                    if (Utils.isValidUserObject(userProfile))
+                    {
+                        userProfile.Email = userProfile.Email.ToLower();
+                        userProfile.userPreference = new UserPreference();
+                        userProfile.userPreference.IsMailCommunication = 1;
+                        new DataAccess().saveUserProfile(userProfile);
+                        userProfiles.Add(userProfile);
+                    }
+                }
+                catch (Exception e)
+                {
+                    
+                }
+            }
+
+            if(userProfiles.Count > 0)
+            {
+
+            }
+
+
+            /*Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
+            Microsoft.Office.Interop.Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"C:\Users\Monin.Jose\Desktop\em.xlsx");
+            Microsoft.Office.Interop.Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+            Microsoft.Office.Interop.Excel.Range xlRange = xlWorksheet.UsedRange;
+            try
+            {
+                List<UserProfile> userProfiles = new List<UserProfile>();
+
+                int rowCount = xlRange.Rows.Count;
+                int colCount = xlRange.Columns.Count;
+                for (int i = 1; i <= rowCount; i++)
+                {
+                    UserProfile userProfile = new UserProfile();
+                    userProfile.NTPLID = xlRange.Cells[i, 0].Value2.ToString();
+                    userProfile.Email = xlRange.Cells[i, 1].Value2.ToString();
+                    userProfile.FullName = xlRange.Cells[i, 2].Value2.ToString();
+                    userProfile.FirstName = xlRange.Cells[i, 3].Value2.ToString();
+                    userProfile.MiddleName = xlRange.Cells[i, 4].Value2.ToString();
+                    userProfile.LastName = xlRange.Cells[i, 5].Value2.ToString();
+                    userProfile.EmpStatusId = xlRange.Cells[i, 6].Value2.ToString();
+                    userProfile.DateofJoining = xlRange.Cells[i, 7].Value2.ToString();
+                    userProfile.PracticeId = xlRange.Cells[i, 8].Value2.ToString();
+                    userProfile.Location = xlRange.Cells[i, 9].Value2.ToString();
+                    userProfile.JLId = xlRange.Cells[i, 10].Value2.ToString();
+                    userProfile.DSId = xlRange.Cells[i, 11].Value2.ToString();
+                    userProfile.Active = xlRange.Cells[i, 12].Value2.ToString();
+                    userProfile.AddedOn = DateTime.UtcNow.ToString();
+                    if (Utils.isValidUserObject(userProfile))
+                    {
+                        userProfiles.Add(userProfile);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                //rule of thumb for releasing com objects:
+                //  never use two dots, all COM objects must be referenced and released individually
+                //  ex: [somthing].[something].[something] is bad
+
+                //release com objects to fully kill excel process from running in the background
+                Marshal.ReleaseComObject(xlRange);
+                Marshal.ReleaseComObject(xlWorksheet);
+
+                //close and release
+                xlWorkbook.Close();
+                Marshal.ReleaseComObject(xlWorkbook);
+
+                //quit and release
+                xlApp.Quit();
+                Marshal.ReleaseComObject(xlApp);
+            }*/
+            return null;
+        }
 
 
 
@@ -434,6 +562,10 @@ namespace NeuRequest.Controllers
         public ActionResult GeneralRequest(GeneralRequestUiRender generalRequestUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
             TempData["Message"] = null;
             try
             {
@@ -546,7 +678,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -634,7 +766,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -721,7 +853,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -833,6 +965,10 @@ namespace NeuRequest.Controllers
         public ActionResult SalaryCertificate(SalaryCertificateUiRender salaryCertificateUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
             TempData["Message"] = null;
             try
             {
@@ -945,7 +1081,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -1033,7 +1169,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -1120,7 +1256,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -1232,6 +1368,10 @@ namespace NeuRequest.Controllers
         public ActionResult EmployeeVerificationReq(EmployeeVerificationReqUiRender employeeVerificationReqUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
             TempData["Message"] = null;
             try
             {
@@ -1344,7 +1484,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -1432,7 +1572,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -1519,7 +1659,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
                 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -1632,6 +1772,10 @@ namespace NeuRequest.Controllers
         public ActionResult AddressProof(AddressProofUiRender addressProofUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
             TempData["Message"] = null;
             try
             {
@@ -1744,7 +1888,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -1832,7 +1976,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -1919,7 +2063,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
                 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -2032,6 +2176,10 @@ namespace NeuRequest.Controllers
         public ActionResult LeaveBalanceEnquiry(LeaveBalanceEnquiryUiRender leaveBalanceEnquiryUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
             TempData["Message"] = null;
             try
             {
@@ -2154,7 +2302,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -2242,7 +2390,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -2329,7 +2477,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser)  || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -2443,6 +2591,10 @@ namespace NeuRequest.Controllers
         {
             TempData["Message"] = null;
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
             try
             {
                 string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
@@ -2558,7 +2710,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -2646,7 +2798,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -2733,7 +2885,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -2844,7 +2996,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -2997,6 +3149,10 @@ namespace NeuRequest.Controllers
         {
             TempData["Message"] = null;
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
             try
             {
                 string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
@@ -3112,7 +3268,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -3200,7 +3356,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -3287,7 +3443,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -3398,7 +3554,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -3549,6 +3705,10 @@ namespace NeuRequest.Controllers
         {
             TempData["Message"] = null;
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
             try
             {
                 string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
@@ -3664,7 +3824,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -3752,7 +3912,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -3839,7 +3999,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -3950,7 +4110,7 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                    || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -4092,7 +4252,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
                     || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
@@ -4205,7 +4365,7 @@ namespace NeuRequest.Controllers
             try
             {
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || userComment == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || userComment == null || requestId == null
                     || userComment.Trim() == "" || requestId.Trim() == "" )
                 {
                     throw new Exception("Invalid request");
@@ -4295,7 +4455,7 @@ namespace NeuRequest.Controllers
             {
 
                 UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
-                if (currentUser == null || userComment == null || recipient == null || requestId == null
+                if (!Utils.isValidUserObject(currentUser) || userComment == null || recipient == null || requestId == null
                    || userComment.Trim() == "" || recipient.Trim() == "" || requestId.Trim() == "")
                 {
                     throw new Exception("Invalid request");
