@@ -438,6 +438,47 @@ namespace NeuRequest.Models
                         }
                     }
                 }
+                else if (userRequest.RequestSubType == "DomesticTrip")
+                {
+                    DomesticTripRequestModal domesticTripRequestModal = new DataAccess().getNeuDomesticTripRequestModal(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    string accommodation = "No";
+                    if (domesticTripRequestModal.Accommodation == 1)
+                    {
+                        accommodation = "Yes";
+                    }
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Accommodation", accommodation);
+                    messageData.Add("From", domesticTripRequestModal.LocationFrom);
+                    messageData.Add("To", domesticTripRequestModal.LocationTo);
+                    messageData.Add("Start Date", domesticTripRequestModal.StartDate);
+                    messageData.Add("End Date", domesticTripRequestModal.EndDate);
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", domesticTripRequestModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = domesticTripRequestModal.Message;
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        if (mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
+                    }
+                }
 
                 mailHandilar(mailItems);
 
@@ -509,7 +550,11 @@ namespace NeuRequest.Models
                     {
                         heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Common Request";
                     }
-
+                    else if (userRequest.RequestSubType == "DomesticTrip")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Domestic Travel Request";
+                    }
+                    
 
                     if (userRequest.RequestStatus == "close")
                     {
@@ -2153,6 +2198,207 @@ namespace NeuRequest.Models
             return uiRender;
         }
 
+        public string generateDomesticTripRequestUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, DomesticTripRequestModal domesticTripRequestModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            string communicaterOwnerLink = "";
+
+            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
+            if (requestOwner.userPreference.IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
+            string accommodation = "No";
+            if(domesticTripRequestModal.Accommodation == 1)
+            {
+                accommodation = "Yes";
+            }
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-domestic-travel-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-domestic-travel-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-hcm-domestic-travel-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-domestic-travel-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n" +
+                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
+                    "                                    <div class=\"mt-4\">\r\n" +
+                    "                                        <div class=\"vertical-timeline\">\r\n";
+
+            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((domesticTripRequestModal.Message != null && domesticTripRequestModal.Message.Trim() != "") ? domesticTripRequestModal.Message.Trim() : "has created new domestic travel request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + domesticTripRequestModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+           "                                    </div>\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n" +
+           "\r\n" +
+           "                                    <div class=\"card thin-border\">\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h4 class=\"card-title\">Domestic Travel Request</h4>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body bg-light\">\r\n" +
+           "                                            <div class=\"row text-center\">\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+          requestStatusStr +
+           "                                                </div>\r\n" +
+           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
+           domesticTripRequestModal.AddedOn.ToLocalTime() +
+           "                                                </div>\r\n" +
+           "                                            </div>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                        <div class=\"card-body\">\r\n" +
+           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
+           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
+           communicaterOwnerLink +
+           "                                            <br>\r\n" +
+           approverStr +
+           "                                            <h5 class=\"m-t-30\">Accommodation</h5>\r\n" +
+                    "                                            <span>" + accommodation + "</span>\r\n" +
+                    "                                            <br>\r\n" +
+           "                                            <h5 class=\"m-t-30\">From</h5>\r\n" +
+                    "                                            <span>" + domesticTripRequestModal.LocationFrom + "</span>\r\n" +
+                    "                                            <br>\r\n" +
+                    "                                            <h5 class=\"m-t-30\">To</h5>\r\n" +
+                    "                                            <span>" + domesticTripRequestModal.LocationTo + "</span>\r\n" +
+                    "                                            <br>\r\n" +
+                    "                                            <h5 class=\"m-t-30\">Start Date</h5>\r\n" +
+                    "                                            <span>" + domesticTripRequestModal.StartDate + "</span>\r\n" +
+                    "                                            <br>\r\n" +
+                    "                                            <h5 class=\"m-t-30\">End Date</h5>\r\n" +
+                    "                                            <span>" + domesticTripRequestModal.EndDate + "</span>\r\n" +
+                    "                                            <br>\r\n" +
+           "                                            <br>\r\n" +
+           "                                        </div>\r\n" +
+           "\r\n" +
+           "                                    </div>\r\n" +
+           "\r\n" +
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                            </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                        </div>\r\n" +
+           "                    </div>\r\n" +
+           "                </div>\r\n" +
+           "            </div>\r\n" +
+           "\r\n" +
+           "        </div>";
+
+            return uiRender;
+        }
 
         static Random rnd = new Random();
         public string generateRequestLog(List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)

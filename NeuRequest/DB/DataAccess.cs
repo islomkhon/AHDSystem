@@ -562,6 +562,33 @@ namespace NeuRequest.DB
             return modified;
         }
 
+        public int addDomesticTripRequest(DomesticTripRequest domesticTripRequest)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueDomesticTripRequest (RequestId, UserId, Accommodation, LocationFrom, LocationTo, StartDate, EndDate, Message, AddedOn, ModifiedOn) " +
+                    "output INSERTED.ID VALUES(@RequestId, @UserId, @Accommodation, @LocationFrom, @LocationTo, @StartDate, @EndDate, @Message, @AddedOn, @ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", domesticTripRequest.RequestId);
+                    cmd.Parameters.AddWithValue("@UserId", domesticTripRequest.UserId);
+                    cmd.Parameters.AddWithValue("@Accommodation", domesticTripRequest.Accommodation);
+                    cmd.Parameters.AddWithValue("@LocationFrom", domesticTripRequest.LocationFrom);
+                    cmd.Parameters.AddWithValue("@LocationTo", domesticTripRequest.LocationTo);
+                    cmd.Parameters.AddWithValue("@StartDate", domesticTripRequest.StartDate);
+                    cmd.Parameters.AddWithValue("@EndDate", domesticTripRequest.EndDate);
+                    cmd.Parameters.AddWithValue("@Message", domesticTripRequest.Message);
+                    cmd.Parameters.AddWithValue("@AddedOn", domesticTripRequest.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", domesticTripRequest.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
+
         public int addGeneralRequest(GeneralRequest generalRequest)
         {
             int modified = -1;
@@ -791,6 +818,46 @@ namespace NeuRequest.DB
                 connection.Close();
             }
             return neuLeavePastApplyModal;
+        }
+
+        public DomesticTripRequestModal getNeuDomesticTripRequestModal(string requestId)
+        {
+            DomesticTripRequestModal domesticTripRequestModal = new DomesticTripRequestModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.Accommodation, nucr.LocationFrom, 
+														nucr.LocationTo, nucr.StartDate, nucr.EndDate,
+														nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueDomesticTripRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId = @RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            domesticTripRequestModal = new DomesticTripRequestModal();
+                            domesticTripRequestModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            domesticTripRequestModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            domesticTripRequestModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            domesticTripRequestModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            domesticTripRequestModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            domesticTripRequestModal.Accommodation = ConvertFromDBVal<int>(dataReader["Accommodation"]);
+                            domesticTripRequestModal.LocationFrom = ConvertFromDBVal<string>(dataReader["LocationFrom"]);
+                            domesticTripRequestModal.LocationTo = ConvertFromDBVal<string>(dataReader["LocationTo"]);
+                            domesticTripRequestModal.StartDate = ConvertFromDBVal<string>(dataReader["StartDate"]);
+                            domesticTripRequestModal.EndDate = ConvertFromDBVal<string>(dataReader["EndDate"]);
+                            domesticTripRequestModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            domesticTripRequestModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return domesticTripRequestModal;
         }
 
         public GeneralRequestModal getNeuGeneralRequestModalDetails(string requestId)

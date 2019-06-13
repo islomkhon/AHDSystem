@@ -629,6 +629,10 @@
                                             {
                                                 requestTypeString = "General";
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "domestictrip")
+                                            {
+                                                requestTypeString = "Domestic Travel";
+                                            }
 
                                             <li class="list-group-item cursor-pointer link-action-tigger-tab" data-target="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId">
                                                 <div class="todo-indicator bg-@sideBarClass"></div>
@@ -743,6 +747,10 @@
                                             else if (item.RequestSubType.ToString().ToLower() == "hcmgeneral")
                                             {
                                                 requestTypeString = "General";
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "domestictrip")
+                                            {
+                                                requestTypeString = "Domestic Travel";
                                             }
 
                                             <li class="list-group-item cursor-pointer link-action-tigger-tab" data-target="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId">

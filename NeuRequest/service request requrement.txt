@@ -1,0 +1,1791 @@
+Leaves and Holydays ->
+ Leave Cancelation -> date? mail from approver Yes/No
+ Appliing leave for past date -> date? mail from approver Yes/No
+ Appling WFH -> date? reason  for request
+
+letters -> (Address proof, Employee Verification, Salary Certificate)name and purpose 
+
+Leave balance query -> desc.
+Others -> title & desc
+
+check in date , check out date, other requirements. Types: domestic
+ 
+Travel -> domestic and international (domestic -> accomadation -> location, start and end date) (internationanl -> visa initi -> place to visit, planned visit travel date, project name)
+
+Database updations -> (Manager Change, Location change) ->  
+
+
+Em/CM -> emplyee list
+Project specific pgb(project bg varification) -> project name, bgb requrements.
+
+you can put a section to attach mail of approval if any. there is no need for approval as such
+Location :
+is also needed
+ 
+
+
+https://zocada.com/setting-mongodb-users-beginners-guide/
+
+Mongodb
+
+db:- neuahd
+ use neuahd
+
+use neuahd
+db.runCommand({ 
+    "createUser" : "root", 
+    "pwd" : "12345678", 
+    "customData" : {
+
+    }, 
+    "roles" : [
+        {
+            "role" : "dbAdmin", 
+            "db" : "neuahd"
+        }, 
+        {
+            "role" : "dbOwner", 
+            "db" : "neuahd"
+        }, 
+        {
+            "role" : "enableSharding", 
+            "db" : "neuahd"
+        }, 
+        {
+            "role" : "read", 
+            "db" : "neuahd"
+        }, 
+        {
+            "role" : "readWrite", 
+            "db" : "neuahd"
+        }, 
+        {
+            "role" : "userAdmin", 
+            "db" : "neuahd"
+        }
+    ]
+});
+
+mongo --port 27017 -u "root" -p "12345678" --authenticationDatabase "neuahd"
+
+https://www.c-sharpcorner.com/article/simple-crud-operation-using-asp-net-mvc-and-mongodb/
+
+
+Install-Package mongocsharpdriver
+
+var list = await collection.Find(new BsonDocument()).ToListAsync();
+foreach (var dox in list)
+{
+    Console.WriteLine(dox);
+}
+
+https://csharp.hotexamples.com/examples/-/IMongoCollection/Find/php-imongocollection-find-method-examples.html
+
+
+
+var tags = connection.Query<string>(SqlQueryFactory.Instance.Get("get_thread_tags"), new { ThreadId = profile.Id });
+
+            var key = Builders<BsonDocument>.Filter.Eq("id", (profile.Id as string).Trim());
+
+            var match = await threadCollection.Find(key).Project("{url: 1, messages: 1, _id: 0}").SingleOrDefaultAsync();
+
+            var updateAction = Builders<BsonDocument>.Update
+                                 .Set("create_on", (DateTime)profile.CreateOn)
+                                 .Set("category", profile.Category as string)
+                                 .Set("title", profile.Title as string)
+                                 .Set("type", profile.Type as string);
+
+            if (match != null)
+            {
+                var html = match.GetValue("messages")
+                                .AsBsonArray
+                                .FirstOrDefault()
+                                .AsBsonDocument
+                                .GetValue("body").AsString;
+
+                var document = new HtmlAgilityPack.HtmlDocument();
+
+                document.LoadHtml(html);
+
+                var text = document.DocumentNode.InnerText;
+
+                var excerpt = text.Substring(0, Math.Min(256, text.Length));
+
+                updateAction = updateAction.Set("url", match.GetValue("url").AsString)
+                                           .Set("excerpt", excerpt);
+            }
+
+            if (tags != null)
+            {
+                var tagArray = new BsonArray(tags.Select(m => m.ToLower()).ToList());
+
+                updateAction = updateAction.Set("tags", tagArray);
+            }
+
+            await threadProfiles.UpdateOneAsync("{'_id': '" + (profile.Id as string).Trim() + "'}",
+                updateAction,
+                new UpdateOptions { IsUpsert = true });
+
+
+
+https://csharp.hotexamples.com/examples/-/IMongoCollection/Find/php-imongocollection-find-method-examples.html
+
+https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
+
+var formData = new FormData();
+
+formData.append("username", "Groucho");
+formData.append("accountnum", 123456); // number 123456 is immediately converted to a string "123456"
+
+// HTML file input, chosen by user
+formData.append("userfile", fileInputElement.files[0]);
+
+// JavaScript file-like object
+var content = '<a id="a"><b id="b">hey!</b></a>'; // the body of the new file...
+var blob = new Blob([content], { type: "text/xml"});
+
+formData.append("webmasterfile", blob);
+
+var request = new XMLHttpRequest();
+request.open("POST", "http://foo.com/submitform.php");
+request.send(formData);
+
+enableOnReadonly: true,
+                todayHighlight: true,
+                endDate: '+d',
+                autoclose: true,
+
+<!--<input type="hidden" name="userNtplId" id="userNtplId" value="@userProfileSession.ntplId" />
+                                <input type="hidden" name="userEmail" id="userEmail" value="@userProfileSession.email" />-->
+
+
+Serveice request inbox by default it shoild show list of request created by me
+
+
+https://www.aspsnippets.com/Articles/Upload-file-using-jQuery-AJAX-in-ASPNet-MVC.aspx
+
+https://stackoverflow.com/questions/2428296/jquery-ajax-upload-file-in-asp-net-mvc
+
+
+-------------------------------------------
+NeuLeavePastApply
++++
+SubApproveLeavePastApplyRequest inter-approve-leave-past-apply-request
+ApproveLeavePastApplyRequest final-approve-leave-past-apply-request
+CloseLeavePastApplyRequest close-leave-past-apply-request
+WithdrawLeavePastApplyRequest withdraw-leave-past-apply-request
+
+----------------------------------------------------
+
+NeuLeaveWFHApply
++++
+AddUserWFHLeaveComment
+AddUserWFHLeaveAttachment
+ApproveWFHLeaveRequest final-approve-leave-wfh-apply-request
+CloseWFHLeaveApplyRequest close-leave-wfh-apply-request
+WithdrawLeaveWFHApplyRequest withdraw-leave-wfh-apply-request
+
+----------------------------------------------------
+LeaveBalanceEnquiryCreate
+NeuLeaveBalanceEnquiryApply
++++
+CloseBalanceEnqLeaveRequest close-leave-bal-enq-request
+WithdrawLeaveBalanceEnqRequest withdraw-leave-bal-enq-request
+ApproveBalanceEnqLeaveRequest final-approve-leave-bal-enq-request
+
+----------------------------------------------------
+HCMAddressProofReqCreate
+HCMAddressProofReqApply
++++
+WithdrawHCMAddressProofReqRequest withdraw-hcm-address-proof-request
+CloseHCMAddressProofRequest close-hcm-address-proof-request
+ApproveHCMAddressProofRequest final-hcm-address-proof-request
+
+
+-----------------------------------------------------
+HCMEmployeeVerificationReqCreate
+NeuHCMEmployeeVerificationReqApply
++++
+
+WithdrawHCMEmployeeVerificationRequest withdraw-hcm-employee-verification-request
+CloseHCMEmployeeVerificationRequest close-hcm-employee-verification-request
+ApproveHCMEmployeeVerificationRequest final-hcm-employee-verification-request
+
+
+-----------------------------------------------------
+
+
+
+
+
+
+
+
+
+https://wrappixel.com/demos/admin-templates/xtreme-admin/html/light-sidebar/index7.html
+
+https://wrappixel.com/demos/admin-templates/xtreme-admin/landingpage/index.html
+
+https://wrappixel.com/demos/admin-templates/xtreme-admin/html/light-sidebar/index5.html
+
+https://wrappixel.com/demos/admin-templates/xtreme-admin/html/light-sidebar/ticket-detail.html
+
+https://wrappixel.com/demos/admin-templates/xtreme-admin/html/light-sidebar/eco-products-detail.html
+
+https://medium.com/@levifuller/building-an-angular-application-with-asp-net-core-in-visual-studio-2017-visualized-f4b163830eaa
+
+https://www.talkingdotnet.com/create-react-redux-app-with-visual-studio-2017-and-asp-net-core-2-2/
+
+https://www.pointblankdevelopment.com.au/blog/135/react-redux-with-aspnet-core-20-login-registration-tutorial-example
+
+https://medium.com/@mirela95/asp-net-core-2-0-mvc-with-reactjs-net-basic-setup-and-example-template-4811b10b114a
+
+https://www.codeproject.com/Articles/3132485/CRUD-Operation-using-ASP-NET-CORE-2-2-and-React-Re
+
+https://reactjs.net/tutorials/aspnetcore.html
+
+https://reactjs.net/tutorials/aspnetcore.html
+
+https://www.codeproject.com/Articles/1214168/How-to-Implement-CRUD-forms-with-React-and-ASP-NET
+
+https://www.codeproject.com/Articles/1214168/How-to-Implement-CRUD-forms-with-React-and-ASP-NET
+
+https://github.com/AnkitSharma-007/CRUD.ASPCore.Reactjs.WebAPI.EF
+
+https://dzone.com/articles/aspnet-core-crud-with-reactjs-and-entity-framework
+
+https://ankitsharmablogs.com/asp-net-core-crud-with-react-js-and-entity-framework-core/
+
+--------------------------------------------------------------------------------
+********https://dzone.com/articles/aspnet-core-crud-with-reactjs-and-entity-framework
+
+CREATE TABLE tblEmployee (      
+EmployeeID int IDENTITY(1,1) NOT NULL PRIMARY KEY,      
+Name varchar(20) NOT NULL ,      
+City varchar(20) NOT NULL ,      
+Department varchar(20) NOT NULL ,      
+Gender varchar(6) NOT NULL       
+)      
+GO      
+CREATE TABLE tblCities (      
+CityID int IDENTITY(1,1) NOT NULL PRIMARY KEY,      
+CityName varchar(20) NOT NULL       
+)      
+GO
+
+INSERT INTO tblCities VALUES('New Delhi');      
+INSERT INTO tblCities VALUES('Mumbai');      
+INSERT INTO tblCities VALUES('Hyderabad');      
+INSERT INTO tblCities VALUES('Chennai');      
+INSERT INTO tblCities VALUES('Bengaluru');
+
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
+
+Install-Package Microsoft.EntityFrameworkCore.Tools
+
+Install-Package Microsoft.EntityFrameworkCore.Design
+
+Scaffold-DbContext "Data Source=MJOSE01\TEST;Initial Catalog=test;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Tables tblEmployee, tblCities
+
+https://www.pointblankdevelopment.com.au/blog/135/react-redux-with-aspnet-core-20-login-registration-tutorial-example
+
+-------------------------------------------------------
+https://auth0.com/blog/developing-web-apps-with-asp-dot-net-core-2-dot-0-and-react-part-1/
+
+Auth0
+dev-x1u2cpty.auth0.com
+https://dev-x1u2cpty.auth0.com
+
+
+https://dotnet2-react.auth0.com
+
+https://onlinebookstore.mycompany.com
+
+curl --request POST \
+  --url https://dev-x1u2cpty.auth0.com/oauth/token \
+  --header 'content-type: application/json' \
+  --data '{"client_id":"s3nXZ2SDet1R31N649GjruN7d03CrrTP","client_secret":"wXkWTRcqmCWP3wgjFnAI6tiA2D3-ZDwG7jDXFcg9rTeVqByFEX43EFewZBnVgALH","audience":"https://onlinebookstore.mycompany.com","grant_type":"client_credentials"}'
+
+{
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlF6ZzJOREE0TmtVME5qTkJSREE1TmpaR056TXlNVFF5T0VaRVJqTTVORGMyUlVJd09UVTVSUSJ9.eyJpc3MiOiJodHRwczovL2Rldi14MXUyY3B0eS5hdXRoMC5jb20vIiwic3ViIjoiczNuWFoyU0RldDFSMzFONjQ5R2pydU43ZDAzQ3JyVFBAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vb25saW5lYm9va3N0b3JlLm15Y29tcGFueS5jb20iLCJpYXQiOjE1NTc5NDg1MDAsImV4cCI6MTU1ODAzNDkwMCwiYXpwIjoiczNuWFoyU0RldDFSMzFONjQ5R2pydU43ZDAzQ3JyVFAiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.Xx6Usd2e5CbxlGELfqmApDwHADyBSh5qvO7t1m_cutn66LgOM7rXO7L7iJ58UwCUkHqBxVMK16cyu67h9KMFWfPxniUp8gVOGjGIkIhb987lnCG04hEgHHP98i7xBnFewHF3ODmdHyiekBhbuxgGCCh6AV_RVExQoM5xFVdiTzjgknYcOvMdZlcOjZrR-BRUu_AEeAMxUdVjUe2_2G49unYQGsm-2_XFL0OT8UWDpIya7RWcihuq9K9WXc0T_Ib7E8KWlDXZiIdH3bc3mIgjG3sGBvDvFs92eWmXaHl-lNTFRwW8niA2_r_S_PGNRGjeadQ2BRPfABD8WF3Av7zmhA",
+  "token_type": "Bearer"
+}
+
+var client = new RestClient("http://path_to_your_api/");
+var request = new RestRequest(Method.GET);
+request.AddHeader("authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlF6ZzJOREE0TmtVME5qTkJSREE1TmpaR056TXlNVFF5T0VaRVJqTTVORGMyUlVJd09UVTVSUSJ9.eyJpc3MiOiJodHRwczovL2Rldi14MXUyY3B0eS5hdXRoMC5jb20vIiwic3ViIjoiczNuWFoyU0RldDFSMzFONjQ5R2pydU43ZDAzQ3JyVFBAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vb25saW5lYm9va3N0b3JlLm15Y29tcGFueS5jb20iLCJpYXQiOjE1NTc5NDg1MDAsImV4cCI6MTU1ODAzNDkwMCwiYXpwIjoiczNuWFoyU0RldDFSMzFONjQ5R2pydU43ZDAzQ3JyVFAiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.Xx6Usd2e5CbxlGELfqmApDwHADyBSh5qvO7t1m_cutn66LgOM7rXO7L7iJ58UwCUkHqBxVMK16cyu67h9KMFWfPxniUp8gVOGjGIkIhb987lnCG04hEgHHP98i7xBnFewHF3ODmdHyiekBhbuxgGCCh6AV_RVExQoM5xFVdiTzjgknYcOvMdZlcOjZrR-BRUu_AEeAMxUdVjUe2_2G49unYQGsm-2_XFL0OT8UWDpIya7RWcihuq9K9WXc0T_Ib7E8KWlDXZiIdH3bc3mIgjG3sGBvDvFs92eWmXaHl-lNTFRwW8niA2_r_S_PGNRGjeadQ2BRPfABD8WF3Av7zmhA");
+IRestResponse response = client.Execute(request);
+
+
+
+
+
+
+
+close text-dark
+withdraw text-danger
+created text-primary
+in_approval text-warning
+completed text-success
+
+text-warning
+    background-color: #ffbc34;
+text-danger
+    background-color: #e65251; 
+text-dark
+    background-color: #424964; 
+text-primary
+    background-color: #7460ee;
+text-success
+    background-color: #36bea6;
+
+
+dell 5590 
+
+-------------------------------------
+created date
+approved date 
+
+userRequest.dateModified = DateTime.UtcNow;
+
+
+*****************************************************
+*****************************************************
+*****************************************************
+https://www.pointblankdevelopment.com.au/blog/135/react-redux-with-aspnet-core-20-login-registration-tutorial-example
+https://reactjs.net/tutorials/aspnetcore.html
+
+https://blogs.perficient.com/2017/11/28/aps-net-core-web-application-with-react-redux/
+
+-----------------------------------
+https://blogs.perficient.com/2017/11/28/aps-net-core-web-application-with-react-redux/
+
+https://www.talkingdotnet.com/create-react-app-visual-studio-2017-and-asp-net-core-2-2/
+
+>>>>>>>>>>>>>>>>>>https://www.talkingdotnet.com/create-react-app-visual-studio-2017-and-asp-net-core-2-2/
+
+https://jonhilton.net/connecting-react-to-asp-net-core-web-api/
+
+----------------------------------------------------------------------------
+https://www.talkingdotnet.com/create-react-app-visual-studio-2017-and-asp-net-core-2-2/
+https://dzone.com/articles/aspnet-core-crud-with-reactjs-and-entity-framework
+https://blogs.taiga.nl/martijn/2018/08/13/lean-asp-net-core-2-1-react-forms-validation-and-web-api-integration/
+https://github.com/mdamyanova/ASP.NET-Core-ReactJS-Example
+
+import React, { Component } from 'react';
+
+export class CustomView extends Component {
+    displayName = CustomView.name
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            error: null,
+            isLoaded: false,
+            temp:'',
+            items: []
+        };
+    }
+
+    componentDidMount() {
+        /*fetch("api/CustomView/GetSampleData")
+            .then(res => res.json())
+            .then(
+                result => {
+                    this.setState({
+                        isLoaded: true,
+                        items: result
+                    });
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )*/
+
+        fetch("api/CustomView/GetSampleDataX")
+            .then(res => res.text())
+            .then(
+                result => {
+                    this.setState({
+                        isLoaded: true,
+                        temp: result
+                    });
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
+
+    render() {
+        const { error, isLoaded, items, temp } = this.state;
+        if (error) {
+            return <div>Error: {error.message}</div>;
+        } else if (!isLoaded) {
+            return <div>Loading...</div>;
+        } else {
+            return (
+                <div>
+                <ul>
+                    {items.map(function (name, index) {
+                        return <li key={index}>{name}</li>;
+                    })}
+                </ul>
+            );
+        }
+    }
+}
+
+
+https://code-maze.com/react-series/
+
+https://reactjs.org/docs/forms.html
+
+https://www.youtube.com/redirect?redir_token=9CFuzaKfTMVfUBqkZQHCSblGJeF8MTU1ODIxMDAzMkAxNTU4MTIzNjMy&q=https%3A%2F%2Fgithub.com%2Fiamshaunjp%2Freact-redux-complete-playlist%2Ftree%2Flesson-3&v=SAX6RMEFVM4&event=video_description
+
+https://www.youtube.com/watch?v=OxIDLw0M-m0
+https://github.com/iamshaunjp/react-redux-complete-playlist/tree/lesson-5
+
+https://reactjs.org/docs/cdn-links.html
+
+https://babeljs.io/setup
+live server
+https://reactjs.org/docs/cdn-links.html
+https://reactjs.org/docs/events.html#supported-events
+https://medium.freecodecamp.org/this-is-why-we-need-to-bind-event-handlers-in-class-components-in-react-f7ea1a6f93eb
+
+this.handleClick() // load function when page loads
+
+
+https://www.youtube.com/watch?v=5QwNCX3UbXc
+
+
+-----------------------------
+vs plugins 
+ES7 React/Redux/GraphQL/React-Native snippets
+Live Server
+Sublime Babel
+
+code setup
+----
+https://reactjs.org/docs/cdn-links.html
+
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+https://babeljs.io/setup
+
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+
+final set up
+--
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+
+https://reactjs.org/docs/events.html
+------
+reactfull stack app
+
+
+https://github.com/facebook/create-react-app
+
+
+npx create-react-app my-app
+cd my-app
+npm start
+
+Single Page Apps
+--------------
+
+Props:
+pass data from parent compoenent to child compoenet
+
+destruchering https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+const {name,age,belt} = this.props
+
+
+//looping and render
+map take array and map to new array
+
+
+Stateless Components
+container-state
+ui- not state
+
+function component - ui component - no state
+
+import React from 'react';
+
+const Ninjas = (props) => {
+
+        const {ninjas} = props;
+        const ninjasList = ninjas.map( ninja => {
+            return (
+                <div key={ninja.id}>
+                    <span>name {ninja.name}</span>
+                    <span>age {ninja.age}</span>
+                </div>
+            )
+        })
+        return(
+            <div className="ninja-list"> {ninjasList} </div>
+        )
+
+}
+
+export default Ninjas;
+
+------------------------------
+
+conditons
+
+
+import React from 'react';
+
+const Ninjas = ({ninjas}) => {
+
+        //const {ninjas} = props; or arrow function Ninjas = ({ninjas}) => 
+        /*const ninjasList = ninjas.map( ninja => {
+            //if
+            if(ninja.age > 20){
+                return (
+                    <div key={ninja.id}>
+                        <span>name {ninja.name}</span>
+                        <span>age {ninja.age}</span>
+                    </div>
+                )
+            }
+            else{
+                return null;
+            }
+        })*/
+        const ninjasList = ninjas.map( ninja => {
+            return ninja.age > 20 ?  (
+                 <div key={ninja.id}>
+                        <span>name {ninja.name}</span>
+                        <span>age {ninja.age}</span>
+                    </div>
+            ) : null
+        })
+        return(
+            <div className="ninja-list"> {ninjasList} </div>
+        )
+
+-----------------------------------
+forms -> add to parent  https://www.youtube.com/watch?v=UmuLW78biBw&list=PL4cUxeGkcC9ij8CfkAY2RAGb-tmkNwQHG&index=19
+
+---------------------------------------------- 
+
+delete
+<button onClick={() => {deleteNinja(ninja.id)}}>X</button> prevent from calling automaticaly
+---------------------------------
+https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121
+-----------------------------------
+
+https://demos.creative-tim.com/light-bootstrap-dashboard-react/?_ga=2.41023018.969298524.1558208844-324199111.1557470536#/documentation/getting-started
+
+D:\reactjs\light
+
+react lifecycle methods
+http://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
+
+---------------------------------------------------
+
+todo app--
+https://materializecss.com/getting-started.html
+<!-- Compiled and minified CSS -->**
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -> to index.html
+
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+------------------------
+25, multipage router
+npm install react-router-dom
+import {Link, NavLink } from 'react-router-dom' // NavLink  =to get active class
+<li><Link to="/">Home</Link></li>
+<li><NavLink to="/about">About</NavLink></li>
+
+-------------------------
+programitic redirect
+const Contact = (props) => {
+    //console.log(props)
+    /*setTimeout(()=>{
+        props.history.push('/about'); //redirect after some time
+    }, 2000);*/
+
+    return(
+        <div className="container">
+            <h4 className="center">Contact</h4>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus ratione quia quidem totam? Atque explicabo fugit sunt quia aspernatur sed neque impedit, reprehenderit nesciunt nemo dolores nobis odit sit eligendi!</p>
+        </div>
+    )
+}
+
+export default Contact;
+
+ <BrowserRouter> -> <Route exact path="/" component={Home} />
+          <Route path="/about" component={About} />
+          <Route path="/contact" component={Contact} />          
+props.history.push('/about')
+
+without use heigher order component
+import {Link, NavLink, withRouter } from 'react-router-dom'
+export default withRouter(Navbar);
+
+----------------------------------------------
+Higher order component
+
+hoc is a function which recive wrapped component which return super charged component
+const Rainbow = (wrappedComponent) => {
+
+
+import React from 'react'
+
+const Rainbow = (WrappedComponent) => {
+    const colors = ['red','pink', 'blue', 'green'];
+    const randomColor = colors[Math.floor(Math.random() * 4)];
+    const className = randomColor+"-text";
+
+    return (props) => {
+        return(
+            <div className={className}>
+                <WrappedComponent {...props}/>
+            </div>
+        )
+    }
+}
+
+export default Rainbow;
+
+import Ranbow from '../hoc/Ranbow'
+
+export default Ranbow(About);
+---------------------------------------------------------
+
+use Axios for external data
+https://jsonplaceholder.typicode.com/
+https://jsonplaceholder.typicode.com/
+
+npm install axios
+
+finctional components canot use lifecycle hooks
+
+import axios from 'axios'
+
+
+axios.get('https://jsonplaceholder.typicode.com/posts') return promis which means it will happen soon
+so hook it with then()
+
+
+import React, {Component} from 'react';
+import axios from 'axios'
+
+class Home extends Component {
+
+    state = {
+        posts:[]
+    }
+
+    componentDidMount(){
+        axios.get('https://jsonplaceholder.typicode.com/posts')
+            .then(res => {//call back frunction
+                this.setState({
+                    posts: res.data.slice(0,10)
+                })
+            })
+    }
+
+    render(){
+
+        const {posts} = this.state;
+
+        const postList = posts.length ? (
+            posts.map(post => {
+                return(
+                   <div className="post card" key={post.id}>
+                        <div className="card-content">
+                            <span className="card-title">{post.title}</span>
+                            <p>{post.body}</p>
+                        </div>
+                   </div> 
+                )
+            })
+        ) : (
+            <div className="center">No post yet</div>
+        )
+
+        return(
+            <div className="container">
+                <h4 className="center">Home</h4>
+                {postList}
+            </div>
+        )
+    }
+}
+
+export default Home;
+
+-----------------------------------------
+
+route parameters
+
+ <Route path="/:post_id" component={Post}/>   
+switch type Switch -> to indicate route presidence in top to bottom approch if it found stop
+<BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/about" component={About} />
+            <Route path="/contact" component={Contact} />      
+            <Route path="/:post_id" component={Post}/> ***
+          </Switch>     
+        </div>
+      </BrowserRouter>
+------------------------------------------------------------------
+
+image
+import image
+import Pokerball from '../pokeball.png'
+ <img src={Pokerball} alt="a pokerball"/>
+
+-------------------------------------------------------------------
+
+
+Redux - share data btween compontens as datastore
+subscribe (props ) component -> dispach action (chnages with payload) -> reducer ->(update data store) redux 
+https://www.youtube.com/watch?v=HKU24nY8Hsc&list=PL4cUxeGkcC9ij8CfkAY2RAGb-tmkNwQHG&index=34
+
+---------------------------------------------------------------------
+
+Redux reprecent javascript object to represent data
+
+
+const {createStore} = Redux
+
+const initState = {
+  todos:[],
+  posts:[]
+}
+
+function myreducer(state= initState, action){ //state of store 
+  
+} 
+
+const store = createStore(myreducer)
+
+
+-------------------------------------------
+redux action to udate data in reducer dispatch action
+
+const {createStore} = Redux
+
+const initState = {
+  todos:[],
+  posts:[]
+}
+
+function myreducer(state= initState, action){
+  
+} 
+
+const store = createStore(myreducer)
+
+//action type and payload
+
+const todoAction = {type : 'ADD_TODO', todo:'buy milk'} //type and payload
+
+
+const {createStore} = Redux
+
+const initState = {
+  todos:[],
+  posts:[]
+}
+
+function myreducer(state= initState, action){
+  console.log(action, state);
+  
+} 
+
+const store = createStore(myreducer)
+
+//action type and payload
+
+const todoAction = {type : 'ADD_TODO', todo:'buy milk'}; //type , payload
+
+//dispatch action
+store.dispatch(todoAction)
+
+
+---------------------------------------------------------
+const {createStore} = Redux
+
+const initState = {
+  todos:[],
+  posts:[]
+}
+
+function myreducer(state= initState, action){
+    if (action.type == 'ADD_TODO'){
+      return { //represent new state of store
+        todos:[...state.todos, action.todo]
+      }
+    }
+} 
+
+const store = createStore(myreducer)
+
+//action type and payload
+
+const todoAction = {type : 'ADD_TODO', todo:'buy milk'}; //type , payload
+
+//dispatch action
+store.dispatch(todoAction)
+
+
+--------------------------------------------------
+subscribe
+listion for changes and subscribe changes
+
+
+const {createStore} = Redux
+
+const initState = {
+  todos:[],
+  posts:[]
+}
+
+function myreducer(state= initState, action){
+    if (action.type == 'ADD_TODO'){
+      return { //represent new state of store
+        ...state,
+        todos:[...state.todos, action.todo]
+        
+      }
+    }
+  if (action.type == 'ADD_POST'){
+      return { //represent new state of store
+        ...state,
+        posts:[...state.posts, action.post]
+        
+      }
+    }
+} 
+
+const store = createStore(myreducer)
+
+
+store.subscribe(() => { //fire everytime stage chages
+  console.log('state updated');
+  console.log(store.getState());//current state
+})
+
+//action type and payload
+
+const todoAction = {type : 'ADD_TODO', todo:'buy milk'}; //type , payload
+
+//dispatch action
+store.dispatch(todoAction)
+store.dispatch({type : 'ADD_TODO', todo:'test data todo'})
+
+store.dispatch({type : 'ADD_POST', post:'Egg hunt check'})
+
+
+
+------------------------------------------------------------
+redux in react web
+npm install redux react-redux
+
+root reducer 
+
+const initState = {
+    posts:[{
+        {id: '1', title: 'Squirtle Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
+        {id: '2', title: 'Charmander Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
+        {id: '3', title: 'a Helix Fossil was Found', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'}
+    }]
+}
+
+const rootReducer = (state = initState, action) => {
+    return state;
+}
+
+export default rootReducer;
+
+
+
+create store in index.js starting point of app
+index.js
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';//reactjs react binder
+import rootReducer from './reducers/rootReducer'
+
+const store = createStore(rootReducer);
+
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+
+
+
+
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';//reactjs react binder
+
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root')); //bind
+
+//careate reducers folder in src
+
+import { connect } from 'react-redux';//hoc to connect store in index.js
+const mapStateToProps = (state) => {
+    return {
+        posts: state.posts
+    }
+}
+
+export default connect(mapStateToProps)(Home);
+
+
+home.js
+import { connect } from 'react-redux';//hoc to connect store in index.js
+
+
+//conenct componet to store data
+const mapStateToProps = (state) => {
+    return {
+        posts: state.posts
+    }
+}
+
+export default connect(mapStateToProps)(Home);
+
+----------------------------------------------------
+redux action
+
+map dispatch to props
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deletePost : (id) => {dispatch({type : 'DELETE_POST', id : id})}
+    }
+}
+
+//deletePost avilable to props in component
+
+reducer.js
+
+const initState = {
+    posts: [
+      {id: '1', title: 'Squirtle Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
+      {id: '2', title: 'Charmander Laid an Egg', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'},
+      {id: '3', title: 'a Helix Fossil was Found', body: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptate laborum perferendis, enim repellendus ipsam sunt autem at odit dolorum, voluptatum suscipit iste harum cum magni itaque animi laudantium fugiat'}
+    ]
+  }
+  
+  
+  
+  const rootReducer = (state = initState, action) => {
+      if(action.type === 'DELETE_POST') {
+          let newPost = state.posts.filter(post => {
+                            return action.id !== post.id
+                        });
+        return {
+            ...state,
+            posts:newPost
+        }
+      }
+    return state;
+  }
+  
+  export default rootReducer
+
+
+post.js
+
+import React, {Component} from 'react'
+import axios from 'axios'
+import { connect } from 'react-redux';
+
+class Post extends Component {
+
+    /*state = {
+        post : null
+    }
+
+    componentDidMount(){//find url parms using props added in route app.js
+        let id = this.props.match.params.post_id
+        axios.get('https://jsonplaceholder.typicode.com/posts/'+id)
+            .then(res => {//call back frunction
+                this.setState({
+                    post: res.data
+                })
+            })
+    }*/
+
+    handleClick = (e) => {
+        this.props.deletePost(this.props.post.id);
+        this.props.history.push('/');
+    }
+
+    render(){
+        console.log(this.props)
+        const post = this.props.post ? (
+            <div className="post">
+                <h4 className="center">{this.props.post.title}</h4>
+                <p>{this.props.post.body}</p>
+                <div className="center">
+                    <button className="btn gray" onClick={this.handleClick}>
+                        Delete Post
+                    </button>
+                </div>
+            </div>
+        ):(
+            <div className="center">Loadding post...</div>
+        )
+
+        return(
+            <div className="container">
+                <h4>{post}</h4>
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = (state, ownProps) => {//ownProps atach self component props
+    let id = ownProps.match.params.post_id;
+    return {
+        post: state.posts.find((x) => {
+            return x.id === id
+        })
+    }
+}
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deletePost : (id) => {dispatch({type : 'DELETE_POST', id : id})}
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Post);
+
+----------------------------------------------------------------------------
+action creaters is function it generate action
+create actions folder
+create postActions.js
+
+--------------------------------------------------------------
+summary
+
+npx create-react-app promanager
+npm install react-router-dom axios redux react-redux
+npm start
+
+folder:
+src -> actions, components, hoc, reducer
+
+create reducer/rootReducer.js
+projects -> action.type === 'DELETE_PROJECT' and action.id
+map redux in index.js
+
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';//reactjs react binder
+import rootReducer from './reducers/rootReducer'
+
+const store = createStore(rootReducer);
+
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+
+++++++++++++++++++++++++++++
+
+create actions/postActions.js
+
+export const deletePost = (id) => {
+    return {
+        type : 'DELETE_PROJECT',
+        id : id
+    }
+}
+
+++++++++++++++++++++++++++++++++++++++++
+create hoc/Ranbow.js
+
+import React from 'react'
+
+const Rainbow = (WrappedComponent) => {
+    const colors = ['red','pink', 'blue', 'green'];
+    const randomColor = colors[Math.floor(Math.random() * 4)];
+    const className = randomColor+"-text";
+
+    return (props) => {
+        return(
+            <div className={className}>
+                <WrappedComponent {...props}/>
+            </div>
+        )
+    }
+}
+
+export default Rainbow;
+++++++++++++++++++++++++++++++++++++++++
+craete components/About.js
+
+import React, {Component} from 'react';
+import Ranbow from '../hoc/Ranbow'
+
+const About = () => {
+    return(
+        <div className="container">
+            <h4 className="center">About</h4>
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus ratione quia quidem totam? Atque explicabo fugit sunt quia aspernatur sed neque impedit, reprehenderit nesciunt nemo dolores nobis odit sit eligendi!</p>
+        </div>
+    )
+}
+
+export default Ranbow(About);
++++++++++++++++++++++++++++++++++++++++
+create components/Navbar.js
+
+import React, {Component} from 'react';
+import {Link, NavLink, withRouter } from 'react-router-dom'
+
+const Navbar = (props) => {
+    /*console.log(props);
+    setTimeout(()=>{
+        props.history.push('/about')
+    },2000);*/
+    return(
+        <nav className="nav wrapper red darken-3">
+            <div className="container">
+                <a href="" className="brand-logo">Poke's Times</a>
+                <ul className="right">
+                    <li><Link to="/">Home</Link></li>
+                    <li><NavLink to="/about">About</NavLink></li>
+                    <li><NavLink to="/contact">Contact</NavLink></li>
+                </ul>
+            </div>
+        </nav>
+    )
+}
+
+export default withRouter(Navbar);
+
+NavLink gives active class property
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+upadate app.js
+
+import React, {Component} from 'react';
+import Navbar from './components/Navbar'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import Home from './components/Home'
+import About from './components/About'
+import Contact from './components/Contact'
+import Post from './components/Post'
+
+class App extends Component{
+  
+  render(){
+    return (
+      <BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/about" component={About} />
+            <Route path="/contact" component={Contact} />      
+            <Route path="/:post_id" component={Post}/>
+          </Switch>     
+        </div>
+      </BrowserRouter>
+    )
+  }
+  
+}
+
+export default App;
+
+++++++++++++++++++++++++++++++++++++++++++++
+create home component Home.js
+
+
+import React, {Component} from 'react';
+import axios from 'axios';
+import {Link} from 'react-router-dom';
+import Pokerball from '../pokeball.png';
+import { connect } from 'react-redux';//hoc to connect store in index.js
+
+class Home extends Component {
+
+    /*state = {
+        posts:[]
+    }
+
+    componentDidMount(){
+        axios.get('https://jsonplaceholder.typicode.com/posts')
+            .then(res => {//call back frunction
+                this.setState({
+                    posts: res.data.slice(0,10)
+                })
+            })
+    }*/
+
+    render(){
+        const {posts} = this.props;
+
+        const postList = posts.length ? (
+            posts.map(post => {
+                return(
+                   <div className="post card" key={post.id}>
+                       <img src={Pokerball} alt="a pokerball"/>
+                        <div className="card-content">
+                            <Link to={'/'+post.id}>
+                                <span className="card-title red-text">{post.title}</span>
+                            </Link>
+                            <p>{post.body}</p>
+                        </div>
+                   </div> 
+                )
+            })
+        ) : (
+            <div className="center">No post yet</div>
+        )
+
+        return(
+            <div className="container">
+                <h4 className="center">Home</h4>
+                {postList}
+            </div>
+        )
+    }
+}
+
+//conenct componet to store data
+const mapStateToProps = (state) => {
+    return {
+        posts: state.posts
+    }
+}
+
+export default connect(mapStateToProps)(Home);
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+load details page
+add <Route path="/:project_id" component={Post}/> to app.js route section
+create Project.js
+
+import React, {Component} from 'react'
+import axios from 'axios'
+import { connect } from 'react-redux';
+import { deletePost } from '../actions/postActions'
+
+class Project extends Component {
+
+    /*state = {
+        post : null
+    }
+
+    componentDidMount(){//find url parms using props added in route app.js
+        let id = this.props.match.params.post_id
+        axios.get('https://jsonplaceholder.typicode.com/posts/'+id)
+            .then(res => {//call back frunction
+                this.setState({
+                    post: res.data
+                })
+            })
+    }*/
+
+    handleClick = (e) => {
+        this.props.deletePost(this.props.post.id);
+        this.props.history.push('/');
+    }
+
+    render(){
+        console.log(this.props)
+        const post = this.props.post ? (
+            <div className="post">
+                <h4 className="center">{this.props.post.title}</h4>
+                <p>{this.props.post.body}</p>
+                <div className="center">
+                    <button className="btn gray" onClick={this.handleClick}>
+                        Delete Post
+                    </button>
+                </div>
+            </div>
+        ):(
+            <div className="center">Loadding post...</div>
+        )
+
+        return(
+            <div className="container">
+                <h4>{post}</h4>
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = (state, ownProps) => {//ownProps atach self component props
+    let id = ownProps.match.params.post_id;
+    return {
+        post: state.posts.find((x) => {
+            return x.id === id
+        })
+    }
+}
+
+
+//normal
+/*const mapDispatchToProps = (dispatch) => {
+    return {
+        deletePost : (id) => {dispatch({type : 'DELETE_POST', id : id})}
+    }
+}*/
+
+//action generater
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deletePost : (id) => {dispatch(deletePost(id))}
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Project);
+
+++++++++++++++++++++++++++++++++++++++++++
+edit action
+
+id
+title
+body
+
+export const editSaveProject = (id, title, body) => {
+    return{
+        type : 'EDIT_SAVE_PROJECT',
+        id : id,
+        title : title,
+        body : body
+    }
+}
+
+
+https://medium.com/@geekrodion/blog-with-asp-net-core-and-react-redux-part-2-creating-a-story-62c49bfa82ff
+
+
+-----------------------------------------------------
+firebase app
+https://www.youtube.com/watch?v=Oi4v5uxTY5o&list=PL4cUxeGkcC9iWstfXntcj8f-dFZ4UtlN3&index=2&t=0s
+
+https://github.com/iamshaunjp/React-Redux-Firebase-App
+
+
+---------------------------------chapter
+
+https://www.pointblankdevelopment.com.au/blog/135/react-redux-with-aspnet-core-20-login-registration-tutorial-example
+
+https://github.com/MacKentoch/react-director-admin-template
+
+https://github.com/reduction-admin/react-reduction?ref=designrevision.com
+
+--------------------------------------------
+
+https://www.c-sharpcorner.com/article/asp-net-core-learn-crud-operations-in-entity-framework-core-from-zero-to-hero/
+
+
+function pass_function(){
+  alert('42');
+}
+Then, from your react component:
+
+window["pass_function"]();
+And, of course, you can pass a parameter:
+
+//react
+window["passp"]("react ts");
+
+//js
+function passp(someval) {
+  alert(`passes parameter: ${someval}`);
+}
+
+-----------------------
+https://github.com/polonel/trudesk
+http://docker.trudesk.io/profile
+
+
+https://materialdesignicons.com/bootstrap
+
+
+https://stackoverflow.com/questions/2957522/accessing-active-directory-from-asp-net-mvc-using-c-sharp
+
+
+https://www.technipages.com/windows-install-active-directory-users-and-computers
+
+
+Right-click the Start button and choose “Settings” > “Apps” > “Manage optional features” > “Add feature“.
+Select “RSAT: Active Directory Domain Services and Lightweight Directory Tools“.
+Select “Install“, then wait while Windows installs the feature. It should eventually appear as an option under “Start” > “Windows Administrative Tools“.
+
+https://www.microsoft.com/en-us/download/details.aspx?id=45520
+
+
+_ldap._tcp.corp.neudesic.net
+
+nslookup -type=srv _ldap._tcp
+
+https://www.codeproject.com/Tips/458039/Application-Login-through-Active-Directory-LDAP
+
+https://csharp.hotexamples.com/examples/System.DirectoryServices.Protocols/SearchRequest/-/php-searchrequest-class-examples.html
+
+
+https://www.c-sharpcorner.com/uploadfile/dhananjaycoder/all-operations-on-active-directory-ad-using-C-Sharp/
+
+https://www.c-sharpcorner.com/uploadfile/dhananjaycoder/all-operations-on-active-directory-ad-using-C-Sharp/
+
+
+----------------------------------------------------------------
+https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutorial-with-example-api
+https://jasonwatmore.com/post/2017/12/07/react-redux-jwt-authentication-tutorial-example
+
+https://github.com/cornflourblue/react-redux-jwt-authentication-example
+https://jasonwatmore.com/post/2017/12/07/react-redux-jwt-authentication-tutorial-example
+https://github.com/cornflourblue/aspnet-core-jwt-authentication-api
+
+
+https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutorial-with-example-api
+https://jasonwatmore.com/post/2017/12/07/react-redux-jwt-authentication-tutorial-example
+https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutorial-with-example-api
+
+
+----------------------------------------------------------
+----------------------------------------------------------
+----------------------------------------------------------
+----------------------------------------------------------
+LeaveCancelation: NueLeaveCancelationRequest
+LeaveCancelationUiRender
+NeuLeaveCancelation
+NeuLeaveCancelationModal
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueLeaveCancelationRequest]    Script Date: 6/9/2019 5:48:46 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueLeaveCancelationRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[StartDate] [varchar](250) NULL,
+	[EndDate] [varchar](250) NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueLeaveCancelationRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+---------------------------------------------------
+LeavePastApply: NueLeavePastApplyRequest
+NeuLeavePastApplyModal
+NeuLeavePastApply
+LeavePastApplyUiRender
+
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueLeavePastApplyRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueLeavePastApplyRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[StartDate] [varchar](250) NULL,
+	[EndDate] [varchar](250) NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueLeavePastApplyRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+-----------------------------------------------------
+LeaveWFHApply:NueLeaveWFHApplyRequest
+NeuLeaveWFHApplyModal
+LeaveWFHApply
+LeaveWFHApplyUiRender
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueLeaveWFHApplyRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueLeaveWFHApplyRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[StartDate] [varchar](250) NULL,
+	[EndDate] [varchar](250) NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueLeaveWFHApplyRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+-----------------------------------------------------------------
+LeaveBalanceEnquiry: NueLeaveBalanceEnquiryRequest
+LeaveBalanceEnquiryModal
+LeaveBalanceEnquiry
+LeaveBalanceEnquiryUiRender
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueLeaveBalanceEnquiryRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueLeaveBalanceEnquiryRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[StartDate] [varchar](250) NULL,
+	[EndDate] [varchar](250) NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueLeaveBalanceEnquiryRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+-----------------------------------------------
+AddressProof: NueAddressProofRequest
+AddressProofModal
+AddressProof
+AddressProofUiRender
+
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueAddressProofRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueAddressProofRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueAddressProofRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+-----------------------------------------------------------------------
+EmployeeVerificationReq: EmployeeVerificationRequest
+EmployeeVerificationReqUiRender
+EmployeeVerificationReqModal
+EmployeeVerificationReq
+USE [NueRequest]
+GO
+
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[EmployeeVerificationRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[EmployeeVerificationRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[EmployeeVerificationRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+-------------------------------------------------------------------------
+SalaryCertificate: NueSalaryCertificateRequest
+SalaryCertificateUiRender
+SalaryCertificate
+SalaryCertificateModal
+
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueSalaryCertificateRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueSalaryCertificateRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueSalaryCertificateRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+--------------------------------------------------------------------
+General: NueGeneralRequest
+GeneralRequestUiRender
+GeneralRequest
+GeneralRequestModal
+
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueGeneralRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueGeneralRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueGeneralRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+-------------------------------------------
+DomesticTripRequest: NueDomesticTripRequest
+DomesticTripRequestUiRender
+DomesticTripRequestModal
+DomesticTripRequest
+
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueDomesticTripRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueDomesticTripRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[Accommodation] [int] NULL DEFAULT 0,
+	[LocationFrom] [text] NULL,
+	[LocationTo] [text] NULL,
+	[StartDate] [varchar](250) NULL,
+	[EndDate] [varchar](250) NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueDomesticTripRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+--------------------------------------------------------------------------

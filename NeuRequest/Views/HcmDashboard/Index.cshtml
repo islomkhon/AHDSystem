@@ -210,7 +210,12 @@
                                                 requestTypeString = "General";
                                                 otherReq++;
                                             }
-                                            
+                                            else if (item.RequestSubType.ToString().ToLower() == "domestictrip")
+                                            {
+                                                requestTypeString = "Domestic Travel";
+                                                otherReq++;
+                                            }
+
 
                                             <tr style="">
                                                 <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)<span class="hide">item.RequestId</span></span></a></td>
@@ -290,6 +295,14 @@
                                     <option value="AddressProof" data-target="/HcmDashboard/AddressProof">Address Proof</option>
                                     <option value="EmployeeVerificationReq" data-target="/HcmDashboard/EmployeeVerificationReq">Employee Verification</option>
                                     <option value="SalaryCertificate" data-target="/HcmDashboard/SalaryCertificate">Salary Certificate</option>
+                                </optgroup>
+                                <optgroup label="Travel">
+                                    <option value="DomesticTripRequest" data-target="/HcmDashboard/DomesticTripRequest">Domestic</option>
+                                    <option value="InternationalTripRequest" data-target="/HcmDashboard/InternationalTripRequest">International</option>
+                                </optgroup>
+                                <optgroup label="Database">
+                                    <option value="DBManagerChangeRequest" data-target="/HcmDashboard/DBManagerChangeRequest">Manager Change</option>
+                                    <option value="DBLocationChangeRequest" data-target="/HcmDashboard/DBLocationChangeRequest">Location change</option>
                                 </optgroup>
                                 <optgroup label="General">
                                     <option value="GeneralRequest" data-target="/HcmDashboard/GeneralRequest">Other</option>

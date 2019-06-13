@@ -230,6 +230,7 @@
     </Compile>
     <Compile Include="Hubs\MessagesHub.cs" />
     <Compile Include="Models\AdalTokenCache.cs" />
+    <Compile Include="Models\DomesticTripRequestUiRender.cs" />
     <Compile Include="Models\GeneralRequestUiRender.cs" />
     <Compile Include="Models\MailItem.cs" />
     <Compile Include="Models\SalaryCertificateUiRender.cs" />
@@ -1423,6 +1424,7 @@
     <Content Include="Views\HcmDashboard\SalaryCertificate.cshtml" />
     <Content Include="Views\HcmDashboard\GeneralRequest.cshtml" />
     <Content Include="Views\HcmDashboard\PreApprovalHCMHistory.cshtml" />
+    <Content Include="Views\HcmDashboard\DomesticTripRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Analytics\" />
