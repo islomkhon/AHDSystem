@@ -84,13 +84,13 @@ namespace MailTest
         static void Main(string[] args)
         {
 
-            Program pr = new Program();
+            /*Program pr = new Program();
             ThreadStart ts = delegate
             {
                 pr.SendEmail("monin.jose@neudesic.com", "Test Mail", "Test mail message", true);
             };
             new Thread(ts).Start();
-            int i = 10;
+            int i = 10;*/
             //await email.Send();
             /*SmtpClient smtpClient = new SmtpClient("mail.neudesic.com", 25);
 

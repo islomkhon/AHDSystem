@@ -144,6 +144,7 @@ namespace NeuRequest.Models
                     NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Leave Cancelation");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Start Date", neuLeaveCancelationModal.StartDate);
                     messageData.Add("End Date", neuLeaveCancelationModal.EndDate);
@@ -193,6 +194,7 @@ namespace NeuRequest.Models
                     NeuLeavePastApplyModal neuLeavePastApplyModal = new DataAccess().getNeuLeavePastApplyDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Past Leave Apply");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Start Date", neuLeavePastApplyModal.StartDate);
                     messageData.Add("End Date", neuLeavePastApplyModal.EndDate);
@@ -241,6 +243,7 @@ namespace NeuRequest.Models
                     NeuLeaveWFHApplyModal neuLeaveWFHApplyModal = new DataAccess().getNeuLeaveWFHApplyDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Work From Home");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Start Date", neuLeaveWFHApplyModal.StartDate);
                     messageData.Add("End Date", neuLeaveWFHApplyModal.EndDate);
@@ -289,6 +292,7 @@ namespace NeuRequest.Models
                     LeaveBalanceEnquiryModal leaveBalanceEnquiryModal = new DataAccess().getNeuLeaveBalanceEnquiryDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Leave Balance Enquiry");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Start Date", leaveBalanceEnquiryModal.StartDate);
                     messageData.Add("End Date", leaveBalanceEnquiryModal.EndDate);
@@ -321,6 +325,7 @@ namespace NeuRequest.Models
                     AddressProofModal addressProofModal = new DataAccess().getNeuAddressProofModalDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Address Proof");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Request Status", requestStatusStr);
                     messageData.Add("Created On", addressProofModal.AddedOn.ToLocalTime().ToString());
@@ -351,6 +356,7 @@ namespace NeuRequest.Models
                     EmployeeVerificationReqModal employeeVerificationReqModal = new DataAccess().getNeuEmployeeVerificationReqModalDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Employee Verification");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Request Status", requestStatusStr);
                     messageData.Add("Created On", employeeVerificationReqModal.AddedOn.ToLocalTime().ToString());
@@ -381,6 +387,7 @@ namespace NeuRequest.Models
                     SalaryCertificateModal salaryCertificateModal = new DataAccess().getNeuSalaryCertificateModalDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Salary Certificate");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Request Status", requestStatusStr);
                     messageData.Add("Created On", salaryCertificateModal.AddedOn.ToLocalTime().ToString());
@@ -412,6 +419,7 @@ namespace NeuRequest.Models
                     GeneralRequestModal generalRequestModal = new DataAccess().getNeuGeneralRequestModalDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Common");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Request Status", requestStatusStr);
                     messageData.Add("Created On", generalRequestModal.AddedOn.ToLocalTime().ToString());
@@ -448,6 +456,7 @@ namespace NeuRequest.Models
                     {
                         accommodation = "Yes";
                     }
+                    messageData.Add("Request Category", "Domestic Travel");
                     messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
                     messageData.Add("Accommodation", accommodation);
                     messageData.Add("From", domesticTripRequestModal.LocationFrom);
