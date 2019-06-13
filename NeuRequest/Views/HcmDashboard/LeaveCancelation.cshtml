@@ -4,6 +4,7 @@
     UserProfile userProfileSession = ViewData["UserProfileSession"] as UserProfile;
     List<UserProfile> userMasterList = ViewData["UserMasterList"] as List<UserProfile>;
     LeaveCancelationUiRender leaveCancelationUiRender = ViewData["LeaveCancelationUiRender"] as LeaveCancelationUiRender;
+
 }
 @{
     ViewBag.Title = "HCM Create New Leave Cancelation Request - ";
@@ -366,8 +367,17 @@
                                         <div class="form-group row">
                                             <label class="col-sm-3 col-form-label">Approver</label>
                                             <div class="col-sm-9">
-                                                <input type="hidden" value="@leaveCancelationUiRender.leaveCancelationApprover" class="dynaLoadSelectContent" data-target="leaveCancelationApprover" />
-                                                <select class="js-example-basic-single" id="leaveCancelationApprover" name="leaveCancelationApprover" style="width:100%">
+
+                                                @if (leaveCancelationUiRender.leaveCancelationApprover == null || leaveCancelationUiRender.leaveCancelationApprover.Trim() == "")
+                                                {
+                                                    <input type="hidden" value="@userProfileSession.userPreference.FirstApprover" class="dynaLoadSelectContent" data-target="leaveCancelationApprover" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="hidden" value="@leaveCancelationUiRender.leaveCancelationApprover" class="dynaLoadSelectContent" data-target="leaveCancelationApprover" />
+                                                }
+
+                                                <select class="js-example-basic-single select2" id="leaveCancelationApprover" name="leaveCancelationApprover" style="width:100%">
                                                     <option value="">-- Select --</option>
                                                     @foreach (UserProfile item in userMasterList)
                                                     {
@@ -509,6 +519,18 @@
 
         if ($(".leaveCancelationApprover").length) {
             $(".leaveCancelationApprover").select2();
+        }
+
+        if ($(".dynaLoadSelectContent").length) {
+            $('.dynaLoadSelectContent').each(function (index) {
+                var value = $(this).val();
+                var target = $(this).data('target');
+                $('#' + target).val(value);
+            });
+        }
+
+        if ($(".select2").length) {
+            $(".select2").select2();
         }
     });
     (function ($) {

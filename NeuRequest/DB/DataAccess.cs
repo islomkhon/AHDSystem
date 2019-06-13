@@ -1407,7 +1407,8 @@ namespace NeuRequest.DB
                         if (userProfile != null)
                         {
                             userProfile.userPreference = new UserPreference();
-                            string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication
+                            string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication, 
+                                          FirstApprover, SecondApprover
                                           FROM NeuUserPreference nup 
                                           join NueUserProfile as np on nup.UserId = np.Id
                                           where np.Id = @UserId";
@@ -1423,6 +1424,8 @@ namespace NeuRequest.DB
                                     UserPreference userPreference = new UserPreference();
                                     userPreference.Id = ConvertFromDBVal<int>(dataReader1["Id"]);
                                     userPreference.UserId = ConvertFromDBVal<int>(dataReader1["UserId"]);
+                                    userPreference.FirstApprover = ConvertFromDBVal<int>(dataReader1["FirstApprover"]);
+                                    userPreference.SecondApprover = ConvertFromDBVal<int>(dataReader1["SecondApprover"]);
                                     userPreference.IsMailCommunication = ConvertFromDBVal<int>(dataReader1["IsMailCommunication"]);
                                     userProfile.userPreference = userPreference;
                                 }
@@ -1507,7 +1510,8 @@ namespace NeuRequest.DB
                         if (userProfile != null)
                         {
                             userProfile.userPreference = new UserPreference();
-                            string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication
+                            string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication,
+                                          FirstApprover, SecondApprover
                                           FROM NeuUserPreference nup 
                                           join NueUserProfile as np on nup.UserId = np.Id
                                           where np.Id = @UserId";
@@ -1523,6 +1527,8 @@ namespace NeuRequest.DB
                                     UserPreference userPreference = new UserPreference();
                                     userPreference.Id = ConvertFromDBVal<int>(dataReader1["Id"]);
                                     userPreference.UserId = ConvertFromDBVal<int>(dataReader1["UserId"]);
+                                    userPreference.FirstApprover = ConvertFromDBVal<int>(dataReader1["FirstApprover"]);
+                                    userPreference.SecondApprover = ConvertFromDBVal<int>(dataReader1["SecondApprover"]);
                                     userPreference.IsMailCommunication = ConvertFromDBVal<int>(dataReader1["IsMailCommunication"]);
                                     userProfile.userPreference = userPreference;
                                 }
@@ -1807,6 +1813,24 @@ namespace NeuRequest.DB
             return modified;
         }
 
+        public int addUserPreferenceL1(UserPreference userPreference)
+        {
+            var dateCreated = DateTime.UtcNow;
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("UPDATE NeuUserPreference SET FirstApprover = @FirstApprover WHERE UserId = @UserId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userPreference.UserId);
+                    cmd.Parameters.AddWithValue("@FirstApprover", userPreference.FirstApprover);
+                    modified = (int)cmd.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+            return modified;
+        }
+
         public int addUserPreference(UserPreference userPreference)
         {
             var dateCreated = DateTime.UtcNow;
@@ -2074,7 +2098,8 @@ namespace NeuRequest.DB
                 if (userProfile != null)
                 {
                     userProfile.userPreference = new UserPreference();
-                    string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication
+                    string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication, 
+                                          FirstApprover, SecondApprover
                                           FROM NeuUserPreference nup 
                                           join NueUserProfile as np on nup.UserId = np.Id
                                           where np.Id = @UserId";
@@ -2090,6 +2115,8 @@ namespace NeuRequest.DB
                             UserPreference userPreference = new UserPreference();
                             userPreference.Id = ConvertFromDBVal<int>(dataReader1["Id"]);
                             userPreference.UserId = ConvertFromDBVal<int>(dataReader1["UserId"]);
+                            userPreference.FirstApprover = ConvertFromDBVal<int>(dataReader1["FirstApprover"]);
+                            userPreference.SecondApprover = ConvertFromDBVal<int>(dataReader1["SecondApprover"]);
                             userPreference.IsMailCommunication = ConvertFromDBVal<int>(dataReader1["IsMailCommunication"]);
                             userProfile.userPreference = userPreference;
                         }
@@ -2176,7 +2203,8 @@ namespace NeuRequest.DB
                 if (userProfile != null)
                 {
                     userProfile.userPreference = new UserPreference();
-                    string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication
+                    string sql1 = @"SELECT nup.Id, UserId, IsMailCommunication,
+                                          FirstApprover, SecondApprover
                                           FROM NeuUserPreference nup 
                                           join NueUserProfile as np on nup.UserId = np.Id
                                           where np.Id = @UserId";
@@ -2192,6 +2220,8 @@ namespace NeuRequest.DB
                             UserPreference userPreference = new UserPreference();
                             userPreference.Id = ConvertFromDBVal<int>(dataReader1["Id"]);
                             userPreference.UserId = ConvertFromDBVal<int>(dataReader1["UserId"]);
+                            userPreference.FirstApprover = ConvertFromDBVal<int>(dataReader1["FirstApprover"]);
+                            userPreference.SecondApprover = ConvertFromDBVal<int>(dataReader1["SecondApprover"]);
                             userPreference.IsMailCommunication = ConvertFromDBVal<int>(dataReader1["IsMailCommunication"]);
                             userProfile.userPreference = userPreference;
                         }

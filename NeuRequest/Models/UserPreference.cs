@@ -10,6 +10,7 @@ namespace NeuRequest.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public int IsMailCommunication { get; set; }
-
+        public int FirstApprover { get; set; }
+        public int SecondApprover { get; set; }
     }
 }

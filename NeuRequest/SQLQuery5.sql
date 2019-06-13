@@ -179,3 +179,10 @@
 --	[ModifiedOn] datetime
 --)
 
+--ALTER TABLE NeuUserPreference
+--    ADD FirstApprover int,
+--    FOREIGN KEY(FirstApprover) REFERENCES NueUserProfile(Id);
+
+--ALTER TABLE NeuUserPreference
+--    ADD SecondApprover int,
+--    FOREIGN KEY(SecondApprover) REFERENCES NueUserProfile(Id);

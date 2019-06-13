@@ -2653,6 +2653,10 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
 
+                            UserPreference userPreference = new UserPreference();
+                            userPreference.UserId = currentUser.Id;
+                            userPreference.FirstApprover = int.Parse(leaveWFHApplyUiRender.leaveWFHApplyApprover);
+
                             MessagesModel messagesModel = new MessagesModel();
                             messagesModel.Message = "Work From Home";
                             messagesModel.EmptyMessage = currentUser.FullName + " submitted work from home request";
@@ -2664,7 +2668,7 @@ namespace NeuRequest.Controllers
 
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
                             new DataAccess().addNeuMessagess(messages);
-
+                            new DataAccess().addUserPreferenceL1(userPreference);
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
 
@@ -3211,6 +3215,10 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
 
+                            UserPreference userPreference = new UserPreference();
+                            userPreference.UserId = currentUser.Id;
+                            userPreference.FirstApprover = int.Parse(leavePastApplyUiRender.leavePastApplyApprover);
+
                             MessagesModel messagesModel = new MessagesModel();
                             messagesModel.Message = "Leave Past Apply";
                             messagesModel.EmptyMessage = currentUser.FullName + " submitted leave past request";
@@ -3222,7 +3230,7 @@ namespace NeuRequest.Controllers
 
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
                             new DataAccess().addNeuMessagess(messages);
-
+                            new DataAccess().addUserPreferenceL1(userPreference);
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
 
@@ -3767,6 +3775,11 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
 
+                            UserPreference userPreference = new UserPreference();
+                            userPreference.UserId = currentUser.Id;
+                            userPreference.FirstApprover = int.Parse(leaveCancelationUiRender.leaveCancelationApprover);
+
+
                             MessagesModel messagesModel = new MessagesModel();
                             messagesModel.Message = "Leave Cancelation";
                             messagesModel.EmptyMessage = currentUser.FullName + " submitted leave cancellation request";
@@ -3778,7 +3791,7 @@ namespace NeuRequest.Controllers
 
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
                             new DataAccess().addNeuMessagess(messages);
-
+                            new DataAccess().addUserPreferenceL1(userPreference);
 
                             System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
 
