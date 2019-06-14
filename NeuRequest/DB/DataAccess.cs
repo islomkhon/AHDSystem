@@ -1,4 +1,5 @@
-﻿using NeuRequest.Models;
+﻿using NeuRequest.DAL;
+using NeuRequest.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -433,7 +434,7 @@ namespace NeuRequest.DB
                 connection.Open();
                 foreach (var item in messages)
                 {
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Messages (Message, EmptyMessage, Processed, UserId, Target, Date) " +
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO NeuMessages (Message, EmptyMessage, Processed, UserId, Target, Date) " +
                                       "output INSERTED.MessageID VALUES(@Message, @EmptyMessage, @Processed, @UserId, @Target, @Date)", connection))
                     {
                         cmd.Parameters.AddWithValue("@Message", item.Message);
@@ -450,7 +451,7 @@ namespace NeuRequest.DB
             return modified;
         }
 
-        public int addNeuRequestAccessLogs(List<NueRequestAceessLog> nueRequestAceessLogs)
+        public int addNeuRequestAccessLogs(List<NuRequestAceessLog> nueRequestAceessLogs)
         {
             int modified = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -475,7 +476,7 @@ namespace NeuRequest.DB
             return modified;
         }
 
-        public int updateNeuRequestAccessLogs(NueRequestAceessLog nueRequestAceessLog)
+        public int updateNeuRequestAccessLogs(NuRequestAceessLog nueRequestAceessLog)
         {
             int modified = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -496,7 +497,7 @@ namespace NeuRequest.DB
             return modified;
         }
 
-        public int updateNeuRequestStatusLogs(NueRequestMaster nueRequestMaster)
+        public int updateNeuRequestStatusLogs(NuRequestMaster nueRequestMaster)
         {
             int modified = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -516,7 +517,7 @@ namespace NeuRequest.DB
             return modified;
         }
 
-        public int addNeuRequest(NueRequestMaster nueRequestMaster)
+        public int addNeuRequest(NuRequestMaster nueRequestMaster)
         {
             int modified = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -562,6 +563,49 @@ namespace NeuRequest.DB
             return modified;
         }
 
+
+        public int addInternationalTripRequest(InternationalTripRequest internationalTripRequest)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueInternationalTripRequest (RequestId, UserId, NeedVisiaProcessing, PlaceToVisit, StartDate, ProjectName, Message, AddedOn, ModifiedOn) " +
+                    "output INSERTED.ID VALUES(@RequestId, @UserId, @NeedVisiaProcessing, @PlaceToVisit, @StartDate, @ProjectName, @Message, @AddedOn, @ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", internationalTripRequest.RequestId);
+                    cmd.Parameters.AddWithValue("@UserId", internationalTripRequest.UserId);
+                    cmd.Parameters.AddWithValue("@NeedVisiaProcessing", internationalTripRequest.NeedVisiaProcessing);
+                    cmd.Parameters.AddWithValue("@PlaceToVisit", internationalTripRequest.PlaceToVisit);
+                    cmd.Parameters.AddWithValue("@StartDate", internationalTripRequest.StartDate);
+                    if (internationalTripRequest.ProjectName != null)
+                    {
+                        cmd.Parameters.AddWithValue("@ProjectName", internationalTripRequest.ProjectName);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@ProjectName", DBNull.Value);
+                    }
+
+                    if (internationalTripRequest.Message != null)
+                    {
+                        cmd.Parameters.AddWithValue("@Message", internationalTripRequest.Message);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Message", DBNull.Value);
+                    }
+
+                    cmd.Parameters.AddWithValue("@AddedOn", internationalTripRequest.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", internationalTripRequest.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
+
         public int addDomesticTripRequest(DomesticTripRequest domesticTripRequest)
         {
             int modified = -1;
@@ -578,7 +622,14 @@ namespace NeuRequest.DB
                     cmd.Parameters.AddWithValue("@LocationTo", domesticTripRequest.LocationTo);
                     cmd.Parameters.AddWithValue("@StartDate", domesticTripRequest.StartDate);
                     cmd.Parameters.AddWithValue("@EndDate", domesticTripRequest.EndDate);
-                    cmd.Parameters.AddWithValue("@Message", domesticTripRequest.Message);
+                    if (domesticTripRequest.Message != null)
+                    {
+                        cmd.Parameters.AddWithValue("@Message", domesticTripRequest.Message);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Message", DBNull.Value);
+                    }
                     cmd.Parameters.AddWithValue("@AddedOn", domesticTripRequest.AddedOn);
                     cmd.Parameters.AddWithValue("@ModifiedOn", domesticTripRequest.ModifiedOn);
                     modified = (int)cmd.ExecuteScalar();
@@ -637,7 +688,7 @@ namespace NeuRequest.DB
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO EmployeeVerificationRequest (UserId, RequestId, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@Message,@AddedOn,@ModifiedOn)", connection))
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NeuEmployeeVerificationRequest (UserId, RequestId, Message, AddedOn, ModifiedOn) output INSERTED.ID VALUES(@UserId,@RequestId,@Message,@AddedOn,@ModifiedOn)", connection))
                 {
                     cmd.Parameters.AddWithValue("@UserId", employeeVerificationReq.UserId);
                     cmd.Parameters.AddWithValue("@RequestId", employeeVerificationReq.RequestId);
@@ -695,7 +746,7 @@ namespace NeuRequest.DB
             return modified;
         }
 
-        public int addNewLeavePastApply(NeuLeavePastApply neuLeavePastApply)
+        public int addNewLeavePastApply(NeLeavePastApply neuLeavePastApply)
         {
             int modified = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -717,7 +768,7 @@ namespace NeuRequest.DB
             return modified;
         }
 
-        public int addNewLeaveCancelation(NeuLeaveCancelation neuLeaveCancelation)
+        public int addNewLeaveCancelation(NeLeaveCancelation neuLeaveCancelation)
         {
             int modified = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -763,7 +814,7 @@ namespace NeuRequest.DB
             return modified;
         }
 
-        public int addRequestComment(NueRequestActivity nueRequestActivity)
+        public int addRequestComment(NuRequestActivity nueRequestActivity)
         {
             int modified = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -785,9 +836,9 @@ namespace NeuRequest.DB
             return modified;
         }
 
-        public NeuLeavePastApplyModal getNeuLeavePastApplyDetails(string requestId)
+        public NeLeavePastApplyModal getNeuLeavePastApplyDetails(string requestId)
         {
-            NeuLeavePastApplyModal neuLeavePastApplyModal = new NeuLeavePastApplyModal();
+            NeLeavePastApplyModal neuLeavePastApplyModal = new NeLeavePastApplyModal();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -801,7 +852,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            neuLeavePastApplyModal = new NeuLeavePastApplyModal();
+                            neuLeavePastApplyModal = new NeLeavePastApplyModal();
                             neuLeavePastApplyModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             neuLeavePastApplyModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
                             neuLeavePastApplyModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
@@ -819,6 +870,48 @@ namespace NeuRequest.DB
             }
             return neuLeavePastApplyModal;
         }
+
+
+        public InternationalTripRequestModal getInternationalTripRequestModal(string requestId)
+        {
+            InternationalTripRequestModal internationalTripRequestModal = new InternationalTripRequestModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.NeedVisiaProcessing, nucr.PlaceToVisit, 
+														nucr.StartDate, nucr.ProjectName,
+														nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueInternationalTripRequest nucr join NueUserProfile nup 
+                                                        on nucr.UserId = nup.id where nucr.RequestId = @RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            internationalTripRequestModal = new InternationalTripRequestModal();
+                            internationalTripRequestModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            internationalTripRequestModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            internationalTripRequestModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            internationalTripRequestModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            internationalTripRequestModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            internationalTripRequestModal.NeedVisiaProcessing = ConvertFromDBVal<int>(dataReader["NeedVisiaProcessing"]);
+                            internationalTripRequestModal.PlaceToVisit = ConvertFromDBVal<string>(dataReader["PlaceToVisit"]);
+                            internationalTripRequestModal.StartDate = ConvertFromDBVal<string>(dataReader["StartDate"]);
+                            internationalTripRequestModal.ProjectName = ConvertFromDBVal<string>(dataReader["ProjectName"]);
+                            internationalTripRequestModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            internationalTripRequestModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return internationalTripRequestModal;
+        }
+
+
 
         public DomesticTripRequestModal getNeuDomesticTripRequestModal(string requestId)
         {
@@ -934,7 +1027,7 @@ namespace NeuRequest.DB
                 connection.Open();
                 using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
                                                         nucr.Message, nucr.AddedOn, nucr.ModifiedOn 
-                                                        from EmployeeVerificationRequest nucr join NueUserProfile nup 
+                                                        from NeuEmployeeVerificationRequest nucr join NueUserProfile nup 
                                                         on nucr.UserId = nup.id where nucr.RequestId=@RequestId", connection))
                 {
                     cmd.Parameters.AddWithValue("@RequestId", requestId);
@@ -1027,9 +1120,9 @@ namespace NeuRequest.DB
             return leaveBalanceEnquiryModal;
         }
 
-        public NeuLeaveWFHApplyModal getNeuLeaveWFHApplyDetails(string requestId)
+        public NeLeaveWFHApplyModal getNeuLeaveWFHApplyDetails(string requestId)
         {
-            NeuLeaveWFHApplyModal neuLeaveWFHApplyModal = new NeuLeaveWFHApplyModal();
+            NeLeaveWFHApplyModal neuLeaveWFHApplyModal = new NeLeaveWFHApplyModal();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1043,7 +1136,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            neuLeaveWFHApplyModal = new NeuLeaveWFHApplyModal();
+                            neuLeaveWFHApplyModal = new NeLeaveWFHApplyModal();
                             neuLeaveWFHApplyModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             neuLeaveWFHApplyModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
                             neuLeaveWFHApplyModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
@@ -1062,9 +1155,9 @@ namespace NeuRequest.DB
             return neuLeaveWFHApplyModal;
         }
 
-        public NeuLeaveCancelationModal getNeuLeaveCancelationDetails(string requestId)
+        public NeLeaveCancelationModal getNeuLeaveCancelationDetails(string requestId)
         {
-            NeuLeaveCancelationModal neuLeaveCancelationModal = new NeuLeaveCancelationModal();
+            NeLeaveCancelationModal neuLeaveCancelationModal = new NeLeaveCancelationModal();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1078,7 +1171,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            neuLeaveCancelationModal = new NeuLeaveCancelationModal();
+                            neuLeaveCancelationModal = new NeLeaveCancelationModal();
                             neuLeaveCancelationModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             neuLeaveCancelationModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
                             neuLeaveCancelationModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
@@ -1135,9 +1228,9 @@ namespace NeuRequest.DB
             return attachmentLogModels;
         }
 
-        public List<NueRequestActivityModel> getRequestLogs(string requestId)
+        public List<NuRequestActivityModel> getRequestLogs(string requestId)
         {
-            List<NueRequestActivityModel> nueRequestActivityModels = new List<NueRequestActivityModel>();
+            List<NuRequestActivityModel> nueRequestActivityModels = new List<NuRequestActivityModel>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1156,7 +1249,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            NueRequestActivityModel nueRequestActivityModel = new NueRequestActivityModel();
+                            NuRequestActivityModel nueRequestActivityModel = new NuRequestActivityModel();
                             nueRequestActivityModel.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             nueRequestActivityModel.Payload = ConvertFromDBVal<string>(dataReader["Payload"]);
                             nueRequestActivityModel.PayloadTypeId = ConvertFromDBVal<int>(dataReader["PayloadTypeId"]);
@@ -1177,9 +1270,9 @@ namespace NeuRequest.DB
             return nueRequestActivityModels;
         }
 
-        public List<NueRequestAceessLog> getRequestAccessList(string requestId)
+        public List<NuRequestAceessLog> getRequestAccessList(string requestId)
         {
-            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1193,7 +1286,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             nueRequestAceessLog.RequestId = ConvertFromDBVal<int>(dataReader["RequestId"]);
                             nueRequestAceessLog.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
@@ -1210,9 +1303,9 @@ namespace NeuRequest.DB
             return nueRequestAceessLogs;
         }
 
-        public List<NueRequestAceessLog> getAllRequestAccessList()
+        public List<NuRequestAceessLog> getAllRequestAccessList()
         {
-            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1225,7 +1318,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             nueRequestAceessLog.RequestId = ConvertFromDBVal<int>(dataReader["RequestId"]);
                             nueRequestAceessLog.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
@@ -1328,9 +1421,9 @@ namespace NeuRequest.DB
             return userRequest;
         }
 
-        public NueRequestActivityMaster getRequestType(string requestMainType, string requestSubType)
+        public NuRequestActivityMaster getRequestType(string requestMainType, string requestSubType)
         {
-            NueRequestActivityMaster nueRequestActivityMaster = new NueRequestActivityMaster();
+            NuRequestActivityMaster nueRequestActivityMaster = new NuRequestActivityMaster();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1345,7 +1438,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            nueRequestActivityMaster = new NueRequestActivityMaster();
+                            nueRequestActivityMaster = new NuRequestActivityMaster();
                             nueRequestActivityMaster.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             nueRequestActivityMaster.ActivityDesc = ConvertFromDBVal<string>(dataReader["RequestSubType"]);
                             break;
@@ -1357,9 +1450,9 @@ namespace NeuRequest.DB
             return nueRequestActivityMaster;
         }
 
-        public NueRequestActivityMaster getRequestStatus(string statusType)
+        public NuRequestActivityMaster getRequestStatus(string statusType)
         {
-            NueRequestActivityMaster nueRequestActivityMaster = new NueRequestActivityMaster();
+            NuRequestActivityMaster nueRequestActivityMaster = new NuRequestActivityMaster();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1370,7 +1463,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            nueRequestActivityMaster = new NueRequestActivityMaster();
+                            nueRequestActivityMaster = new NuRequestActivityMaster();
                             nueRequestActivityMaster.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             nueRequestActivityMaster.ActivityDesc = ConvertFromDBVal<string>(dataReader["RequestStatus"]);
                             break;
@@ -1382,9 +1475,9 @@ namespace NeuRequest.DB
             return nueRequestActivityMaster;
         }
 
-        public NueRequestActivityMaster getRequestActivityMasterId(string activityType)
+        public NuRequestActivityMaster getRequestActivityMasterId(string activityType)
         {
-            NueRequestActivityMaster nueRequestActivityMaster = new NueRequestActivityMaster();
+            NuRequestActivityMaster nueRequestActivityMaster = new NuRequestActivityMaster();
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -1395,7 +1488,7 @@ namespace NeuRequest.DB
                     {
                         while (dataReader.Read())
                         {
-                            nueRequestActivityMaster = new NueRequestActivityMaster();
+                            nueRequestActivityMaster = new NuRequestActivityMaster();
                             nueRequestActivityMaster.Id = ConvertFromDBVal<int>(dataReader["Id"]);
                             nueRequestActivityMaster.ActivityDesc = ConvertFromDBVal<string>(dataReader["ActivityDesc"]);
                             break;
@@ -1417,10 +1510,10 @@ namespace NeuRequest.DB
 	                           ,ems.Id as EmpStatusId, ems.Status as EmpStatusDesc, DateofJoining, pc.Id as PracticeId, 
                                 pc.Practice as PracticeDesc, Location, jl.Id as JLId, jl.[LEVEL] as JLDesc, 
                                 ds.Id as DSId, ds.Desig as DSDesc, Active, NP.AddedOn
-                                FROM NueUserProfile as NP join EmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
-                                join Practice as pc on NP.Practice = pc.Id 
-                                join JobLevel as jl on NP.JobLevel = jl.Id 
-                                join Designation as ds on NP.Designation = ds.Id";
+                                FROM NueUserProfile as NP join NeuEmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
+                                join NeuPractice as pc on NP.Practice = pc.Id 
+                                join NeuJobLevel as jl on NP.JobLevel = jl.Id 
+                                join NeuDesignation as ds on NP.Designation = ds.Id";
                 SqlCommand command = new SqlCommand(sql, connection);
                 using (SqlDataReader dataReader = command.ExecuteReader())
                 {
@@ -1509,6 +1602,12 @@ namespace NeuRequest.DB
             return userProfiles;
         }
 
+        public List<NueUserProfile> getAllUserProfilesDinamic()
+        {
+            NueRequestEntities nueRequestEntities = new NueRequestEntities();
+            return nueRequestEntities.NueUserProfile.ToList<NueUserProfile>();
+        }
+
         public List<UserProfile> getAllUserProfiles()
         {
             List<UserProfile> userProfiles = new List<UserProfile>();
@@ -1519,10 +1618,10 @@ namespace NeuRequest.DB
 	                           ,ems.Id as EmpStatusId, ems.Status as EmpStatusDesc, DateofJoining, pc.Id as PracticeId, 
                                 pc.Practice as PracticeDesc, Location, jl.Id as JLId, jl.[LEVEL] as JLDesc, 
                                 ds.Id as DSId, ds.Desig as DSDesc, Active, NP.AddedOn
-                                FROM NueUserProfile as NP join EmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
-                                join Practice as pc on NP.Practice = pc.Id 
-                                join JobLevel as jl on NP.JobLevel = jl.Id 
-                                join Designation as ds on NP.Designation = ds.Id
+                                FROM NueUserProfile as NP join NeuEmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
+                                join NeuPractice as pc on NP.Practice = pc.Id 
+                                join NeuJobLevel as jl on NP.JobLevel = jl.Id 
+                                join NeuDesignation as ds on NP.Designation = ds.Id
                                 WHERE NP.Active = 1";
                 SqlCommand command = new SqlCommand(sql, connection);
                 using (SqlDataReader dataReader = command.ExecuteReader())
@@ -1622,10 +1721,10 @@ namespace NeuRequest.DB
 	                           ,ems.Id as EmpStatusId, ems.Status as EmpStatusDesc, DateofJoining, pc.Id as PracticeId, 
                                 pc.Practice as PracticeDesc, Location, jl.Id as JLId, jl.[LEVEL] as JLDesc, 
                                 ds.Id as DSId, ds.Desig as DSDesc, Active, NP.AddedOn
-                                FROM NueUserProfile as NP join EmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
-                                join Practice as pc on NP.Practice = pc.Id 
-                                join JobLevel as jl on NP.JobLevel = jl.Id 
-                                join Designation as ds on NP.Designation = ds.Id 
+                                FROM NueUserProfile as NP join NeuEmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
+                                join NeuPractice as pc on NP.Practice = pc.Id 
+                                join NeuJobLevel as jl on NP.JobLevel = jl.Id 
+                                join NeuDesignation as ds on NP.Designation = ds.Id 
                                 where Email != @Email
                                 AND Active = 1";
                 SqlCommand command = new SqlCommand(sql, connection);
@@ -1946,7 +2045,7 @@ namespace NeuRequest.DB
             {
                 connection.Open();
                 using (SqlCommand cmd = new SqlCommand("SELECT MessageID, Message, EmptyMessage, Processed, UserId, nup.FullName, nup.NTPLID , " +
-                    "Target, Date FROM Messages m join NueUserProfile nup on m.UserId = nup.Id WHERE UserId = @UserId ORDER BY [Date] DESC;", connection))
+                    "Target, Date FROM NeuMessages m join NueUserProfile nup on m.UserId = nup.Id WHERE UserId = @UserId ORDER BY [Date] DESC;", connection))
                 {
                     cmd.Parameters.AddWithValue("@UserId", messagesModel.UserId);
                     using (SqlDataReader dataReader = cmd.ExecuteReader())
@@ -1980,7 +2079,7 @@ namespace NeuRequest.DB
             {
                 connection.Open();
                 using (SqlCommand cmd = new SqlCommand("SELECT MessageID, Message, EmptyMessage, Processed, UserId, nup.FullName, nup.NTPLID , " +
-                    "Target, Date FROM Messages m join NueUserProfile nup on m.UserId = nup.Id where MessageID = @MessageID", connection))
+                    "Target, Date FROM NeuMessages m join NueUserProfile nup on m.UserId = nup.Id where MessageID = @MessageID", connection))
                 {
                     cmd.Parameters.AddWithValue("@MessageID", messagesModel.MessageID);
                     using (SqlDataReader dataReader = cmd.ExecuteReader())
@@ -2004,7 +2103,7 @@ namespace NeuRequest.DB
 
                     if(messagesModelRet != null && messagesModelRet.MessageID == messagesModel.MessageID)
                     {
-                        using (SqlCommand cmd1 = new SqlCommand("UPDATE Messages SET Processed = @Processed where MessageID = @MessageID", connection))
+                        using (SqlCommand cmd1 = new SqlCommand("UPDATE NeuMessages SET Processed = @Processed where MessageID = @MessageID", connection))
                         {
                             cmd1.Parameters.AddWithValue("@Processed", 1);
                             cmd1.Parameters.AddWithValue("@MessageID", messagesModel.MessageID);
@@ -2100,10 +2199,10 @@ namespace NeuRequest.DB
 	                           ,ems.Id as EmpStatusId, ems.Status as EmpStatusDesc, DateofJoining, pc.Id as PracticeId, 
                                 pc.Practice as PracticeDesc, Location, jl.Id as JLId, jl.[LEVEL] as JLDesc, 
                                 ds.Id as DSId, ds.Desig as DSDesc, Active, NP.AddedOn
-                                FROM NueUserProfile as NP join EmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
-                                join Practice as pc on NP.Practice = pc.Id 
-                                join JobLevel as jl on NP.JobLevel = jl.Id 
-                                join Designation as ds on NP.Designation = ds.Id 
+                                FROM NueUserProfile as NP join NeuEmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
+                                join NeuPractice as pc on NP.Practice = pc.Id 
+                                join NeuJobLevel as jl on NP.JobLevel = jl.Id 
+                                join NeuDesignation as ds on NP.Designation = ds.Id 
                                 where NP.Id = @Id";
                 SqlCommand command = new SqlCommand(sql, connection);
                 SqlParameter param = new SqlParameter();
@@ -2205,10 +2304,10 @@ namespace NeuRequest.DB
 	                           ,ems.Id as EmpStatusId, ems.Status as EmpStatusDesc, DateofJoining, pc.Id as PracticeId, 
                                 pc.Practice as PracticeDesc, Location, jl.Id as JLId, jl.[LEVEL] as JLDesc, 
                                 ds.Id as DSId, ds.Desig as DSDesc, Active, NP.AddedOn
-                                FROM NueUserProfile as NP join EmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
-                                join Practice as pc on NP.Practice = pc.Id 
-                                join JobLevel as jl on NP.JobLevel = jl.Id 
-                                join Designation as ds on NP.Designation = ds.Id 
+                                FROM NueUserProfile as NP join NeuEmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
+                                join NeuPractice as pc on NP.Practice = pc.Id 
+                                join NeuJobLevel as jl on NP.JobLevel = jl.Id 
+                                join NeuDesignation as ds on NP.Designation = ds.Id 
                                 where Email = @Email";
                 SqlCommand command = new SqlCommand(sql, connection);
                 SqlParameter param = new SqlParameter();

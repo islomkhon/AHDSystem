@@ -111,9 +111,9 @@ namespace NeuRequest.Models
             try
             {
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
-                List<NueRequestActivityModel> nueRequestActivityModels = new DataAccess().getRequestLogs(requestId);
+                List<NuRequestActivityModel> nueRequestActivityModels = new DataAccess().getRequestLogs(requestId);
                 List<AttachmentLogModel> attachmentLogModels = new DataAccess().getAttachmentLogs(requestId);
                 List<MailItem> mailItems = new List<MailItem>();
 
@@ -141,7 +141,7 @@ namespace NeuRequest.Models
 
                 if (userRequest.RequestSubType == "LeaveCancelation")
                 {
-                    NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                    NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
                     messageData.Add("Request Category", "Leave Cancelation");
@@ -151,7 +151,7 @@ namespace NeuRequest.Models
                     messageData.Add("Request Status", requestStatusStr);
                     string userMessage = neuLeaveCancelationModal.Message;
                     int approverC = 0;
-                    foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+                    foreach (NuRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
                     {
                         if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                         {
@@ -191,7 +191,7 @@ namespace NeuRequest.Models
                 }
                 else if (userRequest.RequestSubType == "LeavePastApply")
                 {
-                    NeuLeavePastApplyModal neuLeavePastApplyModal = new DataAccess().getNeuLeavePastApplyDetails(requestId);
+                    NeLeavePastApplyModal neuLeavePastApplyModal = new DataAccess().getNeuLeavePastApplyDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
                     messageData.Add("Request Category", "Past Leave Apply");
@@ -201,7 +201,7 @@ namespace NeuRequest.Models
                     messageData.Add("Request Status", requestStatusStr);
                     string userMessage = neuLeavePastApplyModal.Message;
                     int approverC = 0;
-                    foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+                    foreach (NuRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
                     {
                         if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                         {
@@ -240,7 +240,7 @@ namespace NeuRequest.Models
                 }
                 else if (userRequest.RequestSubType == "LeaveWFHApply")
                 {
-                    NeuLeaveWFHApplyModal neuLeaveWFHApplyModal = new DataAccess().getNeuLeaveWFHApplyDetails(requestId);
+                    NeLeaveWFHApplyModal neuLeaveWFHApplyModal = new DataAccess().getNeuLeaveWFHApplyDetails(requestId);
                     var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
                     Dictionary<string, string> messageData = new Dictionary<string, string>();
                     messageData.Add("Request Category", "Work From Home");
@@ -250,7 +250,7 @@ namespace NeuRequest.Models
                     messageData.Add("Request Status", requestStatusStr);
                     string userMessage = neuLeaveWFHApplyModal.Message;
                     int approverC = 0;
-                    foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+                    foreach (NuRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
                     {
                         if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                         {
@@ -488,6 +488,49 @@ namespace NeuRequest.Models
                         }
                     }
                 }
+                else if (userRequest.RequestSubType == "InternationalTrip")
+                {
+                    InternationalTripRequestModal internationalTripRequestModal = new DataAccess().getInternationalTripRequestModal(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    string needVisiaProcessing = "No";
+                    if (internationalTripRequestModal.NeedVisiaProcessing == 1)
+                    {
+                        needVisiaProcessing = "Yes";
+                    }
+                    messageData.Add("Request Category", "International Travel");
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Need Visia Processing", needVisiaProcessing);
+                    messageData.Add("Place To Visit", internationalTripRequestModal.PlaceToVisit);
+                    messageData.Add("Project Name", internationalTripRequestModal.ProjectName);
+                    messageData.Add("Planned Travel Date", internationalTripRequestModal.StartDate);
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", internationalTripRequestModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = internationalTripRequestModal.Message;
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        if (mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
+                    }
+                }
+
+
 
                 mailHandilar(mailItems);
 
@@ -563,7 +606,13 @@ namespace NeuRequest.Models
                     {
                         heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Domestic Travel Request";
                     }
-                    
+                    else if (userRequest.RequestSubType == "InternationalTrip")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> International Travel Request";
+                    }
+
+
+
 
                     if (userRequest.RequestStatus == "close")
                     {
@@ -612,7 +661,7 @@ namespace NeuRequest.Models
             return uiRender;
         }
 
-        public string generateLeaveCancelationUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeuLeaveCancelationModal neuLeaveCancelationModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateLeaveCancelationUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeLeaveCancelationModal neuLeaveCancelationModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfile, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -620,33 +669,42 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfile.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\""+ userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
             }
 
 
-            foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            foreach (NuRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
                 if(nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                 {
 
-                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    var userApp = nueUserProfile.Where(x => x.Id == nueRequestAceessLog.UserId).First<DAL.NueUserProfile>();
 
                     string communicaterLink = "";
 
-                    if (userApp.userPreference.IsMailCommunication == 1)
+                    if (userApp.NeuUserPreference2.First().IsMailCommunication == 1)
                     {
                         communicaterLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
                         communicaterLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
                     }
 
-                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    approverStr += "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                                "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                                "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                                "                                                                   <h4 class=\"timeline-title\">Request Approver</h4>" +
+                                "                                                                   <p>" + userApp.FullName + " (" + userApp.NTPLID + ") " + communicaterLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                                "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n";
+                    
+
+                    /*approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
                     "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
                     communicaterLink+
-                    "                            <br>\r\n";
+                    "                            <br>\r\n";*/
+
                 }
             }
 
@@ -693,23 +751,26 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
                 requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
                 requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
                 requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -728,165 +789,158 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#"+ userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\""+ userRequest.RequestId + "\" title=\"copy\"></i>"+
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
                                     "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
                                     "                                                    </div>\r\n" +
                                     "                                                    <div class=\"timeline-body\">\r\n" +
-                                    "                                                        <p>"+ requestOwner.FullName + " (" + requestOwner.NTPLID + ") "+((neuLeaveCancelationModal.Message != null && neuLeaveCancelationModal.Message.Trim() != "") ? neuLeaveCancelationModal.Message.Trim() : "has created new Leave Cancelation Request") +"</p>\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((neuLeaveCancelationModal.Message != null && neuLeaveCancelationModal.Message.Trim() != "") ? neuLeaveCancelationModal.Message.Trim() : "has created new Leave Cancelation Request") + "</p>\r\n" +
                                     "                                                    </div>\r\n" +
                                     "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
                                     "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
                                     "                                                        <span class=\"hide\">19</span>\r\n" +
-                                    "                                                        <span class=\"ml-auto font-weight-bold\">"+ neuLeaveCancelationModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + neuLeaveCancelationModal.AddedOn.ToLocalTime() + "</span>\r\n" +
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
-           var temp ="                                            <div class=\"timeline-wrapper timeline-wrapper-warning hide\">\r\n" +
-            "                                                <div class=\"timeline-badge\"></div>\r\n" +
-            "                                                <div class=\"timeline-panel\">\r\n" +
-            "                                                    <div class=\"timeline-heading\">\r\n" +
-            "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-body\">\r\n" +
-            "                                                        <p>Monin Jose (0790) has created new Leave Cancelation Request</p>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
-            "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
-            "                                                        <span class=\"hide\">19</span>\r\n" +
-            "                                                        <span class=\"ml-auto font-weight-bold\">2019-05-31 16:40:07.033</span>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                </div>\r\n" +
-            "                                            </div>\r\n" +
+            uiRender += generateRequestLog(nueUserProfile, nueRequestActivityModels, attachmentLogModels);
 
-            "                                            <div class=\"timeline-wrapper timeline-inverted timeline-wrapper-warning hide\">\r\n" +
-            "                                                <div class=\"timeline-badge\"></div>\r\n" +
-            "                                                <div class=\"timeline-panel\">\r\n" +
-            "                                                    <div class=\"timeline-heading\">\r\n" +
-            "                                                        <h6 class=\"timeline-title\">Comment Added</h6>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-body\">\r\n" +
-            "                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate. Quisque mauris augue,</p>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
-            "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
-            "                                                        <span class=\"hide\">25</span>\r\n" +
-            "                                                        <span class=\"ml-auto font-weight-bold\">2019-05-31 16:40:08.033</span>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                </div>\r\n" +
-            "                                            </div>\r\n" +
-
-            "                                            <div class=\"timeline-wrapper timeline-wrapper-success hide\">\r\n" +
-            "                                                <div class=\"timeline-badge\"></div>\r\n" +
-            "                                                <div class=\"timeline-panel\">\r\n" +
-            "                                                    <div class=\"timeline-heading\">\r\n" +
-            "                                                        <h6 class=\"timeline-title\">New File Attached</h6>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-body\">\r\n" +
-            "                                                        <div>\r\n" +
-            "                                                            <div class=\"thumb\"><i class=\"mdi mdi-attachment\"></i></div>\r\n" +
-            "                                                            <div class=\"details\">\r\n" +
-            "                                                                <p class=\"file-name\">favicon.png</p>\r\n" +
-            "                                                                <div class=\"buttons\">\r\n" +
-            "                                                                    <a href=\"/HcmAHDDashboard/DownloadAttachment?requestId=1000000000000000001&amp;vFile=20190513025413_.png\" target=\"_blank\" class=\"download\">Download</a>\r\n" +
-            "                                                                </div>\r\n" +
-            "                                                            </div>\r\n" +
-            "                                                        </div>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
-            "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
-            "                                                        <span class=\"hide\">25</span>\r\n" +
-            "                                                        <span class=\"ml-auto font-weight-bold\">2019-05-31 16:40:08.033</span>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                </div>\r\n" +
-            "                                            </div>\r\n" +
-
-            "                                            <div class=\"timeline-wrapper timeline-inverted timeline-wrapper-info hide\">\r\n" +
-            "                                                <div class=\"timeline-badge\"></div>\r\n" +
-            "                                                <div class=\"timeline-panel\">\r\n" +
-            "                                                    <div class=\"timeline-heading\">\r\n" +
-            "                                                        <h6 class=\"timeline-title\">L1 Approval</h6>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-body\">\r\n" +
-            "                                                        <p>Mathew Job (0725) approved your request</p>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
-            "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
-            "                                                        <span class=\"hide\">25</span>\r\n" +
-            "                                                        <span class=\"ml-auto font-weight-bold\">2019-05-31 16:40:08.033</span>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                </div>\r\n" +
-            "                                            </div>\r\n" +
-
-            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary hide\">\r\n" +
-            "                                                <div class=\"timeline-badge\"></div>\r\n" +
-            "                                                <div class=\"timeline-panel\">\r\n" +
-            "                                                    <div class=\"timeline-heading\">\r\n" +
-            "                                                        <h6 class=\"timeline-title\">Approved by HCM</h6>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-body\">\r\n" +
-            "                                                        <p>Priya Ignatius (0580) approved your request</p>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
-            "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
-            "                                                        <span class=\"hide\">25</span>\r\n" +
-            "                                                        <span class=\"ml-auto font-weight-bold\">25th July 2016</span>\r\n" +
-            "                                                    </div>\r\n" +
-            "                                                </div>\r\n" +
-            "                                            </div>\r\n";
+            uiRender += "                                        </div>\r\n" +
 
 
 
-                     uiRender += "                                        </div>\r\n" +
-                    "                                    </div>\r\n" +
-                    "                                </div>\r\n" +
                     "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
                     "\r\n" +
-                    "                                <div class=\"col-4\">\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Leave Cancelation Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
                     "\r\n" +
-                    "                                    <div class=\"card thin-border\">\r\n" +
-                    "                                        <div class=\"card-body\">\r\n" +
-                    "                                            <h4 class=\"card-title\">Leave Cancelation Request</h4>\r\n" +
-                    "                                        </div>\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> "+ requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> "+ neuLeaveCancelationModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
                     "\r\n" +
-                    "                                        <div class=\"card-body bg-light\">\r\n" +
-                    "                                            <div class=\"row text-center\">\r\n" +
-                    "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-                   requestStatusStr +
-                    "                                                </div>\r\n" +
-                    "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-                    neuLeaveCancelationModal.AddedOn.ToLocalTime()+
-                    "                                                </div>\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+                    
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+                    
+                    "\r\n" +
+                    approverStr+
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Leave Start Date</h4>" +
+                    "                                                                   <p>" + neuLeaveCancelationModal.StartDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Leave End Date</h4>" +
+                    "                                                                   <p>" + neuLeaveCancelationModal.EndDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
                     "                                            </div>\r\n" +
                     "                                        </div>\r\n" +
-                    "\r\n" +
-                    "                                        <div class=\"card-body\">\r\n" +
-                    "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-                    "                                            <span>"+ requestOwner.FullName +" ("+ requestOwner.NTPLID+ ") </span>\r\n" +
-                    communicaterOwnerLink +
-                    "                                            <br>\r\n" +
-                    approverStr +
-                    "                                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
-                    "                                            <span>"+ neuLeaveCancelationModal.StartDate + "</span>\r\n" +
-                    "                                            <br>\r\n" +
-                    "                                            <h5 class=\"m-t-30\">Leave End Date</h5>\r\n" +
-                    "                                            <span>"+ neuLeaveCancelationModal.EndDate + "</span>\r\n" +
-                    "                                            <br>\r\n" +
-                    "                                        </div>\r\n" +
-                    "\r\n" +
                     "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
                     "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>"+
+
+
+
+
+
+
                     "                                </div>\r\n" +
                     "\r\n" +
                     "\r\n" +
@@ -903,8 +957,9 @@ namespace NeuRequest.Models
 
             return uiRender;
         }
+        
 
-        public string generateLeavePastApplyUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeuLeavePastApplyModal neuLeavePastApplyModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateLeavePastApplyUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeLeavePastApplyModal neuLeavePastApplyModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -912,30 +967,39 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
             }
 
-            foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            foreach (NuRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
                 if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                 {
-                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    var userApp = nueUserProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<DAL.NueUserProfile>();
 
                     string communicaterLink = "";
 
-                    if(userApp.userPreference.IsMailCommunication == 1)
+                    if(userApp.NeuUserPreference2.First().IsMailCommunication == 1)
                     {
                         communicaterLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
                         communicaterLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
                     }
-                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+
+                    approverStr += "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                                "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                                "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                                "                                                                   <h4 class=\"timeline-title\">Request Approver</h4>" +
+                                "                                                                   <p>" + userApp.FullName + " (" + userApp.NTPLID + ") " + communicaterLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                                "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n";
+
+
+                    /*approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
                     "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
                     communicaterLink+
-                    "                            <br>\r\n";
+                    "                            <br>\r\n";*/
                 }
             }
 
@@ -982,23 +1046,23 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
-                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
-                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
-                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -1017,15 +1081,28 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
@@ -1041,65 +1118,139 @@ namespace NeuRequest.Models
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
 
             uiRender += "                                        </div>\r\n" +
-           "                                    </div>\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                                <div class=\"col-4\">\r\n" +
-           "\r\n" +
-           "                                    <div class=\"card thin-border\">\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h4 class=\"card-title\">Leave Past Apply Request</h4>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body bg-light\">\r\n" +
-           "                                            <div class=\"row text-center\">\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-          requestStatusStr +
-           "                                                </div>\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-           neuLeavePastApplyModal.AddedOn.ToLocalTime() +
-           "                                                </div>\r\n" +
-           "                                            </div>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
-           communicaterOwnerLink+
-           "                                            <br>\r\n" +
-           approverStr +
-           "                                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
-           "                                            <span>" + neuLeavePastApplyModal.StartDate + "</span>\r\n" +
-           "                                            <br>\r\n" +
-           "                                            <h5 class=\"m-t-30\">Leave End Date</h5>\r\n" +
-           "                                            <span>" + neuLeavePastApplyModal.EndDate + "</span>\r\n" +
-           "                                            <br>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                    </div>\r\n" +
-           "\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                            </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                        </div>\r\n" +
-           "                    </div>\r\n" +
-           "                </div>\r\n" +
-           "            </div>\r\n" +
-           "\r\n" +
-           "        </div>";
 
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Leave Past Apply Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + neuLeavePastApplyModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Leave Start Date</h4>" +
+                    "                                                                   <p>" + neuLeavePastApplyModal.StartDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Leave End Date</h4>" +
+                    "                                                                   <p>" + neuLeavePastApplyModal.EndDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+            
             return uiRender;
         }
 
-        public string generateLeaveWFHApplyUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeuLeaveWFHApplyModal neuLeaveWFHApplyModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateLeaveWFHApplyUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeLeaveWFHApplyModal neuLeaveWFHApplyModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -1107,29 +1258,37 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
             }
 
-            foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            foreach (NuRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
             {
                 if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
                 {
-                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    var userApp = nueUserProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<DAL.NueUserProfile>();
                     string communicaterLink = "";
 
-                    if (userApp.userPreference.IsMailCommunication == 1)
+                    if (userApp.NeuUserPreference2.First().IsMailCommunication == 1)
                     {
                         communicaterLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
                         communicaterLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
                     }
-                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    approverStr += "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                                "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                                "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                                "                                                                   <h4 class=\"timeline-title\">Request Approver</h4>" +
+                                "                                                                   <p>" + userApp.FullName + " (" + userApp.NTPLID + ") " + communicaterLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                                "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n";
+
+
+                    /*approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
                     "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
                     communicaterLink+
-                    "                            <br>\r\n";
+                    "                            <br>\r\n";*/
                 }
             }
 
@@ -1176,23 +1335,23 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
-                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
-                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
-                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -1211,15 +1370,28 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
@@ -1235,65 +1407,140 @@ namespace NeuRequest.Models
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
-            
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
+
             uiRender += "                                        </div>\r\n" +
-           "                                    </div>\r\n" +
+
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
            "                                </div>\r\n" +
            "\r\n" +
            "\r\n" +
-           "                                <div class=\"col-4\">\r\n" +
-           "\r\n" +
-           "                                    <div class=\"card thin-border\">\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h4 class=\"card-title\">Work From Home Request</h4>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body bg-light\">\r\n" +
-           "                                            <div class=\"row text-center\">\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-          requestStatusStr +
-           "                                                </div>\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-           neuLeaveWFHApplyModal.AddedOn.ToLocalTime() +
-           "                                                </div>\r\n" +
-           "                                            </div>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
-           communicaterOwnerLink+
-           "                                            <br>\r\n" +
-           approverStr +
-           "                                            <h5 class=\"m-t-30\">Leave Start Date</h5>\r\n" +
-           "                                            <span>" + neuLeaveWFHApplyModal.StartDate + "</span>\r\n" +
-           "                                            <br>\r\n" +
-           "                                            <h5 class=\"m-t-30\">Leave End Date</h5>\r\n" +
-           "                                            <span>" + neuLeaveWFHApplyModal.EndDate + "</span>\r\n" +
-           "                                            <br>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                    </div>\r\n" +
-           "\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                            </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                        </div>\r\n" +
-           "                    </div>\r\n" +
-           "                </div>\r\n" +
-           "            </div>\r\n" +
-           "\r\n" +
-           "        </div>";
+           "                                <div class=\"col-4\">\r\n";
+
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Work From Home Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + neuLeaveWFHApplyModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Start Date</h4>" +
+                    "                                                                   <p>" + neuLeaveWFHApplyModal.StartDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">End Date</h4>" +
+                    "                                                                   <p>" + neuLeaveWFHApplyModal.StartDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+            
 
             return uiRender;
         }
 
-        public string generateLeaveBalanceEnquiryUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, LeaveBalanceEnquiryModal leaveBalanceEnquiryModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateLeaveBalanceEnquiryUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, LeaveBalanceEnquiryModal leaveBalanceEnquiryModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -1301,8 +1548,8 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
@@ -1362,23 +1609,23 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
-                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
-                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
-                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -1397,15 +1644,28 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
@@ -1421,65 +1681,138 @@ namespace NeuRequest.Models
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
 
             uiRender += "                                        </div>\r\n" +
-           "                                    </div>\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                                <div class=\"col-4\">\r\n" +
-           "\r\n" +
-           "                                    <div class=\"card thin-border\">\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h4 class=\"card-title\">Leave Balance Enquiry Request</h4>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body bg-light\">\r\n" +
-           "                                            <div class=\"row text-center\">\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-          requestStatusStr +
-           "                                                </div>\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-           leaveBalanceEnquiryModal.AddedOn.ToLocalTime() +
-           "                                                </div>\r\n" +
-           "                                            </div>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
-           communicaterOwnerLink +
-           "                                            <br>\r\n" +
-           approverStr +
-           "                                            <h5 class=\"m-t-30\">Start Date</h5>\r\n" +
-           "                                            <span>" + leaveBalanceEnquiryModal.StartDate + "</span>\r\n" +
-           "                                            <br>\r\n" +
-           "                                            <h5 class=\"m-t-30\">End Date</h5>\r\n" +
-           "                                            <span>" + leaveBalanceEnquiryModal.EndDate + "</span>\r\n" +
-           "                                            <br>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                    </div>\r\n" +
-           "\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                            </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                        </div>\r\n" +
-           "                    </div>\r\n" +
-           "                </div>\r\n" +
-           "            </div>\r\n" +
-           "\r\n" +
-           "        </div>";
 
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Leave Balance Enquiry Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + leaveBalanceEnquiryModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Start Date</h4>" +
+                    "                                                                   <p>" + leaveBalanceEnquiryModal.StartDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">End Date</h4>" +
+                    "                                                                   <p>" + leaveBalanceEnquiryModal.EndDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                   
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+            
             return uiRender;
         }
 
-        public string generateAddressProofUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, AddressProofModal addressProofModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateAddressProofUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, AddressProofModal addressProofModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -1487,8 +1820,8 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
@@ -1549,23 +1882,23 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
-                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
-                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
-                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -1584,15 +1917,28 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
@@ -1608,60 +1954,116 @@ namespace NeuRequest.Models
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
 
             uiRender += "                                        </div>\r\n" +
-           "                                    </div>\r\n" +
+
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
            "                                </div>\r\n" +
            "\r\n" +
            "\r\n" +
-           "                                <div class=\"col-4\">\r\n" +
-           "\r\n" +
-           "                                    <div class=\"card thin-border\">\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h4 class=\"card-title\">Address Proof Request</h4>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body bg-light\">\r\n" +
-           "                                            <div class=\"row text-center\">\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-          requestStatusStr +
-           "                                                </div>\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-           addressProofModal.AddedOn.ToLocalTime() +
-           "                                                </div>\r\n" +
-           "                                            </div>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
-           communicaterOwnerLink +
-           "                                            <br>\r\n" +
-           approverStr +
-           "                                            <br>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                    </div>\r\n" +
-           "\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                            </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                        </div>\r\n" +
-           "                    </div>\r\n" +
-           "                </div>\r\n" +
-           "            </div>\r\n" +
-           "\r\n" +
-           "        </div>";
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Address Proof Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + addressProofModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline single small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success hide\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+                    
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                   
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+            
 
             return uiRender;
         }
 
-        public string generateEmployeeVerificationReqUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, EmployeeVerificationReqModal employeeVerificationReqModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateEmployeeVerificationReqUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, EmployeeVerificationReqModal employeeVerificationReqModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -1669,8 +2071,8 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
@@ -1731,23 +2133,23 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
-                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
-                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
-                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -1766,15 +2168,28 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
@@ -1790,60 +2205,116 @@ namespace NeuRequest.Models
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
 
             uiRender += "                                        </div>\r\n" +
-           "                                    </div>\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                                <div class=\"col-4\">\r\n" +
-           "\r\n" +
-           "                                    <div class=\"card thin-border\">\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h4 class=\"card-title\">Employee Verification Request</h4>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body bg-light\">\r\n" +
-           "                                            <div class=\"row text-center\">\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-          requestStatusStr +
-           "                                                </div>\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-           employeeVerificationReqModal.AddedOn.ToLocalTime() +
-           "                                                </div>\r\n" +
-           "                                            </div>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
-           communicaterOwnerLink +
-           "                                            <br>\r\n" +
-           approverStr +
-           "                                            <br>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                    </div>\r\n" +
-           "\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                            </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                        </div>\r\n" +
-           "                    </div>\r\n" +
-           "                </div>\r\n" +
-           "            </div>\r\n" +
-           "\r\n" +
-           "        </div>";
 
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Employee Verification Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + employeeVerificationReqModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline single small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success hide\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+                    
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                   
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+            
             return uiRender;
         }
 
-        public string generateSalaryCertificateUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, SalaryCertificateModal salaryCertificateModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateSalaryCertificateUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, SalaryCertificateModal salaryCertificateModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -1851,8 +2322,8 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
@@ -1913,23 +2384,23 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
-                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
-                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
-                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -1948,15 +2419,28 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
@@ -1972,60 +2456,115 @@ namespace NeuRequest.Models
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
 
             uiRender += "                                        </div>\r\n" +
-           "                                    </div>\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                                <div class=\"col-4\">\r\n" +
-           "\r\n" +
-           "                                    <div class=\"card thin-border\">\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h4 class=\"card-title\">Salary Certificate Request</h4>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body bg-light\">\r\n" +
-           "                                            <div class=\"row text-center\">\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-          requestStatusStr +
-           "                                                </div>\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-           salaryCertificateModal.AddedOn.ToLocalTime() +
-           "                                                </div>\r\n" +
-           "                                            </div>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
-           communicaterOwnerLink +
-           "                                            <br>\r\n" +
-           approverStr +
-           "                                            <br>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                    </div>\r\n" +
-           "\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                            </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                        </div>\r\n" +
-           "                    </div>\r\n" +
-           "                </div>\r\n" +
-           "            </div>\r\n" +
-           "\r\n" +
-           "        </div>";
 
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Salary Certificate Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + salaryCertificateModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                   "                                                            <div class=\"vertical-without-time vertical-timeline single small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success hide\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+                    
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+            
             return uiRender;
         }
 
-        public string generateGeneralRequestUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, GeneralRequestModal generalRequestModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateGeneralRequestUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, GeneralRequestModal generalRequestModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -2033,8 +2572,8 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
@@ -2095,23 +2634,23 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
-                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
-                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
-                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -2130,15 +2669,28 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
@@ -2154,60 +2706,118 @@ namespace NeuRequest.Models
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
 
             uiRender += "                                        </div>\r\n" +
-           "                                    </div>\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                                <div class=\"col-4\">\r\n" +
-           "\r\n" +
-           "                                    <div class=\"card thin-border\">\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h4 class=\"card-title\">Common Request</h4>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body bg-light\">\r\n" +
-           "                                            <div class=\"row text-center\">\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-          requestStatusStr +
-           "                                                </div>\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-           generalRequestModal.AddedOn.ToLocalTime() +
-           "                                                </div>\r\n" +
-           "                                            </div>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
-           communicaterOwnerLink +
-           "                                            <br>\r\n" +
-           approverStr +
-           "                                            <br>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                    </div>\r\n" +
-           "\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                            </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                        </div>\r\n" +
-           "                    </div>\r\n" +
-           "                </div>\r\n" +
-           "            </div>\r\n" +
-           "\r\n" +
-           "        </div>";
 
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Common Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + generalRequestModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline single small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success hide\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+                    
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
             return uiRender;
         }
 
-        public string generateDomesticTripRequestUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, DomesticTripRequestModal domesticTripRequestModal, List<NueRequestAceessLog> nueRequestAceessLogs, List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateDomesticTripRequestUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, DomesticTripRequestModal domesticTripRequestModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
             string uiMenuRender = "";
@@ -2215,8 +2825,8 @@ namespace NeuRequest.Models
 
             string communicaterOwnerLink = "";
 
-            UserProfile requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First<UserProfile>();
-            if (requestOwner.userPreference.IsMailCommunication == 1)
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
             {
                 communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
                 communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
@@ -2282,23 +2892,23 @@ namespace NeuRequest.Models
             string requestStatusStr = "";
             if (userRequest.RequestStatus == "close")
             {
-                requestStatusStr = "                                    <span class=\"label label-dark\">Close</span>\r\n";
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "completed")
             {
-                requestStatusStr = "                                    <span class=\"label label-success\">Completed</span>\r\n";
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "withdraw")
             {
-                requestStatusStr = "                                    <span class=\"label label-danger\">Withdraw</span>\r\n";
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "In_Approval")
             {
-                requestStatusStr = "                                    <span class=\"label label-warning\">In Approval</span>\r\n";
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
             }
             else if (userRequest.RequestStatus == "created")
             {
-                requestStatusStr = "                                    <span class=\"label label-primary\">Created</span>\r\n";
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
             }
 
             uiRender += "<div class=\"row\">\r\n" +
@@ -2317,15 +2927,28 @@ namespace NeuRequest.Models
                     "                <div class=\"col-12\">\r\n" +
                     "                    <div class=\"card\">\r\n" +
                     "                        <div class=\"card-body\">\r\n" +
-                    "                            <h4 class=\"card-title\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
                     "\r\n" +
                     "                            <div class=\"row\">\r\n" +
-                    "                                <div class=\"col-8\">\r\n" +
-                    "                                    <p class=\"card-description hide\">Request timeline</p>\r\n" +
-                    "                                    <div class=\"mt-4\">\r\n" +
-                    "                                        <div class=\"vertical-timeline\">\r\n";
+                    "                                <div class=\"col-8\">\r\n";
 
-            uiRender += "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
                                     "                                                <div class=\"timeline-badge\"></div>\r\n" +
                                     "                                                <div class=\"timeline-panel\">\r\n" +
                                     "                                                    <div class=\"timeline-heading\">\r\n" +
@@ -2341,76 +2964,464 @@ namespace NeuRequest.Models
                                     "                                                    </div>\r\n" +
                                     "                                                </div>\r\n" +
                                     "                                            </div>\r\n";
-            uiRender += generateRequestLog(userProfiles, nueRequestActivityModels, attachmentLogModels);
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
 
             uiRender += "                                        </div>\r\n" +
-           "                                    </div>\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                                <div class=\"col-4\">\r\n" +
-           "\r\n" +
-           "                                    <div class=\"card thin-border\">\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h4 class=\"card-title\">Domestic Travel Request</h4>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body bg-light\">\r\n" +
-           "                                            <div class=\"row text-center\">\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-          requestStatusStr +
-           "                                                </div>\r\n" +
-           "                                                <div class=\"col-6 m-t-10 m-b-10\">\r\n" +
-           domesticTripRequestModal.AddedOn.ToLocalTime() +
-           "                                                </div>\r\n" +
-           "                                            </div>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                        <div class=\"card-body\">\r\n" +
-           "                                            <h5 class=\"p-t-20\">Ticket Creator</h5>\r\n" +
-           "                                            <span>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") </span>\r\n" +
-           communicaterOwnerLink +
-           "                                            <br>\r\n" +
-           approverStr +
-           "                                            <h5 class=\"m-t-30\">Accommodation</h5>\r\n" +
-                    "                                            <span>" + accommodation + "</span>\r\n" +
-                    "                                            <br>\r\n" +
-           "                                            <h5 class=\"m-t-30\">From</h5>\r\n" +
-                    "                                            <span>" + domesticTripRequestModal.LocationFrom + "</span>\r\n" +
-                    "                                            <br>\r\n" +
-                    "                                            <h5 class=\"m-t-30\">To</h5>\r\n" +
-                    "                                            <span>" + domesticTripRequestModal.LocationTo + "</span>\r\n" +
-                    "                                            <br>\r\n" +
-                    "                                            <h5 class=\"m-t-30\">Start Date</h5>\r\n" +
-                    "                                            <span>" + domesticTripRequestModal.StartDate + "</span>\r\n" +
-                    "                                            <br>\r\n" +
-                    "                                            <h5 class=\"m-t-30\">End Date</h5>\r\n" +
-                    "                                            <span>" + domesticTripRequestModal.EndDate + "</span>\r\n" +
-                    "                                            <br>\r\n" +
-           "                                            <br>\r\n" +
-           "                                        </div>\r\n" +
-           "\r\n" +
-           "                                    </div>\r\n" +
-           "\r\n" +
-           "                                </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                            </div>\r\n" +
-           "\r\n" +
-           "\r\n" +
-           "                        </div>\r\n" +
-           "                    </div>\r\n" +
-           "                </div>\r\n" +
-           "            </div>\r\n" +
-           "\r\n" +
-           "        </div>";
 
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Domestic Travel Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + domesticTripRequestModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Accommodation</h4>" +
+                    "                                                                   <p>" + accommodation + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">From</h4>" +
+                    "                                                                   <p>" + domesticTripRequestModal.LocationFrom + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">To</h4>" +
+                    "                                                                   <p>" + domesticTripRequestModal.LocationTo + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\"> Start Date</h4>" +
+                    "                                                                   <p>" + domesticTripRequestModal.StartDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">End Date</h4>" +
+                    "                                                                   <p>" + domesticTripRequestModal.EndDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                   
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+
+            
+            return uiRender;
+        }
+
+        public string generateInternationalTripUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, InternationalTripRequestModal internationalTripRequestModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+
+            string communicaterOwnerLink = "";
+
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
+            string needVisiaProcessing = "No";
+            if (internationalTripRequestModal.NeedVisiaProcessing == 1)
+            {
+                needVisiaProcessing = "Yes";
+            }
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-International-travel-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-International-travel-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-hcm-International-travel-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-International-travel-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n";
+
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((internationalTripRequestModal.Message != null && internationalTripRequestModal.Message.Trim() != "") ? internationalTripRequestModal.Message.Trim() : "has created new international travel request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + internationalTripRequestModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+
+                
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                   
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            International Travel Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + internationalTripRequestModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Need Visia Processing</h4>" +
+                    "                                                                   <p>" + needVisiaProcessing + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Place To Visit</h4>" +
+                    "                                                                   <p>" + internationalTripRequestModal.PlaceToVisit + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Planned Travel Date</h4>" +
+                    "                                                                   <p>" + internationalTripRequestModal.StartDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Project Name</h4>" +
+                    "                                                                   <p>" + internationalTripRequestModal.ProjectName + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+                    
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+                    
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+            
             return uiRender;
         }
 
         static Random rnd = new Random();
-        public string generateRequestLog(List<UserProfile> userProfiles, List<NueRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        public string generateRequestLog(List<DAL.NueUserProfile> nueUserProfile, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             List<string> colorPallet = new List<string>() {
                 "timeline-wrapper-warning",
@@ -2426,7 +3437,7 @@ namespace NeuRequest.Models
             {
                 if(nueRequestActivityModels.ElementAt(i) != null)
                 {
-                    NueRequestActivityModel nueRequestActivityModel = nueRequestActivityModels.ElementAt(i);
+                    NuRequestActivityModel nueRequestActivityModel = nueRequestActivityModels.ElementAt(i);
                     var className = "";
                     if ((i) % 2 == 0)
                     {
@@ -2476,7 +3487,7 @@ namespace NeuRequest.Models
                         {
                             able = true;
                             AttachmentLogModel attachmentLogModel = internalFile.First();
-                            UserProfile attachmentOwner = userProfiles.Where(x => x.Id == attachmentLogModel.UserId).First<UserProfile>();
+                            DAL.NueUserProfile attachmentOwner = nueUserProfile.Where(x => x.Id == attachmentLogModel.UserId).First<DAL.NueUserProfile>();
                             heading = "                                                        <h6 class=\"timeline-title\"> File Attached <i class=\"mdi mdi-attachment\"></i> </h6>\r\n";
                             body = "                                                        <div>\r\n" +
                                             "                                                            <div class=\"thumb hide\"><i class=\"mdi mdi-attachment\"></i></div>\r\n" +
@@ -2484,6 +3495,109 @@ namespace NeuRequest.Models
                                             "                                                                <p class=\"file-name\">"+ nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") </p>\r\n" +
                                             "                                                                <div class=\"buttons\">\r\n" +
                                             "                                                                    <a href=\"/HcmDashboard/DownloadAttachment?requestId="+ attachmentLogModel.Request + "&amp;vFile="+ attachmentLogModel.VFileName + "\" target=\"_blank\" class=\"download\">" + attachmentLogModel.FileName + "" + attachmentLogModel.FileExt + "</a>\r\n" +
+                                            "                                                                </div>\r\n" +
+                                            "                                                            </div>\r\n" +
+                                            "                                                        </div>\r\n";
+                        }
+                    }
+                    if (able)
+                    {
+                        uiRender += "                                            <div class=\"" + className + "\">\r\n" +
+                                        "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                        "                                                <div class=\"timeline-panel\">\r\n" +
+                                        "                                                    <div class=\"timeline-heading\">\r\n" +
+                                        heading +
+                                        "                                                    </div>\r\n" +
+                                        "                                                    <div class=\"timeline-body\">\r\n" +
+                                        body +
+                                        "                                                    </div>\r\n" +
+                                        "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                        "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                        "                                                        <span class=\"hide\">19</span>\r\n" +
+                                        "                                                        <span class=\"ml-auto font-weight-bold\">" + nueRequestActivityModel.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                        "                                                    </div>\r\n" +
+                                        "                                                </div>\r\n" +
+                                        "                                            </div>\r\n";
+                    }
+                }
+            }
+            return uiRender;
+        }
+
+        public string generateRequestLog(List<UserProfile> userProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            List<string> colorPallet = new List<string>() {
+                "timeline-wrapper-warning",
+                "timeline-wrapper-danger",
+                "timeline-wrapper-success",
+                "timeline-wrapper-info",
+                "timeline-wrapper-primary",
+            };
+
+
+            string uiRender = "";
+            for (int i = 0; i < nueRequestActivityModels.Count; i++)
+            {
+                if (nueRequestActivityModels.ElementAt(i) != null)
+                {
+                    NuRequestActivityModel nueRequestActivityModel = nueRequestActivityModels.ElementAt(i);
+                    var className = "";
+                    if ((i) % 2 == 0)
+                    {
+                        className = " timeline-wrapper timeline-inverted " + colorPallet[rnd.Next(colorPallet.Count)];
+                    }
+                    else
+                    {
+                        className = " timeline-wrapper " + colorPallet[rnd.Next(colorPallet.Count)];
+                    }
+                    string heading = "";
+                    string body = "";
+                    bool able = false;
+                    if (nueRequestActivityModel.PayloadTypeDesc == "Comment")
+                    {
+                        able = true;
+                        body = "                                                        <p>" + nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") - " + nueRequestActivityModel.Payload + "</p>\r\n";
+                        heading = "                                                        <h6 class=\"timeline-title\">Comment Added</h6>\r\n";
+                    }
+                    else if (nueRequestActivityModel.PayloadTypeDesc == "L1 Approval")
+                    {
+                        able = true;
+                        body = "                                                        <p>" + nueRequestActivityModel.Payload + "</p>\r\n";
+                        heading = "                                                        <h6 class=\"timeline-title\">Level 1 Approval</h6>\r\n";
+                    }
+                    else if (nueRequestActivityModel.PayloadTypeDesc == "HCM Approval")
+                    {
+                        able = true;
+                        body = "                                                        <p>" + nueRequestActivityModel.Payload + "</p>\r\n";
+                        heading = "                                                        <h6 class=\"timeline-title\">HCM Approval</h6>\r\n";
+                    }
+                    else if (nueRequestActivityModel.PayloadTypeDesc == "Close")
+                    {
+                        able = true;
+                        body = "                                                        <p>" + nueRequestActivityModel.Payload + "</p>\r\n";
+                        heading = "                                                        <h6 class=\"timeline-title\">Request Closed</h6>\r\n";
+                    }
+                    else if (nueRequestActivityModel.PayloadTypeDesc == "Withdraw")
+                    {
+                        able = true;
+                        body = "                                                        <p>" + nueRequestActivityModel.Payload + "</p>\r\n";
+                        heading = "                                                        <h6 class=\"timeline-title\">Request Withdrawn </h6>\r\n";
+                    }
+                    else if (nueRequestActivityModel.PayloadTypeDesc == "File")
+                    {
+                        var internalFile = attachmentLogModels.Where(x => x.Request == nueRequestActivityModel.Request && x.VFileName == nueRequestActivityModel.Payload);
+                        if (internalFile != null && internalFile.Count() > 0)
+                        {
+                            able = true;
+                            AttachmentLogModel attachmentLogModel = internalFile.First();
+                            UserProfile attachmentOwner = userProfiles.Where(x => x.Id == attachmentLogModel.UserId).First<UserProfile>();
+                            heading = "                                                        <h6 class=\"timeline-title\"> File Attached <i class=\"mdi mdi-attachment\"></i> </h6>\r\n";
+                            body = "                                                        <div>\r\n" +
+                                            "                                                            <div class=\"thumb hide\"><i class=\"mdi mdi-attachment\"></i></div>\r\n" +
+                                            "                                                            <div class=\"details\">\r\n" +
+                                            "                                                                <p class=\"file-name\">" + nueRequestActivityModel.FullName + " (" + nueRequestActivityModel.NTPLID + ") </p>\r\n" +
+                                            "                                                                <div class=\"buttons\">\r\n" +
+                                            "                                                                    <a href=\"/HcmDashboard/DownloadAttachment?requestId=" + attachmentLogModel.Request + "&amp;vFile=" + attachmentLogModel.VFileName + "\" target=\"_blank\" class=\"download\">" + attachmentLogModel.FileName + "" + attachmentLogModel.FileExt + "</a>\r\n" +
                                             "                                                                </div>\r\n" +
                                             "                                                            </div>\r\n" +
                                             "                                                        </div>\r\n";

@@ -1,0 +1,11 @@
+C:\Users\Monin.Jose\source\repos\NAHD\Req\bin\Debug\Req.exe.config
+C:\Users\Monin.Jose\source\repos\NAHD\Req\bin\Debug\Req.exe
+C:\Users\Monin.Jose\source\repos\NAHD\Req\bin\Debug\Req.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\Req\bin\Debug\EntityFramework.dll
+C:\Users\Monin.Jose\source\repos\NAHD\Req\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Monin.Jose\source\repos\NAHD\Req\bin\Debug\EntityFramework.xml
+C:\Users\Monin.Jose\source\repos\NAHD\Req\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Monin.Jose\source\repos\NAHD\Req\obj\Debug\Req.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\Req\obj\Debug\Req.csproj.CopyComplete
+C:\Users\Monin.Jose\source\repos\NAHD\Req\obj\Debug\Req.exe
+C:\Users\Monin.Jose\source\repos\NAHD\Req\obj\Debug\Req.pdb

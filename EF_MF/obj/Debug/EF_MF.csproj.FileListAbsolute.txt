@@ -1,0 +1,12 @@
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\bin\Debug\EF_MF.exe.config
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\bin\Debug\EF_MF.exe
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\bin\Debug\EF_MF.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\bin\Debug\EntityFramework.dll
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\bin\Debug\EntityFramework.xml
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\obj\Debug\EF_MF.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\obj\Debug\EF_MF.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\obj\Debug\EF_MF.csproj.CopyComplete
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\obj\Debug\EF_MF.exe
+C:\Users\Monin.Jose\source\repos\NAHD\EF_MF\obj\Debug\EF_MF.pdb

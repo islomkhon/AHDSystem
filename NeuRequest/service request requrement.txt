@@ -23,6 +23,13 @@ Location :
 is also needed
  
 
+https://www.entityframeworktutorial.net/code-first/simple-code-first-example.aspx
+https://www.c-sharpcorner.com/article/learning-entity-framework-data-access-approaches-of-entity-framework-in-net/
+
+https://codepen.io/mr_alien/full/synHB
+https://codepen.io/Vestride/full/vHzyk
+https://codepen.io/redlabor/pen/idHeG
+
 
 https://zocada.com/setting-mongodb-users-beginners-guide/
 
@@ -1789,3 +1796,39 @@ REFERENCES [dbo].[NueUserProfile] ([Id])
 GO
 
 --------------------------------------------------------------------------
+InternationalTripRequest: NueInternationalTripRequest
+InternationalTripUiRender
+InternationalTripRequestModal
+InternationalTripRequest
+
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueInternationalTripRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueInternationalTripRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[NeedVisiaProcessing] [int] NULL DEFAULT 0,
+	[PlaceToVisit] [text] NULL,
+	[StartDate] [varchar](250) NULL,
+	[ProjectName] [text] NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueInternationalTripRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO

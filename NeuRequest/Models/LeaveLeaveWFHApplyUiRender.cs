@@ -6,7 +6,7 @@ using System.Web;
 namespace NeuRequest.Models
 {
 
-    public class NeuLeaveWFHApplyModal
+    public class NeLeaveWFHApplyModal
     {
         public int Id { get; set; }
         public int UserId { get; set; }

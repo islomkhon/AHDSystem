@@ -200,9 +200,11 @@ namespace NeuRequest.Controllers
             int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
 
             UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
-            List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
-            List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
-            List<NueRequestActivityModel> nueRequestActivityModels = new DataAccess().getRequestLogs(requestId);
+            List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+
+            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+            
+            List<NuRequestActivityModel> nueRequestActivityModels = new DataAccess().getRequestLogs(requestId);
             List<AttachmentLogModel> attachmentLogModels = new DataAccess().getAttachmentLogs(requestId);
             if (userRequest == null || userRequest.RequestId == null)
             {
@@ -248,8 +250,8 @@ namespace NeuRequest.Controllers
 
                 if(userRequest.RequestSubType == "LeaveCancelation")
                 {
-                    NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
-                    string viewRender = new Utils().generateLeaveCancelationUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, neuLeaveCancelationModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                    string viewRender = new Utils().generateLeaveCancelationUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, neuLeaveCancelationModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
@@ -258,8 +260,8 @@ namespace NeuRequest.Controllers
                 }
                 else if (userRequest.RequestSubType == "LeavePastApply")
                 {
-                    NeuLeavePastApplyModal neuLeavePastApplyModal = new DataAccess().getNeuLeavePastApplyDetails(requestId);
-                    string viewRender = new Utils().generateLeavePastApplyUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, neuLeavePastApplyModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    NeLeavePastApplyModal neuLeavePastApplyModal = new DataAccess().getNeuLeavePastApplyDetails(requestId);
+                    string viewRender = new Utils().generateLeavePastApplyUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, neuLeavePastApplyModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
@@ -268,8 +270,8 @@ namespace NeuRequest.Controllers
                 }
                 else if (userRequest.RequestSubType == "LeaveWFHApply")
                 {
-                    NeuLeaveWFHApplyModal neuLeaveWFHApplyModal = new DataAccess().getNeuLeaveWFHApplyDetails(requestId);
-                    string viewRender = new Utils().generateLeaveWFHApplyUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, neuLeaveWFHApplyModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    NeLeaveWFHApplyModal neuLeaveWFHApplyModal = new DataAccess().getNeuLeaveWFHApplyDetails(requestId);
+                    string viewRender = new Utils().generateLeaveWFHApplyUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, neuLeaveWFHApplyModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
@@ -279,7 +281,7 @@ namespace NeuRequest.Controllers
                 else if (userRequest.RequestSubType == "LeaveBalanceEnquiry")
                 {
                     LeaveBalanceEnquiryModal leaveBalanceEnquiryModal = new DataAccess().getNeuLeaveBalanceEnquiryDetails(requestId);
-                    string viewRender = new Utils().generateLeaveBalanceEnquiryUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, leaveBalanceEnquiryModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    string viewRender = new Utils().generateLeaveBalanceEnquiryUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, leaveBalanceEnquiryModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
@@ -289,7 +291,7 @@ namespace NeuRequest.Controllers
                 else if (userRequest.RequestSubType == "HCMAddressProof")
                 {
                     AddressProofModal addressProofModal = new DataAccess().getNeuAddressProofModalDetails(requestId);
-                    string viewRender = new Utils().generateAddressProofUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, addressProofModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    string viewRender = new Utils().generateAddressProofUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, addressProofModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
@@ -299,7 +301,7 @@ namespace NeuRequest.Controllers
                 else if (userRequest.RequestSubType == "HCMEmployeeVerification")
                 {
                     EmployeeVerificationReqModal employeeVerificationReqModal = new DataAccess().getNeuEmployeeVerificationReqModalDetails(requestId);
-                    string viewRender = new Utils().generateEmployeeVerificationReqUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, employeeVerificationReqModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    string viewRender = new Utils().generateEmployeeVerificationReqUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, employeeVerificationReqModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
@@ -309,7 +311,7 @@ namespace NeuRequest.Controllers
                 else if (userRequest.RequestSubType == "SalaryCertificate")
                 {
                     SalaryCertificateModal salaryCertificateModal = new DataAccess().getNeuSalaryCertificateModalDetails(requestId);
-                    string viewRender = new Utils().generateSalaryCertificateUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, salaryCertificateModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    string viewRender = new Utils().generateSalaryCertificateUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, salaryCertificateModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
@@ -319,7 +321,7 @@ namespace NeuRequest.Controllers
                 else if (userRequest.RequestSubType == "HCMGeneral")
                 {
                     GeneralRequestModal generalRequestModal = new DataAccess().getNeuGeneralRequestModalDetails(requestId);
-                    string viewRender = new Utils().generateGeneralRequestUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, generalRequestModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    string viewRender = new Utils().generateGeneralRequestUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, generalRequestModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
@@ -329,12 +331,22 @@ namespace NeuRequest.Controllers
                 else if (userRequest.RequestSubType == "DomesticTrip")
                 {
                     DomesticTripRequestModal domesticTripRequestModal = new DataAccess().getNeuDomesticTripRequestModal(requestId);
-                    string viewRender = new Utils().generateDomesticTripRequestUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, domesticTripRequestModal, nueRequestAceessLogs, userProfiles, nueRequestActivityModels, attachmentLogModels);
+                    string viewRender = new Utils().generateDomesticTripRequestUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, domesticTripRequestModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
                     ViewData["UiRender"] = viewRender;
 
                     ViewData["UserRequest"] = userRequest;
 
                     ViewData["RequestType"] = "Domestic Travel";
+                }
+                else if (userRequest.RequestSubType == "InternationalTrip")
+                {
+                    InternationalTripRequestModal internationalTripRequestModal = new DataAccess().getInternationalTripRequestModal(requestId);
+                    string viewRender = new Utils().generateInternationalTripUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, internationalTripRequestModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
+                    ViewData["UiRender"] = viewRender;
+
+                    ViewData["UserRequest"] = userRequest;
+
+                    ViewData["RequestType"] = "International Travel";
                 }
                 else
                 {
@@ -368,10 +380,9 @@ namespace NeuRequest.Controllers
                 int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
 
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
-                NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
-                List<NueRequestActivityModel> nueRequestActivityModels = new DataAccess().getRequestLogs(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                List<NuRequestActivityModel> nueRequestActivityModels = new DataAccess().getRequestLogs(requestId);
                 List<AttachmentLogModel> attachmentLogModels = new DataAccess().getAttachmentLogs(requestId);
                 if (userRequest == null)
                 {
@@ -573,6 +584,432 @@ namespace NeuRequest.Controllers
 
 
 
+
+
+
+
+
+
+
+        /********************** International Trip Request ***************************/
+        public ActionResult InternationalTripRequest()
+        {
+            TempData["Message"] = null;
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+            ViewData["UserMasterList"] = userProfiles;
+            ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+            ViewData["InternationalTripUiRender"] = new InternationalTripUiRender();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult InternationalTripRequest(InternationalTripUiRender internationalTripUiRender)
+        {
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            TempData["Message"] = null;
+            try
+            {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
+                var dateCreated = DateTime.UtcNow;
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                if (internationalTripUiRender.isValid())
+                {
+
+                    //List<DAL.NueUserProfile> nueUserProfiles1 = new DataAccess().getAllUserProfilesDinamic();
+                    //List<DAL.NueUserProfile> userProfilesAdmin1 = nueUserProfiles1.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+
+                    var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
+                    string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
+
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "InternationalTrip");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+
+                    InternationalTripRequest internationalTripRequest = new InternationalTripRequest();
+                    internationalTripRequest.UserId = currentUser.Id;
+                    internationalTripRequest.RequestId = newRequestId;
+                    internationalTripRequest.NeedVisiaProcessing = internationalTripUiRender.NeedVisiaProcessing;
+                    internationalTripRequest.PlaceToVisit = internationalTripUiRender.PlaceToVisit;
+                    internationalTripRequest.StartDate = internationalTripUiRender.StartDate;
+                    internationalTripRequest.ProjectName = internationalTripUiRender.ProjectName;
+                    internationalTripRequest.Message = internationalTripUiRender.Message;
+                    internationalTripRequest.AddedOn = dateCreated;
+                    internationalTripRequest.ModifiedOn = dateCreated;
+                    int newRequestInternId = new DataAccess().addInternationalTripRequest(internationalTripRequest);
+                    if (newRequestInternId != -1)
+                    {
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.RequestId = newRequestId;
+                        nueRequestMaster.CreatedBy = currentUser.Id;
+                        nueRequestMaster.IsApprovalProcess = 0;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.PayloadId = newRequestInternId;
+                        nueRequestMaster.RequestCatType = nueRequestCat.Id;
+                        nueRequestMaster.AddedOn = dateCreated;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
+                            List<MessagesModel> messages = new List<MessagesModel>();
+
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
+                            nueRequestAceessLog.RequestId = newRequestTempInternId;
+                            nueRequestAceessLog.UserId = currentUser.Id;
+                            nueRequestAceessLog.OwnerId = currentUser.Id;
+                            nueRequestAceessLog.Completed = 1;
+                            nueRequestAceessLog.AddedOn = dateCreated;
+                            nueRequestAceessLog.ModifiedOn = dateCreated;
+                            nueRequestAceessLogs.Add(nueRequestAceessLog);
+                            new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
+
+                            //List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            //List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.NueAccessMapper.Any(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User"))).ToList();
+                            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+                            foreach (var item in userProfilesAdmin)
+                            {
+                                MessagesModel messagesModel = new MessagesModel();
+                                messagesModel.Message = "International Travel Request";
+                                messagesModel.EmptyMessage = currentUser.FullName + " submited international travel request";
+                                messagesModel.Processed = 0;
+                                messagesModel.UserId = item.Id;
+                                messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + newRequestId;
+                                messagesModel.MessageDate = dateCreated;
+                                messages.Add(messagesModel);
+                            }
+
+
+                            new DataAccess().addNeuMessagess(messages);
+
+
+                            System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("An error occerd");
+                    }
+                }
+                else
+                {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                    ViewData["UserMasterList"] = userProfiles;
+                    ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+                    ViewData["InternationalTripUiRender"] = internationalTripUiRender;
+                    TempData["Message"] = "Invalid request";
+                    return View();
+                }
+            }
+            catch (Exception e)
+            {
+                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                ViewData["UserMasterList"] = userProfiles;
+                ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+                ViewData["InternationalTripUiRender"] = internationalTripUiRender;
+                TempData["Message"] = "Invalid request";
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public JsonResult WithdrawInternationalTripRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                var userAceess = currentUser.userAccess;
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                if (userRequest.OwnerId == currentUser.Id)
+                {
+                    if (userRequest.NueRequestStatusId != nueRequestStatus.Id
+                        && userRequest.NueRequestStatusId != nueRequestStatus1.Id
+                        && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
+                    {
+                        var dateCreated = DateTime.UtcNow;
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
+                            if (userComment != null && userComment.Trim() != "")
+                            {
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                                nueRequestActivity1.Payload = userComment;
+                                nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                                nueRequestActivity1.UserId = currentUser.Id;
+                                nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                                nueRequestActivity1.Request = userRequest.RequestId;
+                                nueRequestActivity1.AddedOn = dateCreated;
+                                nueRequestActivity1.ModifiedOn = dateCreated;
+                                new DataAccess().addRequestComment(nueRequestActivity1);
+                            }
+
+                            nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                            nueRequestActivity2.Payload = appCmt;
+                            nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity2.UserId = currentUser.Id;
+                            nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity2.Request = userRequest.RequestId;
+                            nueRequestActivity2.AddedOn = dateCreated;
+                            nueRequestActivity2.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity2);
+                            return Json(new JsonResponse("Ok", "Request withdrawn successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid Operation"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to close the request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult CloseInternationalTripRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                var userAceess = currentUser.userAccess;
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                if (userRequest.OwnerId == currentUser.Id)
+                {
+                    if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
+                    {
+                        var dateCreated = DateTime.UtcNow;
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
+                            if (userComment != null && userComment.Trim() != "")
+                            {
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                                nueRequestActivity1.Payload = userComment;
+                                nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                                nueRequestActivity1.UserId = currentUser.Id;
+                                nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                                nueRequestActivity1.Request = userRequest.RequestId;
+                                nueRequestActivity1.AddedOn = dateCreated;
+                                nueRequestActivity1.ModifiedOn = dateCreated;
+                                new DataAccess().addRequestComment(nueRequestActivity1);
+                            }
+
+                            nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                            nueRequestActivity2.Payload = appCmt;
+                            nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity2.UserId = currentUser.Id;
+                            nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity2.Request = userRequest.RequestId;
+                            nueRequestActivity2.AddedOn = dateCreated;
+                            nueRequestActivity2.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity2);
+                            return Json(new JsonResponse("Ok", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid Operation, Request is not in approved state"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to close the request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ApproveInternationalTripRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                var userAceess = currentUser.userAccess;
+                bool userAccess = false;
+
+                int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
+                if (adminUsers > 0)
+                {
+                    userAccess = true;
+                }
+
+                if (userAccess)
+                {
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                    var dateCreated = DateTime.UtcNow;
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                    nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                    nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                    nueRequestMaster.ModifiedOn = dateCreated;
+                    int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                    if (newRequestTempInternId != -1)
+                    {
+                        List<MessagesModel> messages = new List<MessagesModel>();
+
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
+                        if (userComment != null && userComment.Trim() != "")
+                        {
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                            nueRequestActivity1.Payload = userComment;
+                            nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity1.UserId = currentUser.Id;
+                            nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity1.Request = userRequest.RequestId;
+                            nueRequestActivity1.AddedOn = dateCreated;
+                            nueRequestActivity1.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity1);
+                        }
+
+                        nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                        nueRequestActivity2.Payload = appCmt;
+                        nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                        nueRequestActivity2.UserId = currentUser.Id;
+                        nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                        nueRequestActivity2.Request = userRequest.RequestId;
+                        nueRequestActivity2.AddedOn = dateCreated;
+                        nueRequestActivity2.ModifiedOn = dateCreated;
+                        new DataAccess().addRequestComment(nueRequestActivity2);
+
+                        MessagesModel messagesModel = new MessagesModel();
+                        messagesModel.Message = "International Travel Request";
+                        messagesModel.EmptyMessage = currentUser.FullName + " approved(HCM) international travel request";
+                        messagesModel.Processed = 0;
+                        messagesModel.UserId = userRequest.OwnerId;
+                        messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + userRequest.RequestId;
+                        messagesModel.MessageDate = dateCreated;
+                        messages.Add(messagesModel);
+
+                        new DataAccess().addNeuMessagess(messages);
+
+                        HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
+                        return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        throw new Exception("An error occerd");
+                    }
+                    return null;
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to perform hcm approvals"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /********************** International Trip Request ***************************/
+
+
+
+
         /********************** Domestic Trip Request ***************************/
         public ActionResult DomesticTripRequest()
         {
@@ -600,14 +1037,14 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (domesticTripRequestUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "DomesticTrip");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "DomesticTrip");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
                     DomesticTripRequest domesticTripRequest = new DomesticTripRequest();
                     domesticTripRequest.UserId = currentUser.Id;
@@ -623,7 +1060,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addDomesticTripRequest(domesticTripRequest);
                     if (newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 0;
@@ -635,10 +1072,10 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -648,9 +1085,12 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
 
-                            List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
-                            List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
-                            foreach (var item in userProfilesTemp)
+                            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+                            foreach (var item in userProfilesAdmin)
                             {
                                 MessagesModel messagesModel = new MessagesModel();
                                 messagesModel.Message = "Domestic Travel Request";
@@ -684,6 +1124,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["DomesticTripRequestUiRender"] = domesticTripRequestUiRender;
@@ -721,12 +1162,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -735,18 +1176,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -758,7 +1199,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -809,28 +1250,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -842,7 +1283,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -896,7 +1337,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -908,10 +1349,10 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
                     nueRequestMaster.Id = userRequest.NueRequestMasterId;
                     nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                     nueRequestMaster.ModifiedOn = dateCreated;
@@ -920,11 +1361,11 @@ namespace NeuRequest.Controllers
                     {
                         List<MessagesModel> messages = new List<MessagesModel>();
 
-                        NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                         string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                         if (userComment != null && userComment.Trim() != "")
                         {
-                            NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                             nueRequestActivity1.Payload = userComment;
                             nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity1.UserId = currentUser.Id;
@@ -936,7 +1377,7 @@ namespace NeuRequest.Controllers
                         }
 
                         nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                        NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                         nueRequestActivity2.Payload = appCmt;
                         nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                         nueRequestActivity2.UserId = currentUser.Id;
@@ -1009,14 +1450,14 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (generalRequestUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "HCMGeneral");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "HCMGeneral");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
                     GeneralRequest generalRequest = new GeneralRequest();
                     generalRequest.UserId = currentUser.Id;
@@ -1027,7 +1468,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addGeneralRequest(generalRequest);
                     if (newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 0;
@@ -1039,10 +1480,10 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -1052,9 +1493,13 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
 
-                            List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
-                            List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
-                            foreach (var item in userProfilesTemp)
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+
+                            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                            foreach (var item in userProfilesAdmin)
                             {
                                 MessagesModel messagesModel = new MessagesModel();
                                 messagesModel.Message = "Common Request";
@@ -1088,6 +1533,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["GeneralRequestUiRender"] = generalRequestUiRender;
@@ -1125,12 +1571,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -1139,18 +1585,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -1162,7 +1608,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -1213,28 +1659,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -1246,7 +1692,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -1300,7 +1746,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -1312,10 +1758,10 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
                     nueRequestMaster.Id = userRequest.NueRequestMasterId;
                     nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                     nueRequestMaster.ModifiedOn = dateCreated;
@@ -1324,11 +1770,11 @@ namespace NeuRequest.Controllers
                     {
                         List<MessagesModel> messages = new List<MessagesModel>();
 
-                        NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                         string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                         if (userComment != null && userComment.Trim() != "")
                         {
-                            NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                             nueRequestActivity1.Payload = userComment;
                             nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity1.UserId = currentUser.Id;
@@ -1340,7 +1786,7 @@ namespace NeuRequest.Controllers
                         }
 
                         nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                        NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                         nueRequestActivity2.Payload = appCmt;
                         nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                         nueRequestActivity2.UserId = currentUser.Id;
@@ -1412,14 +1858,14 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (salaryCertificateUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "SalaryCertificate");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "SalaryCertificate");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
                     SalaryCertificate salaryCertificate = new SalaryCertificate();
                     salaryCertificate.UserId = currentUser.Id;
@@ -1430,7 +1876,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addSalaryCertificateRequest(salaryCertificate);
                     if (newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 0;
@@ -1442,10 +1888,10 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -1455,9 +1901,13 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
 
-                            List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
-                            List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
-                            foreach (var item in userProfilesTemp)
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+
+                            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                            foreach (var item in userProfilesAdmin)
                             {
                                 MessagesModel messagesModel = new MessagesModel();
                                 messagesModel.Message = "Salary Certificate Request";
@@ -1491,6 +1941,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["SalaryCertificateUiRender"] = salaryCertificateUiRender;
@@ -1528,12 +1979,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -1542,18 +1993,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -1565,7 +2016,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -1616,28 +2067,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -1649,7 +2100,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -1703,7 +2154,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -1715,10 +2166,10 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
                     nueRequestMaster.Id = userRequest.NueRequestMasterId;
                     nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                     nueRequestMaster.ModifiedOn = dateCreated;
@@ -1727,11 +2178,11 @@ namespace NeuRequest.Controllers
                     {
                         List<MessagesModel> messages = new List<MessagesModel>();
 
-                        NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                         string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                         if (userComment != null && userComment.Trim() != "")
                         {
-                            NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                             nueRequestActivity1.Payload = userComment;
                             nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity1.UserId = currentUser.Id;
@@ -1743,7 +2194,7 @@ namespace NeuRequest.Controllers
                         }
 
                         nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                        NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                         nueRequestActivity2.Payload = appCmt;
                         nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                         nueRequestActivity2.UserId = currentUser.Id;
@@ -1815,14 +2266,14 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (employeeVerificationReqUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "HCMEmployeeVerification");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "HCMEmployeeVerification");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
                     EmployeeVerificationReq employeeVerificationReq = new EmployeeVerificationReq();
                     employeeVerificationReq.UserId = currentUser.Id;
@@ -1833,7 +2284,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addEmployeeVerificationRequest(employeeVerificationReq);
                     if (newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 0;
@@ -1845,10 +2296,10 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -1858,9 +2309,14 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
 
-                            List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
-                            List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
-                            foreach (var item in userProfilesTemp)
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+
+                            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+
+                            foreach (var item in userProfilesAdmin)
                             {
                                 MessagesModel messagesModel = new MessagesModel();
                                 messagesModel.Message = "Employee Verification Request";
@@ -1894,6 +2350,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["EmployeeVerificationReqUiRender"] = employeeVerificationReqUiRender;
@@ -1931,12 +2388,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -1945,18 +2402,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -1968,7 +2425,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -2019,28 +2476,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -2052,7 +2509,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -2106,7 +2563,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -2118,10 +2575,10 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
                     nueRequestMaster.Id = userRequest.NueRequestMasterId;
                     nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                     nueRequestMaster.ModifiedOn = dateCreated;
@@ -2130,11 +2587,11 @@ namespace NeuRequest.Controllers
                     {
                         List<MessagesModel> messages = new List<MessagesModel>();
 
-                        NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                         string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                         if (userComment != null && userComment.Trim() != "")
                         {
-                            NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                             nueRequestActivity1.Payload = userComment;
                             nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity1.UserId = currentUser.Id;
@@ -2146,7 +2603,7 @@ namespace NeuRequest.Controllers
                         }
 
                         nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                        NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                         nueRequestActivity2.Payload = appCmt;
                         nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                         nueRequestActivity2.UserId = currentUser.Id;
@@ -2219,14 +2676,14 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (addressProofUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "HCMAddressProof");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "HCMAddressProof");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
                     AddressProof addressProof = new AddressProof();
                     addressProof.UserId = currentUser.Id;
@@ -2237,7 +2694,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addAddressProofRequest(addressProof);
                     if (newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 0;
@@ -2249,10 +2706,10 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -2262,9 +2719,13 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
 
-                            List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
-                            List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
-                            foreach (var item in userProfilesTemp)
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+
+                            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                            foreach (var item in userProfilesAdmin)
                             {
                                 MessagesModel messagesModel = new MessagesModel();
                                 messagesModel.Message = "Address Proof Request";
@@ -2298,6 +2759,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["AddressProofUiRender"] = addressProofUiRender;
@@ -2335,12 +2797,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -2349,18 +2811,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -2372,7 +2834,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -2423,28 +2885,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -2456,7 +2918,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -2510,7 +2972,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -2522,10 +2984,10 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
                     nueRequestMaster.Id = userRequest.NueRequestMasterId;
                     nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                     nueRequestMaster.ModifiedOn = dateCreated;
@@ -2534,11 +2996,11 @@ namespace NeuRequest.Controllers
                     {
                         List<MessagesModel> messages = new List<MessagesModel>();
 
-                        NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                         string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                         if (userComment != null && userComment.Trim() != "")
                         {
-                            NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                             nueRequestActivity1.Payload = userComment;
                             nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity1.UserId = currentUser.Id;
@@ -2550,7 +3012,7 @@ namespace NeuRequest.Controllers
                         }
 
                         nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                        NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                         nueRequestActivity2.Payload = appCmt;
                         nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                         nueRequestActivity2.UserId = currentUser.Id;
@@ -2623,14 +3085,14 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leaveBalanceEnquiryUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "LeaveBalanceEnquiry");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "LeaveBalanceEnquiry");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
                     LeaveBalanceEnquiry leaveBalanceEnquiry = new LeaveBalanceEnquiry();
                     leaveBalanceEnquiry.UserId = currentUser.Id;
@@ -2643,7 +3105,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addLeaveBalanceEnquiry(leaveBalanceEnquiry);
                     if (newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 0;
@@ -2655,11 +3117,11 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
                             //List<MailItem> mailItems = new List<MailItem>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -2668,10 +3130,14 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
                             new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
-                            List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
-                            List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
 
-                            foreach (var item in userProfilesTemp)
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+
+                            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                            foreach (var item in userProfilesAdmin)
                             {
                                 MessagesModel messagesModel = new MessagesModel();
                                 messagesModel.Message = "Leave Balance Enquiry";
@@ -2712,6 +3178,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["LeaveBalanceEnquiryUiRender"] = leaveBalanceEnquiryUiRender;
@@ -2749,12 +3216,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -2763,18 +3230,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -2786,7 +3253,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -2837,28 +3304,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -2870,7 +3337,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -2924,7 +3391,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -2936,10 +3403,10 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
                     nueRequestMaster.Id = userRequest.NueRequestMasterId;
                     nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                     nueRequestMaster.ModifiedOn = dateCreated;
@@ -2948,11 +3415,11 @@ namespace NeuRequest.Controllers
                     {
                         List<MessagesModel> messages = new List<MessagesModel>();
 
-                        NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                         string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                         if (userComment != null && userComment.Trim() != "")
                         {
-                            NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                             nueRequestActivity1.Payload = userComment;
                             nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity1.UserId = currentUser.Id;
@@ -2964,7 +3431,7 @@ namespace NeuRequest.Controllers
                         }
 
                         nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                        NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                         nueRequestActivity2.Payload = appCmt;
                         nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                         nueRequestActivity2.UserId = currentUser.Id;
@@ -3037,14 +3504,14 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leaveWFHApplyUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "LeaveWFHApply");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "LeaveWFHApply");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
                     LeaveWFHApply leaveWFHApply = new LeaveWFHApply();
                     leaveWFHApply.UserId = currentUser.Id;
@@ -3057,7 +3524,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addNewLeaveWFHApply(leaveWFHApply);
                     if (newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 1;
@@ -3069,10 +3536,10 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -3080,7 +3547,7 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLog.AddedOn = dateCreated;
                             nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
-                            nueRequestAceessLog = new NueRequestAceessLog();
+                            nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = int.Parse(leaveWFHApplyUiRender.leaveWFHApplyApprover);
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -3124,6 +3591,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["LeaveWFHApplyUiRender"] = leaveWFHApplyUiRender;
@@ -3161,12 +3629,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -3175,18 +3643,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -3198,7 +3666,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -3249,28 +3717,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -3282,7 +3750,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -3336,7 +3804,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -3348,12 +3816,12 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     if (nueRequestAceessLogs.Where(x => x.Completed != 1 && x.UserId != userRequest.OwnerId).Count() <= 0)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
@@ -3362,11 +3830,11 @@ namespace NeuRequest.Controllers
                         {
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -3378,7 +3846,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -3447,17 +3915,17 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("In_Approval");
+                NuRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("In_Approval");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
                 int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
 
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
-                NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
+                NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
                 if (userRequest == null)
                 {
                     throw new Exception("Invalid request");
@@ -3471,7 +3939,7 @@ namespace NeuRequest.Controllers
                 if (userAccess)
                 {
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                    NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                     nueRequestAceessLog.RequestId = userRequest.NueRequestMasterId;
                     nueRequestAceessLog.UserId = currentUser.Id;
                     nueRequestAceessLog.Completed = 1;
@@ -3479,7 +3947,7 @@ namespace NeuRequest.Controllers
                     int updated = new DataAccess().updateNeuRequestAccessLogs(nueRequestAceessLog);
                     if (updated != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
@@ -3488,11 +3956,11 @@ namespace NeuRequest.Controllers
                         {
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") approved the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -3504,7 +3972,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -3523,11 +3991,14 @@ namespace NeuRequest.Controllers
                             messagesModel.MessageDate = dateCreated;
                             messages.Add(messagesModel);
 
-                            List<NueRequestAceessLog> nueRequestAceessLogsTemp = new DataAccess().getRequestAccessList(requestId);
+                            List<NuRequestAceessLog> nueRequestAceessLogsTemp = new DataAccess().getRequestAccessList(requestId);
                             if (nueRequestAceessLogsTemp.Where(x => x.Completed == 0).Count() <= 0)
                             {
-                                List<UserProfile> userProfilesTemp = userProfiles.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
-                                foreach (var item in userProfilesTemp)
+                                List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                                List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                                //List<UserProfile> userProfilesTemp = userProfiles.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+                                foreach (var item in userProfilesAdmin)
                                 {
                                     messagesModel = new MessagesModel();
                                     messagesModel.Message = "Work From Home";
@@ -3599,16 +4070,16 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leavePastApplyUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "LeavePastApply");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "LeavePastApply");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
-                    NeuLeavePastApply neuLeavePastApply = new NeuLeavePastApply();
+                    NeLeavePastApply neuLeavePastApply = new NeLeavePastApply();
                     neuLeavePastApply.UserId = currentUser.Id;
                     neuLeavePastApply.RequestId = newRequestId;
                     neuLeavePastApply.Message = leavePastApplyUiRender.message;
@@ -3619,7 +4090,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addNewLeavePastApply(neuLeavePastApply);
                     if (newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 1;
@@ -3631,10 +4102,10 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -3642,7 +4113,7 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLog.AddedOn = dateCreated;
                             nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
-                            nueRequestAceessLog = new NueRequestAceessLog();
+                            nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = int.Parse(leavePastApplyUiRender.leavePastApplyApprover);
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -3686,6 +4157,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["LeavePastApplyUiRender"] = leavePastApplyUiRender;
@@ -3723,12 +4195,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -3737,18 +4209,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -3760,7 +4232,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -3811,28 +4283,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -3844,7 +4316,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -3898,7 +4370,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -3910,12 +4382,12 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     if(nueRequestAceessLogs.Where(x=>x.Completed != 1 && x.UserId != userRequest.OwnerId).Count() <= 0)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
@@ -3924,11 +4396,11 @@ namespace NeuRequest.Controllers
                         {
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -3940,7 +4412,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -4009,17 +4481,17 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("In_Approval");
+                NuRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("In_Approval");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
                 int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
 
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
-                NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
+                NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
                 if (userRequest == null)
                 {
                     throw new Exception("Invalid request");
@@ -4033,7 +4505,7 @@ namespace NeuRequest.Controllers
                 if (userAccess)
                 {
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                    NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                     nueRequestAceessLog.RequestId = userRequest.NueRequestMasterId;
                     nueRequestAceessLog.UserId = currentUser.Id;
                     nueRequestAceessLog.Completed = 1;
@@ -4041,7 +4513,7 @@ namespace NeuRequest.Controllers
                     int updated = new DataAccess().updateNeuRequestAccessLogs(nueRequestAceessLog);
                     if (updated != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
@@ -4050,11 +4522,11 @@ namespace NeuRequest.Controllers
                         {
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") approved the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -4066,7 +4538,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -4085,11 +4557,15 @@ namespace NeuRequest.Controllers
                             messagesModel.MessageDate = dateCreated;
                             messages.Add(messagesModel);
 
-                            List<NueRequestAceessLog> nueRequestAceessLogsTemp = new DataAccess().getRequestAccessList(requestId);
+                            List<NuRequestAceessLog> nueRequestAceessLogsTemp = new DataAccess().getRequestAccessList(requestId);
                             if (nueRequestAceessLogsTemp.Where(x => x.Completed == 0).Count() <= 0)
                             {
-                                List<UserProfile> userProfilesTemp = userProfiles.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
-                                foreach (var item in userProfilesTemp)
+                                //List<UserProfile> userProfilesTemp = userProfiles.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+
+                                List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                                List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                                foreach (var item in userProfilesAdmin)
                                 {
                                     messagesModel = new MessagesModel();
                                     messagesModel.Message = "Leave Past Apply";
@@ -4159,16 +4635,16 @@ namespace NeuRequest.Controllers
                 var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
 
                 var dateCreated = DateTime.UtcNow;
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                 if (leaveCancelationUiRender.isValid())
                 {
                     var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
                     string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
 
-                    NueRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "LeaveCancelation");
-                    NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "LeaveCancelation");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
 
-                    NeuLeaveCancelation neuLeaveCancelation = new NeuLeaveCancelation();
+                    NeLeaveCancelation neuLeaveCancelation = new NeLeaveCancelation();
                     neuLeaveCancelation.UserId = currentUser.Id;
                     neuLeaveCancelation.RequestId = newRequestId;
                     neuLeaveCancelation.Message = leaveCancelationUiRender.message;
@@ -4179,7 +4655,7 @@ namespace NeuRequest.Controllers
                     int newRequestInternId = new DataAccess().addNewLeaveCancelation(neuLeaveCancelation);
                     if(newRequestInternId != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.RequestId = newRequestId;
                         nueRequestMaster.CreatedBy = currentUser.Id;
                         nueRequestMaster.IsApprovalProcess = 1;
@@ -4191,10 +4667,10 @@ namespace NeuRequest.Controllers
                         int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
                         if(newRequestTempInternId != -1)
                         {
-                            List<NueRequestAceessLog> nueRequestAceessLogs = new List<NueRequestAceessLog>();
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = currentUser.Id;
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -4202,7 +4678,7 @@ namespace NeuRequest.Controllers
                             nueRequestAceessLog.AddedOn = dateCreated;
                             nueRequestAceessLog.ModifiedOn = dateCreated;
                             nueRequestAceessLogs.Add(nueRequestAceessLog);
-                            nueRequestAceessLog = new NueRequestAceessLog();
+                            nueRequestAceessLog = new NuRequestAceessLog();
                             nueRequestAceessLog.RequestId = newRequestTempInternId;
                             nueRequestAceessLog.UserId = int.Parse(leaveCancelationUiRender.leaveCancelationApprover);
                             nueRequestAceessLog.OwnerId = currentUser.Id;
@@ -4247,6 +4723,7 @@ namespace NeuRequest.Controllers
                 }
                 else
                 {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
                     ViewData["UserMasterList"] = userProfiles;
                     ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
                     ViewData["LeaveCancelationUiRender"] = leaveCancelationUiRender;
@@ -4284,12 +4761,12 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
-                NueRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest.OwnerId == currentUser.Id)
                 {
@@ -4298,18 +4775,18 @@ namespace NeuRequest.Controllers
                         && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -4321,7 +4798,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -4372,28 +4849,28 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
-                NueRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if(userRequest.OwnerId == currentUser.Id)
                 {
                     if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
                         int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
                         if (newRequestTempInternId != -1)
                         {
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -4405,7 +4882,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -4459,7 +4936,7 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
 
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
@@ -4471,12 +4948,12 @@ namespace NeuRequest.Controllers
 
                 if (userAccess)
                 {
-                    List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
                     UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                     if(nueRequestAceessLogs.Where(x=>x.Completed != 1 && x.UserId != userRequest.OwnerId).Count() <= 0)
                     {
                         var dateCreated = DateTime.UtcNow;
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
@@ -4485,11 +4962,11 @@ namespace NeuRequest.Controllers
                         {
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -4501,7 +4978,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -4570,17 +5047,17 @@ namespace NeuRequest.Controllers
                     userComment = userComment.Trim();
                 }
                 
-                NueRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
-                NueRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("In_Approval");
+                NuRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("In_Approval");
                 var userAceess = currentUser.userAccess;
                 bool userAccess = false;
 
                 int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
 
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
-                NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
+                NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
                 if (userRequest == null)
                 {
                     throw new Exception("Invalid request");
@@ -4594,7 +5071,7 @@ namespace NeuRequest.Controllers
                 if (userAccess)
                 {
                     var dateCreated = DateTime.UtcNow;
-                    NueRequestAceessLog nueRequestAceessLog = new NueRequestAceessLog();
+                    NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
                     nueRequestAceessLog.RequestId = userRequest.NueRequestMasterId;
                     nueRequestAceessLog.UserId = currentUser.Id;
                     nueRequestAceessLog.Completed = 1;
@@ -4602,7 +5079,7 @@ namespace NeuRequest.Controllers
                     int updated = new DataAccess().updateNeuRequestAccessLogs(nueRequestAceessLog);
                     if(updated != -1)
                     {
-                        NueRequestMaster nueRequestMaster = new NueRequestMaster();
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
                         nueRequestMaster.Id = userRequest.NueRequestMasterId;
                         nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
                         nueRequestMaster.ModifiedOn = dateCreated;
@@ -4611,11 +5088,11 @@ namespace NeuRequest.Controllers
                         {
                             List<MessagesModel> messages = new List<MessagesModel>();
 
-                            NueRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                             string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") approved the request.";
                             if (userComment != null && userComment.Trim() != "")
                             {
-                                NueRequestActivity nueRequestActivity1 = new NueRequestActivity();
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
                                 nueRequestActivity1.Payload = userComment;
                                 nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
                                 nueRequestActivity1.UserId = currentUser.Id;
@@ -4627,7 +5104,7 @@ namespace NeuRequest.Controllers
                             }
 
                             nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("L1 Approval");
-                            NueRequestActivity nueRequestActivity2 = new NueRequestActivity();
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
                             nueRequestActivity2.Payload = appCmt;
                             nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
                             nueRequestActivity2.UserId = currentUser.Id;
@@ -4646,11 +5123,15 @@ namespace NeuRequest.Controllers
                             messagesModel.MessageDate = dateCreated;
                             messages.Add(messagesModel);
 
-                            List<NueRequestAceessLog> nueRequestAceessLogsTemp = new DataAccess().getRequestAccessList(requestId);
+                            List<NuRequestAceessLog> nueRequestAceessLogsTemp = new DataAccess().getRequestAccessList(requestId);
                             if(nueRequestAceessLogsTemp.Where(x => x.Completed == 0).Count() <= 0)
                             {
-                                List<UserProfile> userProfilesTemp = userProfiles.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
-                                foreach (var item in userProfilesTemp)
+                                //List<UserProfile> userProfilesTemp = userProfiles.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+
+                                List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                                List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                                foreach (var item in userProfilesAdmin)
                                 {
                                     messagesModel = new MessagesModel();
                                     messagesModel.Message = "Leave Cancelation";
@@ -4694,7 +5175,7 @@ namespace NeuRequest.Controllers
         /********************** Leave Cancelation End***************************/
 
         [HttpPost]
-        public ActionResult AddUserAttachment(NueRequestAttchment nueRequestAttchment)
+        public ActionResult AddUserAttachment(NuRequestAttchment nueRequestAttchment)
         {
             string retrunResponse = "";
             string requestId = nueRequestAttchment.requestId;
@@ -4706,7 +5187,7 @@ namespace NeuRequest.Controllers
                 {
                     throw new Exception("Invalid request");
                 }
-                NueRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("File");
+                NuRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("File");
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if (userRequest == null)
                 {
@@ -4717,9 +5198,9 @@ namespace NeuRequest.Controllers
                 bool userAccess = false;
 
                 int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
-                NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
+                NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
                 if (userRequest == null)
                 {
                     throw new Exception("Invalid request");
@@ -4772,7 +5253,7 @@ namespace NeuRequest.Controllers
                     int addedId = new DataAccess().addRequestAttachmentLog(attachmentLog);
                     if (addedId != -1)
                     {
-                        NueRequestActivity nueRequestActivity = new NueRequestActivity();
+                        NuRequestActivity nueRequestActivity = new NuRequestActivity();
                         nueRequestActivity.Payload = VFileName;
                         nueRequestActivity.PayloadType = nueRequestActivityMaster.Id;
                         nueRequestActivity.UserId = currentUser.Id;
@@ -4820,7 +5301,7 @@ namespace NeuRequest.Controllers
                     throw new Exception("Invalid request");
                 }
                 userComment = userComment.Trim();
-                NueRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                NuRequestActivityMaster nueRequestActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if(userRequest == null)
                 {
@@ -4831,9 +5312,9 @@ namespace NeuRequest.Controllers
                 bool userAccess = false;
 
                 int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
-                NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                //List<UserProfile> userProfiles1 = new DataAccess().getAllUserProfiles();
+                NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
                 if (userRequest == null)
                 {
                     throw new Exception("Invalid request");
@@ -4858,7 +5339,7 @@ namespace NeuRequest.Controllers
                 {
                     var dateCreated = DateTime.UtcNow;
 
-                    NueRequestActivity nueRequestActivity = new NueRequestActivity();
+                    NuRequestActivity nueRequestActivity = new NuRequestActivity();
                     nueRequestActivity.Payload = userComment;
                     nueRequestActivity.PayloadType = nueRequestActivityMaster.Id;
                     nueRequestActivity.UserId = currentUser.Id;
@@ -4918,7 +5399,7 @@ namespace NeuRequest.Controllers
                 {
                     recipient += ";";
                 }
-                List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
                 if(userRequest == null || userRequest.RequestId != requestId)
                 {
@@ -4929,8 +5410,8 @@ namespace NeuRequest.Controllers
                 bool userAccess = false;
 
                 int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
-                NeuLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                NeLeaveCancelationModal neuLeaveCancelationModal = new DataAccess().getNeuLeaveCancelationDetails(requestId);
                 if (userRequest == null)
                 {
                     throw new Exception("Invalid request");
@@ -4958,9 +5439,11 @@ namespace NeuRequest.Controllers
 
                 var toUsers = recipient.Split(';').ToList();
 
+                List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+
                 foreach (var item in toUsers)
                 {
-                    var user = userProfiles.Where(x => x.Email == item);
+                    var user = nueUserProfiles.Where(x => x.Email == item);
                     if(user != null && user.Count() > 0 && user.First().Email != null && user.First().Email.Trim() != "")
                     {
                         MessagesModel messagesModel = new MessagesModel();

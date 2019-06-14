@@ -34,7 +34,7 @@ namespace NeuRequest.Controllers
             if (q.StartsWith("#"))
             {
                 List<UserRequest> userRequestsRaws = new DataAccess().getRequestDetailsSearchById(q.Replace("#",""));
-                List<NueRequestAceessLog> nueRequestAceessLogs = new DataAccess().getAllRequestAccessList();
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getAllRequestAccessList();
                 List<RequestSearchRender> requestSearchRenders = new List<RequestSearchRender>();
                 List<UserProfile> userProfiles = new DataAccess().getAllUserProfiles();
                 if (userRequestsRaws != null && userRequestsRaws.Count > 0)

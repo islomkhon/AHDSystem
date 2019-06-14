@@ -6,7 +6,7 @@ using System.Web;
 namespace NeuRequest.Models
 {
 
-    public class NeuLeaveCancelationModal
+    public class NeLeaveCancelationModal
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -19,7 +19,7 @@ namespace NeuRequest.Models
         public DateTime ModifiedOn { get; set; }
     }
 
-    public class NeuLeaveCancelation
+    public class NeLeaveCancelation
     {
         public int Id { get; set; }
         public int UserId { get; set; }

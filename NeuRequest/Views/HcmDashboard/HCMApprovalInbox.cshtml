@@ -215,40 +215,50 @@
                                                 requestTypeString = "Domestic Travel";
                                                 otherReq++;
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "InternationalTrip")
+                                            {
+                                                requestTypeString = "International Travel";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "internationaltrip")
+                                            {
+                                                requestTypeString = "International Travel";
+                                                otherReq++;
+                                            }
 
 
-                                        <tr style="">
-                                            <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)<span class="hide">item.RequestId</span></span></a></td>
-                                            <td>@item.FullName (@item.NTPLID)</td>
-                                            <td>@Html.Raw(@requestTypeString)</td>
-                                            <td>@Html.Raw(@statusRowString)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.getLocalAddedOn)</td>
-                                            <td>@Html.DisplayFor(modelItem => item.getLocalModifiedOn)</td>
-                                        </tr>
+                                            <tr style="">
+                                                <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)</span></a></td>
+                                                <td>@item.FullName (@item.NTPLID)</td>
+                                                <td>@Html.Raw(@requestTypeString)</td>
+                                                <td>@Html.Raw(@statusRowString)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.getLocalAddedOn)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.getLocalModifiedOn)</td>
+                                            </tr>
                                         }
 
                                         <!--<tr>
-        <td>
-            <div class="d-flex no-block align-items-center">
-                <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
-                <div class="">
-                    <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
-                </div>
-            </div>
-        </td>
-        <td>Elite Admin</td>
-        <td>
-            <div class="popover-icon">
-                <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
-                <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
-                <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
-                <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
-            </div>
-        </td>
-        <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
-        <td>35</td>
-        <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
-    </tr>-->
+                                            <td>
+                                                <div class="d-flex no-block align-items-center">
+                                                    <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
+                                                    <div class="">
+                                                        <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>Elite Admin</td>
+                                            <td>
+                                                <div class="popover-icon">
+                                                    <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
+                                                    <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
+                                                    <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
+                                                    <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
+                                                </div>
+                                            </td>
+                                            <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
+                                            <td>35</td>
+                                            <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
+                                        </tr>-->
 
 
                                     </tbody>
@@ -310,6 +320,15 @@
 
 @Scripts.Render("~/Rebone/js")
 @Scripts.Render("~/Rebone/public/js/tooltips.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/dataTables.buttons.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.flash.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/jszip.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/pdfmake.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/vfs_fonts.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.html5.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.print.min.js")
+
+
 <script>
     $(function () {
 
@@ -327,6 +346,13 @@
         });
 
         $('#request-summary-listing').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "search": {
+                "regex": true,
+            },
             "aLengthMenu": [
                 [5, 10, 15, 20, 50, 100],
                 [5, 10, 15, 20, 50, 100]
@@ -346,5 +372,11 @@
             var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
             length_sel.removeClass('form-control-sm');
         });
+
+        if ($(".dt-buttons").length) {
+
+            $(".dt-buttons").appendTo("#request-summary-listing_filter");
+        }
+
     });
 </script>

@@ -1,0 +1,11 @@
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\bin\Debug\EF_DBF.exe.config
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\bin\Debug\EF_DBF.exe
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\bin\Debug\EF_DBF.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\bin\Debug\EntityFramework.dll
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\bin\Debug\EntityFramework.xml
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\obj\Debug\EF_DBF.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\obj\Debug\EF_DBF.csproj.CopyComplete
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\obj\Debug\EF_DBF.exe
+C:\Users\Monin.Jose\source\repos\NAHD\EF_DBF\obj\Debug\EF_DBF.pdb
