@@ -1,0 +1,63 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+
+@{
+    UserProfile currentUser = ViewData["UserProfileSession"] as UserProfile;
+    MessagesModel messagesModel = ViewData["MessagesModel"] as MessagesModel;
+
+    ViewBag.Title = "Notification";
+}
+<style>
+</style>
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item"><a href="/ProcessNotification/Index">Notifications</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Notification Details</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="email-wrapper wrapper">
+
+            <div class="mail-view d-none d-md-block col-md-11 col-lg-10 pt-4 bg-white">
+
+                <div class="message-body">
+                    <div class="sender-details">
+                        <img class="img-sm rounded-circle mr-3" src="../../images/faces/face11.jpg" alt="">
+                        <div class="details">
+                            <h4 class="msg-subject mb-2">
+                                @messagesModel.Message
+                            </h4>
+                            <p class="sender-email">
+                                <i class="mdi mdi-clock pl-0 ml-0"></i> @messagesModel.getLocalAddedOn
+                            </p>
+                        </div>
+                    </div>
+                    <div class="message-content">
+                        <p>@messagesModel.EmptyMessage</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        
+
+    </div>
+</div>
+
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/tooltips.js")
+
+
+<script>
+    $(function () {
+        
+
+    });
+</script>

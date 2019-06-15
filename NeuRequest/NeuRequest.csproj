@@ -272,6 +272,9 @@
     <Compile Include="DAL\NueAddressProofRequest.cs">
       <DependentUpon>EntityModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DAL\NueDBManagerChangeRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DAL\NueDomesticTripRequest.cs">
       <DependentUpon>EntityModel.tt</DependentUpon>
     </Compile>
@@ -335,6 +338,8 @@
     </Compile>
     <Compile Include="Hubs\MessagesHub.cs" />
     <Compile Include="Models\AdalTokenCache.cs" />
+    <Compile Include="Models\DBLocationChangeUiRender.cs" />
+    <Compile Include="Models\DBManagerChangeUiRender.cs" />
     <Compile Include="Models\InternationalTripUiRender.cs" />
     <Compile Include="Models\DomesticTripRequestUiRender.cs" />
     <Compile Include="Models\GeneralRequestUiRender.cs" />
@@ -1556,6 +1561,8 @@
     <Content Include="Views\HcmDashboard\PreApprovalHCMHistory.cshtml" />
     <Content Include="Views\HcmDashboard\DomesticTripRequest.cshtml" />
     <Content Include="Views\HcmDashboard\InternationalTripRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\DBManagerChangeRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\DBLocationChangeRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Analytics\" />

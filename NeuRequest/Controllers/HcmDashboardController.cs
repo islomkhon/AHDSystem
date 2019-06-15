@@ -348,6 +348,26 @@ namespace NeuRequest.Controllers
 
                     ViewData["RequestType"] = "International Travel";
                 }
+                else if (userRequest.RequestSubType == "DBManagerChange")
+                {
+                    DBManagerChangeRequestModal dBManagerChangeRequestModal = new DataAccess().getDBManagerChangeRequestModal(requestId);
+                    string viewRender = new Utils().generateDBManagerChangeUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, dBManagerChangeRequestModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
+                    ViewData["UiRender"] = viewRender;
+
+                    ViewData["UserRequest"] = userRequest;
+
+                    ViewData["RequestType"] = "Manager Change";
+                }
+                else if (userRequest.RequestSubType == "DBLocationChange")
+                {
+                    DBLocationChangeRequestModal dBLocationChangeRequestModal = new DataAccess().getDBLocationChangeRequestModal(requestId);
+                    string viewRender = new Utils().generateDBLocationChangeUiRender(isOwner, ishcm, isApprover, currentUser, userRequest, dBLocationChangeRequestModal, nueRequestAceessLogs, nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
+                    ViewData["UiRender"] = viewRender;
+
+                    ViewData["UserRequest"] = userRequest;
+
+                    ViewData["RequestType"] = "Location Change";
+                }
                 else
                 {
                     return RedirectToAction("AccessError", "ErrorHandilar", new { message = "Coming soon", errorCode = "404" });
@@ -586,8 +606,837 @@ namespace NeuRequest.Controllers
 
 
 
+        /********************** Location Change Request ***************************/
+        public ActionResult DBLocationChangeRequest()
+        {
+            TempData["Message"] = null;
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+            ViewData["UserMasterList"] = userProfiles;
+            ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+            ViewData["DBLocationChangeUiRender"] = new DBLocationChangeUiRender();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult DBLocationChangeRequest(DBLocationChangeUiRender dBLocationChangeUiRender)
+        {
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            TempData["Message"] = null;
+            try
+            {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
+                var dateCreated = DateTime.UtcNow;
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                if (dBLocationChangeUiRender.isValid())
+                {
+
+                    //List<DAL.NueUserProfile> nueUserProfiles1 = new DataAccess().getAllUserProfilesDinamic();
+                    //List<DAL.NueUserProfile> userProfilesAdmin1 = nueUserProfiles1.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+                    
+
+                    var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
+                    string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
+
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "DBLocationChange");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+
+                    DBLocationChangeRequest dBLocationChangeRequest = new DBLocationChangeRequest();
+                    dBLocationChangeRequest.UserId = currentUser.Id;
+                    dBLocationChangeRequest.RequestId = newRequestId;
+                    dBLocationChangeRequest.Location = dBLocationChangeUiRender.Location;
+                    dBLocationChangeRequest.Message = dBLocationChangeUiRender.Message;
+                    dBLocationChangeRequest.AddedOn = dateCreated;
+                    dBLocationChangeRequest.ModifiedOn = dateCreated;
+                    int newRequestInternId = new DataAccess().addDBLocationChangeRequest(dBLocationChangeRequest);
+                    if (newRequestInternId != -1)
+                    {
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.RequestId = newRequestId;
+                        nueRequestMaster.CreatedBy = currentUser.Id;
+                        nueRequestMaster.IsApprovalProcess = 0;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.PayloadId = newRequestInternId;
+                        nueRequestMaster.RequestCatType = nueRequestCat.Id;
+                        nueRequestMaster.AddedOn = dateCreated;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
+                            List<MessagesModel> messages = new List<MessagesModel>();
+
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
+                            nueRequestAceessLog.RequestId = newRequestTempInternId;
+                            nueRequestAceessLog.UserId = currentUser.Id;
+                            nueRequestAceessLog.OwnerId = currentUser.Id;
+                            nueRequestAceessLog.Completed = 1;
+                            nueRequestAceessLog.AddedOn = dateCreated;
+                            nueRequestAceessLog.ModifiedOn = dateCreated;
+                            nueRequestAceessLogs.Add(nueRequestAceessLog);
+                            new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
+
+                            //List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            //List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.NueAccessMapper.Any(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User"))).ToList();
+                            List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+                            foreach (var item in userProfilesAdmin)
+                            {
+                                MessagesModel messagesModel = new MessagesModel();
+                                messagesModel.Message = "Location Change Request";
+                                messagesModel.EmptyMessage = currentUser.FullName + " submited location change request";
+                                messagesModel.Processed = 0;
+                                messagesModel.UserId = item.Id;
+                                messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + newRequestId;
+                                messagesModel.MessageDate = dateCreated;
+                                messages.Add(messagesModel);
+                            }
 
 
+                            new DataAccess().addNeuMessagess(messages);
+
+
+                            System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("An error occerd");
+                    }
+                }
+                else
+                {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                    ViewData["UserMasterList"] = userProfiles;
+                    ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+                    ViewData["DBLocationChangeUiRender"] = dBLocationChangeUiRender;
+                    TempData["Message"] = "Invalid request";
+                    return View();
+                }
+            }
+            catch (Exception e)
+            {
+                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                ViewData["UserMasterList"] = userProfiles;
+                ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+                ViewData["DBLocationChangeUiRender"] = dBLocationChangeUiRender;
+                TempData["Message"] = "Invalid request";
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public JsonResult WithdrawDBLocationChangeRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                var userAceess = currentUser.userAccess;
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                if (userRequest.OwnerId == currentUser.Id)
+                {
+                    if (userRequest.NueRequestStatusId != nueRequestStatus.Id
+                        && userRequest.NueRequestStatusId != nueRequestStatus1.Id
+                        && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
+                    {
+                        var dateCreated = DateTime.UtcNow;
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
+                            if (userComment != null && userComment.Trim() != "")
+                            {
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                                nueRequestActivity1.Payload = userComment;
+                                nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                                nueRequestActivity1.UserId = currentUser.Id;
+                                nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                                nueRequestActivity1.Request = userRequest.RequestId;
+                                nueRequestActivity1.AddedOn = dateCreated;
+                                nueRequestActivity1.ModifiedOn = dateCreated;
+                                new DataAccess().addRequestComment(nueRequestActivity1);
+                            }
+
+                            nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                            nueRequestActivity2.Payload = appCmt;
+                            nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity2.UserId = currentUser.Id;
+                            nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity2.Request = userRequest.RequestId;
+                            nueRequestActivity2.AddedOn = dateCreated;
+                            nueRequestActivity2.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity2);
+                            return Json(new JsonResponse("Ok", "Request withdrawn successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid Operation"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to close the request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult CloseDBLocationChangeRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                var userAceess = currentUser.userAccess;
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                if (userRequest.OwnerId == currentUser.Id)
+                {
+                    if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
+                    {
+                        var dateCreated = DateTime.UtcNow;
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
+                            if (userComment != null && userComment.Trim() != "")
+                            {
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                                nueRequestActivity1.Payload = userComment;
+                                nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                                nueRequestActivity1.UserId = currentUser.Id;
+                                nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                                nueRequestActivity1.Request = userRequest.RequestId;
+                                nueRequestActivity1.AddedOn = dateCreated;
+                                nueRequestActivity1.ModifiedOn = dateCreated;
+                                new DataAccess().addRequestComment(nueRequestActivity1);
+                            }
+
+                            nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                            nueRequestActivity2.Payload = appCmt;
+                            nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity2.UserId = currentUser.Id;
+                            nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity2.Request = userRequest.RequestId;
+                            nueRequestActivity2.AddedOn = dateCreated;
+                            nueRequestActivity2.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity2);
+                            return Json(new JsonResponse("Ok", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid Operation, Request is not in approved state"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to close the request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ApproveDBLocationChangeRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                var userAceess = currentUser.userAccess;
+                bool userAccess = false;
+
+                int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
+                if (adminUsers > 0)
+                {
+                    userAccess = true;
+                }
+
+                if (userAccess)
+                {
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                    var dateCreated = DateTime.UtcNow;
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                    nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                    nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                    nueRequestMaster.ModifiedOn = dateCreated;
+                    int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                    if (newRequestTempInternId != -1)
+                    {
+                        List<MessagesModel> messages = new List<MessagesModel>();
+
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
+                        if (userComment != null && userComment.Trim() != "")
+                        {
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                            nueRequestActivity1.Payload = userComment;
+                            nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity1.UserId = currentUser.Id;
+                            nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity1.Request = userRequest.RequestId;
+                            nueRequestActivity1.AddedOn = dateCreated;
+                            nueRequestActivity1.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity1);
+                        }
+
+                        nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                        nueRequestActivity2.Payload = appCmt;
+                        nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                        nueRequestActivity2.UserId = currentUser.Id;
+                        nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                        nueRequestActivity2.Request = userRequest.RequestId;
+                        nueRequestActivity2.AddedOn = dateCreated;
+                        nueRequestActivity2.ModifiedOn = dateCreated;
+                        new DataAccess().addRequestComment(nueRequestActivity2);
+
+                        MessagesModel messagesModel = new MessagesModel();
+                        messagesModel.Message = "Location Change Request";
+                        messagesModel.EmptyMessage = currentUser.FullName + " approved(HCM) location change request";
+                        messagesModel.Processed = 0;
+                        messagesModel.UserId = userRequest.OwnerId;
+                        messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + userRequest.RequestId;
+                        messagesModel.MessageDate = dateCreated;
+                        messages.Add(messagesModel);
+
+                        new DataAccess().addNeuMessagess(messages);
+
+                        HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
+                        return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        throw new Exception("An error occerd");
+                    }
+                    return null;
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to perform hcm approvals"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /********************** Location Change Request ***************************/
+
+
+        /********************** Manager Change Request ***************************/
+        public ActionResult DBManagerChangeRequest()
+        {
+            TempData["Message"] = null;
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+            ViewData["UserMasterList"] = userProfiles;
+            ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+            ViewData["DBManagerChangeUiRender"] = new DBManagerChangeUiRender();
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult DBManagerChangeRequest(DBManagerChangeUiRender dBManagerChangeUiRender)
+        {
+            UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+            if (!Utils.isValidUserObject(currentUser))
+            {
+                return RedirectToAction("SignIn", "Account");
+            }
+            TempData["Message"] = null;
+            try
+            {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
+                var dateCreated = DateTime.UtcNow;
+                //List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                if (dBManagerChangeUiRender.isValid())
+                {
+
+                    //List<DAL.NueUserProfile> nueUserProfiles1 = new DataAccess().getAllUserProfilesDinamic();
+                    //List<DAL.NueUserProfile> userProfilesAdmin1 = nueUserProfiles1.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+
+                    List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                    if(nueUserProfiles.Where(x=> x.Id != currentUser.Id && x.Active == 1 && x.Id == int.Parse(dBManagerChangeUiRender.ManagerId)).Count() <= 0){
+                        throw new Exception("Unable to locate manager details");
+                    }
+
+                    var data = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/request-number-tracker.db"));
+                    string newRequestId = (long.Parse(data, System.Globalization.NumberStyles.AllowThousands | System.Globalization.NumberStyles.AllowLeadingSign) + 1).ToString();
+
+                    NuRequestActivityMaster nueRequestCat = new DataAccess().getRequestType("HCM", "DBManagerChange");
+                    NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("created");
+
+                    DBManagerChangeRequest dBManagerChangeRequest = new DBManagerChangeRequest();
+                    dBManagerChangeRequest.UserId = currentUser.Id;
+                    dBManagerChangeRequest.RequestId = newRequestId;
+                    dBManagerChangeRequest.ManagerId = int.Parse(dBManagerChangeUiRender.ManagerId);
+                    dBManagerChangeRequest.ProjectName = dBManagerChangeUiRender.ProjectName;
+                    dBManagerChangeRequest.Message = dBManagerChangeUiRender.Message;
+                    dBManagerChangeRequest.AddedOn = dateCreated;
+                    dBManagerChangeRequest.ModifiedOn = dateCreated;
+                    int newRequestInternId = new DataAccess().addDBManagerChangeRequest(dBManagerChangeRequest);
+                    if (newRequestInternId != -1)
+                    {
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.RequestId = newRequestId;
+                        nueRequestMaster.CreatedBy = currentUser.Id;
+                        nueRequestMaster.IsApprovalProcess = 0;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.PayloadId = newRequestInternId;
+                        nueRequestMaster.RequestCatType = nueRequestCat.Id;
+                        nueRequestMaster.AddedOn = dateCreated;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().addNeuRequest(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            List<NuRequestAceessLog> nueRequestAceessLogs = new List<NuRequestAceessLog>();
+                            List<MessagesModel> messages = new List<MessagesModel>();
+
+                            NuRequestAceessLog nueRequestAceessLog = new NuRequestAceessLog();
+                            nueRequestAceessLog.RequestId = newRequestTempInternId;
+                            nueRequestAceessLog.UserId = currentUser.Id;
+                            nueRequestAceessLog.OwnerId = currentUser.Id;
+                            nueRequestAceessLog.Completed = 1;
+                            nueRequestAceessLog.AddedOn = dateCreated;
+                            nueRequestAceessLog.ModifiedOn = dateCreated;
+                            nueRequestAceessLogs.Add(nueRequestAceessLog);
+                            new DataAccess().addNeuRequestAccessLogs(nueRequestAceessLogs);
+
+                            //List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            //List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.NueAccessMapper.Any(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User"))).ToList();
+                            //List<DAL.NueUserProfile> nueUserProfiles = new DataAccess().getAllUserProfilesDinamic();
+                            List<DAL.NueUserProfile> userProfilesAdmin = nueUserProfiles.Where(x => x.Active == 1 && x.NueAccessMapper.Where(y => (y.NueAccessMaster.AccessDesc == "Root_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_Admin" || y.NueAccessMaster.AccessDesc == "Hcm_User")).Count() > 0).ToList();
+                            //List<UserProfile> userProfilesX = new DataAccess().getAllUserProfiles();
+                            //List<UserProfile> userProfilesTemp = userProfilesX.Where(x => x.userAccess.Any(y => (y.AccessDesc == "Root_Admin" || y.AccessDesc == "Hcm_Admin" || y.AccessDesc == "Hcm_User"))).ToList();
+                            foreach (var item in userProfilesAdmin)
+                            {
+                                MessagesModel messagesModel = new MessagesModel();
+                                messagesModel.Message = "Manager Change Request";
+                                messagesModel.EmptyMessage = currentUser.FullName + " submited manager change request";
+                                messagesModel.Processed = 0;
+                                messagesModel.UserId = item.Id;
+                                messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + newRequestId;
+                                messagesModel.MessageDate = dateCreated;
+                                messages.Add(messagesModel);
+                            }
+
+
+                            new DataAccess().addNeuMessagess(messages);
+
+
+                            System.IO.File.WriteAllText(Server.MapPath("~/App_Data/request-number-tracker.db"), newRequestId);
+
+                            HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("An error occerd");
+                    }
+                }
+                else
+                {
+                    List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                    ViewData["UserMasterList"] = userProfiles;
+                    ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+                    ViewData["DBManagerChangeUiRender"] = dBManagerChangeUiRender;
+                    TempData["Message"] = "Invalid request";
+                    return View();
+                }
+            }
+            catch (Exception e)
+            {
+                List<UserProfile> userProfiles = new DataAccess().getAllUserProfileExcept(currentUser.Email.ToLower());
+                ViewData["UserMasterList"] = userProfiles;
+                ViewData["UserProfileSession"] = (Session["UserProfileSession"] as UserProfile);
+                ViewData["DBManagerChangeUiRender"] = dBManagerChangeUiRender;
+                TempData["Message"] = "Invalid request";
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public JsonResult WithdrawDBManagerChangeRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("withdraw");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                NuRequestActivityMaster nueRequestStatus1 = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus2 = new DataAccess().getRequestStatus("withdraw");
+                var userAceess = currentUser.userAccess;
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                if (userRequest.OwnerId == currentUser.Id)
+                {
+                    if (userRequest.NueRequestStatusId != nueRequestStatus.Id
+                        && userRequest.NueRequestStatusId != nueRequestStatus1.Id
+                        && userRequest.NueRequestStatusId != nueRequestStatus2.Id)
+                    {
+                        var dateCreated = DateTime.UtcNow;
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - withdrawn the request.";
+                            if (userComment != null && userComment.Trim() != "")
+                            {
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                                nueRequestActivity1.Payload = userComment;
+                                nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                                nueRequestActivity1.UserId = currentUser.Id;
+                                nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                                nueRequestActivity1.Request = userRequest.RequestId;
+                                nueRequestActivity1.AddedOn = dateCreated;
+                                nueRequestActivity1.ModifiedOn = dateCreated;
+                                new DataAccess().addRequestComment(nueRequestActivity1);
+                            }
+
+                            nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Withdraw");
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                            nueRequestActivity2.Payload = appCmt;
+                            nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity2.UserId = currentUser.Id;
+                            nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity2.Request = userRequest.RequestId;
+                            nueRequestActivity2.AddedOn = dateCreated;
+                            nueRequestActivity2.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity2);
+                            return Json(new JsonResponse("Ok", "Request withdrawn successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid Operation"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to close the request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult CloseDBManagerChangeRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("close");
+                NuRequestActivityMaster nueRequestStatus = new DataAccess().getRequestStatus("completed");
+                var userAceess = currentUser.userAccess;
+                List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                if (userRequest.OwnerId == currentUser.Id)
+                {
+                    if (userRequest.NueRequestStatusId == nueRequestStatus.Id)
+                    {
+                        var dateCreated = DateTime.UtcNow;
+                        NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                        nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                        nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                        nueRequestMaster.ModifiedOn = dateCreated;
+                        int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                        if (newRequestTempInternId != -1)
+                        {
+                            NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                            string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - close the request.";
+                            if (userComment != null && userComment.Trim() != "")
+                            {
+                                NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                                nueRequestActivity1.Payload = userComment;
+                                nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                                nueRequestActivity1.UserId = currentUser.Id;
+                                nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                                nueRequestActivity1.Request = userRequest.RequestId;
+                                nueRequestActivity1.AddedOn = dateCreated;
+                                nueRequestActivity1.ModifiedOn = dateCreated;
+                                new DataAccess().addRequestComment(nueRequestActivity1);
+                            }
+
+                            nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Close");
+                            NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                            nueRequestActivity2.Payload = appCmt;
+                            nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity2.UserId = currentUser.Id;
+                            nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity2.Request = userRequest.RequestId;
+                            nueRequestActivity2.AddedOn = dateCreated;
+                            nueRequestActivity2.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity2);
+                            return Json(new JsonResponse("Ok", "Request closed successfully."), JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            throw new Exception("An error occerd");
+                        }
+                    }
+                    else
+                    {
+                        return Json(new JsonResponse("Failed", "Invalid Operation, Request is not in approved state"), JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to close the request"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ApproveDBManagerChangeRequest(FormCollection formCollection)
+        {
+            string userComment = formCollection["userComment"];
+            string requestId = formCollection["requestId"];
+            try
+            {
+                string domainName = Request.Url.GetLeftPart(UriPartial.Authority);
+                var mailTemplate = System.IO.File.ReadAllText(Server.MapPath("~/App_Data/MailTemplate.txt"));
+
+                UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
+                if (!Utils.isValidUserObject(currentUser) || requestId == null
+                   || requestId.Trim() == "")
+                {
+                    throw new Exception("Invalid request");
+                }
+
+                if (userComment != null)
+                {
+                    userComment = userComment.Trim();
+                }
+
+                NuRequestActivityMaster nueRequestNewStatus = new DataAccess().getRequestStatus("completed");
+                var userAceess = currentUser.userAccess;
+                bool userAccess = false;
+
+                int adminUsers = userAceess.Where(x => (x.AccessDesc == "Root_Admin" || x.AccessDesc == "Hcm_Admin" || x.AccessDesc == "Hcm_User")).Count();
+                if (adminUsers > 0)
+                {
+                    userAccess = true;
+                }
+
+                if (userAccess)
+                {
+                    List<NuRequestAceessLog> nueRequestAceessLogs = new DataAccess().getRequestAccessList(requestId);
+                    UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);
+                    var dateCreated = DateTime.UtcNow;
+                    NuRequestMaster nueRequestMaster = new NuRequestMaster();
+                    nueRequestMaster.Id = userRequest.NueRequestMasterId;
+                    nueRequestMaster.RequestStatus = nueRequestNewStatus.Id;
+                    nueRequestMaster.ModifiedOn = dateCreated;
+                    int newRequestTempInternId = new DataAccess().updateNeuRequestStatusLogs(nueRequestMaster);
+                    if (newRequestTempInternId != -1)
+                    {
+                        List<MessagesModel> messages = new List<MessagesModel>();
+
+                        NuRequestActivityMaster nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("Comment");
+                        string appCmt = currentUser.FullName + " (" + currentUser.NTPLID + ") - HCM approved the request.";
+                        if (userComment != null && userComment.Trim() != "")
+                        {
+                            NuRequestActivity nueRequestActivity1 = new NuRequestActivity();
+                            nueRequestActivity1.Payload = userComment;
+                            nueRequestActivity1.PayloadType = nueRequestCmtActivityMaster.Id;
+                            nueRequestActivity1.UserId = currentUser.Id;
+                            nueRequestActivity1.RequestId = userRequest.NueRequestMasterId;
+                            nueRequestActivity1.Request = userRequest.RequestId;
+                            nueRequestActivity1.AddedOn = dateCreated;
+                            nueRequestActivity1.ModifiedOn = dateCreated;
+                            new DataAccess().addRequestComment(nueRequestActivity1);
+                        }
+
+                        nueRequestCmtActivityMaster = new DataAccess().getRequestActivityMasterId("HCM Approval");
+                        NuRequestActivity nueRequestActivity2 = new NuRequestActivity();
+                        nueRequestActivity2.Payload = appCmt;
+                        nueRequestActivity2.PayloadType = nueRequestCmtActivityMaster.Id;
+                        nueRequestActivity2.UserId = currentUser.Id;
+                        nueRequestActivity2.RequestId = userRequest.NueRequestMasterId;
+                        nueRequestActivity2.Request = userRequest.RequestId;
+                        nueRequestActivity2.AddedOn = dateCreated;
+                        nueRequestActivity2.ModifiedOn = dateCreated;
+                        new DataAccess().addRequestComment(nueRequestActivity2);
+
+                        MessagesModel messagesModel = new MessagesModel();
+                        messagesModel.Message = "Manager Change Request";
+                        messagesModel.EmptyMessage = currentUser.FullName + " approved(HCM) manager change request";
+                        messagesModel.Processed = 0;
+                        messagesModel.UserId = userRequest.OwnerId;
+                        messagesModel.Target = "/HcmDashboard/SelfRequestDetails?requestId=" + userRequest.RequestId;
+                        messagesModel.MessageDate = dateCreated;
+                        messages.Add(messagesModel);
+
+                        new DataAccess().addNeuMessagess(messages);
+
+                        HostingEnvironment.QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, userRequest.RequestId, messages));
+
+                        return Json(new JsonResponse("Ok", "Request approved successfully."), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        throw new Exception("An error occerd");
+                    }
+                    return null;
+                }
+                else
+                {
+                    return Json(new JsonResponse("Failed", "You are not authorised to perform hcm approvals"), JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new JsonResponse("Failed", "An error occerd while updating data"), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /********************** Manager Change Request ***************************/
 
 
 

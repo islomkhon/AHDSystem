@@ -2853,3 +2853,241 @@ select[readonly].select2 + .select2-container {
     background-color: #8862e0b3;
     border-color: #8862e0b3;
 }
+
+/*.datepicker.datepicker-dropdown .datepicker-days table.table-condensed tbody td.day.today:before,
+.datepicker.datepicker-inline .datepicker-days table.table-condensed tbody td.day.today:before {
+    left: 22px;
+}*/
+
+/*tr td:first-child,
+tr td:last-child {
+    
+}*/
+
+.datepicker.datepicker-dropdown .datepicker-days table.table-condensed tbody td.day.today:last-child:before,
+.datepicker.datepicker-inline .datepicker-days table.table-condensed tbody td.day.today:last-child:before {
+    left: 22px;
+}
+
+.datepicker.datepicker-dropdown .datepicker-days table.table-condensed tbody td.day.active:first-child:before,
+.datepicker.datepicker-inline .datepicker-days table.table-condensed tbody td.day.active:first-child:before {
+    left: -36px;
+}
+
+.datepicker.datepicker-dropdown .datepicker-days table.table-condensed tbody td.day.active:last-child:before,
+.datepicker.datepicker-inline .datepicker-days table.table-condensed tbody td.day.active:last-child:before {
+    left: 22px;
+}
+
+.widget-side .dropdown-menu-header {
+    color: #fff;
+    margin-top: -0.65rem;
+    margin-bottom: 0.65rem;
+    position: relative;
+    z-index: 6;
+}
+
+.widget-side.card > .dropdown-menu-header {
+    margin: 0;
+}
+
+.widget-side.card  .bg-focus {
+    background-color: #444054 !important;
+}
+
+.widget-side.card .bg-focus {
+    background-color: #444054 !important;
+}
+
+.widget-side.card .dropdown-menu-header .dropdown-menu-header-inner {
+    margin: -1px -1px 0;
+    padding: 1.5rem 0.5rem;
+    position: relative;
+}
+
+.widget-side.card > .dropdown-menu-header .dropdown-menu-header-inner {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.opacity-3 {
+    opacity: .3 !important;
+}
+
+.widget-side.card .dropdown-menu-header .menu-header-image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 8;
+    opacity: .25;
+    -webkit-filter: grayscale(80%);
+    filter: grayscale(80%);
+    background-size: cover;
+}
+
+.widget-side.card .dropdown-menu-header .menu-header-content {
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.widget-side.card .dropdown-menu-header .menu-header-content.btn-pane-right {
+   padding-left: 0.5rem;
+   padding-right: 0.5rem;
+   display: flex;
+   align-content: center;
+   align-items: center;
+   text-align: left;
+}
+
+.mr-3, .mx-3 {
+    margin-right: 1rem !important;
+}
+
+.widget-side.card .avatar-icon-wrapper {
+    display: inline-block;
+    margin-right: .1rem;
+    position: relative;
+}
+
+.widget-side.card .page-title-icon {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    padding: 0.83333333rem;
+    margin: 0 30px 0 0;
+    background: #ffffff2e;
+    box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+    border-radius: 0.25rem;
+    width: 60px;
+    height: 60px;
+}
+.widget-side.card h1, .widget-side.card h2, .widget-side.card h3, .widget-side.card h4, .widget-side.card h5, .widget-side.card h6,
+.widget-side.card .h1, .widget-side.card .h2, .widget-side.card .h3, .widget-side.card .h4, .widget-side.card .h5, .widget-side.card .h6 {
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+    font-weight: 400;
+    line-height: 1.2;
+    color: inherit;
+}
+.widget-side.card h5, .widget-side.card .h5 {
+    font-size: 1.25rem;
+}
+.widget-side.card .menu-header-title {
+    font-weight: 500;
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.widget-side.card ol, .widget-side.card ul, .widget-side.card dl {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.widget-side.card .list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.widget-side.card .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+    .widget-side.card .list-group-item:first-child {
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+    }
+
+    .widget-side.card .list-group-item:last-child {
+        margin-bottom: 0;
+        border-bottom-right-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+    }
+
+.widget-side.card .list-group-flush .list-group-item {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+}
+
+    .widget-side.card .list-group-flush .list-group-item:last-child {
+        margin-bottom: -1px;
+    }
+.widget-side.card .list-group-flush:last-child .list-group-item:last-child {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+.widget-side.card > .list-group:last-child .list-group-item:last-child {
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.widget-side.card .widget-content {
+    padding: 1rem;
+    flex-direction: row;
+    align-items: center;
+}
+    .widget-side.card .widget-content .widget-content-wrapper {
+        display: flex;
+        flex: 1;
+        position: relative;
+        align-items: center;
+    }
+
+.widget-side.card .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.widget-side.card .p-0 {
+    padding: 0 !important;
+}
+
+.widget-side.card .list-group-item:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.widget-side.card .list-group-flush .list-group-item {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+}
+
+    .widget-side.card .list-group-flush .list-group-item:last-child {
+        margin-bottom: -1px;
+    }
+
+.widget-side.card .list-group-flush:last-child .list-group-item:last-child {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+
+.widget-side.card > .list-group:last-child .list-group-item:last-child {
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.widget-side.card .overflow-hidden {
+    overflow: hidden !important;
+}
+.widget-side.card .no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+}

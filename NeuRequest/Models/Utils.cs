@@ -67,7 +67,8 @@ namespace NeuRequest.Models
                 int smtpPort = int.Parse(ConfigurationManager.AppSettings["smtp-port"].ToString());
                 string smtpEmail = ConfigurationManager.AppSettings["smtp-email"].ToString();
                 string smtpPassword = ConfigurationManager.AppSettings["smtp-password"].ToString();
-                var message = new MailMessage(new MailAddress(smtpEmail), new MailAddress(mailItem.To));
+                //var message = new MailMessage(new MailAddress(smtpEmail), new MailAddress(mailItem.To));
+                var message = new MailMessage(new MailAddress(smtpEmail), new MailAddress("monin.jose@neudesic.com"));
                 message.Subject = mailItem.Subject;
                 message.Body = mailItem.Body;
                 message.IsBodyHtml = true;
@@ -183,7 +184,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -232,7 +233,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -281,7 +282,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -314,7 +315,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -345,7 +346,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -376,7 +377,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -408,7 +409,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -440,7 +441,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -482,7 +483,7 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
@@ -523,13 +524,79 @@ namespace NeuRequest.Models
                             MailItem mailItem = new MailItem();
                             mailItem.Subject = messagesModel.Message;
                             mailItem.Body = mailTemplateGen;
-                            mailItem.To = "monin.jose@neudesic.com";
+                            mailItem.To = mailToUser.Email;
                             mailItem.Priority = true;
                             mailItems.Add(mailItem);
                         }
                     }
                 }
+                else if (userRequest.RequestSubType == "DBManagerChange")
+                {
+                    DBManagerChangeRequestModal dBManagerChangeRequestModal = new DataAccess().getDBManagerChangeRequestModal(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Manager Change");
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Requested Manager", dBManagerChangeRequestModal.ManagerName + " (" + dBManagerChangeRequestModal.ManagerNTPLID + ")");
+                    messageData.Add("Project Name", dBManagerChangeRequestModal.ProjectName);
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", dBManagerChangeRequestModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = dBManagerChangeRequestModal.Message;
 
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        if (mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = mailToUser.Email;
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
+                    }
+                }
+                else if (userRequest.RequestSubType == "DBLocationChange")
+                {
+                    DBLocationChangeRequestModal dBLocationChangeRequestModal = new DataAccess().getDBLocationChangeRequestModal(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Manager Change");
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Requested Location", dBLocationChangeRequestModal.Location);
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", dBLocationChangeRequestModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = dBLocationChangeRequestModal.Message;
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        if (mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = mailToUser.Email;
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
+                    }
+                }
 
 
                 mailHandilar(mailItems);
@@ -610,7 +677,14 @@ namespace NeuRequest.Models
                     {
                         heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> International Travel Request";
                     }
-
+                    else if (userRequest.RequestSubType == "DBManagerChange")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Manager Change Request";
+                    }
+                    else if (userRequest.RequestSubType == "DBLocationChange")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Location Change Request";
+                    }
 
 
 
@@ -636,7 +710,7 @@ namespace NeuRequest.Models
                     }
                     uiRender += "<div class=\"col-12 results\">\r\n" +
                     "                        <div class=\"pt-4 border-bottom\">\r\n" +
-                    "                            <a class=\"d-block link h4 mb-0\" href=\"/HcmDashboard/SelfRequestDetails?requestId="+ userRequest.RequestId + "\" target=\"_blank\"><i class=\"mdi mdi-apple-keyboard-command\"></i> " + heading + "</a>\r\n" +
+                    "                            <a class=\"d-block link h4 mb-0\" href=\"/HcmDashboard/SelfRequestDetails?requestId="+ userRequest.RequestId + "\" target=\"_blank\"> " + heading + "</a>\r\n" +
                     "                            <a class=\"page-url text-primary\" href=\"javascript:void(0)\">#" + userRequest.RequestId + "</a>\r\n" +
                     "                            <p class=\"page-description mt-1 w-75 text-muted\">\r\n" +
                     requestStatusStr +
@@ -3419,6 +3493,543 @@ namespace NeuRequest.Models
             
             return uiRender;
         }
+
+        public string generateDBManagerChangeUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, DBManagerChangeRequestModal dBManagerChangeRequestModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+            string communicaterLink = "";
+            string communicaterOwnerLink = "";
+
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
+            
+            var userApp = nueUserProfiles.Where(x => x.Id == dBManagerChangeRequestModal.ManagerId).First<DAL.NueUserProfile>();
+            if (userApp.NeuUserPreference2.First().IsMailCommunication == 1)
+            {
+                communicaterLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                communicaterLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+            }
+            approverStr += "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                        "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                        "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                        "                                                                   <h4 class=\"timeline-title\">Requested Manager</h4>" +
+                        "                                                                   <p>" + userApp.FullName + " (" + userApp.NTPLID + ") " + communicaterLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                        "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n";
+
+
+            /*string needVisiaProcessing = "No";
+            if (internationalTripRequestModal.NeedVisiaProcessing == 1)
+            {
+                needVisiaProcessing = "Yes";
+            }*/
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-manager-change-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-manager-change-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-hcm-manager-change-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-manager-change-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n";
+
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((dBManagerChangeRequestModal.Message != null && dBManagerChangeRequestModal.Message.Trim() != "") ? dBManagerChangeRequestModal.Message.Trim() : "has created new manager change request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + dBManagerChangeRequestModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Manager Change Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + dBManagerChangeRequestModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Project Name</h4>" +
+                    "                                                                   <p>" + dBManagerChangeRequestModal.ProjectName + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+
+            return uiRender;
+        }
+
+        public string generateDBLocationChangeUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, DBLocationChangeRequestModal dBLocationChangeRequestModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+            string communicaterLink = "";
+            string communicaterOwnerLink = "";
+
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
+
+            /*string needVisiaProcessing = "No";
+            if (internationalTripRequestModal.NeedVisiaProcessing == 1)
+            {
+                needVisiaProcessing = "Yes";
+            }*/
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-location-change-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-location-change-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-hcm-location-change-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-location-change-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n";
+
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((dBLocationChangeRequestModal.Message != null && dBLocationChangeRequestModal.Message.Trim() != "") ? dBLocationChangeRequestModal.Message.Trim() : "has created new location change request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + dBLocationChangeRequestModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Location Change Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + dBLocationChangeRequestModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar class=\"ps-show-limits\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Requested Location</h4>" +
+                    "                                                                   <p>" + dBLocationChangeRequestModal.Location + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                    </div>\r\n" +
+
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+
+            return uiRender;
+        }
+
 
         static Random rnd = new Random();
         public string generateRequestLog(List<DAL.NueUserProfile> nueUserProfile, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)

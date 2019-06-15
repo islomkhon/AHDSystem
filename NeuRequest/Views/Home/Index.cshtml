@@ -11,7 +11,7 @@
     string statusRowString = "";
     string requestTypeString = "";
 
-    ViewBag.Title = "HCM - ";
+    ViewBag.Title = "HCM";
 }
 <!--<a href="/NeuUserManagement/Index">User Management</a>-->
 <style>
@@ -637,7 +637,15 @@
                                             {
                                                 requestTypeString = "International Travel";
                                             }
-                                            
+                                            else if (item.RequestSubType.ToString().ToLower() == "dbmanagerchange")
+                                            {
+                                                requestTypeString = "Manager Change";
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "dblocationchange")
+                                            {
+                                                requestTypeString = "Location Change";
+                                            }
+
 
                                             <li class="list-group-item cursor-pointer link-action-tigger-tab" data-target="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId">
                                                 <div class="todo-indicator bg-@sideBarClass"></div>
@@ -761,7 +769,14 @@
                                             {
                                                 requestTypeString = "International Travel";
                                             }
-
+                                            else if (item.RequestSubType.ToString().ToLower() == "dbmanagerchange")
+                                            {
+                                                requestTypeString = "Manager Change";
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "dblocationchange")
+                                            {
+                                                requestTypeString = "Location Change";
+                                            }
 
                                             <li class="list-group-item cursor-pointer link-action-tigger-tab" data-target="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId">
                                                 <div class="todo-indicator bg-@sideBarClass"></div>

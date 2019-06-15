@@ -1,0 +1,331 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+
+@{
+    List<UserRequestUiGridRender> userRequests = ViewData["userRequestUiGridRenders"] as List<UserRequestUiGridRender>;
+    string statusRowString = "";
+    string requestTypeString = "";
+
+    ViewBag.Title = "HCM Request Inbox ";
+}
+<style>
+</style>
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">HCM Request Inbox</li>
+    </ol>
+</nav>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12 mb-4 mt-4">
+                <div class="btn-toolbar">
+                    <div class="btn-group inline">
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" data-toggle="modal" data-target="#exampleModal-4"><i class="mdi mdi-gondola"></i> Add New Request</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmDashboard/RequestHistory"><i class="mdi mdi-compare"></i> Request History</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmDashboard/ApprovalInbox"><i class="mdi mdi-compare"></i> Approval Inbox</button>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mb-4 mt-4">
+
+                <div class="request-summary-container">
+                    <div class="card thin-border">
+                        <div class="card-body border-bottom">
+                            <h4 class="card-title">Overview</h4>
+                            <h5 class="card-subtitle">Applied HCM Requests Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row m-t-10">
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-orange display-5"><i class="mdi mdi-wallet"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Leave Cancellation</span>
+                                            <h3 class="font-medium m-b-0" id="leavecancelation">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-primary display-5"><i class="mdi mdi-account-convert"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Past Leave Apply</span>
+                                            <h3 class="font-medium m-b-0" id="leavepastapply">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-green display-5"><i class="mdi mdi-home"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Work From Home</span>
+                                            <h3 class="font-medium m-b-0" id="leavewfhapply">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-blue display-5"><i class="mdi mdi-checkerboard"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Balance Enquiry</span>
+                                            <h3 class="font-medium m-b-0" id="leavebalReq">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                                <!-- col -->
+                                <div class="col-md-6 col-sm-12 col-lg-2 wid-5">
+                                    <div class="d-flex align-items-center">
+                                        <div class="m-r-10"><span class="text-deep-blue display-5"><i class="mdi mdi-developer-board"></i></span></div>
+                                        <div>
+                                            <span class="text-muted">Other</span>
+                                            <h3 class="font-medium m-b-0" id="otherReq">0</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- col -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        @{
+            int leavecancelation = 0;
+            int leavepastapply = 0;
+            int leavewfhapply = 0;
+            int leavebalReq = 0;
+            int addressProofReq = 0;
+            int employeeVerificationReq = 0;
+            int otherReq = 0;
+        }
+
+        <div class="custome-render-table-section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-md-flex align-items-center">
+                                <div>
+                                    <h4 class="card-title">Request Inbox..</h4>
+                                    <h5 class="card-subtitle">&nbsp;</h5>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="request-summary-listing" class="table no-border no-wrap v-middle">
+                                    <thead>
+                                        <tr class="border-0">
+                                            <th class="border-0">#Id</th>
+                                            <th class="border-0">Type</th>
+                                            <th class="border-0">Status</th>
+                                            <th class="border-0">Date Created</th>
+                                            <th class="border-0">Date Modified</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (UserRequestUiGridRender item in userRequests)
+                                        {
+                                            statusRowString = "";
+                                            requestTypeString = "";
+
+                                            if (item.RequestStatus.ToString().ToLower() == "close")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-dark\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">Close</span>";
+                                            }
+                                            else if (item.RequestStatus.ToString().ToLower() == "withdraw")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-danger\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">Withdraw</span>";
+                                            }
+                                            else if (item.RequestStatus.ToString().ToLower() == "created")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-primary\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">Created</span>";
+                                            }
+                                            else if (item.RequestStatus.ToString().ToLower() == "in_approval")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-warning\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">In Approval</span>";
+                                            }
+                                            else if (item.RequestStatus.ToString().ToLower() == "completed")
+                                            {
+                                                statusRowString = "<i class=\"mdi mdi-checkbox-blank-circle text-success\"  data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + item.RequestStatus.ToString() + "\"></i> <span class=\"hide\">Completed</span>";
+                                            }
+
+                                            if (item.RequestSubType.ToString().ToLower() == "leavecancelation")
+                                            {
+                                                requestTypeString = "Leave Cancelation";
+                                                leavecancelation++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "leavepastapply")
+                                            {
+                                                requestTypeString = "Past Leave Apply";
+                                                leavepastapply++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "leavewfhapply")
+                                            {
+                                                requestTypeString = "WFH Leave Apply";
+                                                leavewfhapply++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "leavebalanceenquiry")
+                                            {
+                                                requestTypeString = "Leave Balance Enquiry";
+                                                leavebalReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmaddressproof")
+                                            {
+                                                requestTypeString = "Address Proof Request";
+                                                addressProofReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmemployeeverification")
+                                            {
+                                                requestTypeString = "Employee Verification";
+                                                employeeVerificationReq++;
+                                            }
+
+                                            <tr style="">
+                                                <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)</span></a></td>
+                                                <td>@Html.Raw(@requestTypeString)</td>
+                                                <td>@Html.Raw(@statusRowString)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.getLocalAddedOn)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.getLocalModifiedOn)</td>
+                                            </tr>
+                                        }
+
+                                        <!--<tr>
+        <td>
+            <div class="d-flex no-block align-items-center">
+                <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
+                <div class="">
+                    <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
+                </div>
+            </div>
+        </td>
+        <td>Elite Admin</td>
+        <td>
+            <div class="popover-icon">
+                <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
+                <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
+                <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
+                <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
+            </div>
+        </td>
+        <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
+        <td>35</td>
+        <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
+    </tr>-->
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal-4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-4" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel-4">New HCM Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Request Category</label>
+                        <div class="col-sm-9">
+                            <select id="hcmRequestDepartment" name="hcmRequestDepartment" class="form-control">
+                                <optgroup label="Leaves and Holydays">
+                                    <option value="LeaveCancelation" data-target="/HcmDashboard/LeaveCancelation">Leave Cancelation</option>
+                                    <option value="LeavePastApply" data-target="/HcmAHDDashboard/LeavePastApplyCreate">Apply Past Leave</option>
+                                    <option value="WorkFromHome" data-target="/HcmAHDDashboard/LeaveWFHApplyCreate">Work From Home</option>
+                                    <option value="LeaveBalanceEnquiry" data-target="/HcmAHDDashboard/LeaveBalanceEnquiryCreate">Leave Balance Enquiry</option>
+                                </optgroup>
+                                <optgroup label="Letter">
+                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/HCMAddressProofReqCreate">Address Proof</option>
+                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/HCMEmployeeVerificationReqCreate">Employee Verification</option>
+                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Salary Certificate</option>
+                                </optgroup>
+                                <optgroup label="General">
+                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Other</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success hcm_create_Request">Create Request</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/tooltips.js")
+<script>
+    $(function () {
+
+        $('#leavecancelation').html(@leavecancelation);
+        $('#leavepastapply').html(@leavepastapply);
+        $('#leavewfhapply').html(@leavewfhapply);
+        $('#leavebalReq').html(@leavebalReq);
+        //addressProofReq
+        //employeeVerificationReq
+        $('#otherReq').html(@otherReq);
+
+        $(document).on('click', '.hcm_create_Request', function (e) {
+            var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
+            window.location = target;
+        });
+
+        $('#request-summary-listing').DataTable({
+            "aLengthMenu": [
+                [5, 10, 15, 20, 50, 100],
+                [5, 10, 15, 20, 50, 100]
+            ],
+            "iDisplayLength": 10,
+            "language": {
+                search: ""
+            }
+        });
+        $('#request-summary-listing').each(function () {
+            var datatable = $(this);
+            // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+            var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+            search_input.attr('placeholder', 'Search');
+            search_input.removeClass('form-control-sm');
+            // LENGTH - Inline-Form control
+            var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+            length_sel.removeClass('form-control-sm');
+        });
+    });
+</script>

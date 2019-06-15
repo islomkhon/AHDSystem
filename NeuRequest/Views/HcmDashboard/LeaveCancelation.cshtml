@@ -403,36 +403,69 @@
         </div>
     </div>
     <div class="col-5">
-        <div class="main-card mb-3 mt-3 card action-card">
-            <div class="card-header">  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
-            <div class="card-body">
-               <div class="row">
-                   <div class="col-12">
-                       <div class="pt-3 pb-2 pl-3 pr-3">
 
-                           <div class="app-page-title"><div class="page-title-wrapper"><div class="page-title-heading"><div class="page-title-icon"><i class="icon pe-7s-pin icon-gradient bg-tempting-azure"></i></div><div> Guidelines </div></div></div></div>
+        <div class="main-card mb-3 mt-3 card action-card widget-side">
 
-                           <p><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave Start Date.<span class="text-danger">*</span> <span class="text-muted">should be on or before today's date</span></p>
-                           <p><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave End Date. <span class="text-danger">*</span></p>
-                           <p><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Approver. <span class="text-danger">*</span> <span class="text-muted">should be your manager</span></p>
-
-                           @if (TempData["Message"] != null)
-                           {
-                               <div class="row">
-                                   <div class="col-md-10 server-error-container mt-4">
-                                       <div class="card-shadow-danger border mb-3 card card-body border-danger server-error">
-                                           @TempData["Message"]
-                                       </div>
-                                   </div>
-                               </div>
-                           }
-
-                       </div>
-                   </div>
-               </div>
+            <div class="dropdown-menu-header">
+                <div class="dropdown-menu-header-inner bg-focus">
+                    <div class="menu-header-image opacity-3" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/back_pic/00/14/65/3256657136926fa.jpg');"></div>
+                    <div class="menu-header-content btn-pane-right">
+                        <div class="avatar-icon-wrapper mr-3 avatar-icon-xl">
+                            <div class="page-title-icon">
+                                <i class="icon pe-7s-pin icon-gradient bg-tempting-azure"></i>
+                            </div>
+                        </div>
+                        <div><h5 class="menu-header-title">Guidelines </h5></div>
+                    </div>
+                </div>
             </div>
-            <div class="d-block text-right card-footer">&nbsp; </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="bg-warm-flame list-group-item">
+                    <div class="widget-content p-0">
+                        <div class="widget-content-wrapper"></div>
+                    </div>
+                </li>
+                <li class="p-0 list-group-item">
+                    <div class="grid-menu grid-menu-2col overflow-hidden">
+                        <div class="no-gutters row">
+
+                            <div class="col-12">
+                                <div class="pt-4 pb-3 pl-3 pr-3">
+
+                                    <p class="mb-1"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave Start Date.<span class="text-danger">*</span> <span class="text-muted">should be on or before today's date</span></p>
+                                    <p class="mb-1"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave End Date. <span class="text-danger">*</span></p>
+                                    <p class="mb-1"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Approver. <span class="text-danger">*</span> <span class="text-muted">should be your manager</span></p>
+
+                                    
+                                    @if (TempData["Message"] != null)
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-10 server-error-container mt-4">
+                                                <div class="card-shadow-danger border mb-3 card card-body border-danger server-error">
+                                                    @TempData["Message"]
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="d-block text-right card-footer bg-dark"></div>
+
+
         </div>
+
+        
+
+
     </div>
 </div>
 
@@ -497,7 +530,7 @@
             $('#start-date-picker').datepicker({
                 enableOnReadonly: true,
                 todayHighlight: true,
-                endDate: '+d',
+                //endDate: '+d',
                 autoclose: true,
             });
         };

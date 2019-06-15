@@ -220,9 +220,20 @@
                                                 requestTypeString = "International Travel";
                                                 otherReq++;
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "dbmanagerchange")
+                                            {
+                                                requestTypeString = "Manager Change";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "dblocationchange")
+                                            {
+                                                requestTypeString = "Location Change";
+                                                otherReq++;
+                                            }
+                                            
 
                                             <tr style="">
-                                                <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)<span class="hide">item.RequestId</span></span></a></td>
+                                                <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)</span></a></td>
                                                 <td>@Html.Raw(@requestTypeString)</td>
                                                 <td>@Html.Raw(@statusRowString)</td>
                                                 <td>@Html.DisplayFor(modelItem => item.getLocalAddedOn)</td>
@@ -327,11 +338,17 @@
 
 @Scripts.Render("~/Rebone/js")
 @Scripts.Render("~/Rebone/public/js/tooltips.js")
-
+@Scripts.Render("~/Rebone/public/vendors/datatable/dataTables.buttons.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.flash.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/jszip.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/pdfmake.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/vfs_fonts.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.html5.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.print.min.js")
 
 <script>
 
-    
+
 
     $(function () {
         $('#leavecancelation').html(@leavecancelation);
@@ -348,6 +365,13 @@
         });
 
         $('#request-summary-listing').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "search": {
+                "regex": true,
+            },
             "aLengthMenu": [
                 [5, 10, 15, 20, 50, 100],
                 [5, 10, 15, 20, 50, 100]
@@ -368,7 +392,10 @@
             length_sel.removeClass('form-control-sm');
         });
 
-        
+        if ($(".dt-buttons").length) {
+
+            $(".dt-buttons").appendTo("#request-summary-listing_filter");
+        }
 
     });
 </script>

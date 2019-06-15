@@ -564,6 +564,76 @@ namespace NeuRequest.DB
         }
 
 
+        public int addDBLocationChangeRequest(DBLocationChangeRequest dBLocationChangeRequest)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueDBLocationChangeRequest (RequestId, UserId, Location, Message, AddedOn, ModifiedOn) " +
+                    "output INSERTED.ID VALUES(@RequestId, @UserId, @Location, @Message, @AddedOn, @ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", dBLocationChangeRequest.RequestId);
+                    cmd.Parameters.AddWithValue("@UserId", dBLocationChangeRequest.UserId);
+                    cmd.Parameters.AddWithValue("@Location", dBLocationChangeRequest.Location);
+                    if (dBLocationChangeRequest.Message != null)
+                    {
+                        cmd.Parameters.AddWithValue("@Message", dBLocationChangeRequest.Message);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Message", DBNull.Value);
+                    }
+                    cmd.Parameters.AddWithValue("@AddedOn", dBLocationChangeRequest.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", dBLocationChangeRequest.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
+
+        public int addDBManagerChangeRequest(DBManagerChangeRequest dBManagerChangeRequest)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NueDBManagerChangeRequest (RequestId, UserId, ManagerId, ProjectName, Message, AddedOn, ModifiedOn) " +
+                    "output INSERTED.ID VALUES(@RequestId, @UserId, @ManagerId, @ProjectName, @Message, @AddedOn, @ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", dBManagerChangeRequest.RequestId);
+                    cmd.Parameters.AddWithValue("@UserId", dBManagerChangeRequest.UserId);
+                    cmd.Parameters.AddWithValue("@ManagerId", dBManagerChangeRequest.ManagerId);
+                    if (dBManagerChangeRequest.ProjectName != null)
+                    {
+                        cmd.Parameters.AddWithValue("@ProjectName", dBManagerChangeRequest.ProjectName);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@ProjectName", DBNull.Value);
+                    }
+
+                    if (dBManagerChangeRequest.Message != null)
+                    {
+                        cmd.Parameters.AddWithValue("@Message", dBManagerChangeRequest.Message);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Message", DBNull.Value);
+                    }
+
+                    cmd.Parameters.AddWithValue("@AddedOn", dBManagerChangeRequest.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", dBManagerChangeRequest.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
+
         public int addInternationalTripRequest(InternationalTripRequest internationalTripRequest)
         {
             int modified = -1;
@@ -871,6 +941,84 @@ namespace NeuRequest.DB
             return neuLeavePastApplyModal;
         }
 
+        public DBLocationChangeRequestModal getDBLocationChangeRequestModal(string requestId)
+        {
+            DBLocationChangeRequestModal dBLocationChangeRequestModal = new DBLocationChangeRequestModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.Location,
+														nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueDBLocationChangeRequest nucr 
+														join NueUserProfile nup on nucr.UserId = nup.Id 
+														where nucr.RequestId = @RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            dBLocationChangeRequestModal = new DBLocationChangeRequestModal();
+                            dBLocationChangeRequestModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            dBLocationChangeRequestModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            dBLocationChangeRequestModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            dBLocationChangeRequestModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            dBLocationChangeRequestModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            dBLocationChangeRequestModal.Location = ConvertFromDBVal<string>(dataReader["Location"]);
+                            dBLocationChangeRequestModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            dBLocationChangeRequestModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return dBLocationChangeRequestModal;
+        }
+
+        public DBManagerChangeRequestModal getDBManagerChangeRequestModal(string requestId)
+        {
+            DBManagerChangeRequestModal dBManagerChangeRequestModal = new DBManagerChangeRequestModal();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.ProjectName,
+														nupM.Id as ManagerId, nupM.FullName as ManagerName,
+														nupM.NTPLID as ManagerNTPLID, nupm.Email as ManagerEmail, 
+														nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NueDBManagerChangeRequest nucr 
+														join NueUserProfile nup on nucr.UserId = nup.Id 
+														join NueUserProfile nupM on nucr.ManagerId = nupM.Id
+														where nucr.RequestId = @RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            dBManagerChangeRequestModal = new DBManagerChangeRequestModal();
+                            dBManagerChangeRequestModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            dBManagerChangeRequestModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            dBManagerChangeRequestModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            dBManagerChangeRequestModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            dBManagerChangeRequestModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+                            dBManagerChangeRequestModal.ProjectName = ConvertFromDBVal<string>(dataReader["ProjectName"]);
+                            dBManagerChangeRequestModal.ManagerId = ConvertFromDBVal<int>(dataReader["ManagerId"]);
+                            dBManagerChangeRequestModal.ManagerName = ConvertFromDBVal<string>(dataReader["ManagerName"]);
+                            dBManagerChangeRequestModal.ManagerNTPLID = ConvertFromDBVal<string>(dataReader["ManagerNTPLID"]);
+                            dBManagerChangeRequestModal.ManagerEmail = ConvertFromDBVal<string>(dataReader["ManagerEmail"]);
+                            dBManagerChangeRequestModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            dBManagerChangeRequestModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return dBManagerChangeRequestModal;
+        }
 
         public InternationalTripRequestModal getInternationalTripRequestModal(string requestId)
         {
@@ -883,7 +1031,7 @@ namespace NeuRequest.DB
 														nucr.StartDate, nucr.ProjectName,
 														nucr.AddedOn, nucr.ModifiedOn 
                                                         from NueInternationalTripRequest nucr join NueUserProfile nup 
-                                                        on nucr.UserId = nup.id where nucr.RequestId = @RequestId", connection))
+                                                        on nucr.UserId = nup.Id where nucr.RequestId = @RequestId", connection))
                 {
                     cmd.Parameters.AddWithValue("@RequestId", requestId);
                     using (SqlDataReader dataReader = cmd.ExecuteReader())

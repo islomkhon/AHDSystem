@@ -74,6 +74,14 @@
 </div>
 @Scripts.Render("~/Rebone/js")
 @Scripts.Render("~/Rebone/public/js/tooltips.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/dataTables.buttons.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.flash.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/jszip.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/pdfmake.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/vfs_fonts.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.html5.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.print.min.js")
+
 <script>
     $(function () {
 
@@ -162,6 +170,13 @@
 
 
         $('#user-summary-listing').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "search": {
+                "regex": true,
+            },
             "aLengthMenu": [
                 [5, 10, 15, 20, 50, 100],
                 [5, 10, 15, 20, 50, 100]
@@ -181,5 +196,11 @@
             var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
             length_sel.removeClass('form-control-sm');
         });
+
+        if ($(".dt-buttons").length) {
+
+            $(".dt-buttons").appendTo("#request-summary-listing_filter");
+        }
+
     });
 </script>

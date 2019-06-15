@@ -224,12 +224,122 @@
     <Compile Include="Controllers\ProcessNotificationController.cs" />
     <Compile Include="Controllers\SearchResultsController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
+    <Compile Include="DAL\EntityModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\EntityModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\EntityModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuDesignation.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuEmployeeVerificationRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuEmploymentStatus.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuJobLevel.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuMessages.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuPractice.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuUserDetail.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuUserPreference.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueAccessMapper.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueAccessMaster.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueAddressProofRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueDBManagerChangeRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueDomesticTripRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueGeneralRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueInternationalTripRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueLeaveBalanceEnquiryRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueLeaveCancelationRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueLeavePastApplyRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueLeaveWFHApplyRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueManagerMapper.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestAceessLog.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestActivity.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestActivityMaster.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestAttachmentLog.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestMaster.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestStatus.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestSubType.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestType.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueSalaryCertificateRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueUserOrgMapper.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueUserProfile.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DB\DataAccess.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\MessagesHub.cs" />
     <Compile Include="Models\AdalTokenCache.cs" />
+    <Compile Include="Models\DBLocationChangeUiRender.cs" />
+    <Compile Include="Models\DBManagerChangeUiRender.cs" />
     <Compile Include="Models\InternationalTripUiRender.cs" />
     <Compile Include="Models\DomesticTripRequestUiRender.cs" />
     <Compile Include="Models\GeneralRequestUiRender.cs" />
@@ -246,10 +356,10 @@
     <Compile Include="Models\LeaveCancelationUiRender.cs" />
     <Compile Include="Models\Messages.cs" />
     <Compile Include="Models\MessagesRepository.cs" />
-    <Compile Include="Models\NueRequestAceessLog.cs" />
-    <Compile Include="Models\NueRequestActivityMaster.cs" />
-    <Compile Include="Models\NueRequestAttchment.cs" />
-    <Compile Include="Models\NueRequestMaster.cs" />
+    <Compile Include="Models\NuRequestAceessLog.cs" />
+    <Compile Include="Models\NuRequestActivityMaster.cs" />
+    <Compile Include="Models\NuRequestAttchment.cs" />
+    <Compile Include="Models\NuRequestMaster.cs" />
     <Compile Include="Models\RequestSearchRender.cs" />
     <Compile Include="Models\UserAccess.cs" />
     <Compile Include="Models\UserPreference.cs" />
@@ -265,6 +375,16 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="DAL\EntityModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+      <LastGenOutput>EntityModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DAL\EntityModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+      <LastGenOutput>EntityModel.cs</LastGenOutput>
+    </Content>
     <Content Include="defaultError.html" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -645,6 +765,13 @@
     <Content Include="Rebone\public\vendors\css\square\_all.html" />
     <Content Include="Rebone\public\vendors\css\vendor.bundle.addons.css" />
     <Content Include="Rebone\public\vendors\css\vendor.bundle.base.css" />
+    <Content Include="Rebone\public\vendors\datatable\buttons.flash.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\buttons.html5.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\buttons.print.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\dataTables.buttons.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\jszip.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\pdfmake.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\vfs_fonts.js" />
     <Content Include="Rebone\public\vendors\font-awesome\css\font-awesome.css" />
     <Content Include="Rebone\public\vendors\font-awesome\css\font-awesome.min.css" />
     <Content Include="Rebone\public\vendors\font-awesome\fonts\fontawesome-webfont.svg" />
@@ -1360,6 +1487,13 @@
     <Content Include="Rebone\public\vendors\summernote\dist\font\summernote291f.woff" />
     <Content Include="Rebone\public\vendors\summernote\dist\font\summernoted41d.eot" />
     <Content Include="App_Data\request-number-tracker.db" />
+    <EntityDeploy Include="DAL\EntityModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EntityModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="DAL\EntityModel.edmx.diagram">
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Rebone\public\fonts\Linearicons-Free.eot" />
     <Content Include="Rebone\public\fonts\Linearicons-Free.ttf" />
@@ -1427,6 +1561,8 @@
     <Content Include="Views\HcmDashboard\PreApprovalHCMHistory.cshtml" />
     <Content Include="Views\HcmDashboard\DomesticTripRequest.cshtml" />
     <Content Include="Views\HcmDashboard\InternationalTripRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\DBManagerChangeRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\DBLocationChangeRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Analytics\" />
@@ -1472,6 +1608,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

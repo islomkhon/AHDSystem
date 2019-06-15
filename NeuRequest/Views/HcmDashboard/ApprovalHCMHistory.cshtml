@@ -219,6 +219,16 @@
                                                 requestTypeString = "International Travel";
                                                 otherReq++;
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "dbmanagerchange")
+                                            {
+                                                requestTypeString = "Manager Change";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "dblocationchange")
+                                            {
+                                                requestTypeString = "Location Change";
+                                                otherReq++;
+                                            }
 
 
                                             <tr style="">

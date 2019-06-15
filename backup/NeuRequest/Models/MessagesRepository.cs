@@ -18,7 +18,7 @@ namespace NeuRequest.Models
             using (var connection = new SqlConnection(_connString))
             {
                 connection.Open();
-                using (var command = new SqlCommand(@"SELECT [MessageID], [Message], [EmptyMessage], [Processed], [Date] FROM [dbo].[Messages] 
+                using (var command = new SqlCommand(@"SELECT [MessageID], [Message], [EmptyMessage], [Processed], [Date] FROM [dbo].[NeuMessages] 
                     WHERE [UserId] = @UserId ORDER BY [Date] DESC;", connection))
                 {
                     command.Parameters.AddWithValue("@UserId", userId);
