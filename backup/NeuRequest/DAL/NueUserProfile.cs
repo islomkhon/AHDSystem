@@ -44,6 +44,7 @@ namespace NeuRequest.DAL
             this.NueUserOrgMapper1 = new HashSet<NueUserOrgMapper>();
             this.NueDBManagerChangeRequest = new HashSet<NueDBManagerChangeRequest>();
             this.NueDBManagerChangeRequest1 = new HashSet<NueDBManagerChangeRequest>();
+            this.NueDBLocationChangeRequest = new HashSet<NueDBLocationChangeRequest>();
         }
     
         public int Id { get; set; }
@@ -124,5 +125,7 @@ namespace NeuRequest.DAL
         public virtual ICollection<NueDBManagerChangeRequest> NueDBManagerChangeRequest { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NueDBManagerChangeRequest> NueDBManagerChangeRequest1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NueDBLocationChangeRequest> NueDBLocationChangeRequest { get; set; }
     }
 }

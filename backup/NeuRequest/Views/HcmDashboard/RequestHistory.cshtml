@@ -230,6 +230,13 @@
                                                 requestTypeString = "Location Change";
                                                 otherReq++;
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "pgbrequest")
+                                            {
+                                                requestTypeString = "Project Background Verification";
+                                                otherReq++;
+                                            }
+
+
 
                                             <tr style="">
                                                 <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)</span></a></td>

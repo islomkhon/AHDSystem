@@ -67,6 +67,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddNewNeuUser(FormCollection formCollection)
         {
             string NTPLID = formCollection["NTPLID"];
@@ -174,6 +175,7 @@ namespace NeuRequest.Controllers
 
         
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ChangeUserActivate(FormCollection formCollection)
         {
             string userId = formCollection["id"];
@@ -247,6 +249,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditNeuUserDetails(FormCollection formCollection)
         {
             string id = formCollection["Id"];
@@ -353,78 +356,6 @@ namespace NeuRequest.Controllers
             catch(Exception e)
             {
                 return RedirectToAction("AccessError", "ErrorHandilar", new { message = "An error occerd" });
-            }
-        }
-
-        // GET: NeuUserManagement/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: NeuUserManagement/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: NeuUserManagement/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: NeuUserManagement/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: NeuUserManagement/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: NeuUserManagement/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: NeuUserManagement/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
             }
         }
     }

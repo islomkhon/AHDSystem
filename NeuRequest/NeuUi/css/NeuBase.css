@@ -3149,6 +3149,7 @@ p.inline-item-row{
     border-bottom-left-radius: 50px !important;
     border-top-right-radius: 50px !important;
     border-bottom-right-radius: 50px !important;
+    margin-bottom: 7px !important;
 }
 
     .expandClicker button .badge {

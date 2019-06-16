@@ -1,0 +1,1655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2C17F127-E867-49CB-AC7E-EBFB02B4093E}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NeuRequest</RootNamespace>
+    <AssemblyName>NeuRequest</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44361</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <WebProject_DirectoryAccessLevelKey>1</WebProject_DirectoryAccessLevelKey>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IKVM.OpenJDK.Charsets, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.OpenJDK.Charsets.7.2.4630.5\lib\IKVM.OpenJDK.Charsets.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Core, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.OpenJDK.Core.7.2.4630.5\lib\IKVM.OpenJDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.SwingAWT, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.OpenJDK.SwingAWT.7.2.4630.5\lib\IKVM.OpenJDK.SwingAWT.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Text, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.OpenJDK.Text.7.2.4630.5\lib\IKVM.OpenJDK.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Util, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.OpenJDK.Util.7.2.4630.5\lib\IKVM.OpenJDK.Util.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.API, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.OpenJDK.XML.API.7.2.4630.5\lib\IKVM.OpenJDK.XML.API.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.Runtime, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.Runtime.7.2.4630.5\lib\IKVM.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="TimeAgo, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TimeAgo.1.0.8\lib\portable-net4+sl5\TimeAgo.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.4.0.0\lib\net451\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.0\lib\net451\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.0\lib\net451\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.0\lib\net451\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.5.2.1\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Protocols">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocols.5.2.1\lib\net451\Microsoft.IdentityModel.Protocols.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocols.OpenIdConnect.5.2.1\lib\net451\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.2.1\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.2.1\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Protocol.Extensions">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.4.403061554\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OpenIdConnect">
+      <HintPath>..\packages\Microsoft.Owin.Security.OpenIdConnect.4.0.0\lib\net451\Microsoft.Owin.Security.OpenIdConnect.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.ActiveDirectory.GraphClient">
+      <HintPath>..\packages\Microsoft.Azure.ActiveDirectory.GraphClient.2.1.1\lib\portable-net4+sl5+win+wpa+wp8\Microsoft.Azure.ActiveDirectory.GraphClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.8.3\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData">
+      <HintPath>..\packages\Microsoft.Data.OData.5.8.3\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.3\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Spatial">
+      <HintPath>..\packages\System.Spatial.5.8.3\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.2\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AnalyticsController.cs" />
+    <Compile Include="Controllers\ErrorHandilarController.cs" />
+    <Compile Include="Controllers\HcmDashboardController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NeuUserManagementController.cs" />
+    <Compile Include="Controllers\ProcessNotificationController.cs" />
+    <Compile Include="Controllers\SearchResultsController.cs" />
+    <Compile Include="Controllers\UserProfileController.cs" />
+    <Compile Include="DAL\EntityModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\EntityModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\EntityModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuDesignation.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuEmployeeVerificationRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuEmploymentStatus.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuJobLevel.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuMessages.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuPractice.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuUserDetail.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NeuUserPreference.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueAccessMapper.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueAccessMaster.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueAddressProofRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueDBManagerChangeRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueDomesticTripRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueGeneralRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueInternationalTripRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueLeaveBalanceEnquiryRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueLeaveCancelationRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueLeavePastApplyRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueLeaveWFHApplyRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueManagerMapper.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestAceessLog.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestActivity.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestActivityMaster.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestAttachmentLog.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestMaster.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestStatus.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestSubType.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueRequestType.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueSalaryCertificateRequest.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueUserOrgMapper.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\NueUserProfile.cs">
+      <DependentUpon>EntityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\DataAccess.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Hubs\MessagesHub.cs" />
+    <Compile Include="Models\AdalTokenCache.cs" />
+    <Compile Include="Models\DBLocationChangeUiRender.cs" />
+    <Compile Include="Models\DBManagerChangeUiRender.cs" />
+    <Compile Include="Models\InternationalTripUiRender.cs" />
+    <Compile Include="Models\DomesticTripRequestUiRender.cs" />
+    <Compile Include="Models\GeneralRequestUiRender.cs" />
+    <Compile Include="Models\MailItem.cs" />
+    <Compile Include="Models\SalaryCertificateUiRender.cs" />
+    <Compile Include="Models\EmployeeVerificationReqUiRender.cs" />
+    <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\AttachmentLog.cs" />
+    <Compile Include="Models\JsonResponse.cs" />
+    <Compile Include="Models\AddressProofUiRender.cs" />
+    <Compile Include="Models\LeaveBalanceEnquiryUiRender.cs" />
+    <Compile Include="Models\LeaveLeaveWFHApplyUiRender.cs" />
+    <Compile Include="Models\LeavePastApplyUiRender.cs" />
+    <Compile Include="Models\LeaveCancelationUiRender.cs" />
+    <Compile Include="Models\Messages.cs" />
+    <Compile Include="Models\MessagesRepository.cs" />
+    <Compile Include="Models\NuRequestAceessLog.cs" />
+    <Compile Include="Models\NuRequestActivityMaster.cs" />
+    <Compile Include="Models\NuRequestAttchment.cs" />
+    <Compile Include="Models\NuRequestMaster.cs" />
+    <Compile Include="Models\RequestSearchRender.cs" />
+    <Compile Include="Models\UserAccess.cs" />
+    <Compile Include="Models\UserPreference.cs" />
+    <Compile Include="Models\UserProfile.cs" />
+    <Compile Include="Models\UserRequestUiGridRender.cs" />
+    <Compile Include="Models\Utils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\MailTemplate.txt" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="DAL\EntityModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+      <LastGenOutput>EntityModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DAL\EntityModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+      <LastGenOutput>EntityModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="defaultError.html" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="NeuUi\css\NeuBase - Copy.css" />
+    <Content Include="NeuUi\css\NeuBase.css" />
+    <Content Include="NeuUi\js\NeuBase.js" />
+    <Content Include="Rebone\public\css\base.css" />
+    <Content Include="Rebone\public\css\base2.css" />
+    <Content Include="Rebone\public\css\style.css" />
+    <Content Include="Rebone\public\css\style2.css" />
+    <Content Include="Rebone\public\favicon.ico" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.svg" />
+    <Content Include="Rebone\public\fonts\linear.css" />
+    <Content Include="Rebone\public\fonts\peicon\css\helper.css" />
+    <Content Include="Rebone\public\fonts\peicon\css\pe-icon-7-stroke.css" />
+    <Content Include="Rebone\public\fonts\peicon\fonts\Pe-icon-7-stroke.svg" />
+    <Content Include="Rebone\public\images\1.jpg" />
+    <Content Include="Rebone\public\images\auth\login_1.jpg" />
+    <Content Include="Rebone\public\images\auth\login_2.jpg" />
+    <Content Include="Rebone\public\images\auth\register.jpg" />
+    <Content Include="Rebone\public\images\auth\register_2.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_1.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_10.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_11.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_12.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_2.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_3.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_4.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_5.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_6.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_7.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_8.jpg" />
+    <Content Include="Rebone\public\images\carousel\banner_9.jpg" />
+    <Content Include="Rebone\public\images\faces-clipart\pic-1.png" />
+    <Content Include="Rebone\public\images\faces-clipart\pic-2.png" />
+    <Content Include="Rebone\public\images\faces-clipart\pic-3.png" />
+    <Content Include="Rebone\public\images\faces-clipart\pic-4.png" />
+    <Content Include="Rebone\public\images\faces\face1.jpg" />
+    <Content Include="Rebone\public\images\faces\face10.jpg" />
+    <Content Include="Rebone\public\images\faces\face11.jpg" />
+    <Content Include="Rebone\public\images\faces\face12.jpg" />
+    <Content Include="Rebone\public\images\faces\face13.jpg" />
+    <Content Include="Rebone\public\images\faces\face14.jpg" />
+    <Content Include="Rebone\public\images\faces\face2.jpg" />
+    <Content Include="Rebone\public\images\faces\face20.jpg" />
+    <Content Include="Rebone\public\images\faces\face23.jpg" />
+    <Content Include="Rebone\public\images\faces\face25.jpg" />
+    <Content Include="Rebone\public\images\faces\face3.jpg" />
+    <Content Include="Rebone\public\images\faces\face4.jpg" />
+    <Content Include="Rebone\public\images\faces\face5.jpg" />
+    <Content Include="Rebone\public\images\faces\face6.jpg" />
+    <Content Include="Rebone\public\images\faces\face7.jpg" />
+    <Content Include="Rebone\public\images\faces\face8.jpg" />
+    <Content Include="Rebone\public\images\faces\face9.jpg" />
+    <Content Include="Rebone\public\images\faces\profile\profile.jpg" />
+    <Content Include="Rebone\public\images\favicon.png" />
+    <Content Include="Rebone\public\images\file-icons\icon-google.svg" />
+    <Content Include="Rebone\public\images\lightbox\play-button.png" />
+    <Content Include="Rebone\public\images\lightbox\thumb-v-v-1.jpg" />
+    <Content Include="Rebone\public\images\lightbox\thumb-v-v-2.jpg" />
+    <Content Include="Rebone\public\images\lightbox\thumb-v-y-1.jpg" />
+    <Content Include="Rebone\public\images\lightbox\thumb-v-y-2.jpg" />
+    <Content Include="Rebone\public\images\logo-mini.svg" />
+    <Content Include="Rebone\public\images\logo.png" />
+    <Content Include="Rebone\public\images\logo.svg" />
+    <Content Include="Rebone\public\images\logo1.png" />
+    <Content Include="Rebone\public\images\logo_star_white.svg" />
+    <Content Include="Rebone\public\images\profile\profileImg.png" />
+    <Content Include="Rebone\public\images\samples\1280x768\1.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\10.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\11.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\12.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\2.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\3.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\4.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\5.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\6.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\7.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\8.jpg" />
+    <Content Include="Rebone\public\images\samples\1280x768\9.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\1.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\10.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\11.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\12.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\13.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\14.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\15.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\2.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\3.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\4.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\5.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\6.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\7.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\8.jpg" />
+    <Content Include="Rebone\public\images\samples\300x300\9.jpg" />
+    <Content Include="Rebone\public\images\samples\angular-4.png" />
+    <Content Include="Rebone\public\images\samples\bootstrap-stack.png" />
+    <Content Include="Rebone\public\images\samples\charts.png" />
+    <Content Include="Rebone\public\images\samples\dashboard.png" />
+    <Content Include="Rebone\public\images\samples\e-commerce.png" />
+    <Content Include="Rebone\public\images\samples\editors.png" />
+    <Content Include="Rebone\public\images\samples\email.png" />
+    <Content Include="Rebone\public\images\samples\forms.png" />
+    <Content Include="Rebone\public\images\samples\html5.png" />
+    <Content Include="Rebone\public\images\samples\modal.png" />
+    <Content Include="Rebone\public\images\samples\popup.png" />
+    <Content Include="Rebone\public\images\samples\profile_page\banner_01.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\banner_02.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\logo\01.png" />
+    <Content Include="Rebone\public\images\samples\profile_page\logo\02.png" />
+    <Content Include="Rebone\public\images\samples\profile_page\logo\03.png" />
+    <Content Include="Rebone\public\images\samples\profile_page\profile_header_banner.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\01.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\02.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\03.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\04.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\05.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\06.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\07.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\08.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\09.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\10.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\11.jpg" />
+    <Content Include="Rebone\public\images\samples\profile_page\thumbnail\12.jpg" />
+    <Content Include="Rebone\public\images\samples\tab_preview\01.png" />
+    <Content Include="Rebone\public\images\samples\tab_preview\02.png" />
+    <Content Include="Rebone\public\images\samples\tab_preview\03.png" />
+    <Content Include="Rebone\public\images\samples\tab_preview\04.png" />
+    <Content Include="Rebone\public\images\samples\tab_preview\05.png" />
+    <Content Include="Rebone\public\images\samples\weather.svg" />
+    <Content Include="Rebone\public\images\samples\widgets.png" />
+    <Content Include="Rebone\public\images\sprites\jsgrid-icons.png" />
+    <Content Include="Rebone\public\js\alerts.js" />
+    <Content Include="Rebone\public\js\avgrund.js" />
+    <Content Include="Rebone\public\js\base.js" />
+    <Content Include="Rebone\public\js\bt-maxLength.js" />
+    <Content Include="Rebone\public\js\c3.js" />
+    <Content Include="Rebone\public\js\calendar.js" />
+    <Content Include="Rebone\public\js\chart.js" />
+    <Content Include="Rebone\public\js\chartist.js" />
+    <Content Include="Rebone\public\js\clipboard.js" />
+    <Content Include="Rebone\public\js\codeEditor.js" />
+    <Content Include="Rebone\public\js\context-menu.js" />
+    <Content Include="Rebone\public\js\dashboard-2.js" />
+    <Content Include="Rebone\public\js\dashboard.js" />
+    <Content Include="Rebone\public\js\data-table.js" />
+    <Content Include="Rebone\public\js\db.js" />
+    <Content Include="Rebone\public\js\desktop-notification.js" />
+    <Content Include="Rebone\public\js\dragula.js" />
+    <Content Include="Rebone\public\js\dropify.js" />
+    <Content Include="Rebone\public\js\dropzone.js" />
+    <Content Include="Rebone\public\js\editorDemo.js" />
+    <Content Include="Rebone\public\js\file-upload.js" />
+    <Content Include="Rebone\public\js\float-chart.js" />
+    <Content Include="Rebone\public\js\form-addons.js" />
+    <Content Include="Rebone\public\js\form-repeater.js" />
+    <Content Include="Rebone\public\js\form-validation.js" />
+    <Content Include="Rebone\public\js\formpickers.js" />
+    <Content Include="Rebone\public\js\google-charts.js" />
+    <Content Include="Rebone\public\js\google-maps.js" />
+    <Content Include="Rebone\public\js\horizontal-menu.js" />
+    <Content Include="Rebone\public\js\hoverable-collapse.js" />
+    <Content Include="Rebone\public\js\iCheck.js" />
+    <Content Include="Rebone\public\js\ion-range-slider.js" />
+    <Content Include="Rebone\public\js\jq.tablesort.js" />
+    <Content Include="Rebone\public\js\jquery-file-upload.js" />
+    <Content Include="Rebone\public\js\js-grid.js" />
+    <Content Include="Rebone\public\js\just-gage.js" />
+    <Content Include="Rebone\public\js\light-gallery.js" />
+    <Content Include="Rebone\public\js\mapeal.js" />
+    <Content Include="Rebone\public\js\mapeal_example_2.js" />
+    <Content Include="Rebone\public\js\mapeal_example_3.js" />
+    <Content Include="Rebone\public\js\maps.js" />
+    <Content Include="Rebone\public\js\misc.js" />
+    <Content Include="Rebone\public\js\modal-demo.js" />
+    <Content Include="Rebone\public\js\morris.js" />
+    <Content Include="Rebone\public\js\no-ui-slider.js" />
+    <Content Include="Rebone\public\js\off-canvas.js" />
+    <Content Include="Rebone\public\js\owl-carousel.js" />
+    <Content Include="Rebone\public\js\paginate.js" />
+    <Content Include="Rebone\public\js\parsley.min.js" />
+    <Content Include="Rebone\public\js\popover.js" />
+    <Content Include="Rebone\public\js\progress-bar.js" />
+    <Content Include="Rebone\public\js\select2.js" />
+    <Content Include="Rebone\public\js\settings.js" />
+    <Content Include="Rebone\public\js\sparkline.js" />
+    <Content Include="Rebone\public\js\tablesorter.js" />
+    <Content Include="Rebone\public\js\tabs.js" />
+    <Content Include="Rebone\public\js\tight-grid.js" />
+    <Content Include="Rebone\public\js\toastDemo.js" />
+    <Content Include="Rebone\public\js\todolist.js" />
+    <Content Include="Rebone\public\js\tooltips.js" />
+    <Content Include="Rebone\public\js\typeahead.js" />
+    <Content Include="Rebone\public\js\wizard.js" />
+    <Content Include="Rebone\public\js\x-editable.js" />
+    <Content Include="Rebone\public\templates\HCMReport.html" />
+    <Content Include="Rebone\public\templates\index.html" />
+    <Content Include="Rebone\public\vendors\ace-builds\src-min\ace.js" />
+    <Content Include="Rebone\public\vendors\ace\ace.js" />
+    <Content Include="Rebone\public\vendors\ace\ext-emmet.js" />
+    <Content Include="Rebone\public\vendors\ace\ext-language_tools.js" />
+    <Content Include="Rebone\public\vendors\ace\mode-java.js" />
+    <Content Include="Rebone\public\vendors\ace\mode-javascript.js" />
+    <Content Include="Rebone\public\vendors\ace\snippets\custom.js" />
+    <Content Include="Rebone\public\vendors\ace\snippets\java.js" />
+    <Content Include="Rebone\public\vendors\ace\snippets\javascript.js" />
+    <Content Include="Rebone\public\vendors\ace\snippets\text.js" />
+    <Content Include="Rebone\public\vendors\ace\theme-idle_fingers.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-extension\addon\hint\show-context-info.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-extension\addon\hint\show-context-info.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-extension\addon\hint\show-hint-eclipse.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-extension\addon\hint\templates-hint.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-extension\addon\hint\templates-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-xquery\addon\hint\xquery-hint.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-xquery\addon\hint\xquery-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-xquery\addon\hint\xquery-templates.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\comment\comment.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\comment\continuecomment.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\dialog\dialog.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\dialog\dialog.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\display\fullscreen.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\display\fullscreen.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\display\placeholder.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\display\rulers.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\edit\closebrackets.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\edit\closetag.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\edit\continuelist.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\edit\matchbrackets.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\edit\matchtags.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\edit\trailingspace.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\fold\brace-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\fold\comment-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\fold\foldcode.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\fold\foldgutter.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\fold\foldgutter.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\fold\indent-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\fold\markdown-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\fold\xml-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\anyword-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\css-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\html-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\javascript-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\python-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\show-hint.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\show-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\sql-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\hint\xml-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\lint\coffeescript-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\lint\css-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\lint\javascript-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\lint\json-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\lint\lint.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\lint\lint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\lint\yaml-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\merge\dep\diff_match_patch.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\merge\merge.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\merge\merge.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\mode\loadmode.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\mode\multiplex.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\mode\multiplex_test.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\mode\overlay.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\runmode\colorize.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\runmode\runmode-standalone.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\runmode\runmode.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\runmode\runmode.node.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\scroll\scrollpastend.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\search\match-highlighter.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\search\search.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\search\searchcursor.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\selection\active-line.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\selection\mark-selection.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\tern\tern.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\tern\tern.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\tern\worker.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\wrap\hardwrap.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\lib\codemirror.css" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\lib\codemirror.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\mode\haxe\haxe.js" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\mode\haxe\index.html" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\comment\comment.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\comment\continuecomment.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\dialog\dialog.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\dialog\dialog.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\display\autorefresh.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\display\fullscreen.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\display\fullscreen.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\display\panel.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\display\placeholder.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\display\rulers.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\edit\closebrackets.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\edit\closetag.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\edit\continuelist.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\edit\matchbrackets.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\edit\matchtags.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\edit\trailingspace.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\fold\brace-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\fold\comment-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\fold\foldcode.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\fold\foldgutter.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\fold\foldgutter.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\fold\indent-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\fold\markdown-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\fold\xml-fold.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\anyword-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\css-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\haxe.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\html-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\javascript-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\show-context-info.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\show-context-info.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\show-hint-eclipse.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\show-hint.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\show-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\sql-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\templates-hint.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\templates-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\up\codemirror.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\up\show-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\xml-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\xquery-hint.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\xquery-hint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\xquery-templates.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\lint\coffeescript-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\lint\css-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\lint\html-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\lint\javascript-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\lint\json-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\lint\lint.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\lint\lint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\lint\yaml-lint.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\merge\merge.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\merge\merge.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\mode\loadmode.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\mode\multiplex.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\mode\multiplex_test.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\mode\overlay.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\mode\simple.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\runmode\colorize.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\runmode\runmode-standalone.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\runmode\runmode.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\runmode\runmode.node.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\scroll\annotatescrollbar.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\scroll\scrollpastend.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\scroll\simplescrollbars.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\scroll\simplescrollbars.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\search\jump-to-line.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\search\match-highlighter.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\search\matchesonscrollbar.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\search\matchesonscrollbar.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\search\search.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\search\searchcursor.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\selection\active-line.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\selection\mark-selection.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\selection\selection-pointer.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\tern\tern.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\tern\tern.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\tern\worker.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\wrap\hardwrap.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\clike.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\codemirror.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\codemirror.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\gherkin.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\javascript\javascript.js" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\simplescrollbars.css" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\simplescrollbars.js" />
+    <Content Include="Rebone\public\vendors\css\flat\_all.html" />
+    <Content Include="Rebone\public\vendors\css\font\context-menu-icons78f9-2.html" />
+    <Content Include="Rebone\public\vendors\css\font\context-menu-icons78f9-3.html" />
+    <Content Include="Rebone\public\vendors\css\font\context-menu-icons78f9-4.html" />
+    <Content Include="Rebone\public\vendors\css\font\context-menu-icons78f9.html" />
+    <Content Include="Rebone\public\vendors\css\futurico\futurico.html" />
+    <Content Include="Rebone\public\vendors\css\line\_all.css" />
+    <Content Include="Rebone\public\vendors\css\minimal\_all.css" />
+    <Content Include="Rebone\public\vendors\css\owl.video.play.html" />
+    <Content Include="Rebone\public\vendors\css\polaris\polaris.html" />
+    <Content Include="Rebone\public\vendors\css\square\_all.html" />
+    <Content Include="Rebone\public\vendors\css\vendor.bundle.addons.css" />
+    <Content Include="Rebone\public\vendors\css\vendor.bundle.base.css" />
+    <Content Include="Rebone\public\vendors\datatable\buttons.flash.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\buttons.html5.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\buttons.print.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\dataTables.buttons.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\jszip.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\pdfmake.min.js" />
+    <Content Include="Rebone\public\vendors\datatable\vfs_fonts.js" />
+    <Content Include="Rebone\public\vendors\font-awesome\css\font-awesome.css" />
+    <Content Include="Rebone\public\vendors\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Rebone\public\vendors\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Rebone\public\vendors\font-awesome\HELP-US-OUT.txt" />
+    <Content Include="Rebone\public\vendors\fonts\dropify-2.html" />
+    <Content Include="Rebone\public\vendors\fonts\dropify-3.html" />
+    <Content Include="Rebone\public\vendors\fonts\dropify.html" />
+    <Content Include="Rebone\public\vendors\icheck\skins\all.css" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\aero%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\aero.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\blue%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\blue.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\flat%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\flat.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\green%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\green.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\grey%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\grey.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\orange%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\orange.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\pink%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\pink.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\purple%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\purple.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\red%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\red.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\yellow%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\yellow.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\flat\_all.css" />
+    <Content Include="Rebone\public\vendors\icheck\skins\futurico\futurico%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\futurico\futurico.css" />
+    <Content Include="Rebone\public\vendors\icheck\skins\futurico\futurico.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\line\line%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\line\line.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\line\_all.css" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\aero%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\aero.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\blue%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\blue.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\green%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\green.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\grey%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\grey.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\minimal%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\minimal.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\orange%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\orange.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\pink%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\pink.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\purple%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\purple.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\red%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\red.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\yellow%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\yellow.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\minimal\_all.css" />
+    <Content Include="Rebone\public\vendors\icheck\skins\polaris\polaris%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\polaris\polaris.css" />
+    <Content Include="Rebone\public\vendors\icheck\skins\polaris\polaris.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\aero%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\aero.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\blue%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\blue.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\green%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\green.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\grey%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\grey.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\orange%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\orange.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\pink%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\pink.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\purple%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\purple.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\red%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\red.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\square%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\square.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\yellow%402x.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\yellow.png" />
+    <Content Include="Rebone\public\vendors\icheck\skins\square\_all.css" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\css\flag-icon.min.css" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ad.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ae.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\af.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ag.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ai.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\al.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\am.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ao.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\aq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ar.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\as.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\at.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\au.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\aw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ax.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\az.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ba.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bb.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bd.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\be.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bi.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bo.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\br.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bs.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\by.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\bz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ca.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cd.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ch.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ci.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ck.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\co.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cx.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cy.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\cz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\de.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\dj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\dk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\dm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\do.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\dz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ec.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ee.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\eg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\eh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\er.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\es-ct.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\es.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\et.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\eu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\fi.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\fj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\fk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\fm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\fo.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\fr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ga.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gb-eng.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gb-nir.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gb-sct.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gb-wls.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gb.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gd.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ge.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gi.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gp.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gs.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\gy.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\hk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\hm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\hn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\hr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ht.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\hu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\id.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ie.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\il.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\im.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\in.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\io.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\iq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ir.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\is.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\it.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\je.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\jm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\jo.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\jp.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ke.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\kg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\kh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ki.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\km.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\kn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\kp.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\kr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\kw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ky.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\kz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\la.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\lb.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\lc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\li.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\lk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\lr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ls.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\lt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\lu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\lv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ly.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ma.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\md.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\me.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ml.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mo.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mp.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ms.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mx.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\my.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\mz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\na.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\nc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ne.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\nf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ng.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ni.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\nl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\no.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\np.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\nr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\nu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\nz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\om.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pa.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pe.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ph.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ps.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\pw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\py.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\qa.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\re.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ro.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\rs.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ru.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\rw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sa.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sb.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sd.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\se.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\si.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\so.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ss.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\st.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sx.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sy.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\sz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\td.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\th.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\to.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\tz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ua.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ug.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\um.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\un.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\us.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\uy.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\uz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\va.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\vc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ve.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\vg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\vi.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\vn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\vu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\wf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ws.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\ye.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\yt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\za.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\zm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\1x1\zw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ad.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ae.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\af.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ag.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ai.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\al.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\am.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ao.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\aq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ar.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\as.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\at.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\au.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\aw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ax.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\az.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ba.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bb.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bd.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\be.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bi.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bo.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\br.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bs.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\by.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\bz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ca.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cd.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ch.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ci.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ck.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\co.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cx.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cy.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\cz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\de.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\dj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\dk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\dm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\do.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\dz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ec.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ee.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\eg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\eh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\er.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\es-ct.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\es.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\et.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\eu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\fi.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\fj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\fk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\fm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\fo.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\fr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ga.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gb-eng.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gb-nir.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gb-sct.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gb-wls.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gb.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gd.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ge.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gi.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gp.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gs.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\gy.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\hk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\hm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\hn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\hr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ht.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\hu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\id.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ie.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\il.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\im.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\in.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\io.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\iq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ir.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\is.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\it.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\je.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\jm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\jo.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\jp.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ke.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\kg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\kh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ki.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\km.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\kn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\kp.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\kr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\kw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ky.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\kz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\la.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\lb.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\lc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\li.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\lk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\lr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ls.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\lt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\lu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\lv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ly.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ma.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\md.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\me.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ml.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mo.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mp.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mq.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ms.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mx.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\my.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\mz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\na.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\nc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ne.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\nf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ng.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ni.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\nl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\no.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\np.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\nr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\nu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\nz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\om.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pa.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pe.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ph.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ps.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\pw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\py.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\qa.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\re.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ro.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\rs.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ru.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\rw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sa.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sb.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sd.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\se.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sh.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\si.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\so.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ss.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\st.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sx.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sy.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\sz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\td.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\th.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tj.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tk.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tl.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\to.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tr.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tv.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\tz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ua.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ug.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\um.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\un.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\us.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\uy.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\uz.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\va.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\vc.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ve.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\vg.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\vi.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\vn.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\vu.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\wf.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ws.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\ye.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\yt.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\za.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\zm.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\flag-icon-css\flags\4x3\zw.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Rebone\public\vendors\iconfonts\font-awesome\fonts\fontawesome-webfont3e6e.html" />
+    <Content Include="Rebone\public\vendors\iconfonts\font-awesome\fonts\fontawesome-webfont3e6e.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\mdi\css\materialdesignicons.min.css" />
+    <Content Include="Rebone\public\vendors\iconfonts\mdi\fonts\materialdesignicons-webfontb675.html" />
+    <Content Include="Rebone\public\vendors\iconfonts\mdi\fonts\materialdesignicons-webfontb675.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\puse-icons-feather\feather.css" />
+    <Content Include="Rebone\public\vendors\iconfonts\puse-icons-feather\fonts\feather-webfont.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\simple-line-icon\css\simple-line-icons.css" />
+    <Content Include="Rebone\public\vendors\iconfonts\simple-line-icon\fonts\Simple-Line-Iconsb26c.html" />
+    <Content Include="Rebone\public\vendors\iconfonts\simple-line-icon\fonts\Simple-Line-Iconsb26c.svg" />
+    <Content Include="Rebone\public\vendors\iconfonts\ti-icons\css\themify-icons.css" />
+    <Content Include="Rebone\public\vendors\iconfonts\ti-icons\fonts\themify.svg" />
+    <Content Include="Rebone\public\vendors\images\alpha.png" />
+    <Content Include="Rebone\public\vendors\images\hue.png" />
+    <Content Include="Rebone\public\vendors\images\saturation.png" />
+    <Content Include="Rebone\public\vendors\images\transparent.png" />
+    <Content Include="Rebone\public\vendors\img\clear.html" />
+    <Content Include="Rebone\public\vendors\img\loading.gif" />
+    <Content Include="Rebone\public\vendors\img\sprite-skin-flat.png" />
+    <Content Include="Rebone\public\vendors\js\vendor.bundle.addons.js" />
+    <Content Include="Rebone\public\vendors\js\vendor.bundle.base.js" />
+    <Content Include="Rebone\public\vendors\lightgallery\css\lightgallery.css" />
+    <Content Include="Rebone\public\vendors\lightgallery\fonts\lgd641.svg" />
+    <Content Include="Rebone\public\vendors\lightgallery\img\loading.gif" />
+    <Content Include="Rebone\public\vendors\lightgallery\img\video-play.png" />
+    <Content Include="Rebone\public\vendors\lightgallery\img\vimeo-play.png" />
+    <Content Include="Rebone\public\vendors\lightgallery\img\youtube-play.png" />
+    <Content Include="Rebone\public\vendors\lightgallery\js\lightgallery-all.min.js" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\.gitignore" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\index.html" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\jquery.dropdown.css" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\jquery.dropdown.js" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\jquery.dropdown.min.css" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\jquery.dropdown.min.js" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\mock.js" />
+    <Content Include="Rebone\public\vendors\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="Rebone\public\vendors\summernote\dist\summernote-bs4.css" />
+    <Content Include="Rebone\public\vendors\summernote\dist\summernote-bs4.min.js" />
+    <Content Include="Rebone\public\vendors\tinymce\themes\modern\theme.js" />
+    <Content Include="Rebone\public\vendors\tinymce\tinymce.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Rebone\public\js\parsley.min.js.map" />
+    <Content Include="Rebone\public\vendors\.DS_Store" />
+    <Content Include="Rebone\public\vendors\ace\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirrorx\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-extension\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-extension\addon\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-xquery\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror-xquery\addon\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirrorx\codemirror\addon\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirror\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\addon\hint\.DS_Store" />
+    <Content Include="Rebone\public\vendors\codemirror\lib\javascript\.DS_Store" />
+    <Content Include="Rebone\public\vendors\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Rebone\public\vendors\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Rebone\public\vendors\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Rebone\public\vendors\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Rebone\public\vendors\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\animated.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\bordered-pulled.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\core.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\fixed-width.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\font-awesome.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\icons.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\larger.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\list.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\mixins.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\path.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\rotated-flipped.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\screen-reader.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\stacked.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\less\variables.less" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\font-awesome.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_animated.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_bordered-pulled.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_core.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_fixed-width.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_icons.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_larger.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_list.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_mixins.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_path.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_rotated-flipped.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_screen-reader.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_stacked.scss" />
+    <Content Include="Rebone\public\vendors\font-awesome\scss\_variables.scss" />
+    <Content Include="Rebone\public\vendors\fonts\dropify.woff" />
+    <Content Include="Rebone\public\vendors\iconfonts\font-awesome\fonts\fontawesome-webfont3e6e.eot" />
+    <Content Include="Rebone\public\vendors\iconfonts\font-awesome\fonts\fontawesome-webfont3e6e.ttf" />
+    <Content Include="Rebone\public\vendors\iconfonts\font-awesome\fonts\fontawesome-webfont3e6e.woff" />
+    <Content Include="Rebone\public\vendors\iconfonts\font-awesome\fonts\fontawesome-webfontd41d.eot" />
+    <Content Include="Rebone\public\vendors\iconfonts\mdi\fonts\materialdesignicons-webfontb675.eot" />
+    <Content Include="Rebone\public\vendors\iconfonts\mdi\fonts\materialdesignicons-webfontb675.ttf" />
+    <Content Include="Rebone\public\vendors\iconfonts\mdi\fonts\materialdesignicons-webfontb675.woff" />
+    <Content Include="Rebone\public\vendors\iconfonts\mdi\fonts\materialdesignicons-webfontd41d.eot" />
+    <Content Include="Rebone\public\vendors\iconfonts\puse-icons-feather\fonts\feather-webfont.eot" />
+    <Content Include="Rebone\public\vendors\iconfonts\puse-icons-feather\fonts\feather-webfont.ttf" />
+    <Content Include="Rebone\public\vendors\iconfonts\puse-icons-feather\fonts\feather-webfont.woff" />
+    <Content Include="Rebone\public\vendors\iconfonts\puse-icons-feather\fonts\feather-webfontd41d.eot" />
+    <Content Include="Rebone\public\vendors\iconfonts\simple-line-icon\fonts\Simple-Line-Iconsb26c.eot" />
+    <Content Include="Rebone\public\vendors\iconfonts\simple-line-icon\fonts\Simple-Line-Iconsb26c.ttf" />
+    <Content Include="Rebone\public\vendors\iconfonts\simple-line-icon\fonts\Simple-Line-Iconsb26c.woff" />
+    <Content Include="Rebone\public\vendors\iconfonts\ti-icons\fonts\themify.eot" />
+    <Content Include="Rebone\public\vendors\iconfonts\ti-icons\fonts\themify.ttf" />
+    <Content Include="Rebone\public\vendors\iconfonts\ti-icons\fonts\themify.woff" />
+    <Content Include="Rebone\public\vendors\iconfonts\ti-icons\fonts\themifyd41d.eot" />
+    <Content Include="Rebone\public\vendors\lightgallery\fonts\lgd41d.eot" />
+    <Content Include="Rebone\public\vendors\lightgallery\fonts\lgd641.eot" />
+    <Content Include="Rebone\public\vendors\lightgallery\fonts\lgd641.ttf" />
+    <Content Include="Rebone\public\vendors\lightgallery\fonts\lgd641.woff" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\LICENSE" />
+    <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\README.md" />
+    <Content Include="Rebone\public\vendors\summernote\dist\font\summernote291f.eot" />
+    <Content Include="Rebone\public\vendors\summernote\dist\font\summernote291f.ttf" />
+    <Content Include="Rebone\public\vendors\summernote\dist\font\summernote291f.woff" />
+    <Content Include="Rebone\public\vendors\summernote\dist\font\summernoted41d.eot" />
+    <Content Include="App_Data\request-number-tracker.db" />
+    <EntityDeploy Include="DAL\EntityModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EntityModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="DAL\EntityModel.edmx.diagram">
+      <DependentUpon>EntityModel.edmx</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.eot" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.ttf" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.woff" />
+    <Content Include="Rebone\public\fonts\Linearicons-Free.woff2" />
+    <Content Include="Rebone\public\fonts\peicon\fonts\Pe-icon-7-stroke.eot" />
+    <Content Include="Rebone\public\fonts\peicon\fonts\Pe-icon-7-stroke.ttf" />
+    <Content Include="Rebone\public\fonts\peicon\fonts\Pe-icon-7-stroke.woff" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Account\SignOutCallback.cshtml" />
+    <Content Include="Views\UserProfile\Index.cshtml" />
+    <Content Include="Views\UserProfile\Relogin.cshtml" />
+    <Content Include="Views\HcmDashboard\Index.cshtml" />
+    <Content Include="Views\HcmDashboard\LeaveCancelation.cshtml" />
+    <Content Include="Views\UserProfile\Update.cshtml" />
+    <Content Include="Views\HcmDashboard\SelfRequestDetails.cshtml" />
+    <Content Include="Views\HcmDashboard\ApprovalInbox.cshtml" />
+    <Content Include="Views\HcmDashboard\HCMApprovalInbox.cshtml" />
+    <Content Include="Views\HcmDashboard\RequestHistory.cshtml" />
+    <Content Include="Views\HcmDashboard\ApprovalHistory.cshtml" />
+    <Content Include="Views\HcmDashboard\ApprovalHCMHistory.cshtml" />
+    <Content Include="Views\NeuUserManagement\Index.cshtml" />
+    <Content Include="Views\NeuUserManagement\EditNeuUserDetails.cshtml" />
+    <Content Include="Views\NeuUserManagement\AddNewNeuUser.cshtml" />
+    <Content Include="Views\SearchResults\Request.cshtml" />
+    <Content Include="Views\Shared\_MessagesList.cshtml" />
+    <Content Include="Views\ProcessNotification\Process.cshtml" />
+    <Content Include="Views\ProcessNotification\Index.cshtml" />
+    <Content Include="Views\Shared\InternalError.cshtml" />
+    <Content Include="Views\ErrorHandilar\OpError.cshtml" />
+    <Content Include="Views\HcmDashboard\LeavePastApply.cshtml" />
+    <Content Include="Views\HcmDashboard\LeaveWFHApply.cshtml" />
+    <Content Include="Views\HcmDashboard\LeaveBalanceEnquiry.cshtml" />
+    <Content Include="Views\HcmDashboard\AddressProof.cshtml" />
+    <Content Include="Views\HcmDashboard\EmployeeVerificationReq.cshtml" />
+    <Content Include="Views\HcmDashboard\SalaryCertificate.cshtml" />
+    <Content Include="Views\HcmDashboard\GeneralRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\PreApprovalHCMHistory.cshtml" />
+    <Content Include="Views\HcmDashboard\DomesticTripRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\InternationalTripRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\DBManagerChangeRequest.cshtml" />
+    <Content Include="Views\HcmDashboard\DBLocationChangeRequest.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Analytics\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>14491</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44361/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

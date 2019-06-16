@@ -440,6 +440,7 @@
     <NavigationProperty Name="NueUserOrgMapper1" Relationship="Self.FK__NueUserOr__UserI__71D1E811" FromRole="NueUserProfile" ToRole="NueUserOrgMapper" />
     <NavigationProperty Name="NueDBManagerChangeRequest" Relationship="NueRequestModel.FK__NueDBMana__Manag__08C03A61" FromRole="NueUserProfile" ToRole="NueDBManagerChangeRequest" />
     <NavigationProperty Name="NueDBManagerChangeRequest1" Relationship="NueRequestModel.FK__NueDBMana__UserI__07CC1628" FromRole="NueUserProfile" ToRole="NueDBManagerChangeRequest" />
+    <NavigationProperty Name="NueDBLocationChangeRequest" Relationship="NueRequestModel.FK__NueDBLoca__UserI__33AA9866" FromRole="NueUserProfile" ToRole="NueDBLocationChangeRequest" />
   </EntityType>
   <Association Name="FK__NueUserOr__OrgUs__73BA3083">
     <End Role="NeuDesignation" Type="Self.NeuDesignation" Multiplicity="0..1" />
@@ -1153,6 +1154,11 @@
       <End Role="NueUserProfile" EntitySet="NueUserProfile" />
       <End Role="NueDBManagerChangeRequest" EntitySet="NueDBManagerChangeRequest" />
     </AssociationSet>
+    <EntitySet Name="NueDBLocationChangeRequest" EntityType="NueRequestModel.NueDBLocationChangeRequest" />
+    <AssociationSet Name="FK__NueDBLoca__UserI__33AA9866" Association="NueRequestModel.FK__NueDBLoca__UserI__33AA9866">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueDBLocationChangeRequest" EntitySet="NueDBLocationChangeRequest" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="NueDBManagerChangeRequest">
     <Key>
@@ -1189,6 +1195,31 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="NueDBManagerChangeRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="NueDBLocationChangeRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="NueRequestModel.FK__NueDBLoca__UserI__33AA9866" FromRole="NueDBLocationChangeRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <Association Name="FK__NueDBLoca__UserI__33AA9866">
+    <End Type="NueRequestModel.NueUserProfile" Role="NueUserProfile" Multiplicity="0..1" />
+    <End Type="NueRequestModel.NueDBLocationChangeRequest" Role="NueDBLocationChangeRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueDBLocationChangeRequest">
         <PropertyRef Name="UserId" />
       </Dependent>
     </ReferentialConstraint>

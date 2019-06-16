@@ -42,6 +42,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#subApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -126,6 +127,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#subApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -210,6 +212,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#subApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -294,6 +297,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -377,6 +381,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -460,6 +465,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -543,6 +549,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -626,6 +633,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -709,6 +717,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -792,6 +801,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -875,6 +885,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -958,6 +969,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1041,6 +1053,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1124,6 +1137,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1207,6 +1221,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1290,6 +1305,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#withdrawalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1373,6 +1389,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1456,6 +1473,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1539,6 +1557,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1622,6 +1641,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1705,6 +1725,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1788,6 +1809,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1871,6 +1893,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -1954,6 +1977,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2037,6 +2061,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2120,6 +2145,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2203,6 +2229,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2286,6 +2313,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2369,6 +2397,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#FeedBackComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2452,6 +2481,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2535,6 +2565,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2618,6 +2649,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2701,6 +2733,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2784,6 +2817,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2867,6 +2901,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -2950,6 +2985,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -3033,6 +3069,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -3116,6 +3153,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -3199,6 +3237,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -3282,6 +3321,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -3365,6 +3405,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
@@ -3408,6 +3449,7 @@
             });
         }
         else if (type === 'final-hcm-pgb-request') {
+            console.log(">>>" + gettoken());
             swal({
                 title: 'Are you sure?',
                 icon: 'warning',
@@ -3448,6 +3490,7 @@
                     formData.append("requestId", "" + reqId + "");
                     formData.append("userId", "" + usrId + "");
                     formData.append("userComment", $('#ApprovalComment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',

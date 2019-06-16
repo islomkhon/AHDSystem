@@ -597,6 +597,63 @@ namespace NeuRequest.Models
                         }
                     }
                 }
+                else if (userRequest.RequestSubType == "PGBRequest")
+                {
+                    PGBRequestModal pGBRequestModal = new DataAccess().getPGBRequestModal(requestId);
+                    var requestOwner = userProfiles.Where(x => x.Id == userRequest.OwnerId).First();
+
+                    string needVisiaProcessing = "No";
+                    if (pGBRequestModal.NeedVisiaProcessing == 1)
+                    {
+                        needVisiaProcessing = "Yes";
+                    }
+
+                    string posibleUsers = "";
+                    foreach (var item in pGBRequestModal.posibleUsers)
+                    {
+                        var userApp = userProfiles.Where(x => x.Id == item.UserId).First<UserProfile>();
+                        posibleUsers += "<div style=\"display:block;\"> " + userApp.FullName + "(" + userApp.NTPLID + ")</div>";
+                    }
+
+                    Dictionary<string, string> messageData = new Dictionary<string, string>();
+                    messageData.Add("Request Category", "Project Background Verification");
+                    messageData.Add("Ticket Creator", requestOwner.FullName + " (" + requestOwner.NTPLID + ")");
+                    messageData.Add("Project Name", pGBRequestModal.ProjectName);
+                    messageData.Add("Client Name", pGBRequestModal.ClientName);
+                    messageData.Add("Country", pGBRequestModal.CountryName);
+                    messageData.Add("Start Date", pGBRequestModal.StartDate);
+                    messageData.Add("Start Financial Quarter", pGBRequestModal.StartFinancialQuarter);
+                    messageData.Add("End Date", pGBRequestModal.EndDate);
+                    messageData.Add("Oprating Mode", pGBRequestModal.OpMode);
+                    messageData.Add("Possible Number of Opportunities", pGBRequestModal.OpportunitiesCount.ToString());
+                    messageData.Add("Estimated Revenue(K)", pGBRequestModal.EstimatedRevenue);
+                    messageData.Add("Need Visia", needVisiaProcessing);
+                    messageData.Add("Posible Consultents", posibleUsers);
+                    messageData.Add("Request Status", requestStatusStr);
+                    messageData.Add("Created On", pGBRequestModal.AddedOn.ToLocalTime().ToString());
+                    string userMessage = pGBRequestModal.Message;
+
+                    foreach (MessagesModel messagesModel in messages)
+                    {
+                        string messageTitle = messagesModel.EmptyMessage;
+                        string requestUrl = domainName + messagesModel.Target;
+                        var mailToUser = userProfiles.Where(x => x.Id == messagesModel.UserId).First();
+
+                        if (mailToUser.userPreference.IsMailCommunication == 1)
+                        {
+                            string mailTemplateGen = mailTemplate;
+                            mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                                .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", userMessage);
+
+                            MailItem mailItem = new MailItem();
+                            mailItem.Subject = messagesModel.Message;
+                            mailItem.Body = mailTemplateGen;
+                            mailItem.To = mailToUser.Email;
+                            mailItem.Priority = true;
+                            mailItems.Add(mailItem);
+                        }
+                    }
+                }
 
 
                 mailHandilar(mailItems);
@@ -685,7 +742,10 @@ namespace NeuRequest.Models
                     {
                         heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Location Change Request";
                     }
-
+                    else if (userRequest.RequestSubType == "PGBRequest")
+                    {
+                        heading = "<i class=\"mdi mdi-apple-keyboard-command\"></i> Project Background Verification Request";
+                    }
 
 
                     if (userRequest.RequestStatus == "close")
@@ -4029,6 +4089,377 @@ namespace NeuRequest.Models
 
             return uiRender;
         }
+
+        public string generatePGBRequestUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, PGBRequestModal pGBRequestModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
+        {
+            string uiRender = "";
+            string uiMenuRender = "";
+            string approverStr = "";
+            string communicaterLink = "";
+            string communicaterOwnerLink = "";
+
+            DAL.NueUserProfile requestOwner = nueUserProfiles.Where(x => x.Id == userRequest.OwnerId).First<DAL.NueUserProfile>();
+            if (requestOwner.NeuUserPreference2.First().IsMailCommunication == 1)
+            {
+                communicaterOwnerLink += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+                communicaterOwnerLink += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\" data-target=\"" + requestOwner.Email + "\"></i>";
+            }
+
+
+            string needVisiaProcessing = "No";
+            if (pGBRequestModal.NeedVisiaProcessing == 1)
+            {
+                needVisiaProcessing = "Yes";
+            }
+
+            string posibleUsers = "";
+            foreach (var item in pGBRequestModal.posibleUsers)
+            {
+                var userApp = nueUserProfiles.Where(x => x.Id == item.UserId).First<DAL.NueUserProfile>();
+
+                string communicaterLink1 = "";
+
+                if (userApp.NeuUserPreference2.First().IsMailCommunication == 1)
+                {
+                    communicaterLink1 += "<i class=\"mdi mdi-facebook-messenger im-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                    communicaterLink1 += "<i class=\"mdi mdi-email-outline mail-tigger cursor-pointer\" data-id=\"" + userRequest.RequestId + "\"  data-target=\"" + userApp.Email + "\"></i>";
+                }
+
+                posibleUsers += "<p class=\"inline-item-row\"> " + userApp.FullName + "(" + userApp.NTPLID + ") " + communicaterLink1 + " <a class=\"hide\" href=\"null\"></a></p>";
+
+
+                /*approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                communicaterLink+
+                "                            <br>\r\n";*/
+            }
+
+            /*foreach (NueRequestAceessLog nueRequestAceessLog in nueRequestAceessLogs)
+            {
+                if (nueRequestAceessLog.UserId != nueRequestAceessLog.OwnerId)
+                {
+                    var userApp = userProfiles.Where(x => x.Id == nueRequestAceessLog.UserId).First<UserProfile>();
+                    approverStr += "                            <h5 class=\"p-t-20\">Ticket Approver</h5>\r\n" +
+                    "                            <span>" + userApp.FullName + " (" + userApp.NTPLID + ")</span>\r\n" +
+                    "                            <br>\r\n";
+                }
+            }*/
+
+            if (userRequest.RequestStatus == "close")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('close-hcm-pgb-request')\"><i class=\"mdi mdi-close-circle-outline\"></i> Close </button>\r\n";
+                }
+                else if (isApprover || ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                }
+            }
+            else
+            {
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#commentModal-1\"><i class=\"mdi mdi-comment-outline\"></i> Comment </button>\r\n";
+                uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" data-toggle=\"modal\" data-target=\"#fileAttchmentModal-1\"><i class=\"mdi mdi-attachment\"></i> Attach File </button>\r\n";
+                if (isOwner)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('withdraw-hcm-pgb-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Withdraw </button>\r\n";
+                }
+                if (isApprover)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn hide\" onclick=\"showSwal('inter-approve-hcm-pgb-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve </button>\r\n";
+                }
+                if (ishcm)
+                {
+                    uiMenuRender += "                        <button type=\"button\" class=\"btn btn-sm btn-inverse-info inbox-inline-btn\" onclick=\"showSwal('final-hcm-pgb-request')\"><i class=\"mdi mdi-compare text-primary\"></i> Approve Request </button>";
+                }
+            }
+
+            string requestStatusStr = "";
+            if (userRequest.RequestStatus == "close")
+            {
+                requestStatusStr = " Close <span class=\"badge badge-dark badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "completed")
+            {
+                requestStatusStr = " Completed  <span class=\"badge badge-success badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "withdraw")
+            {
+                requestStatusStr = " Withdraw  <span class=\"badge badge-danger badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "In_Approval")
+            {
+                requestStatusStr = " In Approval  <span class=\"badge badge-warning badge-dot badge-dot-lg super\"></span>";
+            }
+            else if (userRequest.RequestStatus == "created")
+            {
+                requestStatusStr = " Created  <span class=\"badge badge-primary badge-dot badge-dot-lg super\"></span>";
+            }
+
+            uiRender += "<div class=\"row\">\r\n" +
+                    "            <div class=\"col-md-12 mb-4 mt-4\">\r\n" +
+                    "                <div class=\"btn-toolbar\">\r\n" +
+                    "                    <div class=\"btn-group inline\">\r\n" +
+                    uiMenuRender +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "        </div>\r\n" +
+                    "\r\n" +
+                    "        <div class=\"ahd-service-container\">\r\n" +
+                    "\r\n" +
+                    "            <div class=\"row\">\r\n" +
+                    "                <div class=\"col-12\">\r\n" +
+                    "                    <div class=\"card\">\r\n" +
+                    "                        <div class=\"card-body\">\r\n" +
+                    "                            <h4 class=\"card-title hide\">Request: <span class=\"editable editable-click cursor-default\">#" + userRequest.RequestId + "</span></h4>\r\n" +
+                    "\r\n" +
+                    "                            <div class=\"row\">\r\n" +
+                    "                                <div class=\"col-8\">\r\n";
+
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-store icon-gradient bg-mixed-hopes\"></i>\r\n" +
+                    "                            Request: #" + userRequest.RequestId + "\r\n" +
+                    "<i class=\"mdi mdi-content-copy ml-1 cursor-pointer ml-4 jq-copy\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "\r\n" +
+
+                    "                                        <div class=\"vertical-timeline\">\r\n" +
+
+                            "                                            <div class=\"timeline-wrapper timeline-wrapper-primary\">\r\n" +
+                                    "                                                <div class=\"timeline-badge\"></div>\r\n" +
+                                    "                                                <div class=\"timeline-panel\">\r\n" +
+                                    "                                                    <div class=\"timeline-heading\">\r\n" +
+                                    "                                                        <h6 class=\"timeline-title\">Request Created</h6>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-body\">\r\n" +
+                                    "                                                        <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + ((pGBRequestModal.Message != null && pGBRequestModal.Message.Trim() != "") ? pGBRequestModal.Message.Trim() : "has created new projects background verification request") + "</p>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                    <div class=\"timeline-footer d-flex align-items-center\">\r\n" +
+                                    "                                                        <i class=\"mdi mdi-heart-outline text-muted mr-1 hide\"></i>\r\n" +
+                                    "                                                        <span class=\"hide\">19</span>\r\n" +
+                                    "                                                        <span class=\"ml-auto font-weight-bold\">" + pGBRequestModal.AddedOn.ToLocalTime() + "</span>\r\n" +
+                                    "                                                    </div>\r\n" +
+                                    "                                                </div>\r\n" +
+                                    "                                            </div>\r\n";
+            uiRender += generateRequestLog(nueUserProfiles, nueRequestActivityModels, attachmentLogModels);
+
+            uiRender += "                                        </div>\r\n" +
+
+
+
+                    "\r\n" +
+                    "                    </div>\r\n" +
+
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+           "                                </div>\r\n" +
+           "\r\n" +
+           "\r\n" +
+           "                                <div class=\"col-4\">\r\n";
+
+            uiRender += "<div class=\"card-hover-shadow-2x mb-3 card widget\">\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"card-header-tab card-header\">\r\n" +
+                    "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
+                    "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
+                    "                            Project Background Verification Request\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "\r\n" +
+                    "                    <div class=\"p-0 card-body\">\r\n" +
+                    "                        <div class=\"dropdown-menu-header mt-0 mb-0\">\r\n" +
+                    "                            <div class=\"dropdown-menu-header-inner bg-heavy-rain\">\r\n" +
+                    "                                <div class=\"menu-header-image opacity-2 dd-header-bg-5\"></div>\r\n" +
+                    "                                <div class=\"menu-header-content text-dark\">\r\n" +
+                    "                                    <h5 class=\"menu-header-title\"> " + requestStatusStr + " </h5>\r\n" +
+                    "                                    <h6 class=\"menu-header-subtitle\"> \r\n" +
+                    "                                        Created: \r\n" +
+                    "                                        <b class=\"text-danger\"> " + pGBRequestModal.AddedOn.ToLocalTime() + " </b> \r\n" +
+                    "                                        <i class=\"mdi mdi-content-copy ml-1 cursor-pointer\" data-target=\"" + userRequest.RequestId + "\" title=\"copy\"></i>\r\n" +
+                    "                                    </h6>\r\n" +
+                    "                                 </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+                    "                        <div class=\"card-tabbed-header\">\r\n" +
+                    "                            <div class=\"tabs-animated tabs-animated-shadow\" justify=\"justified\">\r\n" +
+                    "                                <div class=\"tab-content\">\r\n" +
+                    "                                    <div class=\"tab-pane active ng-star-inserted\">\r\n" +
+                    "                                        <div class=\"scroll-gradient ng-star-inserted\">\r\n" +
+                    "                                            <div class=\"scroll-area-sm shadow-overflow\">\r\n" +
+                    "                                                <perfect-scrollbar id=\"LongContainer\" class=\"ps-show-limits mini\">\r\n" +
+                    "\r\n" +
+                    "                                                    <div class=\"ps ps--active-y\">\r\n" +
+                    "                                                        <div class=\"ps-content\">\r\n" +
+                    "                                                            <div class=\"vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column\">\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Request Creator</h4>" +
+                    "                                                                   <p>" + requestOwner.FullName + " (" + requestOwner.NTPLID + ") " + communicaterOwnerLink + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    approverStr +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Project Name</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.ProjectName + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Client Name</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.ClientName + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Country</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.CountryName +"("+ pGBRequestModal .CountryCode+ ")" + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Project Start Date</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.StartDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Project Start Financial Quarter</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.StartFinancialQuarter + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                     "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Project End Date</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.EndDate + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Project Mode</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.OpMode + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Estimated Revenue(K)</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.EstimatedRevenue + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Need Visia Processing</h4>" +
+                    "                                                                   <p>" + needVisiaProcessing + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Possible Number of Opportunities</h4>" +
+                    "                                                                   <p>" + pGBRequestModal.OpportunitiesCount + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+                    "\r\n" +
+                    "                                                                <div class=\"vertical-timeline-item vertical-timeline-element\"><div>" +
+                    "                                                                   <span class=\"vertical-timeline-element-icon bounce-in\"><i class=\"badge badge-dot badge-dot-xl badge-success\"></i></span>" +
+                    "                                                                   <div class=\"vertical-timeline-element-content bounce-in\">" +
+                    "                                                                   <h4 class=\"timeline-title\">Posible Consultents</h4>" +
+                    "                                                                   <p>" + posibleUsers + " <a class=\"hide\" href=\"null\"></a></p>" +
+                    "                                                                   <span class=\"vertical-timeline-element-date\"></span></div></div></div>\r\n" +
+
+
+                    "\r\n" +
+                    "                                                            </div>\r\n" +
+                    "                                                        </div>\r\n" +
+                    "                                                    </div>\r\n" +
+                    "\r\n" +
+                    "                                                </perfect-scrollbar>\r\n" +
+                    "                                            </div>\r\n" +
+                    "                                        </div>\r\n" +
+                    "                                    </div>\r\n" +
+                    "                                </div>\r\n" +
+                    "                            </div>\r\n" +
+                    "                        </div>\r\n" +
+                    "\r\n" +
+
+                    "<div class=\"d-block text-center expandClicker\">\r\n" +
+                    " <button class=\"btn-shadow btn-wide btn-pill btn btn-focus\"><span class=\"badge badge-dot badge-dot-lg badge-warning badge-pulse\">Badge</span><span class=\"expandClicker-text\">Show more</span></button>\r\n" +
+                    "</div>" +
+
+                    "                    </div>\r\n" +
+
+                    "<div class=\"d-block text-right card-footer bg-dark\"></div>" +
+
+                    "                </div>" +
+
+
+
+                    "                                </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                            </div>\r\n" +
+                    "\r\n" +
+                    "\r\n" +
+                    "                        </div>\r\n" +
+                    "                    </div>\r\n" +
+                    "                </div>\r\n" +
+                    "            </div>\r\n" +
+                    "\r\n" +
+                    "        </div>";
+
+            return uiRender;
+        }
+
 
 
         static Random rnd = new Random();

@@ -335,7 +335,7 @@
             <div class="card-header"><i class="lnr lnr-train header-icon icon-gradient bg-warm-flame"></i> New Common Request  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
 
             <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmDashboard/GeneralRequest" method="POST" enctype="multipart/form-data">
-
+                @Html.AntiForgeryToken()
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">

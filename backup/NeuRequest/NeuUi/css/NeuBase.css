@@ -2879,6 +2879,11 @@ tr td:last-child {
     left: 22px;
 }
 
+.datepicker.datepicker-dropdown .datepicker-days table.table-condensed tbody td.day.today:first-child:before,
+.datepicker.datepicker-inline .datepicker-days table.table-condensed tbody td.day.today:first-child:before {
+    left: -36px;
+}
+
 .widget-side .dropdown-menu-header {
     color: #fff;
     margin-top: -0.65rem;
@@ -3090,4 +3095,723 @@ tr td:last-child {
 .widget-side.card .no-gutters {
     margin-right: 0;
     margin-left: 0;
+}
+
+p.inline-item-row{
+    display: table;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.expandClicker button {
+    border-radius: 0 !important;
+    margin: 0 !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    overflow: visible !important;
+    text-transform: none !important;
+    -webkit-appearance: button !important;
+    display: inline-block !important;
+    font-weight: 400 !important;
+    color: #495057 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    border-radius: 0.25rem !important;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+    color: #fff !important;
+    background-color: #444054 !important;
+    border-color: #444054 !important;
+    outline: none !important !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    background-color: #444054 !important;
+    border-color: #444054 !important;
+    position: relative !important;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+    padding: 0.375rem 1.5rem !important;
+    font-size: 0.8rem !important;
+    line-height: 1.5 !important;
+    border-radius: 0.25rem !important;
+    box-shadow: 0 0.125rem 0.625rem rgba(68, 64, 84, 0.4), 0 0.0625rem 0.125rem rgba(68, 64, 84, 0.5) !important;
+    cursor: pointer !important;
+    border-top-left-radius: 50px !important;
+    border-bottom-left-radius: 50px !important;
+    border-top-right-radius: 50px !important;
+    border-bottom-right-radius: 50px !important;
+}
+
+    .expandClicker button .badge {
+        display: inline-block;
+        padding: 0.25em 0.4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+    }
+
+    .expandClicker button .badge-warning {
+        color: #212529;
+        background-color: #f7b924;
+    }
+
+    .expandClicker button .badge-warning {
+        color: #212529;
+        background-color: #f7b924;
+    }
+
+    .expandClicker button .badge {
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 5px 10px;
+        min-width: 19px;
+    }
+
+    .expandClicker button .badge-dot {
+        text-indent: -999em;
+        padding: 0;
+        width: 8px;
+        height: 8px;
+        border: transparent solid 1px;
+        border-radius: 30px;
+        min-width: 2px;
+    }
+
+    .expandClicker button .badge-dot-lg {
+        width: 10px;
+        height: 10px;
+    }
+
+    .expandClicker button .badge-pulse {
+        -webkit-animation: pulse 2s ease-out;
+        -webkit-animation-iteration-count: infinite;
+        position: relative;
+    }
+
+    .expandClicker button .badge {
+        position: relative;
+        top: -1px;
+    }
+
+    .expandClicker button .badge {
+        margin-left: 8px;
+    }
+    .expandClicker button .badge-dot {
+        position: absolute;
+        border: #fff solid 2px;
+        top: -5px;
+        right: -5px;
+        width: 11px;
+        height: 11px;
+    }
+
+        .expandClicker button .badge-dot.badge-dot-lg {
+            width: 14px;
+            height: 14px;
+        }
+
+
+    .expandClicker button .badge-pulse::before, .expandClicker button .badge-pulse::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        -webkit-animation: sploosh 2s cubic-bezier(0.165, 0.84, 0.44, 1);
+        -webkit-animation-iteration-count: infinite;
+    }
+
+    .expandClicker button .badge-pulse::after {
+        -webkit-animation-delay: .33s;
+        -webkit-animation-duration: 2.2s;
+    }
+
+#LongContainer.mini {
+    max-height:250px;
+}
+
+.tab-basic .nav-item .nav-link.active {
+    color: #383838;
+}
+
+    .tab-basic .nav-item .nav-link.active .req-number {
+        color: #383838;
+        font-size: medium;
+        position: relative;
+        bottom: 3px;
+    }
+
+.card.widget {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+}
+
+.mb-3, .template-demo .circle-progress-block, .user-profile .side-left .card .avatar img, .my-3 {
+    margin-bottom: 1rem !important;
+}
+
+.mb-3, .my-3 {
+    margin-bottom: 1rem !important;
+}
+
+.card.widget {
+    border: 0;
+    border-radius: 2px;
+}
+
+.card.widget {
+    box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+    border-width: 0;
+    transition: all .2s;
+}
+
+    .card.widget.mb-3 {
+        margin-bottom: 30px !important;
+    }
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    color: inherit;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(26, 54, 126, 0.125);
+}
+
+.card-header, .card-title {
+    text-transform: uppercase;
+    color: rgba(13, 27, 62, 0.7);
+    font-weight: bold;
+    font-size: 0.88rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    border-bottom-width: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0.625rem;
+    height: 3.5rem;
+}
+
+    .card-header:first-child {
+        border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+    }
+
+    .card-header:first-child {
+        border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+    }
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+.font-weight-normal, .landing-page .feature-list .feature-list-row .feature-list-item h4 {
+    font-weight: 400 !important;
+}
+
+.font-weight-normal, .landing-page .feature-list .feature-list-row .feature-list-item h4 {
+    font-weight: 400;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+.font-weight-normal {
+    font-weight: 400 !important;
+}
+
+.font-size-lg {
+    font-size: 1.1rem !important;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+.card-header.card-header-tab .card-header-title {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.dropup, .dropright, .dropdown, .dropleft {
+    position: relative;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+.btn-actions-pane-right {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.card-header .header-icon {
+    font-size: 1.65rem;
+    margin-right: 0.625rem;
+}
+
+.dropdown-menu-header {
+    color: #fff;
+    margin-top: -0.65rem;
+    margin-bottom: 0.65rem;
+    position: relative;
+    z-index: 6;
+}
+
+.bg-heavy-rain {
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%) !important;
+}
+
+.dropdown-menu-header .dropdown-menu-header-inner {
+    margin: -1px -1px 0;
+    padding: 1.5rem 0.5rem;
+    position: relative;
+}
+
+.opacity-1 {
+    opacity: .1 !important;
+}
+
+.opacity-2 {
+    opacity: .2 !important;
+}
+
+.dd-header-bg-5 {
+    background: url(https://ak6.picdn.net/shutterstock/videos/24276386/thumb/1.jpg);
+}
+
+.dropdown-menu-header .menu-header-image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 8;
+    opacity: .25;
+    -webkit-filter: grayscale(80%);
+    filter: grayscale(80%);
+    background-size: cover;
+}
+
+.text-dark {
+    color: #343a40 !important;
+}
+
+.dropdown-menu-header .menu-header-content {
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.menu-header-title {
+    font-weight: 500;
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.menu-header-subtitle {
+    font-size: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    margin: 5px 0 0;
+    opacity: .8;
+}
+
+.btn .badge-dot.badge-dot-lg {
+    width: 14px;
+    height: 14px;
+}
+
+.badge.super {
+    position: relative;
+    top: -9px;
+}
+
+.tab-content > .tab-pane {
+    display: none;
+}
+
+.tab-content > .active {
+    display: block;
+}
+
+.card-tabbed-header .tab-content .tab-pane {
+    padding: 1.25rem;
+}
+
+.scroll-area-sm {
+    min-height: 200px;
+    overflow-x: hidden;
+}
+
+.shadow-overflow {
+    position: relative;
+}
+
+    .shadow-overflow::after, .shadow-overflow::before {
+        width: 100%;
+        bottom: auto;
+        top: 0;
+        left: 0;
+        height: 1.5rem;
+        position: absolute;
+        z-index: 13;
+        content: '';
+        background: linear-gradient(to bottom, white 20%, rgba(255, 255, 255, 0) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#00ffffff', GradientType=0);
+    }
+
+    .shadow-overflow::after {
+        bottom: 0;
+        top: auto;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 80%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#ffffff', GradientType=0);
+    }
+
+perfect-scrollbar {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.ps {
+    overflow: hidden !important;
+    overflow-anchor: none;
+    -ms-overflow-style: none;
+    touch-action: auto;
+    -ms-touch-action: auto;
+}
+
+perfect-scrollbar > .ps {
+    position: static;
+    display: block;
+    width: inherit;
+    height: inherit;
+    max-width: inherit;
+    max-height: inherit;
+}
+
+.vertical-timeline.small.widget {
+    width: 100%;
+    position: relative;
+    padding: 1.5rem 0 1rem;
+    border: none;
+}
+
+.vertical-timeline.small.widget {
+    border: none;
+}
+
+.vertical-time-simple.small.widget {
+    padding: 0.5rem 0;
+}
+
+.vertical-timeline.small.widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 67px;
+    height: 100%;
+    width: 4px;
+    background: #e9ecef;
+    border-radius: 0.25rem;
+}
+
+.vertical-timeline.small.widget.single::before {
+    width: 0;
+}
+
+.vertical-without-time.small.widget::before {
+    left: 11px;
+}
+
+.vertical-timeline.small.widget::after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.vertical-timeline-element {
+    position: relative;
+    margin: 0 0 1rem;
+}
+
+    .vertical-timeline-element:last-child {
+        margin-bottom: 0;
+    }
+
+.vertical-timeline-element-icon {
+    position: absolute;
+    top: 0;
+    left: 60px;
+}
+
+.vertical-without-time .vertical-timeline-element-icon {
+    left: 4px;
+}
+
+.vertical-timeline--animate .vertical-timeline-element-icon.bounce-in {
+    visibility: visible;
+    -webkit-animation: cd-bounce-1 .8s;
+    animation: cd-bounce-1 .8s;
+}
+
+.badge-dot {
+    text-indent: -999em;
+    padding: 0;
+    width: 8px;
+    height: 8px;
+    border: transparent solid 1px;
+    border-radius: 30px;
+    min-width: 2px;
+}
+
+.badge-dot-xl {
+    width: 18px;
+    height: 18px;
+    position: relative;
+}
+
+
+.vertical-timeline-element-icon .badge-dot-xl {
+    box-shadow: 0 0 0 5px #fff;
+}
+
+.vertical-timeline .badge:empty {
+    display: inline-block;
+}
+
+.badge-dot-xl::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 0.25rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -5px 0 0 -5px;
+    background: #fff;
+}
+
+.vertical-timeline-element-content {
+    position: relative;
+    margin-left: 90px;
+    font-size: 0.8rem;
+}
+
+.vertical-without-time .vertical-timeline-element-content {
+    margin-left: 36px;
+}
+
+.vertical-timeline--animate .vertical-timeline-element-content.bounce-in {
+    visibility: visible;
+    -webkit-animation: cd-bounce-2 .6s;
+    animation: cd-bounce-2 .6s;
+}
+
+.vertical-timeline-element-content .timeline-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+    padding: 2px 0 0;
+    font-weight: bold;
+}
+
+.vertical-timeline-element-content p {
+    color: #6c757d;
+    margin: 0 0 0.5rem;
+    position: relative;
+}
+
+.vertical-timeline-element-content .vertical-timeline-element-date {
+    display: block;
+    position: absolute;
+    left: -90px;
+    top: 0;
+    padding-right: 10px;
+    text-align: right;
+    color: #adb5bd;
+    font-size: 0.76190476rem;
+    white-space: nowrap;
+}
+
+.vertical-timeline-element-content:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.widget .dropdown-toggle::after {
+    display: none !important;
+}
+
+.widget .dropdown-toggle {
+    font-size: large;
+}
+
+.widget .actions-icon-btn .btn-icon-only {
+    padding-left: 0;
+    padding-right: 0;
+    color: #495057;
+}
+
+.widget .dropdown-toggle {
+    font-size: large;
+}
+
+.widget .card-footer {
+    padding: 0.75rem 1.25rem;
+    background-color: #fff;
+    border-top: 1px solid rgba(26, 54, 126, 0.125);
+}
+
+.widget .d-block {
+    display: block !important;
+}
+
+.widget .text-right {
+    text-align: right !important;
+}
+
+.widget .card-footer:last-child {
+    border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+}
+
+.widget .card .card-footer {
+    display: flex;
+    align-items: center;
+}
+
+.widget .btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #495057;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.widget .btn-link {
+    font-weight: 400;
+    color: #3f6ad8;
+}
+
+.widget .btn-sm, .widget .btn-group-sm > .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+.widget .mr-2, .widget .mx-2 {
+    margin-right: 0.5rem !important;
+}
+
+.widget a, .widget button, .widget .btn {
+    outline: none !important;
+}
+
+.widget .btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.widget .btn {
+    position: relative;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+    .widget .btn:not(:disabled):not(.disabled) {
+        cursor: pointer;
+    }
+
+.widget .btn-lg, .widget .btn-group-lg > .btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+}
+
+.widget .btn-success {
+    color: #fff;
+    background-color: #3ac47d;
+    border-color: #3ac47d;
+}
+
+.widget .btn-link {
+    text-decoration: none;
+}
+
+.widget #userComment,
+.widget .file-upload-info,
+.while-bg-input {
+    border: 1px solid #e5e5e5;
+}
+
+.widget .btn.file-upload-browse {
+    color: #fff;
+    background-color: #8659ef;
+    border-color: #8659ef;
+}
+
+.widget .card-footer.bg-dark {
+    background-color: #a7abbc !important;
+}
+
+.form-control, .select2-container, .datepicker.input-group, .datepicker.asColorPicker-wrap {
+    border: 1px solid #fefe9ef5;
 }

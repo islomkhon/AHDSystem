@@ -324,6 +324,7 @@
                     <div class="card-body">
 
                         <form id="add_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserComment" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
                             <fieldset>
                                 <div class="form-group mb-0">
                                     <textarea class="form-control" name="userComment" id="userComment" rows="5" placeholder="Comment..."></textarea>
@@ -368,6 +369,7 @@
                     <div class="card-body">
 
                         <form id="Direct_Mail_Form" action="/HcmDashboard/DirectMail" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="Direct_Mail_Request_Id" id="Direct_Mail_Request_Id" value="@ViewData["RequestId"]" />
                             <fieldset>
                                 <div class="form-group">
@@ -390,7 +392,7 @@
                                 </div>
                             </fieldset>
 
-                            
+
 
 
                         </form>
@@ -429,6 +431,7 @@
                     <div class="card-body">
 
                         <form id="attach_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserAttachment" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
                             <div class="form-group">
                                 <label>File</label>
                                 <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
@@ -528,6 +531,7 @@
                 formData.append("Direct_Mail_Request_Id", "" + $('#Direct_Mail_Request_Id').val() + "");
                 formData.append("Direct_Mail_Request_Recipient", "" + $('#Direct_Mail_Request_Recipient').val() + "");
                 formData.append("Direct_Mail_Request_Comment", $('#Direct_Mail_Request_Comment').val());
+                formData.append("__RequestVerificationToken", gettoken());
                 $.ajax({
                     type: "POST",
                     dataType: 'json',

@@ -82,6 +82,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Update(FormCollection formCollection)
         {
             string NTPLID = formCollection["NTPLID"];

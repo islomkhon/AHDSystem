@@ -56,5 +56,6 @@ namespace NeuRequest.DAL
         public virtual DbSet<NueUserOrgMapper> NueUserOrgMapper { get; set; }
         public virtual DbSet<NueUserProfile> NueUserProfile { get; set; }
         public virtual DbSet<NueDBManagerChangeRequest> NueDBManagerChangeRequest { get; set; }
+        public virtual DbSet<NueDBLocationChangeRequest> NueDBLocationChangeRequest { get; set; }
     }
 }

@@ -335,7 +335,7 @@
             <div class="card-header"><i class="lnr lnr-train header-icon icon-gradient bg-plum-plate"></i> New Manager Change Request  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
 
             <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmDashboard/DBManagerChangeRequest" method="POST" enctype="multipart/form-data">
-
+                @Html.AntiForgeryToken()
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
@@ -377,7 +377,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
 

@@ -628,6 +628,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PGBRequest(PGBRequestUiRender pGBRequestUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -798,6 +799,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawPGBRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -886,6 +888,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ClosePGBRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -970,6 +973,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApprovePGBRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -1090,6 +1094,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DBLocationChangeRequest(DBLocationChangeUiRender dBLocationChangeUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -1213,6 +1218,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawDBLocationChangeRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -1301,6 +1307,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseDBLocationChangeRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -1385,6 +1392,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveDBLocationChangeRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -1504,6 +1512,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DBManagerChangeRequest(DBManagerChangeUiRender dBManagerChangeUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -1632,6 +1641,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawDBManagerChangeRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -1720,6 +1730,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseDBManagerChangeRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -1804,6 +1815,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveDBManagerChangeRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -1924,6 +1936,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult InternationalTripRequest(InternationalTripUiRender internationalTripUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -2050,6 +2063,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawInternationalTripRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -2138,6 +2152,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseInternationalTripRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -2222,6 +2237,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveInternationalTripRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -2343,6 +2359,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DomesticTripRequest(DomesticTripRequestUiRender domesticTripRequestUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -2464,6 +2481,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawDomesticTripRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -2552,6 +2570,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseDomesticTripRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -2636,6 +2655,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveDomesticTripRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -2756,6 +2776,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult GeneralRequest(GeneralRequestUiRender generalRequestUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -2873,6 +2894,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawGeneralRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -2961,6 +2983,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseGeneralRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -3045,6 +3068,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveGeneralRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -3164,6 +3188,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SalaryCertificate(SalaryCertificateUiRender salaryCertificateUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -3281,6 +3306,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawSalaryCertificateRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -3369,6 +3395,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseSalaryCertificateRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -3453,6 +3480,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveSalaryCertificateRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -3572,6 +3600,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EmployeeVerificationReq(EmployeeVerificationReqUiRender employeeVerificationReqUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -3690,6 +3719,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawHCMEmployeeVerificationRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -3778,6 +3808,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseHCMEmployeeVerificationRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -3862,6 +3893,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveHCMEmployeeVerificationRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -3982,6 +4014,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddressProof(AddressProofUiRender addressProofUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -4099,6 +4132,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawHCMAddressProofReqRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -4187,6 +4221,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseHCMAddressProofRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -4271,6 +4306,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveHCMAddressProofRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -4391,6 +4427,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult LeaveBalanceEnquiry(LeaveBalanceEnquiryUiRender leaveBalanceEnquiryUiRender)
         {
             UserProfile currentUser = (Session["UserProfileSession"] as UserProfile);
@@ -4518,6 +4555,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawLeaveBalanceEnqRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -4606,6 +4644,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseBalanceEnqLeaveRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -4690,6 +4729,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveBalanceEnqLeaveRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -4810,6 +4850,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult LeaveWFHApply(LeaveWFHApplyUiRender leaveWFHApplyUiRender)
         {
             TempData["Message"] = null;
@@ -4931,6 +4972,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawLeaveWFHApplyRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -5019,6 +5061,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseWFHLeaveApplyRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -5103,6 +5146,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveWFHLeaveRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -5214,6 +5258,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SubApproveWFHLeaveRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -5376,6 +5421,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult LeavePastApply(LeavePastApplyUiRender leavePastApplyUiRender)
         {
             TempData["Message"] = null;
@@ -5497,6 +5543,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawLeavePastApplyRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -5585,6 +5632,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseLeavePastApplyRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -5669,6 +5717,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveLeavePastApplyRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -5780,6 +5829,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SubApproveLeavePastApplyRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -5941,6 +5991,7 @@ namespace NeuRequest.Controllers
         }
         
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult LeaveCancelation(LeaveCancelationUiRender leaveCancelationUiRender)
         {
             TempData["Message"] = null;
@@ -6063,6 +6114,7 @@ namespace NeuRequest.Controllers
         }
         
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult WithdrawLeaveCancelationRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -6151,6 +6203,7 @@ namespace NeuRequest.Controllers
         }
         
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CloseLeaveCancelationRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -6235,6 +6288,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ApproveLeaveCancelationRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -6346,6 +6400,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SubApproveLeaveCancelationRequest(FormCollection formCollection)
         {
             string userComment = formCollection["userComment"];
@@ -6495,6 +6550,7 @@ namespace NeuRequest.Controllers
         /********************** Leave Cancelation End***************************/
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddUserAttachment(NuRequestAttchment nueRequestAttchment)
         {
             string retrunResponse = "";
@@ -6607,6 +6663,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddUserComment(FormCollection formCollection)
         {
             string retrunResponse = "";
@@ -6695,6 +6752,7 @@ namespace NeuRequest.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult DirectMail(FormCollection formCollection)
         {
             var dateCreated = DateTime.UtcNow;

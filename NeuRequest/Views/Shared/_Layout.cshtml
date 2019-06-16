@@ -245,6 +245,23 @@
     @Scripts.Render("~/Rebone/public/vendors/pace/pace.min.js")
     <script>
 
+        function gettoken() {
+            var token = '@Html.AntiForgeryToken()';
+            token = $(token).val();
+            return token;
+        }
+
+        /*$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            if (originalOptions.type == 'POST') {
+                originalOptions.data = $.extend(
+                    originalOptions.data,
+                    {
+                        '__RequestVerificationToken': gettoken()
+                    }
+                );
+            }
+        });*/
+
         function getAllMessages() {
             var tbl = $('#notificationContainer');
             $.ajax({

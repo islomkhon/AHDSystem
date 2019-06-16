@@ -645,6 +645,12 @@
                                             {
                                                 requestTypeString = "Location Change";
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "pgbrequest")
+                                            {
+                                                requestTypeString = "Project Background Verification";
+                                            }
+
+
 
 
                                             <li class="list-group-item cursor-pointer link-action-tigger-tab" data-target="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId">
@@ -777,6 +783,14 @@
                                             {
                                                 requestTypeString = "Location Change";
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "pgbrequest")
+                                            {
+                                                requestTypeString = "Project Background Verification";
+                                            }
+
+
+
+
 
                                             <li class="list-group-item cursor-pointer link-action-tigger-tab" data-target="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId">
                                                 <div class="todo-indicator bg-@sideBarClass"></div>

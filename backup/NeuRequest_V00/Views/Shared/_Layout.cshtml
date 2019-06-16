@@ -1,0 +1,338 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+@{
+    UserProfile userProfileSession = ViewData["UserProfileSession"] as UserProfile;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style type="text/css">
+
+        .LoadWrap {
+                  background: linear-gradient(90deg, #FF4E50 10%, #F9D423 90%);
+                  overflow: hidden;
+                  height: 100%;
+                  color: #ccc;
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  width: 100%;
+                  height: 100%;
+                  z-index: 999999999999999;
+                }
+
+                .LoadWrap.hide {
+                  display: none;
+                }
+
+                .loader {
+                  height: 40px;
+                  width: 40px;
+                  position: absolute;
+                  left: 50%;
+                  margin-left: -20px;
+                  top: 50%;
+                  margin-top: -20px;
+                }
+                .loader:before, .loader:after {
+                  content: "";
+                  height: 40px;
+                  width: 40px;
+                  border: 8px solid rgba(255, 255, 255, 0.5);
+                  border-radius: 10px;
+                  position: absolute;
+                  top: 0;
+                }
+                .loader:before {
+                  -webkit-animation: animate 2s infinite linear;
+                          animation: animate 2s infinite linear;
+                }
+                .loader:after {
+                  -webkit-animation: animate2 2s infinite linear;
+                          animation: animate2 2s infinite linear;
+                }
+
+                @@-webkit-keyframes animate {
+                  100% {
+                    -webkit-transform: rotate(180deg) skew(360deg);
+                            transform: rotate(180deg) skew(360deg);
+                  }
+                }
+
+                @@keyframes animate {
+                  100% {
+                    -webkit-transform: rotate(180deg) skew(360deg);
+                            transform: rotate(180deg) skew(360deg);
+                  }
+                }
+               @@-webkit-keyframes animate2 {
+                  100% {
+                    -webkit-transform: rotate(-180deg) skew(-360deg);
+                            transform: rotate(-180deg) skew(-360deg);
+                  }
+                }
+                @@keyframes animate2 {
+                  100% {
+                    -webkit-transform: rotate(-180deg) skew(-360deg);
+                            transform: rotate(-180deg) skew(-360deg);
+                  }
+                }
+    </style>
+
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Rebone/css")
+    @Styles.Render("~/NeuUi/css/NeuBase.css")
+    <link rel="shortcut icon" href="~/Rebone/public/images/favicon1.png" />
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="LoadWrap">
+        <div class="loader"></div>
+    </div>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_navbar.html -->
+        <nav class="navbar default-layout neu col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+                <a class="navbar-brand brand-logo" href="/Home/Index"><img src="~/Rebone/public/images/logo.png" alt="logo" /></a>
+                <a class="navbar-brand brand-logo-mini" href="/Home/Index"><img src="~/Rebone/public/images/favicon.png" alt="logo" /></a>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center">
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+                <form class="col-4" action="/SearchResults/Request" method="get" enctype="multipart/form-data" autocomplete="off">
+                    <div class="form-group mb-0 ml-5">
+                        <div class="input-group search-field">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="mdi mdi-magnify"></i></span>
+                            </div>
+                            <input type="text" autocomplete="off" name="q" placeholder="Search Here" class="form-control">
+                        </div>
+                    </div>
+                </form>
+                <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex"></ul>
+                <ul class="navbar-nav navbar-nav-right">
+
+                    <li class="nav-item dropdown" id="notificationContainer">
+
+                    </li>
+
+                    <li class="nav-item dropdown d-none d-xl-inline-block">
+                        <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                            <span class="profile-text">Hello, @userProfileSession.FullName !</span><img class="img-xs rounded-circle" src="~/Rebone/public/images/profile/profileImg.png" alt="Profile image">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                            <a class="dropdown-item p-0">
+                                <div class="d-flex border-bottom">
+                                    <div class="py-3 px-4 d-flex align-items-center justify-content-center"><i class="mdi mdi-bookmark-plus-outline mr-0 text-gray"></i></div>
+                                    <div class="py-3 px-4 d-flex align-items-center justify-content-center border-left border-right"><i class="mdi mdi-account-outline mr-0 text-gray"></i></div>
+                                    <div class="py-3 px-4 d-flex align-items-center justify-content-center"><i class="mdi mdi-alarm-check mr-0 text-gray"></i></div>
+                                </div>
+                            </a>
+                            <a class="dropdown-item mt-2" href="/UserProfile/Update">
+                                Manage Profile
+                            </a>
+                            <a class="dropdown-item" href="/Account/SignOut">
+                                Sign Out
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                    <span class="icon-menu"></span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item nav-profile">
+
+                        <div class="nav-link inline-user-profile-thump">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <div class="profile-pic m-b-20 m-t-20">
+                                        <img src="~/Rebone/public/images/profile/profileImg.png" width="110" class="rounded-circle" alt="user">
+                                        <h4 class="m-t-20 m-b-0">@userProfileSession.FullName</h4>
+                                        <div>
+                                            <small class="designation text-muted">@userProfileSession.DSDesc</small>
+                                            <span class="status-indicator online"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nav-link hide">
+                            <div class="user-wrapper">
+                                <div class="profile-image">
+                                    <img src="~/Rebone/public/images/faces-clipart/pic-1.png" alt="profile image">
+                                </div>
+                                <div class="text-wrapper">
+                                    <p class="profile-name">@userProfileSession.FullName</p>
+                                    <div>
+                                        <small class="designation text-muted">@userProfileSession.DSDesc</small>
+                                        <span class="status-indicator online"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-success btn-block" data-toggle="modal" data-target="#exampleModal">New Goal<i class="mdi mdi-plus"></i></button>
+                        </div>
+
+                    </li>
+                    <li class="nav-item hide"> <a class="nav-link" href="../documentation.html"> <i class="menu-icon mdi mdi-scale-bathroom"></i><span class="menu-title">Documentation</span> </a> </li>
+                </ul>
+            </nav>
+
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-12 grid-margin">
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:../../partials/_footer.html -->
+                <footer class="footer">
+                    <div class="container-fluid clearfix">
+
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <!-- End custom js for this page-->
+    @Scripts.Render("~/Scripts/jquery.signalR-2.4.1.js")
+    @Scripts.Render("~/signalr/hubs")
+
+    <script>
+
+        function getAllMessages() {
+            var tbl = $('#notificationContainer');
+            $.ajax({
+                type: "GET",
+                dataType: 'html',
+                url: '/home/GetMessages',
+                processData: false,
+                contentType: 'application/html ; charset:utf-8',
+                cache: false,
+                timeout: 600000,
+                success: function (result) {
+                    tbl.empty().append(result);
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+
+        }
+
+        function copyToClipboard(text) {
+            var el = document.createElement('textarea');
+            // Set value (string to be copied)
+            el.value = text;
+            // Set non-editable to avoid focus and move outside of view
+            el.setAttribute('readonly', '');
+            el.style = { position: 'absolute', left: '-9999px' };
+            document.body.appendChild(el);
+            // Select text inside element
+            el.select();
+            // Copy text to clipboard
+            document.execCommand('copy');
+            // Remove temporary element
+            document.body.removeChild(el);
+        }
+
+        $(function () {
+
+            $(document).on('click', '.link-action-tigger-tab', function (e) {
+                var win = window.open($(this).data('target'), '_blank');
+                win.focus();
+            });
+
+            $(document).on('click', '.link-action-tigger', function (e) {
+                window.location = $(this).data('target');
+            });
+
+            if ($(".jq-copy").length) {
+                $(document).on('click', '.jq-copy', function (e) {
+                    copyToClipboard($(this).data('target'));
+                });
+            }
+
+            if ($(".im-tigger").length) {
+                $(document).on('click', '.im-tigger', function (e) {
+                    var target = $(this).data('target');
+                    var id = $(this).data('id');
+
+                    copyToClipboard("Request Id: #" + id);
+
+                    var link = document.createElement('a');
+                    link.href = "im:<sip:" + target + ">";
+                    link.className = "tempLink";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
+
+            var notifications = $.connection.messagesHub;
+
+            //debugger;
+            // Create a function that the hub can call to broadcast messages.
+            notifications.client.updateMessages = function () {
+                getAllMessages()
+
+            };
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                console.log("connection started")
+                getAllMessages();
+            }).fail(function (e) {
+                console.log(e);
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        var _paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "http://localhost:9090/matomo/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            _paq.push(['setUserId', '@userProfileSession.FullName']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+
+        var everythingLoaded = setInterval(function () {
+            if (/loaded|complete/.test(document.readyState)) {
+                $(".LoadWrap").fadeOut("slow");
+                clearInterval(everythingLoaded);
+            }
+        }, 10);
+
+        /*$(window).bind('beforeunload', function () {
+            $(".LoadWrap").fadeIn("fast");
+        });*/
+    </script>
+</body>
+</html>

@@ -1,0 +1,1196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="NueRequestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="NeuDesignation">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Desig" Type="String" MaxLength="450" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueUserOrgMapper" Relationship="Self.FK__NueUserOr__OrgUs__73BA3083" FromRole="NeuDesignation" ToRole="NueUserOrgMapper" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueUserPr__Desig__40058253" FromRole="NeuDesignation" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NueUserPr__Desig__44CA3770" FromRole="NeuDesignation" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NeuEmployeeVerificationRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__EmployeeV__UserI__73A521EA" FromRole="NeuEmployeeVerificationRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NeuEmploymentStatus">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Status" Type="String" MaxLength="450" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueUserPr__Emplo__40F9A68C" FromRole="NeuEmploymentStatus" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NueUserPr__Emplo__45BE5BA9" FromRole="NeuEmploymentStatus" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NeuJobLevel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LEVEL" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueUserPr__JobLe__41EDCAC5" FromRole="NeuJobLevel" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NueUserPr__JobLe__46B27FE2" FromRole="NeuJobLevel" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NeuMessages">
+    <Key>
+      <PropertyRef Name="MessageID" />
+    </Key>
+    <Property Name="MessageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Message" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" />
+    <Property Name="EmptyMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Processed" Type="Int32" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Target" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Date" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__Messages__UserId__0C1BC9F9" FromRole="NeuMessages" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NeuPractice">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Practice" Type="String" MaxLength="450" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueUserPr__Pract__42E1EEFE" FromRole="NeuPractice" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NueUserPr__Pract__47A6A41B" FromRole="NeuPractice" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NeuUserDetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="LoginName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="LoginNameWithDomain" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="StreetAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="City" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="State" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="PostalCode" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Country" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="HomePhone" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Extension" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Mobile" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Fax" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="EmailAddress" Type="String" MaxLength="450" FixedLength="false" Unicode="false" />
+    <Property Name="Title" Type="String" MaxLength="450" FixedLength="false" Unicode="false" />
+    <Property Name="Company" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Manager" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="ManagerEmail" Type="String" MaxLength="450" FixedLength="false" Unicode="false" />
+    <Property Name="Department" Type="String" MaxLength="450" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+  </EntityType>
+  <EntityType Name="NeuUserPreference">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="IsMailCommunication" Type="Int32" />
+    <Property Name="AddedOn" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+    <Property Name="FirstApprover" Type="Int32" />
+    <Property Name="SecondApprover" Type="Int32" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NeuUserPr__First__0EE3280B" FromRole="NeuUserPreference" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NeuUserPr__Secon__0FD74C44" FromRole="NeuUserPreference" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile2" Relationship="Self.FK__UserPrefe__UserI__7187CF4E" FromRole="NeuUserPreference" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueAccessMapper">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="AccessId" Type="Int32" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueAccessMaster" Relationship="Self.FK__NueAccess__Acces__5441852A" FromRole="NueAccessMapper" ToRole="NueAccessMaster" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueAccess__UserI__534D60F1" FromRole="NueAccessMapper" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueAccessMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccessDesc" Type="String" MaxLength="450" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueAccessMapper" Relationship="Self.FK__NueAccess__Acces__5441852A" FromRole="NueAccessMaster" ToRole="NueAccessMapper" />
+  </EntityType>
+  <EntityType Name="NueAddressProofRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueAddres__UserI__6DEC4894" FromRole="NueAddressProofRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueDomesticTripRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Accommodation" Type="Int32" />
+    <Property Name="LocationFrom" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="LocationTo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="StartDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="EndDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueDomest__UserI__2B7F66B9" FromRole="NueDomesticTripRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueGeneralRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueGenera__UserI__04CFADEC" FromRole="NueGeneralRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueInternationalTripRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="NeedVisiaProcessing" Type="Int32" />
+    <Property Name="PlaceToVisit" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="StartDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="ProjectName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueIntern__UserI__37E53D9E" FromRole="NueInternationalTripRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueLeaveBalanceEnquiryRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="StartDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="EndDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueLeaveB__UserI__59E54FE7" FromRole="NueLeaveBalanceEnquiryRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueLeaveCancelationRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="StartDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="EndDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueLeaveC__UserI__3587F3E0" FromRole="NueLeaveCancelationRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueLeavePastApplyRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="StartDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="EndDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueLeaveP__UserI__18178C8A" FromRole="NueLeavePastApplyRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueLeaveWFHApplyRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="StartDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="EndDate" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueLeaveW__UserI__31D75E8D" FromRole="NueLeaveWFHApplyRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueManagerMapper">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="ManagerId" Type="Int32" />
+    <Property Name="IsConsultentManager" Type="Int32" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueManage__Manag__395884C4" FromRole="NueManagerMapper" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NueManage__UserI__3864608B" FromRole="NueManagerMapper" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueRequestAceessLog">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="Int32" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Completed" Type="Int32" />
+    <Property Name="OwnerId" Type="Int32" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueReques__Owner__32AB8735" FromRole="NueRequestAceessLog" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueRequestMaster" Relationship="Self.FK__NueReques__Reque__2FCF1A8A" FromRole="NueRequestAceessLog" ToRole="NueRequestMaster" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NueReques__UserI__30C33EC3" FromRole="NueRequestAceessLog" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueRequestActivity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Payload" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="PayloadType" Type="Int32" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="RequestId" Type="Int32" />
+    <Property Name="Request" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="NueRequestActivityMaster" Relationship="Self.FK__NueReques__Paylo__671F4F74" FromRole="NueRequestActivity" ToRole="NueRequestActivityMaster" />
+    <NavigationProperty Name="NueRequestMaster" Relationship="Self.FK__NueReques__Reque__690797E6" FromRole="NueRequestActivity" ToRole="NueRequestMaster" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueReques__UserI__681373AD" FromRole="NueRequestActivity" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueRequestActivityMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ActivityDesc" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueRequestActivity" Relationship="Self.FK__NueReques__Paylo__671F4F74" FromRole="NueRequestActivityMaster" ToRole="NueRequestActivity" />
+  </EntityType>
+  <EntityType Name="NueRequestAttachmentLog">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="Int32" />
+    <Property Name="Request" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="OwnerId" Type="Int32" />
+    <Property Name="FileName" Type="String" MaxLength="1050" FixedLength="false" Unicode="false" />
+    <Property Name="FileExt" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="VFileName" Type="String" MaxLength="2050" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueReques__Owner__72910220" FromRole="NueRequestAttachmentLog" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueRequestMaster" Relationship="Self.FK__NueReques__Reque__70A8B9AE" FromRole="NueRequestAttachmentLog" ToRole="NueRequestMaster" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NueReques__UserI__719CDDE7" FromRole="NueRequestAttachmentLog" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueRequestMaster">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="IsApprovalProcess" Type="Int32" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="RequestStatus" Type="Int32" />
+    <Property Name="PayloadId" Type="Int32" />
+    <Property Name="RequestCatType" Type="Int32" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueRequestAceessLog" Relationship="Self.FK__NueReques__Reque__2FCF1A8A" FromRole="NueRequestMaster" ToRole="NueRequestAceessLog" />
+    <NavigationProperty Name="NueRequestActivity" Relationship="Self.FK__NueReques__Reque__690797E6" FromRole="NueRequestMaster" ToRole="NueRequestActivity" />
+    <NavigationProperty Name="NueRequestAttachmentLog" Relationship="Self.FK__NueReques__Reque__70A8B9AE" FromRole="NueRequestMaster" ToRole="NueRequestAttachmentLog" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueReques__Creat__2B0A656D" FromRole="NueRequestMaster" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueRequestStatus" Relationship="Self.FK__NueReques__Reque__2BFE89A6" FromRole="NueRequestMaster" ToRole="NueRequestStatus" />
+    <NavigationProperty Name="NueRequestSubType" Relationship="Self.FK__NueReques__Reque__2CF2ADDF" FromRole="NueRequestMaster" ToRole="NueRequestSubType" />
+  </EntityType>
+  <EntityType Name="NueRequestStatus">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestStatus" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueRequestMaster" Relationship="Self.FK__NueReques__Reque__2BFE89A6" FromRole="NueRequestStatus" ToRole="NueRequestMaster" />
+  </EntityType>
+  <EntityType Name="NueRequestSubType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestSubType" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="RequestType" Type="Int32" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueRequestMaster" Relationship="Self.FK__NueReques__Reque__2CF2ADDF" FromRole="NueRequestSubType" ToRole="NueRequestMaster" />
+    <NavigationProperty Name="NueRequestType" Relationship="Self.FK__NueReques__Reque__5EBF139D" FromRole="NueRequestSubType" ToRole="NueRequestType" />
+  </EntityType>
+  <EntityType Name="NueRequestType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestType" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NueRequestSubType" Relationship="Self.FK__NueReques__Reque__5EBF139D" FromRole="NueRequestType" ToRole="NueRequestSubType" />
+  </EntityType>
+  <EntityType Name="NueSalaryCertificateRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueSalary__UserI__7F16D496" FromRole="NueSalaryCertificateRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueUserOrgMapper">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="OrgUserId" Type="Int32" />
+    <Property Name="OrgUserType" Type="Int32" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="NeuDesignation" Relationship="Self.FK__NueUserOr__OrgUs__73BA3083" FromRole="NueUserOrgMapper" ToRole="NeuDesignation" />
+    <NavigationProperty Name="NueUserProfile" Relationship="Self.FK__NueUserOr__OrgUs__72C60C4A" FromRole="NueUserOrgMapper" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="Self.FK__NueUserOr__UserI__71D1E811" FromRole="NueUserOrgMapper" ToRole="NueUserProfile" />
+  </EntityType>
+  <EntityType Name="NueUserProfile">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NTPLID" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="FullName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="FirstName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="EmploymentStatus" Type="Int32" />
+    <Property Name="DateofJoining" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Practice" Type="Int32" />
+    <Property Name="Location" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="JobLevel" Type="Int32" />
+    <Property Name="Designation" Type="Int32" />
+    <Property Name="Active" Type="Int32" />
+    <Property Name="AddedOn" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="NeuDesignation" Relationship="Self.FK__NueUserPr__Desig__40058253" FromRole="NueUserProfile" ToRole="NeuDesignation" />
+    <NavigationProperty Name="NeuDesignation1" Relationship="Self.FK__NueUserPr__Desig__44CA3770" FromRole="NueUserProfile" ToRole="NeuDesignation" />
+    <NavigationProperty Name="NeuEmployeeVerificationRequest" Relationship="Self.FK__EmployeeV__UserI__73A521EA" FromRole="NueUserProfile" ToRole="NeuEmployeeVerificationRequest" />
+    <NavigationProperty Name="NeuEmploymentStatus" Relationship="Self.FK__NueUserPr__Emplo__40F9A68C" FromRole="NueUserProfile" ToRole="NeuEmploymentStatus" />
+    <NavigationProperty Name="NeuEmploymentStatus1" Relationship="Self.FK__NueUserPr__Emplo__45BE5BA9" FromRole="NueUserProfile" ToRole="NeuEmploymentStatus" />
+    <NavigationProperty Name="NeuJobLevel" Relationship="Self.FK__NueUserPr__JobLe__41EDCAC5" FromRole="NueUserProfile" ToRole="NeuJobLevel" />
+    <NavigationProperty Name="NeuJobLevel1" Relationship="Self.FK__NueUserPr__JobLe__46B27FE2" FromRole="NueUserProfile" ToRole="NeuJobLevel" />
+    <NavigationProperty Name="NeuMessages" Relationship="Self.FK__Messages__UserId__0C1BC9F9" FromRole="NueUserProfile" ToRole="NeuMessages" />
+    <NavigationProperty Name="NeuPractice" Relationship="Self.FK__NueUserPr__Pract__42E1EEFE" FromRole="NueUserProfile" ToRole="NeuPractice" />
+    <NavigationProperty Name="NeuPractice1" Relationship="Self.FK__NueUserPr__Pract__47A6A41B" FromRole="NueUserProfile" ToRole="NeuPractice" />
+    <NavigationProperty Name="NeuUserPreference" Relationship="Self.FK__NeuUserPr__First__0EE3280B" FromRole="NueUserProfile" ToRole="NeuUserPreference" />
+    <NavigationProperty Name="NeuUserPreference1" Relationship="Self.FK__NeuUserPr__Secon__0FD74C44" FromRole="NueUserProfile" ToRole="NeuUserPreference" />
+    <NavigationProperty Name="NeuUserPreference2" Relationship="Self.FK__UserPrefe__UserI__7187CF4E" FromRole="NueUserProfile" ToRole="NeuUserPreference" />
+    <NavigationProperty Name="NueAccessMapper" Relationship="Self.FK__NueAccess__UserI__534D60F1" FromRole="NueUserProfile" ToRole="NueAccessMapper" />
+    <NavigationProperty Name="NueAddressProofRequest" Relationship="Self.FK__NueAddres__UserI__6DEC4894" FromRole="NueUserProfile" ToRole="NueAddressProofRequest" />
+    <NavigationProperty Name="NueDomesticTripRequest" Relationship="Self.FK__NueDomest__UserI__2B7F66B9" FromRole="NueUserProfile" ToRole="NueDomesticTripRequest" />
+    <NavigationProperty Name="NueGeneralRequest" Relationship="Self.FK__NueGenera__UserI__04CFADEC" FromRole="NueUserProfile" ToRole="NueGeneralRequest" />
+    <NavigationProperty Name="NueInternationalTripRequest" Relationship="Self.FK__NueIntern__UserI__37E53D9E" FromRole="NueUserProfile" ToRole="NueInternationalTripRequest" />
+    <NavigationProperty Name="NueLeaveBalanceEnquiryRequest" Relationship="Self.FK__NueLeaveB__UserI__59E54FE7" FromRole="NueUserProfile" ToRole="NueLeaveBalanceEnquiryRequest" />
+    <NavigationProperty Name="NueLeaveCancelationRequest" Relationship="Self.FK__NueLeaveC__UserI__3587F3E0" FromRole="NueUserProfile" ToRole="NueLeaveCancelationRequest" />
+    <NavigationProperty Name="NueLeavePastApplyRequest" Relationship="Self.FK__NueLeaveP__UserI__18178C8A" FromRole="NueUserProfile" ToRole="NueLeavePastApplyRequest" />
+    <NavigationProperty Name="NueLeaveWFHApplyRequest" Relationship="Self.FK__NueLeaveW__UserI__31D75E8D" FromRole="NueUserProfile" ToRole="NueLeaveWFHApplyRequest" />
+    <NavigationProperty Name="NueManagerMapper" Relationship="Self.FK__NueManage__Manag__395884C4" FromRole="NueUserProfile" ToRole="NueManagerMapper" />
+    <NavigationProperty Name="NueManagerMapper1" Relationship="Self.FK__NueManage__UserI__3864608B" FromRole="NueUserProfile" ToRole="NueManagerMapper" />
+    <NavigationProperty Name="NueRequestAceessLog" Relationship="Self.FK__NueReques__Owner__32AB8735" FromRole="NueUserProfile" ToRole="NueRequestAceessLog" />
+    <NavigationProperty Name="NueRequestAceessLog1" Relationship="Self.FK__NueReques__UserI__30C33EC3" FromRole="NueUserProfile" ToRole="NueRequestAceessLog" />
+    <NavigationProperty Name="NueRequestActivity" Relationship="Self.FK__NueReques__UserI__681373AD" FromRole="NueUserProfile" ToRole="NueRequestActivity" />
+    <NavigationProperty Name="NueRequestAttachmentLog" Relationship="Self.FK__NueReques__Owner__72910220" FromRole="NueUserProfile" ToRole="NueRequestAttachmentLog" />
+    <NavigationProperty Name="NueRequestAttachmentLog1" Relationship="Self.FK__NueReques__UserI__719CDDE7" FromRole="NueUserProfile" ToRole="NueRequestAttachmentLog" />
+    <NavigationProperty Name="NueRequestMaster" Relationship="Self.FK__NueReques__Creat__2B0A656D" FromRole="NueUserProfile" ToRole="NueRequestMaster" />
+    <NavigationProperty Name="NueSalaryCertificateRequest" Relationship="Self.FK__NueSalary__UserI__7F16D496" FromRole="NueUserProfile" ToRole="NueSalaryCertificateRequest" />
+    <NavigationProperty Name="NueUserOrgMapper" Relationship="Self.FK__NueUserOr__OrgUs__72C60C4A" FromRole="NueUserProfile" ToRole="NueUserOrgMapper" />
+    <NavigationProperty Name="NueUserOrgMapper1" Relationship="Self.FK__NueUserOr__UserI__71D1E811" FromRole="NueUserProfile" ToRole="NueUserOrgMapper" />
+    <NavigationProperty Name="NueDBManagerChangeRequest" Relationship="NueRequestModel.FK__NueDBMana__Manag__08C03A61" FromRole="NueUserProfile" ToRole="NueDBManagerChangeRequest" />
+    <NavigationProperty Name="NueDBManagerChangeRequest1" Relationship="NueRequestModel.FK__NueDBMana__UserI__07CC1628" FromRole="NueUserProfile" ToRole="NueDBManagerChangeRequest" />
+  </EntityType>
+  <Association Name="FK__NueUserOr__OrgUs__73BA3083">
+    <End Role="NeuDesignation" Type="Self.NeuDesignation" Multiplicity="0..1" />
+    <End Role="NueUserOrgMapper" Type="Self.NueUserOrgMapper" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuDesignation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserOrgMapper">
+        <PropertyRef Name="OrgUserType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserPr__Desig__40058253">
+    <End Role="NeuDesignation" Type="Self.NeuDesignation" Multiplicity="0..1" />
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuDesignation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserProfile">
+        <PropertyRef Name="Designation" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserPr__Desig__44CA3770">
+    <End Role="NeuDesignation" Type="Self.NeuDesignation" Multiplicity="0..1" />
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuDesignation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserProfile">
+        <PropertyRef Name="Designation" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__EmployeeV__UserI__73A521EA">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NeuEmployeeVerificationRequest" Type="Self.NeuEmployeeVerificationRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NeuEmployeeVerificationRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserPr__Emplo__40F9A68C">
+    <End Role="NeuEmploymentStatus" Type="Self.NeuEmploymentStatus" Multiplicity="0..1" />
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuEmploymentStatus">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserProfile">
+        <PropertyRef Name="EmploymentStatus" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserPr__Emplo__45BE5BA9">
+    <End Role="NeuEmploymentStatus" Type="Self.NeuEmploymentStatus" Multiplicity="0..1" />
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuEmploymentStatus">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserProfile">
+        <PropertyRef Name="EmploymentStatus" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserPr__JobLe__41EDCAC5">
+    <End Role="NeuJobLevel" Type="Self.NeuJobLevel" Multiplicity="0..1" />
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuJobLevel">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserProfile">
+        <PropertyRef Name="JobLevel" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserPr__JobLe__46B27FE2">
+    <End Role="NeuJobLevel" Type="Self.NeuJobLevel" Multiplicity="0..1" />
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuJobLevel">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserProfile">
+        <PropertyRef Name="JobLevel" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Messages__UserId__0C1BC9F9">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NeuMessages" Type="Self.NeuMessages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NeuMessages">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserPr__Pract__42E1EEFE">
+    <End Role="NeuPractice" Type="Self.NeuPractice" Multiplicity="0..1" />
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuPractice">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserProfile">
+        <PropertyRef Name="Practice" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserPr__Pract__47A6A41B">
+    <End Role="NeuPractice" Type="Self.NeuPractice" Multiplicity="0..1" />
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NeuPractice">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserProfile">
+        <PropertyRef Name="Practice" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NeuUserPr__First__0EE3280B">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NeuUserPreference" Type="Self.NeuUserPreference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NeuUserPreference">
+        <PropertyRef Name="FirstApprover" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NeuUserPr__Secon__0FD74C44">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NeuUserPreference" Type="Self.NeuUserPreference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NeuUserPreference">
+        <PropertyRef Name="SecondApprover" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserPrefe__UserI__7187CF4E">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NeuUserPreference" Type="Self.NeuUserPreference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NeuUserPreference">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueAccess__Acces__5441852A">
+    <End Role="NueAccessMaster" Type="Self.NueAccessMaster" Multiplicity="0..1" />
+    <End Role="NueAccessMapper" Type="Self.NueAccessMapper" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueAccessMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueAccessMapper">
+        <PropertyRef Name="AccessId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueAccess__UserI__534D60F1">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueAccessMapper" Type="Self.NueAccessMapper" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueAccessMapper">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueAddres__UserI__6DEC4894">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueAddressProofRequest" Type="Self.NueAddressProofRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueAddressProofRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueDomest__UserI__2B7F66B9">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueDomesticTripRequest" Type="Self.NueDomesticTripRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueDomesticTripRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueGenera__UserI__04CFADEC">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueGeneralRequest" Type="Self.NueGeneralRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueGeneralRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueIntern__UserI__37E53D9E">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueInternationalTripRequest" Type="Self.NueInternationalTripRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueInternationalTripRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueLeaveB__UserI__59E54FE7">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueLeaveBalanceEnquiryRequest" Type="Self.NueLeaveBalanceEnquiryRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueLeaveBalanceEnquiryRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueLeaveC__UserI__3587F3E0">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueLeaveCancelationRequest" Type="Self.NueLeaveCancelationRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueLeaveCancelationRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueLeaveP__UserI__18178C8A">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueLeavePastApplyRequest" Type="Self.NueLeavePastApplyRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueLeavePastApplyRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueLeaveW__UserI__31D75E8D">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueLeaveWFHApplyRequest" Type="Self.NueLeaveWFHApplyRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueLeaveWFHApplyRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueManage__Manag__395884C4">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueManagerMapper" Type="Self.NueManagerMapper" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueManagerMapper">
+        <PropertyRef Name="ManagerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueManage__UserI__3864608B">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueManagerMapper" Type="Self.NueManagerMapper" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueManagerMapper">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Owner__32AB8735">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueRequestAceessLog" Type="Self.NueRequestAceessLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestAceessLog">
+        <PropertyRef Name="OwnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Reque__2FCF1A8A">
+    <End Role="NueRequestMaster" Type="Self.NueRequestMaster" Multiplicity="0..1" />
+    <End Role="NueRequestAceessLog" Type="Self.NueRequestAceessLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueRequestMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestAceessLog">
+        <PropertyRef Name="RequestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__UserI__30C33EC3">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueRequestAceessLog" Type="Self.NueRequestAceessLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestAceessLog">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Paylo__671F4F74">
+    <End Role="NueRequestActivityMaster" Type="Self.NueRequestActivityMaster" Multiplicity="0..1" />
+    <End Role="NueRequestActivity" Type="Self.NueRequestActivity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueRequestActivityMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestActivity">
+        <PropertyRef Name="PayloadType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Reque__690797E6">
+    <End Role="NueRequestMaster" Type="Self.NueRequestMaster" Multiplicity="0..1" />
+    <End Role="NueRequestActivity" Type="Self.NueRequestActivity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueRequestMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestActivity">
+        <PropertyRef Name="RequestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__UserI__681373AD">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueRequestActivity" Type="Self.NueRequestActivity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestActivity">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Owner__72910220">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueRequestAttachmentLog" Type="Self.NueRequestAttachmentLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestAttachmentLog">
+        <PropertyRef Name="OwnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Reque__70A8B9AE">
+    <End Role="NueRequestMaster" Type="Self.NueRequestMaster" Multiplicity="0..1" />
+    <End Role="NueRequestAttachmentLog" Type="Self.NueRequestAttachmentLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueRequestMaster">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestAttachmentLog">
+        <PropertyRef Name="RequestId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__UserI__719CDDE7">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueRequestAttachmentLog" Type="Self.NueRequestAttachmentLog" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestAttachmentLog">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Creat__2B0A656D">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueRequestMaster" Type="Self.NueRequestMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestMaster">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Reque__2BFE89A6">
+    <End Role="NueRequestStatus" Type="Self.NueRequestStatus" Multiplicity="0..1" />
+    <End Role="NueRequestMaster" Type="Self.NueRequestMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueRequestStatus">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestMaster">
+        <PropertyRef Name="RequestStatus" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Reque__2CF2ADDF">
+    <End Role="NueRequestSubType" Type="Self.NueRequestSubType" Multiplicity="0..1" />
+    <End Role="NueRequestMaster" Type="Self.NueRequestMaster" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueRequestSubType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestMaster">
+        <PropertyRef Name="RequestCatType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueReques__Reque__5EBF139D">
+    <End Role="NueRequestType" Type="Self.NueRequestType" Multiplicity="0..1" />
+    <End Role="NueRequestSubType" Type="Self.NueRequestSubType" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueRequestType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueRequestSubType">
+        <PropertyRef Name="RequestType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueSalary__UserI__7F16D496">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueSalaryCertificateRequest" Type="Self.NueSalaryCertificateRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueSalaryCertificateRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserOr__OrgUs__72C60C4A">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueUserOrgMapper" Type="Self.NueUserOrgMapper" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserOrgMapper">
+        <PropertyRef Name="OrgUserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueUserOr__UserI__71D1E811">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueUserOrgMapper" Type="Self.NueUserOrgMapper" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueUserOrgMapper">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="NueRequestEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="NeuDesignation" EntityType="Self.NeuDesignation" />
+    <EntitySet Name="NeuEmployeeVerificationRequest" EntityType="Self.NeuEmployeeVerificationRequest" />
+    <EntitySet Name="NeuEmploymentStatus" EntityType="Self.NeuEmploymentStatus" />
+    <EntitySet Name="NeuJobLevel" EntityType="Self.NeuJobLevel" />
+    <EntitySet Name="NeuMessages" EntityType="Self.NeuMessages" />
+    <EntitySet Name="NeuPractice" EntityType="Self.NeuPractice" />
+    <EntitySet Name="NeuUserDetail" EntityType="Self.NeuUserDetail" />
+    <EntitySet Name="NeuUserPreference" EntityType="Self.NeuUserPreference" />
+    <EntitySet Name="NueAccessMapper" EntityType="Self.NueAccessMapper" />
+    <EntitySet Name="NueAccessMaster" EntityType="Self.NueAccessMaster" />
+    <EntitySet Name="NueAddressProofRequest" EntityType="Self.NueAddressProofRequest" />
+    <EntitySet Name="NueDomesticTripRequest" EntityType="Self.NueDomesticTripRequest" />
+    <EntitySet Name="NueGeneralRequest" EntityType="Self.NueGeneralRequest" />
+    <EntitySet Name="NueInternationalTripRequest" EntityType="Self.NueInternationalTripRequest" />
+    <EntitySet Name="NueLeaveBalanceEnquiryRequest" EntityType="Self.NueLeaveBalanceEnquiryRequest" />
+    <EntitySet Name="NueLeaveCancelationRequest" EntityType="Self.NueLeaveCancelationRequest" />
+    <EntitySet Name="NueLeavePastApplyRequest" EntityType="Self.NueLeavePastApplyRequest" />
+    <EntitySet Name="NueLeaveWFHApplyRequest" EntityType="Self.NueLeaveWFHApplyRequest" />
+    <EntitySet Name="NueManagerMapper" EntityType="Self.NueManagerMapper" />
+    <EntitySet Name="NueRequestAceessLog" EntityType="Self.NueRequestAceessLog" />
+    <EntitySet Name="NueRequestActivity" EntityType="Self.NueRequestActivity" />
+    <EntitySet Name="NueRequestActivityMaster" EntityType="Self.NueRequestActivityMaster" />
+    <EntitySet Name="NueRequestAttachmentLog" EntityType="Self.NueRequestAttachmentLog" />
+    <EntitySet Name="NueRequestMaster" EntityType="Self.NueRequestMaster" />
+    <EntitySet Name="NueRequestStatus" EntityType="Self.NueRequestStatus" />
+    <EntitySet Name="NueRequestSubType" EntityType="Self.NueRequestSubType" />
+    <EntitySet Name="NueRequestType" EntityType="Self.NueRequestType" />
+    <EntitySet Name="NueSalaryCertificateRequest" EntityType="Self.NueSalaryCertificateRequest" />
+    <EntitySet Name="NueUserOrgMapper" EntityType="Self.NueUserOrgMapper" />
+    <EntitySet Name="NueUserProfile" EntityType="Self.NueUserProfile" />
+    <AssociationSet Name="FK__NueUserOr__OrgUs__73BA3083" Association="Self.FK__NueUserOr__OrgUs__73BA3083">
+      <End Role="NeuDesignation" EntitySet="NeuDesignation" />
+      <End Role="NueUserOrgMapper" EntitySet="NueUserOrgMapper" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserPr__Desig__40058253" Association="Self.FK__NueUserPr__Desig__40058253">
+      <End Role="NeuDesignation" EntitySet="NeuDesignation" />
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserPr__Desig__44CA3770" Association="Self.FK__NueUserPr__Desig__44CA3770">
+      <End Role="NeuDesignation" EntitySet="NeuDesignation" />
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EmployeeV__UserI__73A521EA" Association="Self.FK__EmployeeV__UserI__73A521EA">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NeuEmployeeVerificationRequest" EntitySet="NeuEmployeeVerificationRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserPr__Emplo__40F9A68C" Association="Self.FK__NueUserPr__Emplo__40F9A68C">
+      <End Role="NeuEmploymentStatus" EntitySet="NeuEmploymentStatus" />
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserPr__Emplo__45BE5BA9" Association="Self.FK__NueUserPr__Emplo__45BE5BA9">
+      <End Role="NeuEmploymentStatus" EntitySet="NeuEmploymentStatus" />
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserPr__JobLe__41EDCAC5" Association="Self.FK__NueUserPr__JobLe__41EDCAC5">
+      <End Role="NeuJobLevel" EntitySet="NeuJobLevel" />
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserPr__JobLe__46B27FE2" Association="Self.FK__NueUserPr__JobLe__46B27FE2">
+      <End Role="NeuJobLevel" EntitySet="NeuJobLevel" />
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Messages__UserId__0C1BC9F9" Association="Self.FK__Messages__UserId__0C1BC9F9">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NeuMessages" EntitySet="NeuMessages" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserPr__Pract__42E1EEFE" Association="Self.FK__NueUserPr__Pract__42E1EEFE">
+      <End Role="NeuPractice" EntitySet="NeuPractice" />
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserPr__Pract__47A6A41B" Association="Self.FK__NueUserPr__Pract__47A6A41B">
+      <End Role="NeuPractice" EntitySet="NeuPractice" />
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NeuUserPr__First__0EE3280B" Association="Self.FK__NeuUserPr__First__0EE3280B">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NeuUserPreference" EntitySet="NeuUserPreference" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NeuUserPr__Secon__0FD74C44" Association="Self.FK__NeuUserPr__Secon__0FD74C44">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NeuUserPreference" EntitySet="NeuUserPreference" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserPrefe__UserI__7187CF4E" Association="Self.FK__UserPrefe__UserI__7187CF4E">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NeuUserPreference" EntitySet="NeuUserPreference" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueAccess__Acces__5441852A" Association="Self.FK__NueAccess__Acces__5441852A">
+      <End Role="NueAccessMaster" EntitySet="NueAccessMaster" />
+      <End Role="NueAccessMapper" EntitySet="NueAccessMapper" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueAccess__UserI__534D60F1" Association="Self.FK__NueAccess__UserI__534D60F1">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueAccessMapper" EntitySet="NueAccessMapper" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueAddres__UserI__6DEC4894" Association="Self.FK__NueAddres__UserI__6DEC4894">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueAddressProofRequest" EntitySet="NueAddressProofRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueDomest__UserI__2B7F66B9" Association="Self.FK__NueDomest__UserI__2B7F66B9">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueDomesticTripRequest" EntitySet="NueDomesticTripRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueGenera__UserI__04CFADEC" Association="Self.FK__NueGenera__UserI__04CFADEC">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueGeneralRequest" EntitySet="NueGeneralRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueIntern__UserI__37E53D9E" Association="Self.FK__NueIntern__UserI__37E53D9E">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueInternationalTripRequest" EntitySet="NueInternationalTripRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueLeaveB__UserI__59E54FE7" Association="Self.FK__NueLeaveB__UserI__59E54FE7">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueLeaveBalanceEnquiryRequest" EntitySet="NueLeaveBalanceEnquiryRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueLeaveC__UserI__3587F3E0" Association="Self.FK__NueLeaveC__UserI__3587F3E0">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueLeaveCancelationRequest" EntitySet="NueLeaveCancelationRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueLeaveP__UserI__18178C8A" Association="Self.FK__NueLeaveP__UserI__18178C8A">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueLeavePastApplyRequest" EntitySet="NueLeavePastApplyRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueLeaveW__UserI__31D75E8D" Association="Self.FK__NueLeaveW__UserI__31D75E8D">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueLeaveWFHApplyRequest" EntitySet="NueLeaveWFHApplyRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueManage__Manag__395884C4" Association="Self.FK__NueManage__Manag__395884C4">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueManagerMapper" EntitySet="NueManagerMapper" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueManage__UserI__3864608B" Association="Self.FK__NueManage__UserI__3864608B">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueManagerMapper" EntitySet="NueManagerMapper" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Owner__32AB8735" Association="Self.FK__NueReques__Owner__32AB8735">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueRequestAceessLog" EntitySet="NueRequestAceessLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Reque__2FCF1A8A" Association="Self.FK__NueReques__Reque__2FCF1A8A">
+      <End Role="NueRequestMaster" EntitySet="NueRequestMaster" />
+      <End Role="NueRequestAceessLog" EntitySet="NueRequestAceessLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__UserI__30C33EC3" Association="Self.FK__NueReques__UserI__30C33EC3">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueRequestAceessLog" EntitySet="NueRequestAceessLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Paylo__671F4F74" Association="Self.FK__NueReques__Paylo__671F4F74">
+      <End Role="NueRequestActivityMaster" EntitySet="NueRequestActivityMaster" />
+      <End Role="NueRequestActivity" EntitySet="NueRequestActivity" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Reque__690797E6" Association="Self.FK__NueReques__Reque__690797E6">
+      <End Role="NueRequestMaster" EntitySet="NueRequestMaster" />
+      <End Role="NueRequestActivity" EntitySet="NueRequestActivity" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__UserI__681373AD" Association="Self.FK__NueReques__UserI__681373AD">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueRequestActivity" EntitySet="NueRequestActivity" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Owner__72910220" Association="Self.FK__NueReques__Owner__72910220">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueRequestAttachmentLog" EntitySet="NueRequestAttachmentLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Reque__70A8B9AE" Association="Self.FK__NueReques__Reque__70A8B9AE">
+      <End Role="NueRequestMaster" EntitySet="NueRequestMaster" />
+      <End Role="NueRequestAttachmentLog" EntitySet="NueRequestAttachmentLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__UserI__719CDDE7" Association="Self.FK__NueReques__UserI__719CDDE7">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueRequestAttachmentLog" EntitySet="NueRequestAttachmentLog" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Creat__2B0A656D" Association="Self.FK__NueReques__Creat__2B0A656D">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueRequestMaster" EntitySet="NueRequestMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Reque__2BFE89A6" Association="Self.FK__NueReques__Reque__2BFE89A6">
+      <End Role="NueRequestStatus" EntitySet="NueRequestStatus" />
+      <End Role="NueRequestMaster" EntitySet="NueRequestMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Reque__2CF2ADDF" Association="Self.FK__NueReques__Reque__2CF2ADDF">
+      <End Role="NueRequestSubType" EntitySet="NueRequestSubType" />
+      <End Role="NueRequestMaster" EntitySet="NueRequestMaster" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueReques__Reque__5EBF139D" Association="Self.FK__NueReques__Reque__5EBF139D">
+      <End Role="NueRequestType" EntitySet="NueRequestType" />
+      <End Role="NueRequestSubType" EntitySet="NueRequestSubType" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueSalary__UserI__7F16D496" Association="Self.FK__NueSalary__UserI__7F16D496">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueSalaryCertificateRequest" EntitySet="NueSalaryCertificateRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserOr__OrgUs__72C60C4A" Association="Self.FK__NueUserOr__OrgUs__72C60C4A">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueUserOrgMapper" EntitySet="NueUserOrgMapper" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueUserOr__UserI__71D1E811" Association="Self.FK__NueUserOr__UserI__71D1E811">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueUserOrgMapper" EntitySet="NueUserOrgMapper" />
+    </AssociationSet>
+    <EntitySet Name="NueDBManagerChangeRequest" EntityType="NueRequestModel.NueDBManagerChangeRequest" />
+    <AssociationSet Name="FK__NueDBMana__Manag__08C03A61" Association="NueRequestModel.FK__NueDBMana__Manag__08C03A61">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueDBManagerChangeRequest" EntitySet="NueDBManagerChangeRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueDBMana__UserI__07CC1628" Association="NueRequestModel.FK__NueDBMana__UserI__07CC1628">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueDBManagerChangeRequest" EntitySet="NueDBManagerChangeRequest" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="NueDBManagerChangeRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RequestId" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="ManagerId" Type="Int32" />
+    <Property Name="ProjectName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AddedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ModifiedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NueUserProfile" Relationship="NueRequestModel.FK__NueDBMana__Manag__08C03A61" FromRole="NueDBManagerChangeRequest" ToRole="NueUserProfile" />
+    <NavigationProperty Name="NueUserProfile1" Relationship="NueRequestModel.FK__NueDBMana__UserI__07CC1628" FromRole="NueDBManagerChangeRequest" ToRole="NueUserProfile" />
+  </EntityType>
+  <Association Name="FK__NueDBMana__Manag__08C03A61">
+    <End Type="NueRequestModel.NueUserProfile" Role="NueUserProfile" Multiplicity="0..1" />
+    <End Type="NueRequestModel.NueDBManagerChangeRequest" Role="NueDBManagerChangeRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueDBManagerChangeRequest">
+        <PropertyRef Name="ManagerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueDBMana__UserI__07CC1628">
+    <End Type="NueRequestModel.NueUserProfile" Role="NueUserProfile" Multiplicity="0..1" />
+    <End Type="NueRequestModel.NueDBManagerChangeRequest" Role="NueDBManagerChangeRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueDBManagerChangeRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

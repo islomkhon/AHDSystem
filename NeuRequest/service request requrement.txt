@@ -37,6 +37,10 @@ https://select2.org/getting-started/basic-usage
 
 https://select2.org/getting-started/basic-usage
 
+https://app.chatbot.com/stories/category/all
+
+http://superscriptjs.com/
+
 
 netsh http add urlacl url=http://192.168.225.203:44361/ user=everyone
 netsh delete urlacl url=http://192.168.225.203:44361

@@ -1,0 +1,63 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+
+@{
+    UserProfile currentUser = ViewData["UserProfileSession"] as UserProfile;
+    List<MessagesModel> messages = ViewData["Messages"] as List<MessagesModel>;
+    var unreadCount = messages.Where(x => x.Processed == 0).Count();
+    var unreadCountStr = "";
+    if(unreadCount > 0)
+    {
+        unreadCountStr = unreadCount.ToString();
+    }
+    ViewBag.Title = "Notifications";
+}
+<style>
+</style>
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Notifications</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="badge badge-pill badge-success pl-2 pr-3 notifification-title cursor-default" title="Unread Count"><i class="mdi mdi-bell-outline mr-2"></i>@unreadCountStr</div>
+                <ul class="bullet-line-list mt-1 pt-1">
+                    @foreach (var item in messages)
+                    {
+                        string seenClass = "";
+                        if (@item.Processed == 0)
+                        {
+                            seenClass = "unseen";
+                        }
+                        <li class="link-action-tigger cursor-pointer @seenClass unseen-row notification pb-1 mb-1" data-target="/ProcessNotification/Process?notificationId=@item.MessageID">
+                            <h5>@item.Message</h5>
+                            <p class="mb-2 notofication-list-body">@item.EmptyMessage</p>
+                            <p class="text-muted mb-2" title="@item.getLocalAddedOn">
+                                <i class="mdi mdi-clock"></i>
+                                @item.getRedableTime
+                            </p>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/tooltips.js")
+
+
+<script>
+    $(function () {
+        
+
+    });
+</script>

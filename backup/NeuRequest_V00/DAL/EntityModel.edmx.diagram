@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="82173794b12d4e6fb33004cf30ebdbc5" Name="Diagram1">
+        <EntityTypeShape EntityType="NueRequestModel.NeuDesignation" Width="1.5" PointX="0.75" PointY="36.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NeuEmployeeVerificationRequest" Width="1.5" PointX="8.25" PointY="15.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NeuEmploymentStatus" Width="1.5" PointX="3.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NeuJobLevel" Width="1.5" PointX="3.75" PointY="40.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NeuMessages" Width="1.5" PointX="8.25" PointY="18.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NeuPractice" Width="1.5" PointX="3.75" PointY="43.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NeuUserDetail" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NeuUserPreference" Width="1.5" PointX="8.25" PointY="22" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueAccessMapper" Width="1.5" PointX="11.25" PointY="36.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueAccessMaster" Width="1.5" PointX="9" PointY="60.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueAddressProofRequest" Width="1.5" PointX="8.25" PointY="28.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueDomesticTripRequest" Width="1.5" PointX="8.25" PointY="31.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueGeneralRequest" Width="1.5" PointX="8.25" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueInternationalTripRequest" Width="1.5" PointX="8.25" PointY="38.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueLeaveBalanceEnquiryRequest" Width="1.5" PointX="8.25" PointY="42.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueLeaveCancelationRequest" Width="1.5" PointX="8.25" PointY="46.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueLeavePastApplyRequest" Width="1.5" PointX="8.25" PointY="49.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueLeaveWFHApplyRequest" Width="1.5" PointX="8.25" PointY="53.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueManagerMapper" Width="1.5" PointX="8.25" PointY="56.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueRequestAceessLog" Width="1.5" PointX="11.25" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueRequestActivity" Width="1.5" PointX="11.25" PointY="40" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueRequestActivityMaster" Width="1.5" PointX="9" PointY="63.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueRequestAttachmentLog" Width="1.5" PointX="14.25" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueRequestMaster" Width="1.5" PointX="14.25" PointY="30.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueRequestStatus" Width="1.5" PointX="12" PointY="29.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueRequestSubType" Width="1.5" PointX="12" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueRequestType" Width="1.5" PointX="9.75" PointY="11.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueSalaryCertificateRequest" Width="1.5" PointX="8.25" PointY="76.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueUserOrgMapper" Width="1.5" PointX="3" PointY="36.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NueRequestModel.NueUserProfile" Width="1.5" PointX="6" PointY="32.375" IsExpanded="true" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserOr__OrgUs__73BA3083" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserPr__Desig__40058253" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserPr__Desig__44CA3770" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__EmployeeV__UserI__73A521EA" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserPr__Emplo__40F9A68C" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserPr__Emplo__45BE5BA9" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserPr__JobLe__41EDCAC5" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserPr__JobLe__46B27FE2" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__Messages__UserId__0C1BC9F9" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserPr__Pract__42E1EEFE" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserPr__Pract__47A6A41B" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NeuUserPr__First__0EE3280B" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NeuUserPr__Secon__0FD74C44" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__UserPrefe__UserI__7187CF4E" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueAccess__Acces__5441852A" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueAccess__UserI__534D60F1" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueAddres__UserI__6DEC4894" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueDomest__UserI__2B7F66B9" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueGenera__UserI__04CFADEC" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueIntern__UserI__37E53D9E" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueLeaveB__UserI__59E54FE7" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueLeaveC__UserI__3587F3E0" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueLeaveP__UserI__18178C8A" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueLeaveW__UserI__31D75E8D" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueManage__Manag__395884C4" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueManage__UserI__3864608B" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Owner__32AB8735" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Reque__2FCF1A8A" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__UserI__30C33EC3" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Paylo__671F4F74" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Reque__690797E6" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__UserI__681373AD" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Owner__72910220" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Reque__70A8B9AE" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__UserI__719CDDE7" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Creat__2B0A656D" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Reque__2BFE89A6" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Reque__2CF2ADDF" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueReques__Reque__5EBF139D" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueSalary__UserI__7F16D496" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserOr__OrgUs__72C60C4A" ManuallyRouted="false" />
+        <AssociationConnector Association="NueRequestModel.FK__NueUserOr__UserI__71D1E811" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="NueRequestModel.NueDBManagerChangeRequest" Width="1.5" PointX="8.25" PointY="7.25" />
+        <AssociationConnector Association="NueRequestModel.FK__NueDBMana__Manag__08C03A61" />
+        <AssociationConnector Association="NueRequestModel.FK__NueDBMana__UserI__07CC1628" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
