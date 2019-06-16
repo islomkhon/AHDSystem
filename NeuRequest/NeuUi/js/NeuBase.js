@@ -1249,6 +1249,89 @@
                 }
             });
         }
+        else if (type === 'withdraw-hcm-pgb-request') {
+            swal({
+                title: 'Provide withdrawal reason',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3f51b5',
+                cancelButtonColor: '#ff4081',
+                confirmButtonText: 'Great ',
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Reason...",
+                        type: "textarea",
+                        class: 'form-control',
+                        id: 'withdrawalComment'
+                    },
+                },
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "OK",
+                        value: true,
+                        visible: true,
+                        className: "btn btn-primary",
+                        closeModal: true
+                    }
+                }
+            }).then((value) => {
+                if (value) {
+                    var reqId = $('#requestId').val();
+                    var usrId = $('#userId').val();
+                    var formData = new FormData();
+                    formData.append("requestId", "" + reqId + "");
+                    formData.append("userId", "" + usrId + "");
+                    formData.append("userComment", $('#withdrawalComment').val());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmDashboard/WithdrawPGBRequest",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.Status == 'Ok') {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 2 sec.',
+                                    timer: 2000,
+                                    button: false
+                                });
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            }
+                            else {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                }
+            });
+        }
         else if (type === 'close-leave-cancelation-request') {
             swal({
                 title: 'Please provide feedback',
@@ -2208,6 +2291,89 @@
                         dataType: 'json',
                         enctype: 'multipart/form-data',
                         url: "/HcmDashboard/CloseDBLocationChangeRequest",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.Status == 'Ok') {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 2 sec.',
+                                    timer: 2000,
+                                    button: false
+                                });
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            }
+                            else {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                }
+            });
+        }
+        else if (type === 'close-hcm-pgb-request') {
+            swal({
+                title: 'Please provide feedback',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3f51b5',
+                cancelButtonColor: '#ff4081',
+                confirmButtonText: 'Great ',
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Feedback",
+                        type: "textarea",
+                        class: 'form-control',
+                        id: 'FeedBackComment'
+                    },
+                },
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "OK",
+                        value: true,
+                        visible: true,
+                        className: "btn btn-primary",
+                        closeModal: true
+                    }
+                }
+            }).then((value) => {
+                if (value) {
+                    var reqId = $('#requestId').val();
+                    var usrId = $('#userId').val();
+                    var formData = new FormData();
+                    formData.append("requestId", "" + reqId + "");
+                    formData.append("userId", "" + usrId + "");
+                    formData.append("userComment", $('#FeedBackComment').val());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmDashboard/ClosePGBRequest",
                         data: formData,
                         processData: false,
                         contentType: false,
@@ -3241,6 +3407,103 @@
                 }
             });
         }
+        else if (type === 'final-hcm-pgb-request') {
+            swal({
+                title: 'Are you sure?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3f51b5',
+                cancelButtonColor: '#ff4081',
+                confirmButtonText: 'Great ',
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Approval Comment",
+                        type: "textarea",
+                        class: 'form-control',
+                        id: 'ApprovalComment'
+                    },
+                },
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "OK",
+                        value: true,
+                        visible: true,
+                        className: "btn btn-primary",
+                        closeModal: true
+                    }
+                }
+            }).then((value) => {
+                if (value) {
+                    var reqId = $('#requestId').val();
+                    var usrId = $('#userId').val();
+                    var formData = new FormData();
+                    formData.append("requestId", "" + reqId + "");
+                    formData.append("userId", "" + usrId + "");
+                    formData.append("userComment", $('#ApprovalComment').val());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmDashboard/ApprovePGBRequest",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.Status == 'Ok') {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 2 sec.',
+                                    timer: 2000,
+                                    button: false
+                                });
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            }
+                            else {
+                                swal({
+                                    title: data.message,
+                                    text: 'Data refresh in 4 sec.',
+                                    timer: 4000,
+                                    button: false
+                                });
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 4000);
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

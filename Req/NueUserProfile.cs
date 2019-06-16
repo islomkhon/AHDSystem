@@ -17,13 +17,16 @@ namespace Req
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public NueUserProfile()
         {
-            this.EmployeeVerificationRequest = new HashSet<EmployeeVerificationRequest>();
-            this.Messages = new HashSet<Messages>();
+            this.NeuEmployeeVerificationRequest = new HashSet<NeuEmployeeVerificationRequest>();
+            this.NeuMessages = new HashSet<NeuMessages>();
             this.NeuUserPreference = new HashSet<NeuUserPreference>();
             this.NeuUserPreference1 = new HashSet<NeuUserPreference>();
             this.NeuUserPreference2 = new HashSet<NeuUserPreference>();
             this.NueAccessMapper = new HashSet<NueAccessMapper>();
             this.NueAddressProofRequest = new HashSet<NueAddressProofRequest>();
+            this.NueDBLocationChangeRequest = new HashSet<NueDBLocationChangeRequest>();
+            this.NueDBManagerChangeRequest = new HashSet<NueDBManagerChangeRequest>();
+            this.NueDBManagerChangeRequest1 = new HashSet<NueDBManagerChangeRequest>();
             this.NueDomesticTripRequest = new HashSet<NueDomesticTripRequest>();
             this.NueGeneralRequest = new HashSet<NueGeneralRequest>();
             this.NueInternationalTripRequest = new HashSet<NueInternationalTripRequest>();
@@ -60,16 +63,18 @@ namespace Req
         public Nullable<int> Active { get; set; }
         public Nullable<System.DateTime> AddedOn { get; set; }
     
-        public virtual Designation Designation1 { get; set; }
-        public virtual Designation Designation2 { get; set; }
+        public virtual NeuDesignation NeuDesignation { get; set; }
+        public virtual NeuDesignation NeuDesignation1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EmployeeVerificationRequest> EmployeeVerificationRequest { get; set; }
-        public virtual EmploymentStatus EmploymentStatus1 { get; set; }
-        public virtual EmploymentStatus EmploymentStatus2 { get; set; }
-        public virtual JobLevel JobLevel1 { get; set; }
-        public virtual JobLevel JobLevel2 { get; set; }
+        public virtual ICollection<NeuEmployeeVerificationRequest> NeuEmployeeVerificationRequest { get; set; }
+        public virtual NeuEmploymentStatus NeuEmploymentStatus { get; set; }
+        public virtual NeuEmploymentStatus NeuEmploymentStatus1 { get; set; }
+        public virtual NeuJobLevel NeuJobLevel { get; set; }
+        public virtual NeuJobLevel NeuJobLevel1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Messages> Messages { get; set; }
+        public virtual ICollection<NeuMessages> NeuMessages { get; set; }
+        public virtual NeuPractice NeuPractice { get; set; }
+        public virtual NeuPractice NeuPractice1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NeuUserPreference> NeuUserPreference { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -80,6 +85,12 @@ namespace Req
         public virtual ICollection<NueAccessMapper> NueAccessMapper { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NueAddressProofRequest> NueAddressProofRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NueDBLocationChangeRequest> NueDBLocationChangeRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NueDBManagerChangeRequest> NueDBManagerChangeRequest { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NueDBManagerChangeRequest> NueDBManagerChangeRequest1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NueDomesticTripRequest> NueDomesticTripRequest { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -116,7 +127,5 @@ namespace Req
         public virtual ICollection<NueUserOrgMapper> NueUserOrgMapper { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NueUserOrgMapper> NueUserOrgMapper1 { get; set; }
-        public virtual Practice Practice1 { get; set; }
-        public virtual Practice Practice2 { get; set; }
     }
 }

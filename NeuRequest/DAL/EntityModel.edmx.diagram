@@ -80,6 +80,8 @@
         <EntityTypeShape EntityType="NueRequestModel.NueDBManagerChangeRequest" Width="1.5" PointX="8.25" PointY="7.25" />
         <AssociationConnector Association="NueRequestModel.FK__NueDBMana__Manag__08C03A61" />
         <AssociationConnector Association="NueRequestModel.FK__NueDBMana__UserI__07CC1628" />
+        <EntityTypeShape EntityType="NueRequestModel.NueDBLocationChangeRequest" Width="1.5" PointX="8.25" PointY="66.5" />
+        <AssociationConnector Association="NueRequestModel.FK__NueDBLoca__UserI__33AA9866" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="NueRequestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6013: The table/view 'NueRequest.dbo.NeuCountry' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="NeuCountry">
+          <Property Name="CountryID" Type="int" />
+          <Property Name="CountryName" Type="varchar" MaxLength="50" />
+          <Property Name="TwoCharCountryCode" Type="char" MaxLength="2" />
+          <Property Name="ThreeCharCountryCode" Type="char" MaxLength="3" />
+        </EntityType>-->
   <EntityType Name="NeuDesignation">
     <Key>
       <PropertyRef Name="Id" />
@@ -118,6 +126,18 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="RequestId" Type="varchar" MaxLength="350" />
     <Property Name="UserId" Type="int" />
+    <Property Name="Message" Type="text" />
+    <Property Name="AddedOn" Type="datetime" Nullable="false" />
+    <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="NueDBLocationChangeRequest">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequestId" Type="varchar" MaxLength="350" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="Location" Type="text" />
     <Property Name="Message" Type="text" />
     <Property Name="AddedOn" Type="datetime" Nullable="false" />
     <Property Name="ModifiedOn" Type="datetime" Nullable="false" />
@@ -448,6 +468,18 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="NueAddressProofRequest">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__NueDBLoca__UserI__33AA9866">
+    <End Role="NueUserProfile" Type="Self.NueUserProfile" Multiplicity="0..1" />
+    <End Role="NueDBLocationChangeRequest" Type="Self.NueDBLocationChangeRequest" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NueUserProfile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NueDBLocationChangeRequest">
         <PropertyRef Name="UserId" />
       </Dependent>
     </ReferentialConstraint>
@@ -908,6 +940,7 @@
     <EntitySet Name="NueAccessMapper" EntityType="Self.NueAccessMapper" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="NueAccessMaster" EntityType="Self.NueAccessMaster" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="NueAddressProofRequest" EntityType="Self.NueAddressProofRequest" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="NueDBLocationChangeRequest" EntityType="Self.NueDBLocationChangeRequest" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="NueDBManagerChangeRequest" EntityType="Self.NueDBManagerChangeRequest" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="NueDomesticTripRequest" EntityType="Self.NueDomesticTripRequest" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="NueGeneralRequest" EntityType="Self.NueGeneralRequest" Schema="dbo" store:Type="Tables" />
@@ -955,6 +988,10 @@
     <AssociationSet Name="FK__NueAddres__UserI__6DEC4894" Association="Self.FK__NueAddres__UserI__6DEC4894">
       <End Role="NueUserProfile" EntitySet="NueUserProfile" />
       <End Role="NueAddressProofRequest" EntitySet="NueAddressProofRequest" />
+    </AssociationSet>
+    <AssociationSet Name="FK__NueDBLoca__UserI__33AA9866" Association="Self.FK__NueDBLoca__UserI__33AA9866">
+      <End Role="NueUserProfile" EntitySet="NueUserProfile" />
+      <End Role="NueDBLocationChangeRequest" EntitySet="NueDBLocationChangeRequest" />
     </AssociationSet>
     <AssociationSet Name="FK__NueDBMana__Manag__08C03A61" Association="Self.FK__NueDBMana__Manag__08C03A61">
       <End Role="NueUserProfile" EntitySet="NueUserProfile" />

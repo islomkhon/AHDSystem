@@ -20,7 +20,7 @@ namespace Req
         public Nullable<int> OrgUserType { get; set; }
         public System.DateTime AddedOn { get; set; }
     
-        public virtual Designation Designation { get; set; }
+        public virtual NeuDesignation NeuDesignation { get; set; }
         public virtual NueUserProfile NueUserProfile { get; set; }
         public virtual NueUserProfile NueUserProfile1 { get; set; }
     }

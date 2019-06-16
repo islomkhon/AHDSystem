@@ -18,6 +18,35 @@ Database updations -> (Manager Change, Location change) ->
 Em/CM -> emplyee list
 Project specific pgb(project bg varification) -> project name, bgb requrements.
 
+pgb ->
+
+Project name
+Client Name
+Project Country
+Expected Start Date
+Start Financial Quarter
+Onsite/Offshore/Mixed
+Expected End Date
+Number of Opportunities
+Estimated Revenue
+Need Visia Processing
+Posible Consultents(List) 
+
+https://gist.githubusercontent.com/keeguon/2310008/raw/bdc2ce1c1e3f28f9cab5b4393c7549f38361be4e/countries.json
+https://select2.org/getting-started/basic-usage
+
+https://select2.org/getting-started/basic-usage
+
+
+netsh http add urlacl url=http://192.168.225.203:44361/ user=everyone
+netsh delete urlacl url=http://192.168.225.203:44361
+netsh delete urlacl url=http://192.168.225.203:44361
+netsh http delete urlacl url=http://192.168.225.203:44361/
+netsh http delete urlacl url=http://localhost:44361/
+
+
+%userprofile%\My Documents\IISExpress
+
 you can put a section to attach mail of approval if any. there is no need for approval as such
 Location :
 is also needed
@@ -1905,3 +1934,94 @@ ALTER TABLE [dbo].[NueDBLocationChangeRequest]  WITH CHECK ADD FOREIGN KEY([User
 REFERENCES [dbo].[NueUserProfile] ([Id])
 GO
 -----------------------------------------------------
+
+CREATE TABLE NeuCountry
+(
+     CountryID INT
+    ,CountryName VARCHAR(50)
+    ,TwoCharCountryCode CHAR(2)
+    ,ThreeCharCountryCode CHAR(3)    
+);
+--------------------------------------------------------------------
+PGBRequest: NuePGBRequest
+PGBRequestModal
+PGBRequest
+PGBRequestUiRender
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NuePGBRequest]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NuePGBRequest](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[ProjectName] [varchar](2500) NULL,
+	[ClientName] [varchar](2500) NULL,
+	[CountryId] [int] NULL,
+	[StartDate] [varchar](2500) NULL,
+	[EndDate] [varchar](2500) NULL,
+	[StartFinancialQuarter] [varchar](2500) NULL,
+	[OpMode] [varchar](2500) NULL,
+	[OpportunitiesCount] [int] NULL,
+	[EstimatedRevenue] [varchar](2500) NULL,
+	[NeedVisiaProcessing] [int] NULL,
+	[Message] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NuePGBRequest]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NuePGBRequest]  WITH CHECK ADD FOREIGN KEY([CountryId])
+REFERENCES [dbo].[NeuCountry] ([CountryID])
+GO
+
+--------------------------
+
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NuePGBRequestUsers]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NuePGBRequestUsers](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[UserId] [int] NULL,
+	[PGBRequestId] [int] NULL,
+	[Temp] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NuePGBRequestUsers]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NuePGBRequestUsers]  WITH CHECK ADD FOREIGN KEY([PGBRequestId])
+REFERENCES [dbo].[NuePGBRequest] ([Id])
+GO
+
+-----------------------------------------------------------------------------

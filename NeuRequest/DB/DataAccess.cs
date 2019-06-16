@@ -563,6 +563,90 @@ namespace NeuRequest.DB
             return modified;
         }
 
+        public int addPGBRequestUsers(List<PGBRequestUsers> posibleUsers)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                foreach (var item in posibleUsers)
+                {
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO NuePGBRequestUsers (RequestId, UserId, PGBRequestId, AddedOn, ModifiedOn) " +
+                                      "output INSERTED.ID VALUES(@RequestId, @UserId, @PGBRequestId, @AddedOn, @ModifiedOn)", connection))
+                    {
+                        cmd.Parameters.AddWithValue("@RequestId", item.RequestId);
+                        cmd.Parameters.AddWithValue("@UserId", item.UserId);
+                        cmd.Parameters.AddWithValue("@PGBRequestId", item.PGBRequestId);
+                        cmd.Parameters.AddWithValue("@AddedOn", item.AddedOn);
+                        cmd.Parameters.AddWithValue("@ModifiedOn", item.ModifiedOn);
+                        modified = (int)cmd.ExecuteScalar();
+                    }
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
+
+        public int addPGBRequest(PGBRequest pGBRequest)
+        {
+            int modified = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO NuePGBRequest (RequestId, UserId, ProjectName, ClientName, CountryId, StartDate, EndDate, StartFinancialQuarter, OpMode, OpportunitiesCount, EstimatedRevenue, NeedVisiaProcessing, Message, AddedOn, ModifiedOn) " +
+                    "output INSERTED.ID VALUES(@RequestId, @UserId, @ProjectName, @ClientName, @CountryId, @StartDate, @EndDate, @StartFinancialQuarter, @OpMode, @OpportunitiesCount, @EstimatedRevenue, @NeedVisiaProcessing, @Message, @AddedOn, @ModifiedOn)", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", pGBRequest.RequestId);
+                    cmd.Parameters.AddWithValue("@UserId", pGBRequest.UserId);
+                    cmd.Parameters.AddWithValue("@ProjectName", pGBRequest.ProjectName);
+                    cmd.Parameters.AddWithValue("@ClientName", pGBRequest.ClientName);
+                    cmd.Parameters.AddWithValue("@CountryId", pGBRequest.CountryId);
+                    if (pGBRequest.StartDate != null)
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", pGBRequest.StartDate);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);
+                    }
+                    if (pGBRequest.EndDate != null)
+                    {
+                        cmd.Parameters.AddWithValue("@EndDate", pGBRequest.EndDate);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@EndDate", DBNull.Value);
+                    }
+                    cmd.Parameters.AddWithValue("@StartFinancialQuarter", pGBRequest.StartFinancialQuarter);
+                    cmd.Parameters.AddWithValue("@OpMode", pGBRequest.OpMode);
+                    cmd.Parameters.AddWithValue("@OpportunitiesCount", pGBRequest.OpportunitiesCount);
+                    if (pGBRequest.EstimatedRevenue != null)
+                    {
+                        cmd.Parameters.AddWithValue("@EstimatedRevenue", pGBRequest.EstimatedRevenue);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@EstimatedRevenue", DBNull.Value);
+                    }
+                    cmd.Parameters.AddWithValue("@NeedVisiaProcessing", pGBRequest.NeedVisiaProcessing);
+                    if (pGBRequest.Message != null)
+                    {
+                        cmd.Parameters.AddWithValue("@Message", pGBRequest.Message);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Message", DBNull.Value);
+                    }
+                    cmd.Parameters.AddWithValue("@AddedOn", pGBRequest.AddedOn);
+                    cmd.Parameters.AddWithValue("@ModifiedOn", pGBRequest.ModifiedOn);
+                    modified = (int)cmd.ExecuteScalar();
+                }
+                connection.Close();
+            }
+            return modified;
+
+        }
 
         public int addDBLocationChangeRequest(DBLocationChangeRequest dBLocationChangeRequest)
         {
@@ -940,6 +1024,91 @@ namespace NeuRequest.DB
             }
             return neuLeavePastApplyModal;
         }
+
+
+        public PGBRequestModal getPGBRequestModal(string requestId)
+        {
+            PGBRequestModal pGBRequestModal = null;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId, 
+                                                        nucr.Message, nucr.ProjectName,
+														nucr.ClientName, nucr.CountryId, nuc.CountryName, nuc.TwoCharCountryCode as CountryCode,
+														nucr.StartDate, nucr.EndDate,
+														nucr.StartFinancialQuarter, nucr.OpMode,
+														nucr.OpportunitiesCount, nucr.EstimatedRevenue,
+														nucr.NeedVisiaProcessing,
+														nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NuePGBRequest nucr 
+														join NueUserProfile nup on nucr.UserId = nup.Id 
+														join NeuCountry nuc on nucr.CountryId = nuc.CountryID
+														where nucr.RequestId = @RequestId", connection))
+                {
+                    cmd.Parameters.AddWithValue("@RequestId", requestId);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            pGBRequestModal = new PGBRequestModal();
+                            pGBRequestModal.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            pGBRequestModal.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                            pGBRequestModal.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                            pGBRequestModal.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                            pGBRequestModal.Message = ConvertFromDBVal<string>(dataReader["Message"]);
+
+                            pGBRequestModal.ProjectName = ConvertFromDBVal<string>(dataReader["ProjectName"]);
+                            pGBRequestModal.ClientName = ConvertFromDBVal<string>(dataReader["ClientName"]);
+                            pGBRequestModal.CountryId = ConvertFromDBVal<int>(dataReader["CountryId"]);
+                            pGBRequestModal.CountryName = ConvertFromDBVal<string>(dataReader["CountryName"]);
+                            pGBRequestModal.CountryCode = ConvertFromDBVal<string>(dataReader["CountryCode"]);
+                            pGBRequestModal.StartDate = ConvertFromDBVal<string>(dataReader["StartDate"]);
+                            pGBRequestModal.EndDate = ConvertFromDBVal<string>(dataReader["EndDate"]);
+                            pGBRequestModal.StartFinancialQuarter = ConvertFromDBVal<string>(dataReader["StartFinancialQuarter"]);
+                            pGBRequestModal.OpMode = ConvertFromDBVal<string>(dataReader["OpMode"]);
+                            pGBRequestModal.OpportunitiesCount = ConvertFromDBVal<int>(dataReader["OpportunitiesCount"]);
+                            pGBRequestModal.EstimatedRevenue = ConvertFromDBVal<string>(dataReader["EstimatedRevenue"]);
+                            pGBRequestModal.NeedVisiaProcessing = ConvertFromDBVal<int>(dataReader["NeedVisiaProcessing"]);
+                            pGBRequestModal.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                            pGBRequestModal.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                            break;
+                        }
+                    }
+                }
+                List<PGBRequestUsers> posibleUsers = new List<PGBRequestUsers>();
+                if (pGBRequestModal != null && pGBRequestModal.RequestId != null && pGBRequestModal.RequestId.Trim() != "")
+                {
+                    using (SqlCommand cmd = new SqlCommand(@"SELECT nucr.Id, nup.Id as UserId, nup.FullName, nucr.RequestId,
+														nucr.AddedOn, nucr.ModifiedOn 
+                                                        from NuePGBRequestUsers nucr 
+														join NueUserProfile nup on nucr.UserId = nup.Id 
+														where nucr.RequestId = @RequestId and nucr.PGBRequestId = @PGBRequestId", connection))
+                    {
+                        cmd.Parameters.AddWithValue("@RequestId", requestId);
+                        cmd.Parameters.AddWithValue("@PGBRequestId", pGBRequestModal.Id);
+                        using (SqlDataReader dataReader = cmd.ExecuteReader())
+                        {
+                            while (dataReader.Read())
+                            {
+                                PGBRequestUsers pGBRequestUsers = new PGBRequestUsers();
+                                pGBRequestUsers.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                                pGBRequestUsers.UserId = ConvertFromDBVal<int>(dataReader["UserId"]);
+                                pGBRequestUsers.Fullname = ConvertFromDBVal<string>(dataReader["FullName"]);
+                                pGBRequestUsers.RequestId = ConvertFromDBVal<string>(dataReader["RequestId"]);
+                                pGBRequestUsers.AddedOn = ConvertFromDBVal<DateTime>(dataReader["AddedOn"]);
+                                pGBRequestUsers.ModifiedOn = ConvertFromDBVal<DateTime>(dataReader["ModifiedOn"]);
+                                posibleUsers.Add(pGBRequestUsers);
+                            }
+                        }
+                    }
+                    pGBRequestModal.posibleUsers = posibleUsers;
+                }
+
+                connection.Close();
+            }
+            return pGBRequestModal;
+        }
+
 
         public DBLocationChangeRequestModal getDBLocationChangeRequestModal(string requestId)
         {
@@ -1750,6 +1919,32 @@ namespace NeuRequest.DB
             return userProfiles;
         }
 
+        public List<Country> getAllCountries()
+        {
+            List<Country> countries = new List<Country>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql = @"SELECT CountryID, CountryName, TwoCharCountryCode, ThreeCharCountryCode FROM NeuCountry";
+                SqlCommand command = new SqlCommand(sql, connection);
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        Country country = new Country();
+                        //var nt = dataReader["NTPLID"];
+                        country.CountryID = ConvertFromDBVal<int>(dataReader["CountryID"]);
+                        country.CountryName = ConvertFromDBVal<string>(dataReader["CountryName"]);
+                        country.TwoCharCountryCode = ConvertFromDBVal<string>(dataReader["TwoCharCountryCode"]);
+                        country.ThreeCharCountryCode = ConvertFromDBVal<string>(dataReader["ThreeCharCountryCode"]);
+                        countries.Add(country);
+                    }
+                }
+                connection.Close();
+            }
+            return countries;
+        }
+
         public List<NueUserProfile> getAllUserProfilesDinamic()
         {
             NueRequestEntities nueRequestEntities = new NueRequestEntities();
@@ -1850,6 +2045,56 @@ namespace NeuRequest.DB
                         }
 
 
+                        userProfiles.Add(userProfile);
+                    }
+                }
+
+                connection.Close();
+            }
+            return userProfiles;
+        }
+
+        public List<UserProfile> getAllUserProfilesX()
+        {
+            List<UserProfile> userProfiles = new List<UserProfile>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sql = @"SELECT NP.Id, NTPLID, Email, FullName, FirstName, MiddleName, LastName
+	                           ,ems.Id as EmpStatusId, ems.Status as EmpStatusDesc, DateofJoining, pc.Id as PracticeId, 
+                                pc.Practice as PracticeDesc, Location, jl.Id as JLId, jl.[LEVEL] as JLDesc, 
+                                ds.Id as DSId, ds.Desig as DSDesc, Active, NP.AddedOn
+                                FROM NueUserProfile as NP join NeuEmploymentStatus as ems on NP.EmploymentStatus = ems.Id 
+                                join NeuPractice as pc on NP.Practice = pc.Id 
+                                join NeuJobLevel as jl on NP.JobLevel = jl.Id 
+                                join NeuDesignation as ds on NP.Designation = ds.Id 
+                                where Active = 1";
+                SqlCommand command = new SqlCommand(sql, connection);
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        UserProfile userProfile = new UserProfile();
+                        //var nt = dataReader["NTPLID"];
+                        userProfile.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                        userProfile.NTPLID = ConvertFromDBVal<string>(dataReader["NTPLID"]);
+                        userProfile.Email = ConvertFromDBVal<string>(dataReader["Email"]);
+                        userProfile.FullName = ConvertFromDBVal<string>(dataReader["FullName"]);
+                        userProfile.FirstName = ConvertFromDBVal<string>(dataReader["FirstName"]);
+                        userProfile.MiddleName = ConvertFromDBVal<string>(dataReader["MiddleName"]);
+                        userProfile.LastName = ConvertFromDBVal<string>(dataReader["LastName"]);
+                        userProfile.EmpStatusId = ConvertFromDBVal<int>(dataReader["EmpStatusId"]);
+                        userProfile.EmpStatusDesc = ConvertFromDBVal<string>(dataReader["EmpStatusDesc"]);
+                        userProfile.DateofJoining = ConvertFromDBVal<string>(dataReader["DateofJoining"]);
+                        userProfile.PracticeId = ConvertFromDBVal<int>(dataReader["PracticeId"]);
+                        userProfile.PracticeDesc = ConvertFromDBVal<string>(dataReader["PracticeDesc"]);
+                        userProfile.Location = ConvertFromDBVal<string>(dataReader["Location"]);
+                        userProfile.JLId = ConvertFromDBVal<int>(dataReader["JLId"]);
+                        userProfile.JLDesc = ConvertFromDBVal<string>(dataReader["JLDesc"]);
+                        userProfile.DSId = ConvertFromDBVal<int>(dataReader["DSId"]);
+                        userProfile.DSDesc = ConvertFromDBVal<string>(dataReader["DSDesc"]);
+                        userProfile.Active = ConvertFromDBVal<int>(dataReader["Active"]);
+                        userProfile.AddedOn = ConvertFromDBVal<string>(dataReader["AddedOn"].ToString());
                         userProfiles.Add(userProfile);
                     }
                 }
