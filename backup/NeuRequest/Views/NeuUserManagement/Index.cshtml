@@ -123,6 +123,7 @@
                 if (value != null) {
                     var formData = new FormData();
                     formData.append("id", value);
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',

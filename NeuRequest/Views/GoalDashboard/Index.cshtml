@@ -1,0 +1,215 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+@{
+    List<UserRequestUiGridRender> userRequests = ViewData["userRequestUiGridRenders"] as List<UserRequestUiGridRender>;
+    string statusRowString = "";
+    string requestTypeString = "";
+
+    ViewBag.Title = "Goal Dashboard ";
+}
+<style>
+    
+</style>
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Goal Dashboard</li>
+    </ol>
+</nav>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="goal-dashboard">
+            
+            <div class="row">
+                <div class="col-md-12">
+                    
+                    <div class="app-page-title">
+                        <div class="page-title-wrapper">
+
+                            <div class="page-title-heading">
+                                <div class="page-title-icon">
+                                    <i class="icon pe-7s-science icon-gradient bg-happy-itmeo"></i>
+                                </div>
+                                <div>
+                                    Goal Dashboard
+                                    <div class="page-title-subheading">
+                                        Active Perfomence Enable you to be more productive and successful with continuous performance feedback aligned to expectations and organizational goals
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="page-title-actions">
+                                <button class="btn-shadow d-inline-flex align-items-center btn btn-success" data-toggle="modal" data-target="#exampleModal-4" type="button">
+                                    <fa class="mr-2" name="plus" _nghost-c2="">
+                                        <i class="mdi mdi-calendar-plus"></i>
+                                    </fa> 
+                                    Create New 
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    
+
+
+                </div>
+            </div>
+
+        </div>
+        
+
+
+        <div class="row">
+            <div class="col-md-12 mb-4 mt-4">
+                <div class="btn-toolbar">
+                    <div class="btn-group inline">
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" data-toggle="modal" data-target="#exampleModal-4"><i class="mdi mdi-gondola"></i> Add New Request</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmDashboard/RequestHistory"><i class="mdi mdi-compare"></i> Request History</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmDashboard/ApprovalInbox"><i class="mdi mdi-compare"></i> Approval Inbox</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+
+        
+
+        
+
+
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal-4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-4" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="card-hover-shadow-2x mb-0 card widget">
+
+                <div class="card-header-tab card-header">
+                    <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                        <i class="header-icon lnr lnr-briefcase mr-3 text-muted opacity-6 icon-gradient bg-mixed-hopes"></i> Add New Goal
+                    </div>
+                    <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                        <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                            <i class="mdi mdi-close"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <form class="cmxform" id="category-form">
+                        <fieldset>
+
+
+
+                            <div class="form-group">
+                                <label for="Category">Category</label>                                
+                                <select class="js-example-basic-single select2" id="hcmRequestDepartment" data-parent="#exampleModal-4" id="Category" name="Category" style="width:100%">
+                                    <optgroup label="Performance Goals">
+                                        <option value="LeaveCancelation" data-target="/HcmDashboard/LeaveCancelation">Leave Cancelation</option>
+                                        <option value="LeavePastApply" data-target="/HcmDashboard/LeavePastApply">Past Leave Apply</option>
+                                        <option value="LeaveWFHApply" data-target="/HcmDashboard/LeaveWFHApply">Work From Home</option>
+                                        <option value="LeaveBalanceEnquiry" data-target="/HcmDashboard/LeaveBalanceEnquiry">Leave Balance Enquiry</option>
+                                    </optgroup>
+                                    <optgroup label="Developmental Goals">
+                                        <option value="AddressProof" data-target="/HcmDashboard/AddressProof">Address Proof</option>
+                                        <option value="EmployeeVerificationReq" data-target="/HcmDashboard/EmployeeVerificationReq">Employee Verification</option>
+                                        <option value="SalaryCertificate" data-target="/HcmDashboard/SalaryCertificate">Salary Certificate</option>
+                                    </optgroup>
+                                    <optgroup label="Personal Goals">
+                                        <option value="DomesticTripRequest" data-target="/HcmDashboard/DomesticTripRequest">Domestic</option>
+                                        <option value="InternationalTripRequest" data-target="/HcmDashboard/InternationalTripRequest">International</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+
+                        </fieldset>
+                    </form>
+
+                </div>
+
+                <div class="d-block text-right card-footer">
+                    <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-success btn-sm hcm_create_Request">Create</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/tooltips.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/dataTables.buttons.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.flash.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/jszip.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/pdfmake.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/vfs_fonts.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.html5.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.print.min.js")
+
+<script>
+
+
+
+    $(function () {
+        
+
+
+        if ($(".select2").length) {
+            $(".select2").select2({
+                dropdownParent: $('#exampleModal-4')
+            });
+        }
+
+        $(document).on('click', '.hcm_create_Request', function (e) {
+            var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
+            window.location = target;
+        });
+
+        $('#request-summary-listing').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "search": {
+                "regex": true,
+            },
+            "aLengthMenu": [
+                [5, 10, 15, 20, 50, 100],
+                [5, 10, 15, 20, 50, 100]
+            ],
+            "iDisplayLength": 10,
+            "language": {
+                search: ""
+            }
+        });
+        $('#request-summary-listing').each(function () {
+            var datatable = $(this);
+            // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+            var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+            search_input.attr('placeholder', 'Search');
+            search_input.removeClass('form-control-sm');
+            // LENGTH - Inline-Form control
+            var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+            length_sel.removeClass('form-control-sm');
+        });
+
+        if ($(".dt-buttons").length) {
+
+            $(".dt-buttons").appendTo("#request-summary-listing_filter");
+        }
+
+    });
+</script>

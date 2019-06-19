@@ -4,6 +4,7 @@
     UserProfile userProfileSession = ViewData["UserProfileSession"] as UserProfile;
     List<UserProfile> userMasterList = ViewData["UserMasterList"] as List<UserProfile>;
     LeaveCancelationUiRender leaveCancelationUiRender = ViewData["LeaveCancelationUiRender"] as LeaveCancelationUiRender;
+
 }
 @{
     ViewBag.Title = "HCM Create New Leave Cancelation Request - ";
@@ -322,68 +323,158 @@
 <nav class="inline-breadcrumb" aria-label="breadcrumb">
     <ol class="breadcrumb bg-dark">
         <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
-        <li class="breadcrumb-item"><a href="/HcmAHDDashboard/Index">HCM Request Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/HcmDashboard/Index">HCM Request Dashboard</a></li>
         <li class="breadcrumb-item active" aria-current="page">Create New Leave Request</li>
     </ol>
 </nav>
 
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">Create New Leave Cancelation Request </h4>
-        <div class="row">
-            <div class="col-7">
-                <div class="card">
-                    <div class="card-body">
-                        @if (TempData["Message"] != null)
-                        {
-                            @TempData["Message"]
-                        }
-                        <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmDashboard/LeaveCancelation" method="POST" enctype="multipart/form-data">
-                            <fieldset>
-                                <div class="form-group">
-                                    <label for="leaveDate">Leave Start Date</label>
-                                    <div id="start-date-picker" class="input-group date datepicker start-date-picker">
-                                        <input type="text" name="leaveStartDate" id="leaveStartDate" class="form-control" value="@leaveCancelationUiRender.leaveStartDate">
-                                        <span class="input-group-addon input-group-append border-left">
-                                            <span class="mdi mdi-calendar input-group-text"></span>
-                                        </span>
-                                    </div>
+<div class="row">
+    <div class="col-md-7">
+        <div class="main-card mb-3 mt-3 card action-card">
+
+            <div class="card-header"><i class="lnr lnr-train header-icon icon-gradient bg-plum-plate"></i> New Leave Cancelation Request  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
+
+            <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmDashboard/LeaveCancelation" method="POST" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label for="leaveDate">Leave Start Date</label>
+                                            <div id="start-date-picker" class="input-group date datepicker start-date-picker">
+                                                <input type="text" name="leaveStartDate" id="leaveStartDate" class="form-control" value="@leaveCancelationUiRender.leaveStartDate">
+                                                <span class="input-group-addon input-group-append border-left">
+                                                    <span class="mdi mdi-calendar input-group-text"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="leaveDate">Leave End Date</label>
+                                            <div id="end-date-picker" class="input-group date datepicker start-date-picker">
+                                                <input type="text" name="leaveEndDate" id="leaveEndDate" class="form-control" value="@leaveCancelationUiRender.leaveEndDate">
+                                                <span class="input-group-addon input-group-append border-left">
+                                                    <span class="mdi mdi-calendar input-group-text"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="leaveCancelationMessage">Message</label>
+                                            <textarea class="form-control" name="message" id="message" rows="3">@leaveCancelationUiRender.message</textarea>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Approver</label>
+                                            <div class="col-sm-9">
+
+                                                @if (leaveCancelationUiRender.leaveCancelationApprover == null || leaveCancelationUiRender.leaveCancelationApprover.Trim() == "")
+                                                {
+                                                    <input type="hidden" value="@userProfileSession.userPreference.FirstApprover" class="dynaLoadSelectContent" data-target="leaveCancelationApprover" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="hidden" value="@leaveCancelationUiRender.leaveCancelationApprover" class="dynaLoadSelectContent" data-target="leaveCancelationApprover" />
+                                                }
+
+                                                <select class="js-example-basic-single select2" id="leaveCancelationApprover" name="leaveCancelationApprover" style="width:100%">
+                                                    <option value="">-- Select --</option>
+                                                    @foreach (UserProfile item in userMasterList)
+                                                    {
+                                                        <option value="@item.Id">@item.Email</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
                                 </div>
-                                <div class="form-group">
-                                    <label for="leaveDate">Leave End Date</label>
-                                    <div id="end-date-picker" class="input-group date datepicker start-date-picker">
-                                        <input type="text" name="leaveEndDate" id="leaveEndDate" class="form-control" value="@leaveCancelationUiRender.leaveEndDate">
-                                        <span class="input-group-addon input-group-append border-left">
-                                            <span class="mdi mdi-calendar input-group-text"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="leaveCancelationMessage">Message</label>
-                                    <textarea class="form-control" name="message" id="message" rows="3">@leaveCancelationUiRender.message</textarea>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Approver</label>
-                                    <div class="col-sm-9">
-                                        <input type="hidden" value="@leaveCancelationUiRender.leaveCancelationApprover" class="dynaLoadSelectContent" data-target="leaveCancelationApprover" />
-                                        <select class="js-example-basic-single" id="leaveCancelationApprover" name="leaveCancelationApprover" style="width:100%">
-                                            <option value="">-- Select --</option>
-                                            @foreach (UserProfile item in userMasterList)
-                                            {
-                                                <option value="@item.Id">@item.Email</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <input class="btn btn-primary" type="submit" value="Submit">
-                            </fieldset>
-                        </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="d-block text-right card-footer">
+                    <img class="form-submit-loader frm hide" src="~/Rebone/public/images/loader_sm.gif" />
+                    <button class="mr-2 btn btn-link btn-sm link-action-tigger" data-target="/HcmDashboard/Index">Cancel</button>
+                    <input class="btn btn btn-success btn-lg" type="submit" value="Submit">
+                </div>
+
+            </form>
+
+
+        </div>
+    </div>
+    <div class="col-5">
+
+        <div class="main-card mb-3 mt-3 card action-card widget-side">
+
+            <div class="dropdown-menu-header">
+                <div class="dropdown-menu-header-inner bg-focus">
+                    <div class="menu-header-image opacity-3" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/back_pic/00/14/65/3256657136926fa.jpg');"></div>
+                    <div class="menu-header-content btn-pane-right">
+                        <div class="avatar-icon-wrapper mr-3 avatar-icon-xl">
+                            <div class="page-title-icon">
+                                <i class="icon pe-7s-pin icon-gradient bg-tempting-azure"></i>
+                            </div>
+                        </div>
+                        <div><h5 class="menu-header-title">Guidelines </h5></div>
                     </div>
                 </div>
             </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="bg-warm-flame list-group-item">
+                    <div class="widget-content p-0">
+                        <div class="widget-content-wrapper"></div>
+                    </div>
+                </li>
+                <li class="p-0 list-group-item">
+                    <div class="grid-menu grid-menu-2col overflow-hidden">
+                        <div class="no-gutters row">
+
+                            <div class="col-12">
+                                <div class="pt-4 pb-3 pl-3 pr-3">
+
+                                    <p class="mb-1"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave Start Date.<span class="text-danger">*</span> <span class="text-muted">should be on or before today's date</span></p>
+                                    <p class="mb-1"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Leave End Date. <span class="text-danger">*</span></p>
+                                    <p class="mb-1"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Approver. <span class="text-danger">*</span> <span class="text-muted">should be your manager</span></p>
+
+                                    
+                                    @if (TempData["Message"] != null)
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-10 server-error-container mt-4">
+                                                <div class="card-shadow-danger border mb-3 card card-body border-danger server-error">
+                                                    @TempData["Message"]
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="d-block text-right card-footer bg-dark"></div>
+
+
         </div>
+
+        
+
+
     </div>
 </div>
+
+
+
 @Scripts.Render("~/Rebone/js")
 @Scripts.Render("~/Rebone/public/js/formpickers.js")
 @Scripts.Render("~/Rebone/public/js/x-editable.js")
@@ -439,11 +530,20 @@
             }
         });
 
+        $(document).on('submit', '#addNewLeaveCancelationForm', function (e) {
+            if ($(this).valid()) {
+                $('img.form-submit-loader.frm').removeClass('hide');
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+
         if ($("#start-date-picker").length) {
             $('#start-date-picker').datepicker({
                 enableOnReadonly: true,
                 todayHighlight: true,
-                endDate: '+d',
+                //endDate: '+d',
                 autoclose: true,
             });
         };
@@ -465,6 +565,18 @@
 
         if ($(".leaveCancelationApprover").length) {
             $(".leaveCancelationApprover").select2();
+        }
+
+        if ($(".dynaLoadSelectContent").length) {
+            $('.dynaLoadSelectContent').each(function (index) {
+                var value = $(this).val();
+                var target = $(this).data('target');
+                $('#' + target).val(value);
+            });
+        }
+
+        if ($(".select2").length) {
+            $(".select2").select2();
         }
     });
     (function ($) {

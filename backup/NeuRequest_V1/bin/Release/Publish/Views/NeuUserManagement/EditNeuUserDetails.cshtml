@@ -1,0 +1,380 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+@{
+    ViewBag.Title = "Update User Profile";
+    UserProfile currentUser = ViewData["UserProfileSession"] as UserProfile;
+    UserProfile userProfile = ViewData["userProfile"] as UserProfile;
+    List<string> userAcess = new List<string>();
+    foreach (var item in userProfile.userAccess)
+    {
+        userAcess.Add(""+item.AccessItemId.ToString()+"");
+    }
+}
+@Styles.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.css")
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item"><a href="/NeuUserManagement/Index">Manage User Details</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Update Profile Details</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Profile</h4>
+                <form class="forms-sample" id="addNewNeuUserForm" action="/NeuUserManagement/EditNeuUserDetails" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" id="Id" name="Id" value="@userProfile.Id"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="NTPLID">NTPL</label>
+                                <input type="text" class="form-control" id="NTPLID" name="NTPLID" value="@userProfile.NTPLID" placeholder="NTPL ID">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Email">Email address</label>
+                                <input type="email" class="form-control" id="Email" name="Email" value="@userProfile.Email" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="FullName">Full Name</label>
+                                <input type="text" class="form-control" id="FullName" name="FullName" value="@userProfile.FullName" placeholder="FullName">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="FirstName">First Name</label>
+                                <input type="text" class="form-control" id="FirstName" name="FirstName" value="@userProfile.FirstName" placeholder="FirstName">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="MiddleName">Middle Name</label>
+                                <input type="text" class="form-control" id="MiddleName" name="MiddleName" value="@userProfile.MiddleName" placeholder="MiddleName">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="LastName">Last Name</label>
+                                <input type="text" class="form-control" id="LastName" name="LastName" value="@userProfile.LastName" placeholder="LastName">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="DateofJoining">Date of Joining</label>
+                                <input type="text" class="form-control" id="DateofJoining" name="DateofJoining" value="@userProfile.DateofJoining" placeholder="Date of Joining">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="EmploymentStatus">Employment Status</label>
+                                <input type="hidden" value="@userProfile.EmpStatusId" class="dynaLoadSelectContent" data-target="EmpStatusId" />
+                                <select class="js-example-basic-single select2" id="EmpStatusId" name="EmpStatusId" style="width:100%">
+                                    <option>-- Select --</option>
+                                    <option value="1">Employed</option>
+                                    <option value="2">Contractor</option>
+                                    <option value="3">On Notice</option>
+                                    <option value="4">Probation</option>
+                                    <option value="5">Relieved</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Practice">Practice</label>
+                                <input type="hidden" value="@userProfile.PracticeId" class="dynaLoadSelectContent" data-target="PracticeId" />
+                                <select class="js-example-basic-single select2" id="PracticeId" name="PracticeId" style="width:100%">
+                                    <option>-- Select --</option>
+                                    <option value="1">QA</option>
+                                    <option value="2">CAD</option>
+                                    <option value="3">BI</option>
+                                    <option value="4">UX</option>
+                                    <option value="5">Product</option>
+                                    <option value="6">CRM</option>
+                                    <option value="7">Enablement</option>
+                                    <option value="8">MC</option>
+                                    <option value="9">IT</option>
+                                    <option value="10">IW</option>
+                                    <option value="11">CSD</option>
+                                    <option value="12">NMS</option>
+                                    <option value="13">US Operations</option>
+                                    <option value="14">Java</option>
+                                    <option value="15">Mobility</option>
+                                    <option value="16">BizTalk</option>
+                                    <option value="17">App Dev</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="JLId">Job Level</label>
+                                <input type="hidden" value="@userProfile.JLId" class="dynaLoadSelectContent" data-target="JLId" />
+                                <select class="js-example-basic-single select2" id="JLId" name="JLId" style="width:100%">
+                                    <option value="1">JL 1</option>
+                                    <option value="2">JL 2</option>
+                                    <option value="3">JL 3</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="DSId">Designation</label>
+                                <input type="hidden" value="@userProfile.DSId" class="dynaLoadSelectContent" data-target="DSId" />
+                                <select class="js-example-basic-single select2" id="DSId" name="DSId" style="width:100%">
+                                    <option>-- Select --</option>
+                                    <option value="1">Senior Consultant 1</option>
+                                    <option value="2">Consultant Manager</option>
+                                    <option value="3">HCM Manager</option>
+                                    <option value="4">Enablement Manager</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Location">Location</label>
+                                <input type="text" class="form-control" id="Location" name="Location" value="@userProfile.Location" placeholder="Location">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Active">Active</label>
+                                <input type="hidden" value="@userProfile.Active" class="dynaLoadSelectContent" data-target="Active" />
+                                <select class="js-example-basic-single select2" id="Active" name="Active" style="width:100%">
+                                    <option value="1">Active</option>
+                                    <option value="0">Not Active</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="userAccess">User Access</label>
+                                <div class="dropdown-mul-1">
+                                    <input type="hidden" value="@String.Join(";", userAcess)" class="dynaLoadSelectMultyContent" data-target="userAccess" />
+                                    <select style="display:none" id="userAccess" name="userAccess" multiple placeholder="Select">
+                                        <option value="1">Root_Admin</option>
+                                        <option value="2">Hcm_Admin</option>
+                                        <option value="3">Hcm_User</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success mr-2">Submit</button>
+                    <button class="btn btn-light hide">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/tooltips.js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/x-editable.js")
+@Scripts.Render("~/Rebone/public/js/dropify.js")
+@Scripts.Render("~/Rebone/public/js/dropzone.js")
+@Scripts.Render("~/Rebone/public/js/jquery-file-upload.js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/form-repeater.js")
+@Scripts.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.js")
+@if (TempData["Message"] != null)
+{
+    <script>
+                var message = "@TempData["Message"]";
+                    resetToastPosition = function () {
+                        $('.jq-toast-wrap').removeClass('bottom-left bottom-right top-left top-right mid-center'); // to remove previous position class
+                        $(".jq-toast-wrap").css({
+                            "top": "",
+                            "left": "",
+                            "bottom": "",
+                            "right": ""
+                        }); //to remove previous position style
+                    }
+                    resetToastPosition();
+                    $.toast({
+                        heading: '...',
+                        text: message,
+                        showHideTransition: 'slide',
+                        icon: 'info',
+                        loaderBg: '#46c35f',
+                        position: 'top-right'
+                      })
+    </script>
+}
+<script>
+    $.validator.setDefaults({
+        submitHandler: function () {
+            $('#addNewNeuUserForm').submit();
+        }
+    });
+
+    $(function () {
+        // validate signup form on keyup and submit
+        $("#addNewNeuUserForm").validate({
+            rules: {
+                NTPLID: {
+                    required: true
+                },
+                Email: {
+                    required: true,
+                    email: true
+                },
+                FullName: {
+                    required: true
+                },
+                FirstName: {
+                    required: true
+                },
+                LastName: {
+                    required: true
+                },
+                DateofJoining: {
+                    required: true,
+                    date: true
+                },
+                EmpStatusId: {
+                    required: true,
+                    number: true
+                },
+                PracticeId: {
+                    required: true,
+                    number: true
+                },
+                JLId: {
+                    required: true,
+                    number: true
+                },
+                DSId: {
+                    required: true,
+                    number: true,
+                },
+                Location: {
+                    required: true
+                },
+            },
+            messages: {
+                NTPLID: {
+                    required: "Please enter NTPL id",
+                },
+                Email: {
+                    required: "Please enter valid email address",
+                },
+                FullName: {
+                    required: "Please enter full name",
+                },
+                FirstName: {
+                    required: "Please enter first name",
+                },
+                LastName: {
+                    required: "Please enter last name",
+                },
+                DateofJoining: {
+                    required: "Please enter valid date of joing",
+                },
+                EmpStatusId: {
+                    required: "Please select employment status",
+                },
+                PracticeId: {
+                    required: "Please select practice",
+                },
+                JLId: {
+                    required: "Please select job level",
+                },
+                DSId: {
+                    required: "Please select designation",
+                },
+                Location: {
+                    required: "Please your base location",
+                },
+            },
+            errorPlacement: function (label, element) {
+                label.addClass('mt-2 text-danger');
+                label.insertAfter(element);
+            },
+            highlight: function (element, errorClass) {
+                $(element).parent().addClass('has-danger')
+                $(element).addClass('form-control-danger')
+            }
+        });
+
+        $('.dynaLoadSelectMultyContent').each(function (e) {
+            var multiSelVal = $(this).val();
+            var target = $(this).data('target');
+            $.each(multiSelVal.split(";"), function (i, e) {
+                $("#" + target + " option[value='" + e + "']").prop("selected", true);
+            });
+        });
+
+        if ($("#start-date-picker").length) {
+            $('#start-date-picker').datepicker({
+                enableOnReadonly: true,
+                todayHighlight: true,
+                endDate: '+d',
+                autoclose: true,
+            });
+        };
+
+        if ($("#end-date-picker").length) {
+            $('#end-date-picker').datepicker({
+                enableOnReadonly: true,
+                todayHighlight: true,
+                autoclose: true,
+            });
+        };
+
+        $('.dropdown-mul-1').dropdown({
+            multipleMode: 'label',
+            choice: function () {
+                // console.log(arguments,this);
+            }
+        });
+
+        if ($(".leaveCancelationApprover").length) {
+            $(".leaveCancelationApprover").select2();
+        }
+    });
+
+    $(function () {
+
+        $(document).on('click', '.link-action-tigger', function (e) {
+            window.location = $(this).data('target');
+        });
+
+        if ($(".dynaLoadSelectContent").length) {
+            $('.dynaLoadSelectContent').each(function (index) {
+                var value = $(this).val();
+                var target = $(this).data('target');
+                $('#' + target).val(value);
+            });
+        }
+
+
+
+        if ($(".select2").length) {
+            $(".select2").select2();
+        }
+    });
+</script>
+

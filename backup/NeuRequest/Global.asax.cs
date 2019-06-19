@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Helpers;
+using System.Security.Claims;
 
 namespace NeuRequest
 {
@@ -15,6 +17,7 @@ namespace NeuRequest
         string connString = ConfigurationManager.ConnectionStrings ["DB"].ConnectionString;
         protected void Application_Start()
         {
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimsIdentity.DefaultNameClaimType;
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

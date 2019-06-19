@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>HCM</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="vendors/iconfonts/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="vendors/iconfonts/puse-icons-feather/feather.css">
+  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="vendors/css/vendor.bundle.addons.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="images/favicon.png" />
+  <style>
+    .main-panel {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body class="sidebar-icon-only_">
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+        <a class="navbar-brand brand-logo" href="/"><img src="images/logo.png" alt="logo"/></a>
+        <a class="navbar-brand brand-logo-mini" href="/"><img src="images/logo.png" alt="logo"/></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center">
+
+      </div>
+    </nav>
+
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      <div id="right-sidebar" class="settings-panel">
+        <i class="settings-close mdi mdi-close"></i>
+        <div class="d-flex align-items-center justify-content-between border-bottom">
+          <p class="settings-heading font-weight-bold border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Friends</p>
+        </div>
+        <ul class="chat-list">
+
+        </ul>
+      </div>
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Attendance Discrepancy Calculator</h4>
+                  <form id="example-form" action="/validateAttendance" method="POST" enctype="multipart/form-data">
+                    <div>
+                      <h3>Basic Info</h3>
+                      <section>
+                        <h6>Base Data</h6>
+                        <div class="form-group">
+                          <label>Holiday List</label>
+                          <input type="file" name="holidayListFile" class="file-upload-default" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                          <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" placeholder="Upload Holiday List Excecl">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-info" type="button">Upload</button>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label>CM Base List</label>
+                          <input type="file" name="cmBaseListFile" class="file-upload-default" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                          <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" placeholder="Upload CM Base List Excecl">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-info" type="button">Upload</button>
+                            </span>
+                          </div>
+                        </div>
+                      </section>
+                      <h3>Attendance</h3>
+                      <section>
+                        <h6>Attendance Data</h6>
+                        <div class="form-group">
+                          <label>Leave List</label>
+                          <input type="file" name="leaveListFile" class="file-upload-default" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                          <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" placeholder="Upload Leave List Excecl">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-info" type="button">Upload</button>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label>Flexi List</label>
+                          <input type="file" name="flexiListFile" class="file-upload-default" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                          <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" placeholder="Upload Flexi List Excecl">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-info" type="button">Upload</button>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label>Compensatory Off List</label>
+                          <input type="file" name="compListFile" class="file-upload-default" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                          <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" placeholder="Upload Compensatory Off List Excecl">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-info" type="button">Upload</button>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label>Onsite List</label>
+                          <input type="file" name="onsiteListFile" class="file-upload-default" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                          <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" placeholder="Upload Onsite List Excecl">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-info" type="button">Upload</button>
+                            </span>
+                          </div>
+                        </div>
+                      </section>
+                      <h3>Auxiliary</h3>
+                      <section>
+                        <h6>Auxiliary Details</h6>
+                        <div class="form-group">
+                          <label>Swipe List</label>
+                          <input type="file" name="swipeListFile" class="file-upload-default" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                          <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" placeholder="Upload Swipe List Excecl">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-info" type="button">Upload</button>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label>TBS List</label>
+                          <input type="file" name="tbsListFile" class="file-upload-default" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                          <div class="input-group col-xs-12">
+                            <input type="text" class="form-control file-upload-info" placeholder="Upload TBS List Excecl">
+                            <span class="input-group-append">
+                              <button class="file-upload-browse btn btn-info" type="button">Upload</button>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-lg-6 grid-margin d-flex align-items-stretch">
+                              <label>Start Date</label>
+                              <div id="start-date-picker" class="input-group date datepicker start-date-picker">
+                                <input type="text" name="sDate" id="sDate" class="form-control">
+                                <span class="input-group-addon input-group-append border-left">
+                                  <span class="mdi mdi-calendar input-group-text"></span>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="col-lg-6 grid-margin d-flex align-items-stretch">
+                              <label>End Date</label>
+                              <div id="end-date-picker" class="input-group date datepicker end-date-picker">
+                                <input type="text" name="eDate" id="eDate" class="form-control">
+                                <span class="input-group-addon input-group-append border-left">
+                                  <span class="mdi mdi-calendar input-group-text"></span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <footer class="footer">
+
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <script src="vendors/js/vendor.bundle.addons.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="js/off-canvas.js"></script>
+  <script src="js/hoverable-collapse.js"></script>
+  <script src="js/misc.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="js/formpickers.js"></script>
+  <script src="js/x-editable.js"></script>
+  <script src="js/dropify.js"></script>
+  <script src="js/dropzone.js"></script>
+  <script src="js/jquery-file-upload.js"></script>
+  <script src="js/formpickers.js"></script>
+  <script src="js/form-repeater.js"></script>
+  <!-- End custom js for this page-->
+  <script>
+  $(function() {
+    var form = $("#example-form");
+    form.children("div").steps({
+      headerTag: "h3",
+      bodyTag: "section",
+      transitionEffect: "slideLeft",
+      onFinished: function(event, currentIndex) {
+        $('#example-form').submit();
+      }
+    });
+
+    $('.file-upload-browse').on('click', function() {
+      var file = $(this).parent().parent().parent().find('.file-upload-default');
+      file.trigger('click');
+    });
+    $('.file-upload-default').on('change', function() {
+      $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+    });
+
+    if ($(".start-date-picker").length) {
+      $('.start-date-picker').datepicker({
+        enableOnReadonly: true,
+        todayHighlight: true,
+      });
+    };
+
+    if ($(".end-date-picker").length) {
+      $('.end-date-picker').datepicker({
+        enableOnReadonly: true,
+        todayHighlight: true,
+      });
+    };
+
+    $(document).on('submit','#example-form',function(e){
+      e.preventDefault();
+      var form = $('#example-form')[0];
+      var data = new FormData(form);
+      $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/validateAttendance",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+              if(data.Status == 'Ok'){
+                  console.log("ERROR : ", data.Status);
+                  var element = document.createElement('a');
+            		  element.setAttribute('href', '/reportExport?target='+data.Payload);
+            		  element.setAttribute('download', "attendanceDiscrepancy.xlsx");
+            		  element.style.display = 'none';
+            		  document.body.appendChild(element);
+            		  element.click();
+            		  document.body.removeChild(element);
+                  var host = window.location.origin+"/HCMReport?target="+data.PayloadRe;
+                  window.location.href = host;
+              }
+              else{
+                console.log("ERROR : ", data.Status);
+              }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    });
+  });
+  </script>
+</body>
+</html>

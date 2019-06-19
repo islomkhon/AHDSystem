@@ -324,9 +324,10 @@
                     <div class="card-body">
 
                         <form id="add_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserComment" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
                             <fieldset>
                                 <div class="form-group mb-0">
-                                    <textarea class="form-control" name="userComment" id="userComment" rows="5" placeholder="Comment..."></textarea>
+                                    <textarea class="form-control" name="userComment" required title="*Enter comment.." id="userComment" rows="5" placeholder="Comment..."></textarea>
                                     <input type="hidden" name="requestId" id="requestId" value="@ViewData["RequestId"]" />
                                     <input type="hidden" name="userId" id="userId" value="@userProfile.Id" />
                                 </div>
@@ -337,6 +338,7 @@
                     </div>
 
                     <div class="d-block text-right card-footer">
+                        <img class="form-submit-loader comment hide" src="~/Rebone/public/images/loader_sm.gif" />
                         <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
                         <button class="btn btn-success btn-sm add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#add_Leave_Cancelation_Request_Comment_Form').submit();">Save</button>
                     </div>
@@ -368,6 +370,7 @@
                     <div class="card-body">
 
                         <form id="Direct_Mail_Form" action="/HcmDashboard/DirectMail" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="Direct_Mail_Request_Id" id="Direct_Mail_Request_Id" value="@ViewData["RequestId"]" />
                             <fieldset>
                                 <div class="form-group">
@@ -386,11 +389,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">Message:</label>
-                                    <textarea class="form-control while-bg-input" id="Direct_Mail_Request_Comment" name="Direct_Mail_Request_Comment" rows="4"></textarea>
+                                    <textarea class="form-control while-bg-input" required title="*Enter message.." id="Direct_Mail_Request_Comment" name="Direct_Mail_Request_Comment" rows="4"></textarea>
                                 </div>
                             </fieldset>
 
-                            
+
 
 
                         </form>
@@ -398,6 +401,7 @@
                     </div>
 
                     <div class="d-block text-right card-footer">
+                        <img class="form-submit-loader message hide" src="~/Rebone/public/images/loader_sm.gif" />
                         <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
                         <button class="btn btn-success btn-sm directMessageModel_trigger">Send</button>
                     </div>
@@ -429,6 +433,7 @@
                     <div class="card-body">
 
                         <form id="attach_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserAttachment" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
                             <div class="form-group">
                                 <label>File</label>
                                 <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
@@ -460,7 +465,7 @@
 
     @Scripts.Render("~/Rebone/js")
     @Scripts.Render("~/NeuUi/js/NeuBase.js")
-
+    
     @if (TempData["Message"] != null)
     {
         <script>
@@ -487,9 +492,19 @@
     }
 
     <script>
+
         $(function () {
 
-            $(document).on('click', '.hcm_create_Request', function (e) {
+            $(document).on('submit', '#add_Leave_Cancelation_Request_Comment_Form', function (e) {
+                if ($(this).valid()) {
+                    $('img.form-submit-loader.comment').removeClass('hide');
+                }
+                else {
+                    e.preventDefault();
+                }
+            });
+
+            $(document).on('submit', '.hcm_create_Request', function (e) {
                 var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
                 window.location = target;
             });
@@ -514,7 +529,7 @@
                 $(document).on('click', '.mail-tigger', function (e) {
                     var target = $(this).data('target');
                     var id = $(this).data('id');
-                    
+
                     $('#Direct_Mail_Request_Recipient').val(target).trigger('change');
                     $('#Direct_Mail_Request_Comment').val('');
 
@@ -524,48 +539,54 @@
             }
 
             $(document).on('click', '.directMessageModel_trigger', function (e) {
-                var formData = new FormData();
-                formData.append("Direct_Mail_Request_Id", "" + $('#Direct_Mail_Request_Id').val() + "");
-                formData.append("Direct_Mail_Request_Recipient", "" + $('#Direct_Mail_Request_Recipient').val() + "");
-                formData.append("Direct_Mail_Request_Comment", $('#Direct_Mail_Request_Comment').val());
-                $.ajax({
-                    type: "POST",
-                    dataType: 'json',
-                    enctype: 'multipart/form-data',
-                    url: "/HcmDashboard/DirectMail",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    timeout: 600000,
-                    success: function (data) {
-                        if (data.status == 'Ok') {
-                            $.toast({
-                                heading: '...',
-                                text: data.message,
-                                showHideTransition: 'slide',
-                                icon: 'info',
-                                loaderBg: '#46c35f',
-                                position: 'top-right'
-                            });
-                            $('#directMessageModel').modal('hide');
+                if ($('#Direct_Mail_Form').valid()) {
+                    $('img.form-submit-loader.message').removeClass('hide');
+                    var formData = new FormData();
+                    formData.append("Direct_Mail_Request_Id", "" + $('#Direct_Mail_Request_Id').val() + "");
+                    formData.append("Direct_Mail_Request_Recipient", "" + $('#Direct_Mail_Request_Recipient').val() + "");
+                    formData.append("Direct_Mail_Request_Comment", $('#Direct_Mail_Request_Comment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmDashboard/DirectMail",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.status == 'Ok') {
+                                $.toast({
+                                    heading: '...',
+                                    text: data.message,
+                                    showHideTransition: 'slide',
+                                    icon: 'info',
+                                    loaderBg: '#46c35f',
+                                    position: 'top-right'
+                                });
+                                $('#directMessageModel').modal('hide');
+                            }
+                            else {
+                                $.toast({
+                                    heading: '...',
+                                    text: data.message,
+                                    showHideTransition: 'slide',
+                                    icon: 'info',
+                                    loaderBg: '#46c35f',
+                                    position: 'top-right'
+                                });
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
                         }
-                        else {
-                            $.toast({
-                                heading: '...',
-                                text: data.message,
-                                showHideTransition: 'slide',
-                                icon: 'info',
-                                loaderBg: '#46c35f',
-                                position: 'top-right'
-                            });
-                        }
-                    },
-                    error: function (e) {
-                        console.log("ERROR : ", e);
-                    }
-                });
-
+                    });
+                }
+                else {
+                    e.preventDefault();
+                }
             });
 
             $('#request-summary-listing').DataTable({

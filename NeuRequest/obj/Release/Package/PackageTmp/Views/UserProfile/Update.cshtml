@@ -11,14 +11,100 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewBag.Title AHD</title>
+
+    <style type="text/css">
+
+        .LoadWrap {
+            background: linear-gradient(90deg, #FF4E50 10%, #F9D423 90%);
+            overflow: hidden;
+            height: 100%;
+            color: #ccc;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999999999999999;
+        }
+
+            .LoadWrap.hide {
+                display: none;
+            }
+
+        .loader {
+            height: 40px;
+            width: 40px;
+            position: absolute;
+            left: 50%;
+            margin-left: -20px;
+            top: 50%;
+            margin-top: -20px;
+        }
+
+            .loader:before, .loader:after {
+                content: "";
+                height: 40px;
+                width: 40px;
+                border: 8px solid rgba(255, 255, 255, 0.5);
+                border-radius: 10px;
+                position: absolute;
+                top: 0;
+            }
+
+            .loader:before {
+                -webkit-animation: animate 2s infinite linear;
+                animation: animate 2s infinite linear;
+            }
+
+            .loader:after {
+                -webkit-animation: animate2 2s infinite linear;
+                animation: animate2 2s infinite linear;
+            }
+
+        @@-webkit-keyframes animate {
+            100% {
+                -webkit-transform: rotate(180deg) skew(360deg);
+                transform: rotate(180deg) skew(360deg);
+            }
+        }
+
+        @@keyframes animate {
+            100% {
+                -webkit-transform: rotate(180deg) skew(360deg);
+                transform: rotate(180deg) skew(360deg);
+            }
+        }
+
+        @@-webkit-keyframes animate2 {
+            100% {
+                -webkit-transform: rotate(-180deg) skew(-360deg);
+                transform: rotate(-180deg) skew(-360deg);
+            }
+        }
+
+        @@keyframes animate2 {
+            100% {
+                -webkit-transform: rotate(-180deg) skew(-360deg);
+                transform: rotate(-180deg) skew(-360deg);
+            }
+        }
+    </style>
+
     @Styles.Render("~/Rebone/css")
     @Styles.Render("~/NeuUi/css/NeuBase.css")
     <link rel="stylesheet" href="~/Rebone/public/vendors/iconfonts/font-awesome/css/font-awesome.min.css">
-    <link rel="shortcut icon" href="~/Rebone/public/images/favicon.png" />
+    <link rel="shortcut icon" href="~/Rebone/public/images/favicon1.png" />
     <style>
     </style>
 </head>
 <body>
+
+    <div class="LoadWrap">
+        <div class="loader"></div>
+    </div>
+
     <div class="container-scroller">
         <!-- partial:../../partials/_navbar.html -->
         <nav class="navbar default-layout neu col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -121,6 +207,7 @@
                                         <div class="card-body">
                                             <h4 class="card-title">Profile</h4>
                                             <form class="forms-sample" id="updateUserProfileForm" action="/UserProfile/Update" method="POST" enctype="multipart/form-data">
+                                                @Html.AntiForgeryToken()
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
@@ -219,7 +306,7 @@
                                                         <div class="form-group">
                                                             <label for="JLId">Job Level</label>
                                                             <input type="hidden" value="@userProfile.JLId" class="dynaLoadSelectContent" data-target="JLId" />
-                                                            <select class="js-example-basic-single select2" id="JLId" name="JLId" style="width:100%">
+                                                            <select class="js-example-basic-single select2" readonly id="JLId" name="JLId" style="width:100%">
                                                                 <option value="1">JL 1</option>
                                                                 <option value="2">JL 2</option>
                                                                 <option value="3">JL 3</option>
@@ -252,7 +339,20 @@
                                                         <div class="form-group">
                                                             <label for="Active">Active</label>
                                                             <input type="hidden" value="@userProfile.Active" class="dynaLoadSelectContent" data-target="Active" />
-                                                            <select class="js-example-basic-single select2" id="Active" name="Active" style="width:100%">
+                                                            <select class="js-example-basic-single select2" readonly id="Active" name="Active" style="width:100%">
+                                                                <option value="1">Active</option>
+                                                                <option value="0">Not Active</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="Active">Email Notification</label>
+                                                            <input type="hidden" value="@userProfile.userPreference.IsMailCommunication" class="dynaLoadSelectContent" data-target="IsMailCommunication" />
+                                                            <select class="js-example-basic-single select2" id="IsMailCommunication" name="IsMailCommunication" style="width:100%">
                                                                 <option value="1">Active</option>
                                                                 <option value="0">Not Active</option>
                                                             </select>
@@ -298,10 +398,10 @@
     @Scripts.Render("~/Rebone/public/js/form-repeater.js")
     @Scripts.Render("~/Rebone/public/js/select2.js")
     @Scripts.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.js")
-    
-        @if (TempData["Message"] != null)
-        {
-            <script>
+
+    @if (TempData["Message"] != null)
+    {
+        <script>
                 var message = "@TempData["Message"]";
                     resetToastPosition = function () {
                         $('.jq-toast-wrap').removeClass('bottom-left bottom-right top-left top-right mid-center'); // to remove previous position class
@@ -321,9 +421,9 @@
                         loaderBg: '#46c35f',
                         position: 'top-right'
                       })
-            </script>
-        }
-    
+        </script>
+    }
+
     <script>
         $.validator.setDefaults({
             submitHandler: function () {
@@ -450,25 +550,38 @@
         });
 
         $(function () {
-            
+
             $(document).on('click', '.link-action-tigger', function (e) {
                 window.location = $(this).data('target');
             });
-            
+
             if ($(".dynaLoadSelectContent").length) {
                 $('.dynaLoadSelectContent').each(function (index) {
                     var value = $(this).val();
                     var target = $(this).data('target');
-                    $('#' + target ).val(value);
+                    $('#' + target).val(value);
                 });
             }
 
-            
+
 
             if ($(".select2").length) {
                 $(".select2").select2();
             }
         });
+
+
+        var everythingLoaded = setInterval(function () {
+            if (/loaded|complete/.test(document.readyState)) {
+                $(".LoadWrap").fadeOut("slow");
+                clearInterval(everythingLoaded);
+            }
+        }, 10);
+
+        $(window).bind('beforeunload', function () {
+            $(".LoadWrap").fadeIn("fast");
+        });
+
     </script>
 </body>
 </html>

@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Principal;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
@@ -63,6 +64,7 @@ namespace NeuRequest.Models
         {
             try
             {
+
                 string smtpServer = ConfigurationManager.AppSettings["smtp-server"].ToString();
                 int smtpPort = int.Parse(ConfigurationManager.AppSettings["smtp-port"].ToString());
                 string smtpEmail = ConfigurationManager.AppSettings["smtp-email"].ToString();
@@ -986,7 +988,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Leave Cancelation Request\r\n" +
+                    "                            Leave Cancelation\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -1092,7 +1094,6 @@ namespace NeuRequest.Models
             return uiRender;
         }
         
-
         public string generateLeavePastApplyUiRender(bool isOwner, bool ishcm, bool isApprover, UserProfile currentUser, UserRequest userRequest, NeLeavePastApplyModal neuLeavePastApplyModal, List<NuRequestAceessLog> nueRequestAceessLogs, List<DAL.NueUserProfile> nueUserProfiles, List<NuRequestActivityModel> nueRequestActivityModels, List<AttachmentLogModel> attachmentLogModels)
         {
             string uiRender = "";
@@ -1278,7 +1279,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Leave Past Apply Request\r\n" +
+                    "                            Leave Past Apply\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -1567,7 +1568,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Work From Home Request\r\n" +
+                    "                            Work From Home\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -1840,7 +1841,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Leave Balance Enquiry Request\r\n" +
+                    "                            Leave Balance Enquiry\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -2113,7 +2114,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Address Proof Request\r\n" +
+                    "                            Address Proof\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -2364,7 +2365,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Employee Verification Request\r\n" +
+                    "                            Employee Verification\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -2615,7 +2616,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Salary Certificate Request\r\n" +
+                    "                            Salary Certificate\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -3123,7 +3124,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Domestic Travel Request\r\n" +
+                    "                            Domestic Travel\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -3433,7 +3434,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            International Travel Request\r\n" +
+                    "                            International Travel\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -3741,7 +3742,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Manager Change Request\r\n" +
+                    "                            Manager Change\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -4002,7 +4003,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Location Change Request\r\n" +
+                    "                            Location Change\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +
@@ -4285,7 +4286,7 @@ namespace NeuRequest.Models
                     "                    <div class=\"card-header-tab card-header\">\r\n" +
                     "                        <div class=\"card-header-title font-size-lg text-capitalize font-weight-normal\">\r\n" +
                     "                            <i class=\"header-icon lnr lnr-dice icon-gradient bg-happy-itmeo\"></i>\r\n" +
-                    "                            Project Background Verification Request\r\n" +
+                    "                            Project Background Verification\r\n" +
                     "                        </div>\r\n" +
                     "                    </div>\r\n" +
                     "\r\n" +

@@ -8,7 +8,7 @@ namespace NeuRequest
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-
+            
             bundles.Add(new StyleBundle("~/Rebone/css").Include(
                       "~/Rebone/public/vendors/iconfonts/mdi/css/materialdesignicons.min.css",
                        "~/Rebone/public/vendors/iconfonts/puse-icons-feather/feather.css",

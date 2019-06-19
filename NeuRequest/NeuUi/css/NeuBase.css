@@ -3816,3 +3816,162 @@ perfect-scrollbar > .ps {
 .form-control, .select2-container, .datepicker.input-group, .datepicker.asColorPicker-wrap {
     border: 1px solid #fefe9ef5;
 }
+
+.form-submit-loader {
+    height: 28px;
+}
+
+form label.error {
+    color: #f31313;
+    margin-bottom: 0;
+    margin-top: 9px;
+}
+
+.goal-dashboard .app-page-title {
+    padding: 30px;
+    margin: -30px -30px 30px;
+    position: relative;
+}
+
+.goal-dashboard .app-page-title .page-title-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+    .goal-dashboard .app-page-title .page-title-heading, .app-page-title .page-title-subheading {
+        margin: 0;
+        padding: 0;
+    }
+
+    .goal-dashboard .app-page-title .page-title-heading {
+        font-size: 1.25rem;
+        font-weight: 400;
+        display: flex;
+        align-content: center;
+        align-items: center;
+    }
+
+    .goal-dashboard .app-page-title .page-title-icon {
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        text-align: center;
+        padding: 0.83333333rem;
+        margin: 0 30px 0 0;
+        background: #fff;
+        box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+        border-radius: 0.25rem;
+        width: 60px;
+        height: 60px;
+    }
+
+    .goal-dashboard .app-page-title .page-title-icon i {
+        margin: auto;
+    }
+
+.goal-dashboard .app-page-title .page-title-heading, goal-dashboard .app-page-title .page-title-subheading {
+    margin: 0;
+    padding: 0;
+}
+
+    .goal-dashboard .app-page-title .page-title-subheading {
+        padding: 3px 0 0;
+        font-size: 0.88rem;
+        opacity: .6;
+        max-width: 70%;
+    }
+    .goal-dashboard .app-page-title .page-title-actions {
+        margin-left: auto;
+    }
+.goal-dashboard button {
+    border-radius: 0;
+}
+
+.goal-dashboard input, .goal-dashboard button, .goal-dashboard select, .goal-dashboard optgroup, .goal-dashboard textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.goal-dashboard button, .goal-dashboard input {
+    overflow: visible;
+}
+
+.goal-dashboard button, .goal-dashboard select {
+    text-transform: none;
+}
+
+.goal-dashboard button, .goal-dashboard [type="button"], .goal-dashboard [type="reset"], .goal-dashboard [type="submit"] {
+    -webkit-appearance: button;
+}
+
+.goal-dashboard .goal-dashboard .btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #495057;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.goal-dashboard .btn-success {
+    color: #fff;
+    background-color: #3ac47d;
+    border-color: #3ac47d;
+}
+
+.goal-dashboard .d-inline-flex {
+    display: inline-flex !important;
+}
+
+.goal-dashboard .align-items-center {
+    align-items: center !important;
+}
+
+.goal-dashboard a, .goal-dashboard button, .goal-dashboard .btn {
+    outline: none !important;
+}
+
+.goal-dashboard .btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.goal-dashboard .btn-success {
+    color: #fff;
+    background-color: #3ac47d;
+    border-color: #3ac47d;
+}
+
+.goal-dashboard .btn {
+    position: relative;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.goal-dashboard .btn-success.btn-shadow {
+    box-shadow: 0 0.125rem 0.625rem rgba(58, 196, 125, 0.4), 0 0.0625rem 0.125rem rgba(58, 196, 125, 0.5);
+}
+
+.goal-dashboard .btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.goal-dashboard .mr-2, .goal-dashboard .mx-2 {
+    margin-right: 0.5rem !important;
+}
+
+
+

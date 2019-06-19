@@ -1,0 +1,528 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+@{
+    UserProfile userProfileSession = ViewData["UserProfileSession"] as UserProfile;
+    List<UserProfile> userMasterList = ViewData["UserMasterList"] as List<UserProfile>;
+    EmployeeVerificationReqUiRender employeeVerificationReqUiRender = ViewData["EmployeeVerificationReqUiRender"] as EmployeeVerificationReqUiRender;
+}
+@{
+    ViewBag.Title = "HCM New Employee Verification Request - ";
+}
+@Styles.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.css")
+<style>
+    .custome-render-table-section {
+        font-family: "Nunito Sans",sans-serif;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        background-color: #eef5f9;
+        margin: 0;
+        overflow-x: hidden;
+        color: #3e5569;
+        background: #fff;
+    }
+
+        .custome-render-table-section .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 0 solid transparent;
+            border-radius: 0;
+            margin-bottom: 20px;
+        }
+
+        .custome-render-table-section .card-body {
+            flex: 1 1 auto;
+            padding: 1.25rem;
+        }
+
+    @@media (min-width: 768px) {
+        .custome-render-table-section .d-md-flex {
+            display: flex !important;
+        }
+    }
+
+    .custome-render-table-section .align-items-center {
+        align-items: center !important;
+    }
+
+    .custome-render-table-section .h1, .custome-render-table-section .h2,
+    .custome-render-table-section .h3, .custome-render-table-section .h4,
+    .custome-render-table-section .h5,
+    .custome-render-table-section .h6,
+    .custome-render-table-section h1, .custome-render-table-section h2,
+    .custome-render-table-section h3, .custome-render-table-section h4,
+    .custome-render-table-section h5, .custome-render-table-section h6 {
+        margin-bottom: .5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: inherit;
+    }
+
+    .custome-render-table-section .h4, .custome-render-table-section h4 {
+        font-size: 1.125rem;
+    }
+
+    .custome-render-table-section .card-title {
+        margin-bottom: .75rem;
+    }
+
+    .custome-render-table-section .card .card-title {
+        position: relative;
+        font-weight: 400;
+        margin-bottom: 10px;
+    }
+
+    .custome-render-table-section .h5, .custome-render-table-section h5 {
+        font-size: 1rem;
+    }
+
+    .custome-render-table-section .card-header, .custome-render-table-section .card-subtitle, .custome-render-table-section .card-text:last-child {
+        margin-bottom: 0;
+    }
+
+    .custome-render-table-section .card-subtitle {
+        margin-top: -.375rem;
+    }
+
+    .custome-render-table-section .card .card-subtitle {
+        font-weight: 300;
+        margin-bottom: 10px;
+        color: #a1aab2;
+    }
+
+    .custome-render-table-section table {
+        border-collapse: collapse;
+    }
+
+    .custome-render-table-section .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #3e5569;
+    }
+
+    .custome-render-table-section .border-0 {
+        border: 0 !important;
+    }
+
+    .custome-render-table-section th {
+        text-align: inherit;
+    }
+
+    .custome-render-table-section .table td, .custome-render-table-section .table th {
+        padding: 1rem;
+        vertical-align: top;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .custome-render-table-section .cell,
+    .custome-render-table-section .v-middle td,
+    .custome-render-table-section .v-middle th,
+    .custome-render-table-section .vm.table td,
+    .custome-render-table-section .vm.table th,
+    .custome-render-table-section .waves-effect {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section .no-wrap td, .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .custome-render-table-section .table th,
+    .custome-render-table-section .table thead th {
+        font-weight: 400;
+    }
+
+    .custome-render-table-section .cell,
+    .custome-render-table-section .v-middle td, .custome-render-table-section .v-middle th,
+    .custome-render-table-section .vm.table td,
+    .custome-render-table-section .vm.table th, .custome-render-table-section .waves-effect {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section .no-wrap td, .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .d-flex {
+        display: flex !important;
+    }
+
+    .custome-render-table-section .align-items-center {
+        align-items: center !important;
+    }
+
+    .custome-render-table-section .no-wrap td,
+    .custome-render-table-section .no-wrap th {
+        white-space: nowrap;
+    }
+
+    .custome-render-table-section .m-r-10 {
+        margin-right: 10px;
+    }
+
+    .custome-render-table-section .fa-stack, .custome-render-table-section img, .custome-render-table-section svg {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section img {
+        border-style: none;
+    }
+
+    .custome-render-table-section .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .custome-render-table-section .font-medium {
+        font-weight: 500;
+    }
+
+    .custome-render-table-section .font-16 {
+        font-size: 16px;
+    }
+
+    .custome-render-table-section .m-b-0 {
+        margin-bottom: 0;
+    }
+
+    .custome-render-table-section .btn-link, .custome-render-table-section .btn:hover, .custome-render-table-section a {
+        text-decoration: none;
+    }
+
+    .custome-render-table-section .btn,
+    .custome-render-table-section .btn-link,
+    .custome-render-table-section .custom-select,
+    .custome-render-table-section .dropdown-item,
+    .custome-render-table-section .form-control,
+    .custome-render-table-section .input-group-text {
+        font-weight: 400;
+    }
+
+    .custome-render-table-section .btn {
+        display: inline-block;
+        color: #3e5569;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        border-radius: 2px;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .custome-render-table-section .btn-info {
+        color: #fff;
+        background-color: #2962FF;
+        border-color: #2962FF;
+    }
+
+    .custome-render-table-section .btn-circle {
+        border-radius: 100%;
+        width: 40px;
+        height: 40px;
+        padding: 5px;
+        line-height: 30px;
+    }
+
+    .custome-render-table-section .btn-cyan {
+        color: #212529;
+        background-color: #4fc3f7;
+        border-color: #4fc3f7;
+    }
+
+    .custome-render-table-section .text-white {
+        color: #fff !important;
+    }
+
+    .custome-render-table-section .p-0 {
+        padding: 0 !important;
+    }
+
+    .custome-render-table-section .fa-stack, .custome-render-table-section img, .custome-render-table-section svg {
+        vertical-align: middle;
+    }
+
+    .custome-render-table-section img {
+        border-style: none;
+    }
+
+    .custome-render-table-section .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .text-orange {
+        color: #fb8c00 !important;
+    }
+
+    .text-success {
+        color: #36bea6 !important;
+    }
+
+    .custome-render-table-section .table.no-border tr td, .custome-render-table-section .table.no-border tr th {
+        border-width: 0;
+    }
+
+    .custome-render-table-section .table tbody tr {
+        border-bottom: 1px solid #dfdfdf;
+    }
+
+        .custome-render-table-section .table tbody tr:last-of-type {
+            border-bottom: none;
+        }
+
+    .btn-group.inline {
+        border: none !important;
+    }
+
+    .inbox-inline-btn {
+        margin: auto 0.5rem !important;
+        border: 1px solid #f2f2f2 !important;
+    }
+
+    .pagination .page-item.active .page-link, .jsgrid .jsgrid-pager .page-item.active .page-link, .jsgrid .jsgrid-pager .active.jsgrid-pager-nav-button .page-link, .jsgrid .jsgrid-pager .active.jsgrid-pager-page .page-link, .pagination .page-item.active .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item.active .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item.active a, .jsgrid .jsgrid-pager .active.jsgrid-pager-nav-button a, .pagination .page-item.active .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item.active .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item.active a, .jsgrid .jsgrid-pager .active.jsgrid-pager-page a, .pagination .page-item:active .page-link, .jsgrid .jsgrid-pager .page-item:active .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:active .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:active .page-link, .pagination .page-item:active .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:active .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:active a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:active a, .pagination .page-item:active .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:active .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:active a, .jsgrid .jsgrid-pager .jsgrid-pager-page:active a, .pagination .page-item:focus .page-link, .jsgrid .jsgrid-pager .page-item:focus .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:focus .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:focus .page-link, .pagination .page-item:focus .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:focus .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:focus a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:focus a, .pagination .page-item:focus .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:focus .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:focus a, .jsgrid .jsgrid-pager .jsgrid-pager-page:focus a, .pagination .page-item:hover .page-link, .jsgrid .jsgrid-pager .page-item:hover .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:hover .page-link, .jsgrid .jsgrid-pager .jsgrid-pager-page:hover .page-link, .pagination .page-item:hover .jsgrid .jsgrid-pager .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .page-item:hover .jsgrid-pager-nav-button a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button .page-item:hover a, .jsgrid .jsgrid-pager .jsgrid-pager-nav-button:hover a, .pagination .page-item:hover .jsgrid .jsgrid-pager .jsgrid-pager-page a, .jsgrid .jsgrid-pager .page-item:hover .jsgrid-pager-page a, .jsgrid .jsgrid-pager .jsgrid-pager-page .page-item:hover a, .jsgrid .jsgrid-pager .jsgrid-pager-page:hover a {
+        background: #8862e0b3;
+        border-color: #8862e0b3;
+        color: #ffffff;
+    }
+
+    .page-link {
+        color: #8862e0b3;
+    }
+
+    .btn-inverse-info.inbox-inline-btn:hover {
+        color: #ffffff;
+        background-color: #8862e0b3;
+        border-color: #8862e0b3;
+    }
+
+    @@media (min-width: 992px) {
+        .request-summary-container .col-lg-2.wid-5 {
+            flex: 0 0 19%;
+            max-width: 20.66667%;
+        }
+    }
+
+
+    .hide {
+        display: none !important;
+    }
+</style>
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item"><a href="/HcmDashboard/Index">HCM Request Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Create New Employee Verification Request</li>
+    </ol>
+</nav>
+
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="main-card mb-3 mt-3 card action-card">
+
+            <div class="card-header"><i class="lnr lnr-train header-icon icon-gradient bg-plum-plate"></i> New Employee Verification Request  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
+
+            <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmDashboard/EmployeeVerificationReq" method="POST" enctype="multipart/form-data">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label for="leaveCancelationMessage">Purpose</label>
+                                            <textarea class="form-control" name="message" id="message" rows="3">@employeeVerificationReqUiRender.message</textarea>
+                                        </div>
+                                    </fieldset>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="d-block text-right card-footer"><button class="mr-2 btn btn-link btn-sm link-action-tigger" data-target="/HcmDashboard/Index">Cancel</button><input class="btn btn btn-success btn-lg" type="submit" value="Submit"></div>
+
+            </form>
+
+
+        </div>
+    </div>
+    <div class="col-5">
+
+        <div class="main-card mb-3 mt-3 card action-card widget-side">
+
+            <div class="dropdown-menu-header">
+                <div class="dropdown-menu-header-inner bg-focus">
+                    <div class="menu-header-image opacity-3" style="background-image: url('https://png.pngtree.com/thumb_back/fw800/back_pic/00/14/65/3256657136926fa.jpg');"></div>
+                    <div class="menu-header-content btn-pane-right">
+                        <div class="avatar-icon-wrapper mr-3 avatar-icon-xl">
+                            <div class="page-title-icon">
+                                <i class="icon pe-7s-pin icon-gradient bg-tempting-azure"></i>
+                            </div>
+                        </div>
+                        <div><h5 class="menu-header-title">Guidelines </h5></div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="bg-warm-flame list-group-item">
+                    <div class="widget-content p-0">
+                        <div class="widget-content-wrapper"></div>
+                    </div>
+                </li>
+                <li class="p-0 list-group-item">
+                    <div class="grid-menu grid-menu-2col overflow-hidden">
+                        <div class="no-gutters row">
+
+                            <div class="col-12">
+                                <div class="pt-4 pb-3 pl-3 pr-3">
+
+                                    <p class="mb-1"><i class="mdi mdi-checkbox-multiple-blank-circle"></i>Purpose<span class="text-danger">*</span> <span class="text-muted">of employee verification</span></p>
+
+                                    @if (TempData["Message"] != null)
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-10 server-error-container mt-4">
+                                                <div class="card-shadow-danger border mb-3 card card-body border-danger server-error">
+                                                    @TempData["Message"]
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="d-block text-right card-footer bg-dark"></div>
+
+
+        </div>
+
+        
+    </div>
+</div>
+
+
+@Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/x-editable.js")
+@Scripts.Render("~/Rebone/public/js/dropify.js")
+@Scripts.Render("~/Rebone/public/js/dropzone.js")
+@Scripts.Render("~/Rebone/public/js/jquery-file-upload.js")
+@Scripts.Render("~/Rebone/public/js/formpickers.js")
+@Scripts.Render("~/Rebone/public/js/form-repeater.js")
+@Scripts.Render("~/Rebone/public/js/select2.js")
+@Scripts.Render("~/Rebone/public/vendors/SearchableMultiSelectjQueryDropdown/jquery.dropdown.js")
+<script>
+    $.validator.setDefaults({
+        submitHandler: function () {
+            $('#addNewLeaveCancelationForm').submit();
+        }
+    });
+
+    $(function () {
+        // validate signup form on keyup and submit
+        $("#addNewLeaveCancelationForm").validate({
+            rules: {
+                message: {
+                    required: true
+                }
+            },
+            messages: {
+                message: {
+                    required: "Please enter purpose of employee verification",
+                }
+            },
+            errorPlacement: function (label, element) {
+                label.addClass('mt-2 text-danger');
+                label.insertAfter(element);
+            },
+            highlight: function (element, errorClass) {
+                $(element).parent().addClass('has-danger')
+                $(element).addClass('form-control-danger')
+            }
+        });
+
+        if ($("#start-date-picker").length) {
+            $('#start-date-picker').datepicker({
+                enableOnReadonly: true,
+                todayHighlight: true,
+                //endDate: '+d',
+                autoclose: true,
+            });
+        };
+
+        if ($("#end-date-picker").length) {
+            $('#end-date-picker').datepicker({
+                enableOnReadonly: true,
+                todayHighlight: true,
+                autoclose: true,
+            });
+        };
+
+        $('.dropdown-mul-1').dropdown({
+            multipleMode: 'label',
+            choice: function () {
+                // console.log(arguments,this);
+            }
+        });
+
+        if ($(".leaveCancelationApprover").length) {
+            $(".leaveCancelationApprover").select2();
+        }
+    });
+    (function ($) {
+        'use strict';
+        $('#defaultconfig').maxlength({
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+
+        $('#defaultconfig-2').maxlength({
+            alwaysShow: true,
+            threshold: 20,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+
+        $('#defaultconfig-3').maxlength({
+            alwaysShow: true,
+            threshold: 10,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger",
+            separator: ' of ',
+            preText: 'You have ',
+            postText: ' chars remaining.',
+            validate: true
+        });
+
+        $('#maxlength-textarea').maxlength({
+            alwaysShow: true,
+            warningClass: "badge mt-1 badge-success",
+            limitReachedClass: "badge mt-1 badge-danger"
+        });
+    })(jQuery);
+</script>

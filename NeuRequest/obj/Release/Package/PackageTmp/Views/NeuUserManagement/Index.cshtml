@@ -39,24 +39,30 @@
                             <th>Employment Status</th>
                             <th>Active</th>
                             <th>Edit</th>
-                            <th>Remove</th>
+                            <th>A/D</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (UserProfile item in userProfiles)
                         {
+                            string activeRowHtml = "<i class=\"mdi mdi-checkbox-blank-circle text-success cursor-pointer\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"Active\"></i><span class=\"hide\">Active</span>";
+                            if (item.Active != 1)
+                            {
+                                activeRowHtml = "<i class=\"mdi mdi-checkbox-blank-circle text-warning cursor-pointer\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"Deactivate\"></i><span class=\"hide\">Deactivate</span>";
+                            }
+
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => item.NTPLID)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
                                 <td>@Html.DisplayFor(modelItem => item.FullName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.PracticeDesc)</td>
                                 <td>@Html.DisplayFor(modelItem => item.EmpStatusDesc)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Active)</td>
+                                <td>@Html.Raw(@activeRowHtml)</td>
                                 <td>
                                     <button class="btn btn-outline-info link-action-tigger" title="Edit" data-target="/NeuUserManagement/EditNeuUserDetails/@item.Id"><i class="mdi mdi-pencil"></i></button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-outline-warning user-delete-tigger" data-target="@item.Id" title="Activate/Deactivate"><i class="mdi mdi-amplifier"></i></button>
+                                    <button class="btn btn-outline-warning user-activate-tigger" data-target="@item.Id" data-current="@item.Active" title="Activate/Deactivate"><i class="mdi mdi-amplifier"></i></button>
                                 </td>
                             </tr>
                         }
@@ -67,13 +73,31 @@
     </div>
 </div>
 @Scripts.Render("~/Rebone/js")
+@Scripts.Render("~/Rebone/public/js/tooltips.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/dataTables.buttons.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.flash.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/jszip.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/pdfmake.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/vfs_fonts.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.html5.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.print.min.js")
+
 <script>
     $(function () {
-        $(document).on('click', '.user-delete-tigger', function (e) {
+
+        $(document).on('click', '.user-activate-tigger', function (e) {
             var dataId = $(this).data('target');
+            var current = $(this).data('current');
+            var userMessage = "";
+            if (current == "1") {
+                userMessage = "Do you want deactivate account?";
+            }
+            else {
+                userMessage = "Do you want activate account?";
+            }
             swal({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: userMessage,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3f51b5',
@@ -99,18 +123,19 @@
                 if (value != null) {
                     var formData = new FormData();
                     formData.append("id", value);
+                    formData.append("__RequestVerificationToken", gettoken());
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
                         enctype: 'multipart/form-data',
-                        url: "/NeuUserManagement/DeleteNeuUserDetails",
+                        url: "/NeuUserManagement/ChangeUserActivate",
                         data: formData,
                         processData: false,
                         contentType: false,
                         cache: false,
                         timeout: 600000,
                         success: function (data) {
-                            if (data.Status == 'Ok') {
+                            if (data.status == 'Ok') {
                                 swal({
                                     title: data.message,
                                     text: 'Data refresh in 4 sec.',
@@ -146,6 +171,13 @@
 
 
         $('#user-summary-listing').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "search": {
+                "regex": true,
+            },
             "aLengthMenu": [
                 [5, 10, 15, 20, 50, 100],
                 [5, 10, 15, 20, 50, 100]
@@ -165,5 +197,11 @@
             var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
             length_sel.removeClass('form-control-sm');
         });
+
+        if ($(".dt-buttons").length) {
+
+            $(".dt-buttons").appendTo("#request-summary-listing_filter");
+        }
+
     });
 </script>

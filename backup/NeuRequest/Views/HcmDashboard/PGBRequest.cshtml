@@ -344,7 +344,7 @@
             <div class="card-header"><i class="lnr lnr-train header-icon icon-gradient bg-plum-plate"></i> New Projects Background Verification Request  <div class="btn-actions-pane-right actions-icon-btn"></div></div>
 
             <form class="cmxform" id="addNewLeaveCancelationForm" action="/HcmDashboard/PGBRequest" method="POST" enctype="multipart/form-data">
-
+                @Html.AntiForgeryToken()
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
@@ -487,7 +487,11 @@
                     </div>
                 </div>
 
-                <div class="d-block text-right card-footer"><button class="mr-2 btn btn-link btn-sm link-action-tigger" data-target="/HcmDashboard/Index">Cancel</button><input class="btn btn btn-success btn-lg" type="submit" value="Submit"></div>
+                <div class="d-block text-right card-footer">
+                    <img class="form-submit-loader frm hide" src="~/Rebone/public/images/loader_sm.gif" />
+                    <button class="mr-2 btn btn-link btn-sm link-action-tigger" data-target="/HcmDashboard/Index">Cancel</button>
+                    <input class="btn btn btn-success btn-lg" type="submit" value="Submit">
+                </div>
 
             </form>
 
@@ -615,6 +619,15 @@
             highlight: function (element, errorClass) {
                 $(element).parent().addClass('has-danger')
                 $(element).addClass('form-control-danger')
+            }
+        });
+
+        $(document).on('submit', '#addNewLeaveCancelationForm', function (e) {
+            if ($(this).valid()) {
+                $('img.form-submit-loader.frm').removeClass('hide');
+            }
+            else {
+                e.preventDefault();
             }
         });
 

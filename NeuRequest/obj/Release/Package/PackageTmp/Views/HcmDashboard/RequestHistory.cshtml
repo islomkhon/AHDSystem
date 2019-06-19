@@ -192,12 +192,51 @@
                                             {
                                                 requestTypeString = "Address Proof Request";
                                                 addressProofReq++;
+                                                otherReq++;
                                             }
                                             else if (item.RequestSubType.ToString().ToLower() == "hcmemployeeverification")
                                             {
                                                 requestTypeString = "Employee Verification";
                                                 employeeVerificationReq++;
+                                                otherReq++;
                                             }
+                                            else if (item.RequestSubType.ToString().ToLower() == "salarycertificate")
+                                            {
+                                                requestTypeString = "Salary Certificate";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "hcmgeneral")
+                                            {
+                                                requestTypeString = "General";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "domestictrip")
+                                            {
+                                                requestTypeString = "Domestic Travel";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "internationaltrip")
+                                            {
+                                                requestTypeString = "International Travel";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "dbmanagerchange")
+                                            {
+                                                requestTypeString = "Manager Change";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "dblocationchange")
+                                            {
+                                                requestTypeString = "Location Change";
+                                                otherReq++;
+                                            }
+                                            else if (item.RequestSubType.ToString().ToLower() == "pgbrequest")
+                                            {
+                                                requestTypeString = "Project Background Verification";
+                                                otherReq++;
+                                            }
+
+
 
                                             <tr style="">
                                                 <td><a style="text-decoration: none;" href="/HcmDashboard/SelfRequestDetails?requestId=@item.RequestId" target="_blank"><span class="editable editable-click"><i class="mdi mdi-image-filter-center-focus"></i>@Html.DisplayFor(modelItem => item.RequestId)</span></a></td>
@@ -209,27 +248,27 @@
                                         }
 
                                         <!--<tr>
-        <td>
-            <div class="d-flex no-block align-items-center">
-                <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
-                <div class="">
-                    <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
-                </div>
-            </div>
-        </td>
-        <td>Elite Admin</td>
-        <td>
-            <div class="popover-icon">
-                <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
-                <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
-                <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
-                <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
-            </div>
-        </td>
-        <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
-        <td>35</td>
-        <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
-    </tr>-->
+                                            <td>
+                                                <div class="d-flex no-block align-items-center">
+                                                    <div class="m-r-10"><img src="../../assets/images/users/d1.jpg" alt="user" class="rounded-circle" width="45"></div>
+                                                    <div class="">
+                                                        <h5 class="m-b-0 font-16 font-medium">Hanna Gover</h5><span>hgover@gmail.com</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>Elite Admin</td>
+                                            <td>
+                                                <div class="popover-icon">
+                                                    <a class="btn-circle btn btn-info" href="javascript:void(0)">SS</a>
+                                                    <a class="btn-circle btn btn-cyan text-white popover-item" href="javascript:void(0)">DS</a>
+                                                    <a class="btn-circle btn p-0 popover-item" href="javascript:void(0)"><img src="../../assets/images/users/1.jpg" alt="" class="rounded-circle" width="39"></a>
+                                                    <a class="btn-circle btn btn-outline-secondary" href="javascript:void(0)">+</a>
+                                                </div>
+                                            </td>
+                                            <td><i class="mdi mdi-checkbox-blank-circle text-orange" data-toggle="tooltip" data-placement="top" title="" data-original-title="In Progress"></i></td>
+                                            <td>35</td>
+                                            <td class="blue-grey-text  text-darken-4 font-medium">$96K</td>
+                                        </tr>-->
 
 
                                     </tbody>
@@ -249,41 +288,69 @@
 <div class="modal fade" id="exampleModal-4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-4" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel-4">New HCM Request</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Request Category</label>
-                        <div class="col-sm-9">
-                            <select id="hcmRequestDepartment" name="hcmRequestDepartment" class="form-control">
-                                <optgroup label="Leaves and Holydays">
-                                    <option value="LeaveCancelation" data-target="/HcmDashboard/LeaveCancelation">Leave Cancelation</option>
-                                    <option value="LeavePastApply" data-target="/HcmAHDDashboard/LeavePastApplyCreate">Apply Past Leave</option>
-                                    <option value="WorkFromHome" data-target="/HcmAHDDashboard/LeaveWFHApplyCreate">Work From Home</option>
-                                    <option value="LeaveBalanceEnquiry" data-target="/HcmAHDDashboard/LeaveBalanceEnquiryCreate">Leave Balance Enquiry</option>
-                                </optgroup>
-                                <optgroup label="Letter">
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/HCMAddressProofReqCreate">Address Proof</option>
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/HCMEmployeeVerificationReqCreate">Employee Verification</option>
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Salary Certificate</option>
-                                </optgroup>
-                                <optgroup label="General">
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Other</option>
-                                </optgroup>
-                            </select>
-                        </div>
+
+            <div class="card-hover-shadow-2x mb-0 card widget">
+
+                <div class="card-header-tab card-header">
+                    <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                        <i class="header-icon lnr lnr-briefcase mr-3 text-muted opacity-6 icon-gradient bg-mixed-hopes"></i> New HCM Request
                     </div>
-                </form>
+                    <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                        <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                            <i class="mdi mdi-close"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <form class="cmxform" id="category-form">
+
+                        <fieldset>
+
+                            <div class="form-group">
+                                <label for="Category">Category</label>
+                                <select class="js-example-basic-single select2" id="hcmRequestDepartment" data-parent="#exampleModal-4" id="Category" name="Category" style="width:100%">
+                                    <optgroup label="Leaves and Holydays">
+                                        <option value="LeaveCancelation" data-target="/HcmDashboard/LeaveCancelation">Leave Cancelation</option>
+                                        <option value="LeavePastApply" data-target="/HcmDashboard/LeavePastApply">Past Leave Apply</option>
+                                        <option value="LeaveWFHApply" data-target="/HcmDashboard/LeaveWFHApply">Work From Home</option>
+                                        <option value="LeaveBalanceEnquiry" data-target="/HcmDashboard/LeaveBalanceEnquiry">Leave Balance Enquiry</option>
+                                    </optgroup>
+                                    <optgroup label="Letter">
+                                        <option value="AddressProof" data-target="/HcmDashboard/AddressProof">Address Proof</option>
+                                        <option value="EmployeeVerificationReq" data-target="/HcmDashboard/EmployeeVerificationReq">Employee Verification</option>
+                                        <option value="SalaryCertificate" data-target="/HcmDashboard/SalaryCertificate">Salary Certificate</option>
+                                    </optgroup>
+                                    <optgroup label="Travel">
+                                        <option value="DomesticTripRequest" data-target="/HcmDashboard/DomesticTripRequest">Domestic</option>
+                                        <option value="InternationalTripRequest" data-target="/HcmDashboard/InternationalTripRequest">International</option>
+                                    </optgroup>
+                                    <optgroup label="Database">
+                                        <option value="DBManagerChangeRequest" data-target="/HcmDashboard/DBManagerChangeRequest">Manager Change</option>
+                                        <option value="DBLocationChangeRequest" data-target="/HcmDashboard/DBLocationChangeRequest">Location change</option>
+                                    </optgroup>
+                                    <optgroup label="General">
+                                        <option value="PGBRequest" data-target="/HcmDashboard/PGBRequest">Projects Background Verification</option>
+                                        <option value="GeneralRequest" data-target="/HcmDashboard/GeneralRequest">Other</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                        </fieldset>
+
+
+                    </form>
+
+                </div>
+
+                <div class="d-block text-right card-footer">
+                    <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-success btn-sm hcm_create_Request">Create Request</button>
+                </div>
+
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success hcm_create_Request">Create Request</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-            </div>
+
         </div>
     </div>
 </div>
@@ -291,6 +358,15 @@
 
 @Scripts.Render("~/Rebone/js")
 @Scripts.Render("~/Rebone/public/js/tooltips.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/dataTables.buttons.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.flash.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/jszip.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/pdfmake.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/vfs_fonts.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.html5.min.js")
+@Scripts.Render("~/Rebone/public/vendors/datatable/buttons.print.min.js")
+
+
 <script>
     $(function () {
 
@@ -302,12 +378,25 @@
         //employeeVerificationReq
         $('#otherReq').html(@otherReq);
 
+        if ($(".select2").length) {
+            $(".select2").select2({
+                dropdownParent: $('#exampleModal-4')
+            });
+        }
+
         $(document).on('click', '.hcm_create_Request', function (e) {
             var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
             window.location = target;
         });
 
         $('#request-summary-listing').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "search": {
+                "regex": true,
+            },
             "aLengthMenu": [
                 [5, 10, 15, 20, 50, 100],
                 [5, 10, 15, 20, 50, 100]
@@ -327,5 +416,11 @@
             var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
             length_sel.removeClass('form-control-sm');
         });
+
+        if ($(".dt-buttons").length) {
+
+            $(".dt-buttons").appendTo("#request-summary-listing_filter");
+        }
+
     });
 </script>

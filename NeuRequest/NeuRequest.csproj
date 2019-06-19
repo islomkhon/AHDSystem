@@ -218,6 +218,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
     <Compile Include="Controllers\ErrorHandilarController.cs" />
+    <Compile Include="Controllers\GoalDashboardController.cs" />
     <Compile Include="Controllers\HcmDashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NeuUserManagementController.cs" />
@@ -454,11 +455,10 @@
     <Content Include="Rebone\public\images\lightbox\thumb-v-v-2.jpg" />
     <Content Include="Rebone\public\images\lightbox\thumb-v-y-1.jpg" />
     <Content Include="Rebone\public\images\lightbox\thumb-v-y-2.jpg" />
+    <Content Include="Rebone\public\images\loader_sm.gif" />
     <Content Include="Rebone\public\images\logo-mini.svg" />
     <Content Include="Rebone\public\images\logo.png" />
-    <Content Include="Rebone\public\images\logo.svg" />
     <Content Include="Rebone\public\images\logo1.png" />
-    <Content Include="Rebone\public\images\logo_star_white.svg" />
     <Content Include="Rebone\public\images\profile\profileImg.png" />
     <Content Include="Rebone\public\images\samples\1280x768\1.jpg" />
     <Content Include="Rebone\public\images\samples\1280x768\10.jpg" />
@@ -1408,6 +1408,8 @@
     <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\jquery.dropdown.min.js" />
     <Content Include="Rebone\public\vendors\SearchableMultiSelectjQueryDropdown\mock.js" />
     <Content Include="Rebone\public\vendors\slimscroll\jquery.slimscroll.min.js" />
+    <Content Include="Rebone\public\vendors\steper\mstepper.js" />
+    <Content Include="Rebone\public\vendors\steper\mstepper.min.css" />
     <Content Include="Rebone\public\vendors\summernote\dist\summernote-bs4.css" />
     <Content Include="Rebone\public\vendors\summernote\dist\summernote-bs4.min.js" />
     <Content Include="Rebone\public\vendors\tinymce\themes\modern\theme.js" />
@@ -1500,6 +1502,7 @@
     <Content Include="DAL\EntityModel.edmx.diagram">
       <DependentUpon>EntityModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Rebone\public\fonts\Linearicons-Free.eot" />
     <Content Include="Rebone\public\fonts\Linearicons-Free.ttf" />
@@ -1571,6 +1574,7 @@
     <Content Include="Views\HcmDashboard\DBManagerChangeRequest.cshtml" />
     <Content Include="Views\HcmDashboard\DBLocationChangeRequest.cshtml" />
     <Content Include="Views\HcmDashboard\PGBRequest.cshtml" />
+    <Content Include="Views\GoalDashboard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Analytics\" />

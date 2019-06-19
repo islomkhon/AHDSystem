@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -92,10 +93,28 @@ namespace MailTest
             new Thread(ts).Start();
             int i = 10;*/
             //await email.Send();
+
+            SmtpClient smtpClient = new SmtpClient("hcm.neudesic.com", 25);
+
+            smtpClient.Credentials = new System.Net.NetworkCredential("admin@hcm.neudesic.com", "Password.1");
+            smtpClient.UseDefaultCredentials = false;
+            //smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = false;
+            MailMessage mail = new MailMessage();
+
+            //Setting From , To and CC
+            mail.From = new MailAddress("admin@hcm.neudesic.com");
+            mail.To.Add(new MailAddress("monin.jose@neudesic.com"));
+            mail.IsBodyHtml = true;
+            mail.Body = "Test Mail";
+            smtpClient.Send(mail);
+
             /*SmtpClient smtpClient = new SmtpClient("mail.neudesic.com", 25);
 
-            smtpClient.Credentials = new System.Net.NetworkCredential("monin.jose@neudesic.com", "Password.1");
+            //smtpClient.Credentials = new System.Net.NetworkCredential("monin.jose@neudesic.com", "Password.1");
             smtpClient.UseDefaultCredentials = true;
+            smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.EnableSsl = false;
             MailMessage mail = new MailMessage();

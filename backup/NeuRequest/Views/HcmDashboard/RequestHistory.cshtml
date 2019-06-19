@@ -288,41 +288,69 @@
 <div class="modal fade" id="exampleModal-4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-4" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel-4">New HCM Request</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Request Category</label>
-                        <div class="col-sm-9">
-                            <select id="hcmRequestDepartment" name="hcmRequestDepartment" class="form-control">
-                                <optgroup label="Leaves and Holydays">
-                                    <option value="LeaveCancelation" data-target="/HcmDashboard/LeaveCancelation">Leave Cancelation</option>
-                                    <option value="LeavePastApply" data-target="/HcmAHDDashboard/LeavePastApplyCreate">Apply Past Leave</option>
-                                    <option value="WorkFromHome" data-target="/HcmAHDDashboard/LeaveWFHApplyCreate">Work From Home</option>
-                                    <option value="LeaveBalanceEnquiry" data-target="/HcmAHDDashboard/LeaveBalanceEnquiryCreate">Leave Balance Enquiry</option>
-                                </optgroup>
-                                <optgroup label="Letter">
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/HCMAddressProofReqCreate">Address Proof</option>
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/HCMEmployeeVerificationReqCreate">Employee Verification</option>
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Salary Certificate</option>
-                                </optgroup>
-                                <optgroup label="General">
-                                    <option value="LeaveCancelation" data-target="/HcmAHDDashboard/LeaveCancelationCreate">Other</option>
-                                </optgroup>
-                            </select>
-                        </div>
+
+            <div class="card-hover-shadow-2x mb-0 card widget">
+
+                <div class="card-header-tab card-header">
+                    <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                        <i class="header-icon lnr lnr-briefcase mr-3 text-muted opacity-6 icon-gradient bg-mixed-hopes"></i> New HCM Request
                     </div>
-                </form>
+                    <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                        <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                            <i class="mdi mdi-close"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <form class="cmxform" id="category-form">
+
+                        <fieldset>
+
+                            <div class="form-group">
+                                <label for="Category">Category</label>
+                                <select class="js-example-basic-single select2" id="hcmRequestDepartment" data-parent="#exampleModal-4" id="Category" name="Category" style="width:100%">
+                                    <optgroup label="Leaves and Holydays">
+                                        <option value="LeaveCancelation" data-target="/HcmDashboard/LeaveCancelation">Leave Cancelation</option>
+                                        <option value="LeavePastApply" data-target="/HcmDashboard/LeavePastApply">Past Leave Apply</option>
+                                        <option value="LeaveWFHApply" data-target="/HcmDashboard/LeaveWFHApply">Work From Home</option>
+                                        <option value="LeaveBalanceEnquiry" data-target="/HcmDashboard/LeaveBalanceEnquiry">Leave Balance Enquiry</option>
+                                    </optgroup>
+                                    <optgroup label="Letter">
+                                        <option value="AddressProof" data-target="/HcmDashboard/AddressProof">Address Proof</option>
+                                        <option value="EmployeeVerificationReq" data-target="/HcmDashboard/EmployeeVerificationReq">Employee Verification</option>
+                                        <option value="SalaryCertificate" data-target="/HcmDashboard/SalaryCertificate">Salary Certificate</option>
+                                    </optgroup>
+                                    <optgroup label="Travel">
+                                        <option value="DomesticTripRequest" data-target="/HcmDashboard/DomesticTripRequest">Domestic</option>
+                                        <option value="InternationalTripRequest" data-target="/HcmDashboard/InternationalTripRequest">International</option>
+                                    </optgroup>
+                                    <optgroup label="Database">
+                                        <option value="DBManagerChangeRequest" data-target="/HcmDashboard/DBManagerChangeRequest">Manager Change</option>
+                                        <option value="DBLocationChangeRequest" data-target="/HcmDashboard/DBLocationChangeRequest">Location change</option>
+                                    </optgroup>
+                                    <optgroup label="General">
+                                        <option value="PGBRequest" data-target="/HcmDashboard/PGBRequest">Projects Background Verification</option>
+                                        <option value="GeneralRequest" data-target="/HcmDashboard/GeneralRequest">Other</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                        </fieldset>
+
+
+                    </form>
+
+                </div>
+
+                <div class="d-block text-right card-footer">
+                    <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-success btn-sm hcm_create_Request">Create Request</button>
+                </div>
+
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success hcm_create_Request">Create Request</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-            </div>
+
         </div>
     </div>
 </div>
@@ -349,6 +377,12 @@
         //addressProofReq
         //employeeVerificationReq
         $('#otherReq').html(@otherReq);
+
+        if ($(".select2").length) {
+            $(".select2").select2({
+                dropdownParent: $('#exampleModal-4')
+            });
+        }
 
         $(document).on('click', '.hcm_create_Request', function (e) {
             var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');

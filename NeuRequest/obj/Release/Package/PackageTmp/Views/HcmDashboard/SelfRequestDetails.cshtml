@@ -4,9 +4,9 @@
 @{
     //NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
     //NueRequestModel userRequest = ViewData["UserRequest"] as NueRequestModel;
-    
-    UserProfile userProfile = ViewData["UserProfileSession"] as UserProfile;
 
+    UserProfile userProfile = ViewData["UserProfileSession"] as UserProfile;
+    List<UserProfile> userMasterList = ViewData["UserMasterList"] as List<UserProfile>;
 }
 @{
     if (ViewData["RequestId"] != null)
@@ -18,18 +18,7 @@
         ViewBag.Title = "Request Details";
     }
 }
-<style>
-    .tab-basic .nav-item .nav-link.active {
-        color: #383838;
-    }
 
-        .tab-basic .nav-item .nav-link.active .req-number {
-            color: #383838;
-            font-size: medium;
-            position: relative;
-            bottom: 3px;
-        }
-</style>
 <style>
 </style>
 <nav class="inline-breadcrumb" aria-label="breadcrumb">
@@ -41,6 +30,99 @@
 </nav>
 <div class="card">
     <div class="card-body">
+
+        <div class="row hide">
+            <div class="col-8">
+                <div class="card-hover-shadow-2x mb-3 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-store icon-gradient bg-mixed-hopes"></i>
+                            REQUEST: #1000000000000000003
+                        </div>
+                    </div>
+
+                    <div class="p-0 card-body">
+
+                        data
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row hide">
+            <div class="col-md-4 mb-4 mt-4">
+
+
+                <div class="card-hover-shadow-2x mb-3 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-dice icon-gradient bg-happy-itmeo"></i>
+                            Leave Cancelation Request
+                        </div>
+                    </div>
+
+                    <div class="p-0 card-body">
+                        <div class="dropdown-menu-header mt-0 mb-0">
+                            <div class="dropdown-menu-header-inner bg-heavy-rain">
+                                <div class="menu-header-image opacity-2 dd-header-bg-5"></div>
+                                <div class="menu-header-content text-dark">
+                                    <h5 class="menu-header-title">Completed <span class="badge badge-success badge-dot badge-dot-lg super"></span> </h5>
+                                    <h6 class="menu-header-subtitle">
+                                        Created:
+                                        <b class="text-danger"> 6/6/2019 1:31:59 AM </b>
+                                        <i class="mdi mdi-content-copy ml-1 cursor-pointer" title="copy"></i>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-tabbed-header">
+                            <div class="tabs-animated tabs-animated-shadow" justify="justified">
+                                <div class="tab-content">
+                                    <div class="tab-pane active ng-star-inserted">
+                                        <div class="scroll-gradient ng-star-inserted">
+                                            <div class="scroll-area-sm shadow-overflow">
+                                                <perfect-scrollbar class="ps-show-limits">
+
+                                                    <div class="ps ps--active-y">
+                                                        <div class="ps-content">
+                                                            <div class="vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column">
+
+                                                                <div class="vertical-timeline-item vertical-timeline-element"><div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-success"></i></span><div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">All Hands Meeting</h4><p>Lorem ipsum dolor sic amet, today at <a href="null">12:00 PM</a></p><span class="vertical-timeline-element-date"></span></div></div></div>
+
+                                                                <div class="vertical-timeline-item vertical-timeline-element"><div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-success"></i></span><div class="vertical-timeline-element-content bounce-in"><p>Another meeting today, at <b class="text-danger">12:00 PM</b></p><p>Yet another one, at <span class="text-success">15:00 PM</span></p><span class="vertical-timeline-element-date"></span></div></div></div>
+
+                                                                <div class="vertical-timeline-item vertical-timeline-element"><div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-success"></i></span><div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">Build the production release</h4><p>Lorem ipsum dolor sit amit,consectetur eiusmdd tempor incididunt ut labore et dolore magna elit enim at minim veniam quis nostrud</p><span class="vertical-timeline-element-date"></span></div></div></div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </perfect-scrollbar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
 
         @Html.Raw(@ViewData["UiRender"])
 
@@ -218,98 +300,294 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
+
+
 
     <div class="modal fade" id="commentModal-1" tabindex="-1" role="dialog" aria-labelledby="commentModal-4" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel-4">Add new comment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="add_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserComment" method="post" enctype="multipart/form-data">
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Comment</label>
-                            <div class="col-sm-9">
-                                <textarea class="form-control" id="userComment" name="userComment" rows="4"></textarea>
-                                <input type="hidden" name="requestId" id="requestId" value="@ViewData["RequestId"]" />
-                                <input type="hidden" name="userId" id="userId" value="@userProfile.Id" />
-                            </div>
+
+                <div class="card-hover-shadow-2x mb-0 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-dice mr-3 text-muted opacity-6 icon-gradient bg-love-kiss"></i> Comment
                         </div>
-                    </form>
+                        <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                            <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                                <i class="mdi mdi-close"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form id="add_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserComment" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <fieldset>
+                                <div class="form-group mb-0">
+                                    <textarea class="form-control" name="userComment" required title="*Enter comment.." id="userComment" rows="5" placeholder="Comment..."></textarea>
+                                    <input type="hidden" name="requestId" id="requestId" value="@ViewData["RequestId"]" />
+                                    <input type="hidden" name="userId" id="userId" value="@userProfile.Id" />
+                                </div>
+                            </fieldset>
+
+                        </form>
+
+                    </div>
+
+                    <div class="d-block text-right card-footer">
+                        <img class="form-submit-loader comment hide" src="~/Rebone/public/images/loader_sm.gif" />
+                        <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success btn-sm add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#add_Leave_Cancelation_Request_Comment_Form').submit();">Save</button>
+                    </div>
+
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#add_Leave_Cancelation_Request_Comment_Form').submit();">Add Comment</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                </div>
+
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="directMessageModel" tabindex="-1" role="dialog" aria-labelledby="directMessageModel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="card-hover-shadow-2x mb-0 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-rocket mr-3 text-muted opacity-6 icon-gradient bg-love-kiss"></i> Send Direct Mail
+                        </div>
+                        <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                            <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                                <i class="mdi mdi-close"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form id="Direct_Mail_Form" action="/HcmDashboard/DirectMail" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="Direct_Mail_Request_Id" id="Direct_Mail_Request_Id" value="@ViewData["RequestId"]" />
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Recipient:</label>
+                                    <input type="text" class="form-control while-bg-input hide" id="Direct_Mail_Request_Recipient1" name="Direct_Mail_Request_Recipient1">
+                                    <select class="js-example-basic-multiple select2" id="Direct_Mail_Request_Recipient" name="Direct_Mail_Request_Recipient[]" multiple="multiple" style="width:100%">
+                                        <option disabled="disabled">-- Select --</option>
+                                        @foreach (UserProfile item in userMasterList)
+                                        {
+                                            if (@item.EmpStatusDesc != null && @item.EmpStatusDesc.ToLower() != "relieved")
+                                            {
+                                                <option value="@item.Email">@item.Email</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Message:</label>
+                                    <textarea class="form-control while-bg-input" required title="*Enter message.." id="Direct_Mail_Request_Comment" name="Direct_Mail_Request_Comment" rows="4"></textarea>
+                                </div>
+                            </fieldset>
+
+
+
+
+                        </form>
+
+                    </div>
+
+                    <div class="d-block text-right card-footer">
+                        <img class="form-submit-loader message hide" src="~/Rebone/public/images/loader_sm.gif" />
+                        <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success btn-sm directMessageModel_trigger">Send</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal fade" id="fileAttchmentModal-1" tabindex="-1" role="dialog" aria-labelledby="fileAttchmentModal-4" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel-4">Add new file</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="attach_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserAttachment" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label>File</label>
-                            <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
-                            <input type="hidden" name="userId" value="@userProfile.Id" />
-                            <input type="file" name="requestAtchmentFile" class="file-upload-default">
-                            <div class="input-group col-xs-12">
-                                <input type="text" class="form-control file-upload-info" placeholder="Upload documnet">
-                                <span class="input-group-append">
-                                    <button class="file-upload-browse btn btn-info" type="button">Select</button>
-                                </span>
-                            </div>
+
+                <div class="card-hover-shadow-2x mb-0 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-file-add mr-3 text-muted opacity-6 icon-gradient bg-arielle-smile"></i> Add New File
                         </div>
-                    </form>
+                        <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                            <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                                <i class="mdi mdi-close"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form id="attach_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserAttachment" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <label>File</label>
+                                <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
+                                <input type="hidden" name="userId" value="@userProfile.Id" />
+                                <input type="file" name="requestAtchmentFile" class="file-upload-default">
+                                <div class="input-group col-xs-12">
+                                    <input type="text" class="form-control file-upload-info" placeholder="Upload documnet">
+                                    <span class="input-group-append">
+                                        <button class="file-upload-browse btn btn-info" type="button">Select</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div class="d-block text-right card-footer">
+                        <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success btn-sm add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#attach_Leave_Cancelation_Request_Comment_Form').submit();">Upload</button>
+                    </div>
+
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#attach_Leave_Cancelation_Request_Comment_Form').submit();">Upload</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                </div>
+
             </div>
         </div>
     </div>
 
+
+
     @Scripts.Render("~/Rebone/js")
     @Scripts.Render("~/NeuUi/js/NeuBase.js")
+    
+    @if (TempData["Message"] != null)
+    {
+        <script>
+                var message = "@TempData["Message"]";
+                    resetToastPosition = function () {
+                        $('.jq-toast-wrap').removeClass('bottom-left bottom-right top-left top-right mid-center'); // to remove previous position class
+                        $(".jq-toast-wrap").css({
+                            "top": "",
+                            "left": "",
+                            "bottom": "",
+                            "right": ""
+                        }); //to remove previous position style
+                    }
+                    resetToastPosition();
+                    $.toast({
+                        heading: '...',
+                        text: message,
+                        showHideTransition: 'slide',
+                        icon: 'info',
+                        loaderBg: '#46c35f',
+                        position: 'top-right'
+                      })
+        </script>
+    }
+
     <script>
+
         $(function () {
 
-            $(document).on('click', '.hcm_create_Request', function (e) {
+            $(document).on('submit', '#add_Leave_Cancelation_Request_Comment_Form', function (e) {
+                if ($(this).valid()) {
+                    $('img.form-submit-loader.comment').removeClass('hide');
+                }
+                else {
+                    e.preventDefault();
+                }
+            });
+
+            $(document).on('submit', '.hcm_create_Request', function (e) {
                 var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
                 window.location = target;
             });
 
-            $()
+            if ($(".expandClicker").length) {
+                $(document).on('click', '.expandClicker', function (e) {
+                    $('#LongContainer').toggleClass('mini');
+                    if ($(this).find('.expandClicker-text').text() == 'Show more') {
+                        $(this).find('.expandClicker-text').text('Show less');
+                    }
+                    else {
+                        $(this).find('.expandClicker-text').text('Show more');
+                    }
+                });
+            }
+
+            if ($(".select2").length) {
+                $(".select2").select2();
+            }
+
+            if ($(".mail-tigger").length) {
+                $(document).on('click', '.mail-tigger', function (e) {
+                    var target = $(this).data('target');
+                    var id = $(this).data('id');
+
+                    $('#Direct_Mail_Request_Recipient').val(target).trigger('change');
+                    $('#Direct_Mail_Request_Comment').val('');
+
+                    $('#directMessageModel').modal('show');
+
+                });
+            }
+
+            $(document).on('click', '.directMessageModel_trigger', function (e) {
+                if ($('#Direct_Mail_Form').valid()) {
+                    $('img.form-submit-loader.message').removeClass('hide');
+                    var formData = new FormData();
+                    formData.append("Direct_Mail_Request_Id", "" + $('#Direct_Mail_Request_Id').val() + "");
+                    formData.append("Direct_Mail_Request_Recipient", "" + $('#Direct_Mail_Request_Recipient').val() + "");
+                    formData.append("Direct_Mail_Request_Comment", $('#Direct_Mail_Request_Comment').val());
+                    formData.append("__RequestVerificationToken", gettoken());
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        enctype: 'multipart/form-data',
+                        url: "/HcmDashboard/DirectMail",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        timeout: 600000,
+                        success: function (data) {
+                            if (data.status == 'Ok') {
+                                $.toast({
+                                    heading: '...',
+                                    text: data.message,
+                                    showHideTransition: 'slide',
+                                    icon: 'info',
+                                    loaderBg: '#46c35f',
+                                    position: 'top-right'
+                                });
+                                $('#directMessageModel').modal('hide');
+                            }
+                            else {
+                                $.toast({
+                                    heading: '...',
+                                    text: data.message,
+                                    showHideTransition: 'slide',
+                                    icon: 'info',
+                                    loaderBg: '#46c35f',
+                                    position: 'top-right'
+                                });
+                            }
+                        },
+                        error: function (e) {
+                            console.log("ERROR : ", e);
+                        }
+                    });
+                }
+                else {
+                    e.preventDefault();
+                }
+            });
 
             $('#request-summary-listing').DataTable({
                 "aLengthMenu": [

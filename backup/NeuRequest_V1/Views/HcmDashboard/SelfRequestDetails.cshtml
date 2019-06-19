@@ -1,0 +1,600 @@
+﻿@using NeuRequest;
+@using NeuRequest.Models;
+
+@{
+    //NueUserProfile userProfileSession = ViewData["NueUserProfile"] as NueUserProfile;
+    //NueRequestModel userRequest = ViewData["UserRequest"] as NueRequestModel;
+
+    UserProfile userProfile = ViewData["UserProfileSession"] as UserProfile;
+    List<UserProfile> userMasterList = ViewData["UserMasterList"] as List<UserProfile>;
+}
+@{
+    if (ViewData["RequestId"] != null)
+    {
+        ViewBag.Title = "Request Details - " + ViewData["RequestId"];
+    }
+    else
+    {
+        ViewBag.Title = "Request Details";
+    }
+}
+
+<style>
+</style>
+<nav class="inline-breadcrumb" aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+        <li class="breadcrumb-item"><a href="/HcmDashboard/Index">HCM Request Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">HCM Requests Details</li>
+    </ol>
+</nav>
+<div class="card">
+    <div class="card-body">
+
+        <div class="row hide">
+            <div class="col-8">
+                <div class="card-hover-shadow-2x mb-3 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-store icon-gradient bg-mixed-hopes"></i>
+                            REQUEST: #1000000000000000003
+                        </div>
+                    </div>
+
+                    <div class="p-0 card-body">
+
+                        data
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row hide">
+            <div class="col-md-4 mb-4 mt-4">
+
+
+                <div class="card-hover-shadow-2x mb-3 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-dice icon-gradient bg-happy-itmeo"></i>
+                            Leave Cancelation Request
+                        </div>
+                    </div>
+
+                    <div class="p-0 card-body">
+                        <div class="dropdown-menu-header mt-0 mb-0">
+                            <div class="dropdown-menu-header-inner bg-heavy-rain">
+                                <div class="menu-header-image opacity-2 dd-header-bg-5"></div>
+                                <div class="menu-header-content text-dark">
+                                    <h5 class="menu-header-title">Completed <span class="badge badge-success badge-dot badge-dot-lg super"></span> </h5>
+                                    <h6 class="menu-header-subtitle">
+                                        Created:
+                                        <b class="text-danger"> 6/6/2019 1:31:59 AM </b>
+                                        <i class="mdi mdi-content-copy ml-1 cursor-pointer" title="copy"></i>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-tabbed-header">
+                            <div class="tabs-animated tabs-animated-shadow" justify="justified">
+                                <div class="tab-content">
+                                    <div class="tab-pane active ng-star-inserted">
+                                        <div class="scroll-gradient ng-star-inserted">
+                                            <div class="scroll-area-sm shadow-overflow">
+                                                <perfect-scrollbar class="ps-show-limits">
+
+                                                    <div class="ps ps--active-y">
+                                                        <div class="ps-content">
+                                                            <div class="vertical-without-time vertical-timeline small widget vertical-timeline--animate vertical-timeline--one-column">
+
+                                                                <div class="vertical-timeline-item vertical-timeline-element"><div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-success"></i></span><div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">All Hands Meeting</h4><p>Lorem ipsum dolor sic amet, today at <a href="null">12:00 PM</a></p><span class="vertical-timeline-element-date"></span></div></div></div>
+
+                                                                <div class="vertical-timeline-item vertical-timeline-element"><div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-success"></i></span><div class="vertical-timeline-element-content bounce-in"><p>Another meeting today, at <b class="text-danger">12:00 PM</b></p><p>Yet another one, at <span class="text-success">15:00 PM</span></p><span class="vertical-timeline-element-date"></span></div></div></div>
+
+                                                                <div class="vertical-timeline-item vertical-timeline-element"><div><span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl badge-success"></i></span><div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">Build the production release</h4><p>Lorem ipsum dolor sit amit,consectetur eiusmdd tempor incididunt ut labore et dolore magna elit enim at minim veniam quis nostrud</p><span class="vertical-timeline-element-date"></span></div></div></div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </perfect-scrollbar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+
+        @Html.Raw(@ViewData["UiRender"])
+
+        <div class="row hide">
+            <div class="col-md-12 mb-4 mt-4">
+                <div class="btn-toolbar">
+                    <div class="btn-group inline">
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" data-toggle="modal" data-target="#commentModal-1"><i class="mdi mdi-comment-outline"></i> Comment </button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" data-toggle="modal" data-target="#fileAttchmentModal-1"><i class="mdi mdi-attachment"></i> Attach File </button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" onclick="showSwal('close-leave-past-apply-request')"><i class="mdi mdi-close-circle-outline"></i> Close </button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" onclick="showSwal('inter-approve-leave-past-apply-request')"><i class="mdi mdi-compare"></i> Approve </button>
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" onclick="showSwal('final-approve-leave-past-apply-request')"><i class="mdi mdi-compare"></i> Approve Request </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ahd-service-container hide">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Request: <span class="editable editable-click cursor-default">#1000000000000000003</span></h4>
+
+                            <div class="row">
+                                <div class="col-8">
+                                    <p class="card-description hide">Request timeline</p>
+                                    <div class="mt-4">
+                                        <div class="vertical-timeline">
+                                            <div class="timeline-wrapper timeline-wrapper-warning">
+                                                <div class="timeline-badge"></div>
+                                                <div class="timeline-panel">
+                                                    <div class="timeline-heading">
+                                                        <h6 class="timeline-title">Request Created</h6>
+                                                    </div>
+                                                    <div class="timeline-body">
+                                                        <p>Monin Jose (0790) has created new Leave Cancelation Request</p>
+                                                    </div>
+                                                    <div class="timeline-footer d-flex align-items-center">
+                                                        <i class="mdi mdi-heart-outline text-muted mr-1 hide"></i>
+                                                        <span class="hide">19</span>
+                                                        <span class="ml-auto font-weight-bold">2019-05-31 16:40:07.033</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="timeline-wrapper timeline-inverted timeline-wrapper-warning">
+                                                <div class="timeline-badge"></div>
+                                                <div class="timeline-panel">
+                                                    <div class="timeline-heading">
+                                                        <h6 class="timeline-title">Comment Added</h6>
+                                                    </div>
+                                                    <div class="timeline-body">
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate. Quisque mauris augue,</p>
+                                                    </div>
+                                                    <div class="timeline-footer d-flex align-items-center">
+                                                        <i class="mdi mdi-heart-outline text-muted mr-1 hide"></i>
+                                                        <span class="hide">25</span>
+                                                        <span class="ml-auto font-weight-bold">2019-05-31 16:40:08.033</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="timeline-wrapper timeline-wrapper-success">
+                                                <div class="timeline-badge"></div>
+                                                <div class="timeline-panel">
+                                                    <div class="timeline-heading">
+                                                        <h6 class="timeline-title">New File Attached</h6>
+                                                    </div>
+                                                    <div class="timeline-body">
+                                                        <div>
+                                                            <div class="thumb"><i class="mdi mdi-attachment"></i></div>
+                                                            <div class="details">
+                                                                <p class="file-name">favicon.png</p>
+                                                                <div class="buttons">
+                                                                    <a href="/HcmAHDDashboard/DownloadAttachment?requestId=1000000000000000001&amp;vFile=20190513025413_.png" target="_blank" class="download">Download</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="timeline-footer d-flex align-items-center">
+                                                        <i class="mdi mdi-heart-outline text-muted mr-1 hide"></i>
+                                                        <span class="hide">25</span>
+                                                        <span class="ml-auto font-weight-bold">2019-05-31 16:40:08.033</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="timeline-wrapper timeline-inverted timeline-wrapper-info">
+                                                <div class="timeline-badge"></div>
+                                                <div class="timeline-panel">
+                                                    <div class="timeline-heading">
+                                                        <h6 class="timeline-title">L1 Approval</h6>
+                                                    </div>
+                                                    <div class="timeline-body">
+                                                        <p>Mathew Job (0725) approved your request</p>
+                                                    </div>
+                                                    <div class="timeline-footer d-flex align-items-center">
+                                                        <i class="mdi mdi-heart-outline text-muted mr-1 hide"></i>
+                                                        <span class="hide">25</span>
+                                                        <span class="ml-auto font-weight-bold">2019-05-31 16:40:08.033</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="timeline-wrapper timeline-wrapper-primary">
+                                                <div class="timeline-badge"></div>
+                                                <div class="timeline-panel">
+                                                    <div class="timeline-heading">
+                                                        <h6 class="timeline-title">Approved by HCM</h6>
+                                                    </div>
+                                                    <div class="timeline-body">
+                                                        <p>Priya Ignatius (0580) approved your request</p>
+                                                    </div>
+                                                    <div class="timeline-footer d-flex align-items-center">
+                                                        <i class="mdi mdi-heart-outline text-muted mr-1 hide"></i>
+                                                        <span class="hide">25</span>
+                                                        <span class="ml-auto font-weight-bold">25th July 2016</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-4">
+
+                                    <div class="card thin-border">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Leave Cancelation Request</h4>
+                                        </div>
+
+                                        <div class="card-body bg-light">
+                                            <div class="row text-center">
+                                                <div class="col-6 m-t-10 m-b-10">
+                                                    <span class="label label-warning">In Progress</span>
+                                                </div>
+                                                <div class="col-6 m-t-10 m-b-10">
+                                                    May 2, 2018 9:49
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <h5 class="p-t-20">Ticket Creator</h5>
+                                            <span>Monin Jose (0790)</span>
+                                            <br>
+                                            <h5 class="m-t-30">Approver(L1)</h5>
+                                            <span>Mathew Job</span>
+                                            <br>
+                                            <h5 class="m-t-30">Leave Start Date</h5>
+                                            <span>05/01/2019</span>
+                                            <br>
+                                            <h5 class="m-t-30">Leave End Date</h5>
+                                            <span>05/02/2019</span>
+                                            <br>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+    <div class="modal fade" id="commentModal-1" tabindex="-1" role="dialog" aria-labelledby="commentModal-4" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="card-hover-shadow-2x mb-0 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-dice mr-3 text-muted opacity-6 icon-gradient bg-love-kiss"></i> Comment
+                        </div>
+                        <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                            <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                                <i class="mdi mdi-close"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form id="add_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserComment" method="post" enctype="multipart/form-data">
+                            <fieldset>
+                                <div class="form-group mb-0">
+                                    <textarea class="form-control" name="userComment" id="userComment" rows="5" placeholder="Comment..."></textarea>
+                                    <input type="hidden" name="requestId" id="requestId" value="@ViewData["RequestId"]" />
+                                    <input type="hidden" name="userId" id="userId" value="@userProfile.Id" />
+                                </div>
+                            </fieldset>
+
+                        </form>
+
+                    </div>
+
+                    <div class="d-block text-right card-footer">
+                        <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success btn-sm add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#add_Leave_Cancelation_Request_Comment_Form').submit();">Save</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="directMessageModel" tabindex="-1" role="dialog" aria-labelledby="directMessageModel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="card-hover-shadow-2x mb-0 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-rocket mr-3 text-muted opacity-6 icon-gradient bg-love-kiss"></i> Send Direct Mail
+                        </div>
+                        <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                            <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                                <i class="mdi mdi-close"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form id="Direct_Mail_Form" action="/HcmDashboard/DirectMail" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="Direct_Mail_Request_Id" id="Direct_Mail_Request_Id" value="@ViewData["RequestId"]" />
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Recipient:</label>
+                                    <input type="text" class="form-control while-bg-input hide" id="Direct_Mail_Request_Recipient1" name="Direct_Mail_Request_Recipient1">
+                                    <select class="js-example-basic-multiple select2" id="Direct_Mail_Request_Recipient" name="Direct_Mail_Request_Recipient[]" multiple="multiple" style="width:100%">
+                                        <option disabled="disabled">-- Select --</option>
+                                        @foreach (UserProfile item in userMasterList)
+                                        {
+                                            if (@item.EmpStatusDesc != null && @item.EmpStatusDesc.ToLower() != "relieved")
+                                            {
+                                                <option value="@item.Email">@item.Email</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Message:</label>
+                                    <textarea class="form-control while-bg-input" id="Direct_Mail_Request_Comment" name="Direct_Mail_Request_Comment" rows="4"></textarea>
+                                </div>
+                            </fieldset>
+
+                            
+
+
+                        </form>
+
+                    </div>
+
+                    <div class="d-block text-right card-footer">
+                        <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success btn-sm directMessageModel_trigger">Send</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="fileAttchmentModal-1" tabindex="-1" role="dialog" aria-labelledby="fileAttchmentModal-4" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="card-hover-shadow-2x mb-0 card widget">
+
+                    <div class="card-header-tab card-header">
+                        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+                            <i class="header-icon lnr lnr-file-add mr-3 text-muted opacity-6 icon-gradient bg-arielle-smile"></i> Add New File
+                        </div>
+                        <div class="btn-actions-pane-right actions-icon-btn dropdown">
+                            <button class="btn btn-icon btn-icon-only btn-link dropdown-toggle" data-dismiss="modal" aria-label="Close">
+                                <i class="mdi mdi-close"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form id="attach_Leave_Cancelation_Request_Comment_Form" action="/HcmDashboard/AddUserAttachment" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label>File</label>
+                                <input type="hidden" name="requestId" value="@ViewData["RequestId"]" />
+                                <input type="hidden" name="userId" value="@userProfile.Id" />
+                                <input type="file" name="requestAtchmentFile" class="file-upload-default">
+                                <div class="input-group col-xs-12">
+                                    <input type="text" class="form-control file-upload-info" placeholder="Upload documnet">
+                                    <span class="input-group-append">
+                                        <button class="file-upload-browse btn btn-info" type="button">Select</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div class="d-block text-right card-footer">
+                        <button class="mr-2 btn btn-link btn-sm" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-success btn-sm add_Leave_Cancelation_Request_Comment_trigger" onclick="$('#attach_Leave_Cancelation_Request_Comment_Form').submit();">Upload</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    @Scripts.Render("~/Rebone/js")
+    @Scripts.Render("~/NeuUi/js/NeuBase.js")
+
+    @if (TempData["Message"] != null)
+    {
+        <script>
+                var message = "@TempData["Message"]";
+                    resetToastPosition = function () {
+                        $('.jq-toast-wrap').removeClass('bottom-left bottom-right top-left top-right mid-center'); // to remove previous position class
+                        $(".jq-toast-wrap").css({
+                            "top": "",
+                            "left": "",
+                            "bottom": "",
+                            "right": ""
+                        }); //to remove previous position style
+                    }
+                    resetToastPosition();
+                    $.toast({
+                        heading: '...',
+                        text: message,
+                        showHideTransition: 'slide',
+                        icon: 'info',
+                        loaderBg: '#46c35f',
+                        position: 'top-right'
+                      })
+        </script>
+    }
+
+    <script>
+        $(function () {
+
+            $(document).on('click', '.hcm_create_Request', function (e) {
+                var target = $('#hcmRequestDepartment').find('option:selected', this).data('target');
+                window.location = target;
+            });
+
+            if ($(".expandClicker").length) {
+                $(document).on('click', '.expandClicker', function (e) {
+                    $('#LongContainer').toggleClass('mini');
+                    if ($(this).find('.expandClicker-text').text() == 'Show more') {
+                        $(this).find('.expandClicker-text').text('Show less');
+                    }
+                    else {
+                        $(this).find('.expandClicker-text').text('Show more');
+                    }
+                });
+            }
+
+            if ($(".select2").length) {
+                $(".select2").select2();
+            }
+
+            if ($(".mail-tigger").length) {
+                $(document).on('click', '.mail-tigger', function (e) {
+                    var target = $(this).data('target');
+                    var id = $(this).data('id');
+                    
+                    $('#Direct_Mail_Request_Recipient').val(target).trigger('change');
+                    $('#Direct_Mail_Request_Comment').val('');
+
+                    $('#directMessageModel').modal('show');
+
+                });
+            }
+
+            $(document).on('click', '.directMessageModel_trigger', function (e) {
+                var formData = new FormData();
+                formData.append("Direct_Mail_Request_Id", "" + $('#Direct_Mail_Request_Id').val() + "");
+                formData.append("Direct_Mail_Request_Recipient", "" + $('#Direct_Mail_Request_Recipient').val() + "");
+                formData.append("Direct_Mail_Request_Comment", $('#Direct_Mail_Request_Comment').val());
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    enctype: 'multipart/form-data',
+                    url: "/HcmDashboard/DirectMail",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function (data) {
+                        if (data.status == 'Ok') {
+                            $.toast({
+                                heading: '...',
+                                text: data.message,
+                                showHideTransition: 'slide',
+                                icon: 'info',
+                                loaderBg: '#46c35f',
+                                position: 'top-right'
+                            });
+                            $('#directMessageModel').modal('hide');
+                        }
+                        else {
+                            $.toast({
+                                heading: '...',
+                                text: data.message,
+                                showHideTransition: 'slide',
+                                icon: 'info',
+                                loaderBg: '#46c35f',
+                                position: 'top-right'
+                            });
+                        }
+                    },
+                    error: function (e) {
+                        console.log("ERROR : ", e);
+                    }
+                });
+
+            });
+
+            $('#request-summary-listing').DataTable({
+                "aLengthMenu": [
+                    [5, 10, 15, 20, 50, 100],
+                    [5, 10, 15, 20, 50, 100]
+                ],
+                "iDisplayLength": 10,
+                "language": {
+                    search: ""
+                }
+            });
+            $('#request-summary-listing').each(function () {
+                var datatable = $(this);
+                // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+                var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+                search_input.attr('placeholder', 'Search');
+                search_input.removeClass('form-control-sm');
+                // LENGTH - Inline-Form control
+                var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+                length_sel.removeClass('form-control-sm');
+            });
+
+            $('.file-upload-browse').on('click', function () {
+                var file = $(this).parent().parent().parent().find('.file-upload-default');
+                file.trigger('click');
+            });
+            $('.file-upload-default').on('change', function () {
+                $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+            });
+        });
+    </script>

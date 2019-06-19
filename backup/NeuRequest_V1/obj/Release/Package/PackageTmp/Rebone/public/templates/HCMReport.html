@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>HCM - Report</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="vendors/iconfonts/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="vendors/iconfonts/puse-icons-feather/feather.css">
+  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="vendors/css/vendor.bundle.addons.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="vendors/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .hide {
+      display: none !important;
+    }
+    .info-not_avile-conatiner {
+      text-align: center;
+      vertical-align: middle;
+      line-height: 90px;
+      border: solid #cacaca40 thin;
+      padding: 3.5rem 2rem;
+    }
+    .main-panel {
+      width: 100%;
+    }
+    .download-report {
+      position: absolute;
+      right: 0;
+    }
+  </style>
+  <!-- endinject -->
+  <link rel="shortcut icon" href="images/favicon.png" />
+</head>
+
+<body class="sidebar-icon-only_">
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+        <a class="navbar-brand brand-logo" href="/"><img src="images/logo.png" alt="logo"/></a>
+        <a class="navbar-brand brand-logo-mini" href="/"><img src="images/logo.png" alt="logo"/></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center">
+
+      </div>
+    </nav>
+
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_settings-panel.html -->
+      <div id="right-sidebar" class="settings-panel">
+        <i class="settings-close mdi mdi-close"></i>
+        <div class="d-flex align-items-center justify-content-between border-bottom">
+          <p class="settings-heading font-weight-bold border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Friends</p>
+        </div>
+        <ul class="chat-list">
+
+        </ul>
+      </div>
+      <!-- partial -->
+      <!-- partial:../../partials/_sidebar.html -->
+
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">HCM Reports</h4>
+
+                  <div class="row">
+                    <div class="col-7 grid-margin">
+
+                      <div class="form-group">
+                        <label>Select Report</label>
+                        <div class="input-group col-xs-12">
+                          <select class="js-example-basic-single select-data" style="width:80%">
+                           #foreach( $report in $reports )
+                             <option value="$report">$report</option>
+                           #end
+                         </select>
+                          <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-info load-report" type="button">Search</button>
+                          </span>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="col-5 grid-margin">
+                      <div class="form-group">
+                        <label>&nbsp;</label>
+                        <div class="input-group col-xs-12">
+                          <button class="file-upload-browse btn btn-success download-report" type="button">Download</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-12" id="dyna_report_conatiner">
+                          $dinaData
+                          <div class="info-not_avile-conatiner hide"> Information is not Available </div>
+                          <div class="hide">
+                            <table id="order-listing-x" class="table">
+                              <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                    <td>UI Designer</td>
+                                    <td>
+                                      <label class="badge badge-success">Active</label>
+                                    </td>
+                                    <td>
+                                      <button class="btn btn-outline-primary"><i class="fa fa-pencil"></i></button>
+                                    </td>
+                                    <td>
+                                      <button class="btn btn-outline-danger"><i class="fa fa-trash-o"></i></button>
+                                    </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <footer class="footer">
+
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <script src="vendors/js/vendor.bundle.addons.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="js/off-canvas.js"></script>
+  <script src="js/hoverable-collapse.js"></script>
+  <script src="js/misc.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="js/formpickers.js"></script>
+  <script src="js/x-editable.js"></script>
+  <script src="js/dropify.js"></script>
+  <script src="js/dropzone.js"></script>
+  <script src="js/jquery-file-upload.js"></script>
+  <script src="js/formpickers.js"></script>
+  <script src="js/form-repeater.js"></script>
+  <script src="js/file-upload.js"></script>
+  <script src="js/iCheck.js"></script>
+  <script src="js/typeahead.js"></script>
+  <script src="js/select2.js"></script>
+  <!-- End custom js for this page-->
+  <script>
+  $(function() {
+    var form = $("#example-form");
+    form.children("div").steps({
+      headerTag: "h3",
+      bodyTag: "section",
+      transitionEffect: "slideLeft",
+      onFinished: function(event, currentIndex) {
+        $('#example-form').submit();
+      }
+    });
+
+    if ($('#order-listing-x').length) {
+      $('#order-listing-x').DataTable({
+        "aLengthMenu": [
+          [5, 10, 15, -1],
+          [5, 10, 20, 50, 100]
+        ],
+        "iDisplayLength": 10,
+        "language": {
+          search: ""
+        }
+      });
+      $('#order-listing-x').each(function() {
+        var datatable = $(this);
+        // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+        var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+        search_input.attr('placeholder', 'Search');
+        search_input.removeClass('form-control-sm');
+        // LENGTH - Inline-Form control
+        var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+        length_sel.removeClass('form-control-sm');
+      });
+    }
+
+    $('.file-upload-browse').on('click', function() {
+      var file = $(this).parent().parent().parent().find('.file-upload-default');
+      file.trigger('click');
+    });
+    $('.file-upload-default').on('change', function() {
+      $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+    });
+
+    if ($(".start-date-picker").length) {
+      $('.start-date-picker').datepicker({
+        enableOnReadonly: true,
+        todayHighlight: true,
+      });
+    };
+
+    if ($(".end-date-picker").length) {
+      $('.end-date-picker').datepicker({
+        enableOnReadonly: true,
+        todayHighlight: true,
+      });
+    };
+
+    $(document).on('click','.load-report',function(e){
+      var host = window.location.origin+"/HCMReport?target="+$(".select-data").select2('val');
+      window.location.href = host;
+    });
+
+    $(document).on('click','.download-report',function(e){
+      var host = window.location.origin+"/HCMReport?target="+$(".select-data").select2('val');
+      var element = document.createElement('a');
+      element.setAttribute('href', '/reportExport?target='+$(".select-data").select2('val')+".xlsx");
+      element.setAttribute('download', "attendanceDiscrepancy.xlsx");
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    });
+
+    $(document).on('submit','#example-form',function(e){
+      e.preventDefault();
+      var form = $('#example-form')[0];
+      var data = new FormData(form);
+      $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/validateAttendance",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+              if(data.Status == 'Ok'){
+                  var element = document.createElement('a');
+            		  element.setAttribute('href', '/reportExport?target='+data.Payload);
+            		  element.setAttribute('download', "attendanceDiscrepancy.xlsx");
+            		  element.style.display = 'none';
+            		  document.body.appendChild(element);
+            		  element.click();
+            		  document.body.removeChild(element);
+              }
+              else{
+                console.log("ERROR : ", data.Status);
+              }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    });
+  });
+  </script>
+</body>
+</html>

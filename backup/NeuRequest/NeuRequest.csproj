@@ -218,6 +218,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AnalyticsController.cs" />
     <Compile Include="Controllers\ErrorHandilarController.cs" />
+    <Compile Include="Controllers\GoalDashboardController.cs" />
     <Compile Include="Controllers\HcmDashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NeuUserManagementController.cs" />
@@ -454,6 +455,7 @@
     <Content Include="Rebone\public\images\lightbox\thumb-v-v-2.jpg" />
     <Content Include="Rebone\public\images\lightbox\thumb-v-y-1.jpg" />
     <Content Include="Rebone\public\images\lightbox\thumb-v-y-2.jpg" />
+    <Content Include="Rebone\public\images\loader_sm.gif" />
     <Content Include="Rebone\public\images\logo-mini.svg" />
     <Content Include="Rebone\public\images\logo.png" />
     <Content Include="Rebone\public\images\logo.svg" />
@@ -1571,6 +1573,7 @@
     <Content Include="Views\HcmDashboard\DBManagerChangeRequest.cshtml" />
     <Content Include="Views\HcmDashboard\DBLocationChangeRequest.cshtml" />
     <Content Include="Views\HcmDashboard\PGBRequest.cshtml" />
+    <Content Include="Views\GoalDashboard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Analytics\" />

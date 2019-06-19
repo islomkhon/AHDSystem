@@ -150,8 +150,15 @@ C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\ko\System.Spatial.resources
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\ru\System.Spatial.resources.dll
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Release\NeuRequest.csprojAssemblyReference.cache
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Release\NeuRequest.csproj.CoreCompileInputs.cache
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Release\NeuRequest.csproj.CopyComplete
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Release\NeuRequest.dll
 C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Release\NeuRequest.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\TimeAgo.dll
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.Core.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.Core.xml
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+C:\Users\Monin.Jose\source\repos\NAHD\NeuRequest\obj\Release\NeuRequest.csproj.ResolveComReference.cache

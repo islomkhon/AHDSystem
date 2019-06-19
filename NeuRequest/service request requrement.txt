@@ -41,6 +41,36 @@ https://app.chatbot.com/stories/category/all
 
 http://superscriptjs.com/
 
+https://loading.io/
+
+https://www.rizamarhaban.com/2017/11/27/creating-chat-bot-using-asp-net-core-2-web-api-microsoft-bot-framework/
+
+https://www.rizamarhaban.com/2017/11/27/creating-chat-bot-using-asp-net-core-2-web-api-microsoft-bot-framework/
+
+https://angular.architectui.com/architectui-angular-pro/widgets/chart-boxes-3
+
+App name
+hcmhelper
+App ID
+9eb70c9c-944b-416e-8913-b638ffa68542
+pwd
+qnilM61@%}wajYHEADJ924?
+
+https://kinark.github.io/Materialize-stepper/
+
+https://codepen.io/flist/pen/mqXemY
+
+mail.neudesic.com 
+Host Name
+and we use defaultCredentials = true
+<system.net>
+    <mailSettings>
+      <smtp>
+        <network defaultCredentials="true" host="mail.neudesic.com" />
+      </smtp>
+    </mailSettings>
+  </system.net> 
+configuration settings
 
 netsh http add urlacl url=http://192.168.225.203:44361/ user=everyone
 netsh delete urlacl url=http://192.168.225.203:44361
@@ -2029,3 +2059,303 @@ REFERENCES [dbo].[NuePGBRequest] ([Id])
 GO
 
 -----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
+GM Goal Management:-
+
+Goal Types:
+
+PERFORMANCE GOALS
+1) Project Goals
+2) Behavioral goals
+3) Competency goals
+
+DEVELOPMENTAL GOALS
+1) Softskills
+2) Certifications
+3) Traning
+
+PERSONAL GOALS
+Common
+
+Skils Repo
+
+-----
+Loggedin user job level JL1,JL2,JL3
+
+
+NeuLocalGoal
+Id:
+Title:
+Desc:
+Start Date
+End Date:
+Goal Subtype
+GlobelGoalId
+OwnerId
+AddedOn
+ModifiedOn
+
+NeuGlobelGoal
+Id:
+Title:
+Desc:
+GoalSubtypeId
+OwnerId
+AddedOn
+ModifiedOn
+
+NueGoalActivity
+Id:
+GoalId * NeuLocalGoal(Id)
+Payload
+GoalPayloadType *
+OwnerId
+AddedOn
+ModifiedOn
+
+NueGoalAttachmentLog
+Id,
+GoalId,
+UserId,
+OwnerId,
+FileName,
+FileExt,
+VFileName,
+AddedOn,
+ModifiedOn
+**************************************************************************************
+**************************************************************************************
+Goal
+--------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueGoalAccessType]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueGoalAccessType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[GoalAccessType] [TEXT] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+--------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueGoalStatusTypeMaster]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueGoalStatusTypeMaster](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[StausDesc] [varchar](2500) NULL,
+	[Temp][TEXT] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+--------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueGoalLocalRepo]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueGoalLocalRepo](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NULL,
+	[InitiOwner] [int] NULL,
+	[ParentId] [int] NULL,
+	[GoalTypeId] [int] NULL,
+	[Active] [int] NULL,
+	[GoalTitle] [varchar](2500) NULL,
+	[GoalDesc] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([InitiOwner])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([GoalTypeId])
+REFERENCES [dbo].[NueRequestSubType] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([ParentId])
+REFERENCES [dbo].[NueGoalLocalRepo] ([Id])
+GO
+-----------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueGoalGlobelRepo]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueGoalGlobelRepo](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NULL,
+	[GoalTypeId] [int] NULL,
+	[Active] [int] NULL,
+	[LocalRepoId] [int] NULL,
+	[Title] [varchar](2500) NULL,
+	[Desc] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueGoalGlobelRepo]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalGlobelRepo]  WITH CHECK ADD FOREIGN KEY([LocalRepoId])
+REFERENCES [dbo].[NueGoalLocalRepo] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalGlobelRepo]  WITH CHECK ADD FOREIGN KEY([GoalTypeId])
+REFERENCES [dbo].[NueRequestSubType] ([Id])
+GO
+--------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueGoalStatusMapper]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueGoalStatusMapper](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[GoalId] [int] NULL,
+	[UserId] [int] NULL,
+	[OwnerId] [int] NULL,
+	[GoalTypeId] [int] NULL,
+	[GoalStartDate] [date] NULL,
+	[GoalEndDate] [date] NULL,
+	[GoalStatusId] [int] NULL,
+	[Temp] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueGoalStatusMapper]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalStatusMapper]  WITH CHECK ADD FOREIGN KEY([OwnerId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalStatusMapper]  WITH CHECK ADD FOREIGN KEY([GoalId])
+REFERENCES [dbo].[NueGoalLocalRepo] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalStatusMapper]  WITH CHECK ADD FOREIGN KEY([GoalTypeId])
+REFERENCES [dbo].[NueRequestSubType] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalStatusMapper]  WITH CHECK ADD FOREIGN KEY([GoalStatusId])
+REFERENCES [dbo].[NueGoalStatusTypeMaster] ([Id])
+GO
+--------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[NueGoalAccessMapper]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueGoalAccessMapper](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[GoalId] [int] NULL,
+	[UserId] [int] NULL,
+	[OwnerId] [int] NULL,
+	[GoalTypeId] [int] NULL,
+	[GoalAccessTypeId] [int] NULL,
+	[Active] [int] NULL,
+	[Temp] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[NueGoalAccessMapper]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalAccessMapper]  WITH CHECK ADD FOREIGN KEY([OwnerId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalAccessMapper]  WITH CHECK ADD FOREIGN KEY([GoalId])
+REFERENCES [dbo].[NueGoalLocalRepo] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalAccessMapper]  WITH CHECK ADD FOREIGN KEY([GoalTypeId])
+REFERENCES [dbo].[NueRequestSubType] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalAccessMapper]  WITH CHECK ADD FOREIGN KEY([GoalAccessTypeId])
+REFERENCES [dbo].[NueGoalAccessType] ([Id])
+GO
+-------------------------------------------------------------------
+
+
+
+

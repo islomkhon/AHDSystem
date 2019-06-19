@@ -1,0 +1,91 @@
+﻿@{
+    Layout = null;
+    string errorMessage = "An error occerd";
+    string erroCode = "400";
+    string errorCodeFlad = "bg-primary";
+}
+@if (TempData["Message"] != null)
+{
+    errorMessage = TempData["Message"].ToString();
+}
+@if (TempData["ErrorCode"] != null)
+{
+    erroCode = TempData["ErrorCode"].ToString();
+}
+@if (errorCodeFlad != null && errorCodeFlad.StartsWith("4"))
+{
+    errorCodeFlad = "bg-primary";
+}
+else
+{
+    errorCodeFlad = "bg-info";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>An error occurred</title>
+    <!-- plugins:css -->
+    @Styles.Render("~/Rebone/css")
+    @Styles.Render("~/NeuUi/css/NeuBase.css")
+    <link rel="shortcut icon" href="~/Rebone/public/images/favicon.png" />
+</head>
+<body>
+    <div class="container-scroller">
+        <div class="container-fluid page-body-wrapper full-page-wrapper">
+            <div class="content-wrapper d-flex align-items-center text-center error-page @errorCodeFlad">
+                <div class="row flex-grow">
+                    <div class="col-lg-7 mx-auto text-white">
+                        <div class="row align-items-center d-flex flex-row">
+                            <div class="col-lg-6 text-lg-right pr-lg-4">
+                                <h1 class="display-1 mb-0">@erroCode</h1>
+                            </div>
+                            <div class="col-lg-6 error-page-divider text-lg-left pl-lg-4">
+                                <h2>SORRY!</h2>
+                                <h3 class="font-weight-light">@Html.Raw(@errorMessage)</h3>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-12 text-center mt-xl-2">
+                                <a class="text-white font-weight-medium" href="/home/Index">Back to home</a>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-12 mt-xl-2">
+                                <p class="text-white font-weight-medium text-center">
+                                    Copyright &copy;
+                                    <script>document.write(new Date().getFullYear())</script>   All rights reserved.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    @Scripts.Render("~/Rebone/js")
+    @Scripts.Render("~/Rebone/public/js/tooltips.js")
+    <script type="text/javascript">
+        var _paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "http://localhost:9090/matomo/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            _paq.push(['setDocumentTitle', '404/URL = ' + encodeURIComponent(document.location.pathname + document.location.search) + '/From = ' + encodeURIComponent(document.referrer)]);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- endinject -->
+</body>
+</html>
+
