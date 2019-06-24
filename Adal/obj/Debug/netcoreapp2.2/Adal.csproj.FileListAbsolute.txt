@@ -1,0 +1,14 @@
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\bin\Debug\netcoreapp2.2\Adal.deps.json
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\bin\Debug\netcoreapp2.2\Adal.runtimeconfig.json
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\bin\Debug\netcoreapp2.2\Adal.runtimeconfig.dev.json
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\bin\Debug\netcoreapp2.2\Adal.dll
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\bin\Debug\netcoreapp2.2\Adal.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.RazorAssemblyInfo.cache
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.RazorAssemblyInfo.cs
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.AssemblyInfoInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.AssemblyInfo.cs
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.RazorTargetAssemblyInfo.cache
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.dll
+C:\Users\Monin.Jose\source\repos\NAHD\Adal\obj\Debug\netcoreapp2.2\Adal.pdb

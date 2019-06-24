@@ -2178,6 +2178,29 @@ GO
 USE [NueRequest]
 GO
 
+/****** Object:  Table [dbo].[NueGoalTypeMaster]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NueGoalCatgoryTypeMaster](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[GoalDesc] [varchar](2500) NULL,
+	[Temp][TEXT] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+--------------------------------------------------------
+USE [NueRequest]
+GO
+
 /****** Object:  Table [dbo].[NueGoalLocalRepo]    Script Date: 6/9/2019 5:59:37 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -2191,6 +2214,7 @@ CREATE TABLE [dbo].[NueGoalLocalRepo](
 	[InitiOwner] [int] NULL,
 	[ParentId] [int] NULL,
 	[GoalTypeId] [int] NULL,
+	[GoalCatType] [int] NULL,
 	[Active] [int] NULL,
 	[GoalTitle] [varchar](2500) NULL,
 	[GoalDesc] [text] NULL,
@@ -2215,6 +2239,10 @@ ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([GoalTypeId])
 REFERENCES [dbo].[NueRequestSubType] ([Id])
 GO
 
+ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([GoalCatType])
+REFERENCES [dbo].[NueGoalCatgoryTypeMaster] ([Id])
+GO
+
 ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([ParentId])
 REFERENCES [dbo].[NueGoalLocalRepo] ([Id])
 GO
@@ -2233,6 +2261,7 @@ CREATE TABLE [dbo].[NueGoalGlobelRepo](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[UserId] [int] NULL,
 	[GoalTypeId] [int] NULL,
+	[GoalCatType] [int] NULL,
 	[Active] [int] NULL,
 	[LocalRepoId] [int] NULL,
 	[Title] [varchar](2500) NULL,
@@ -2257,6 +2286,10 @@ GO
 ALTER TABLE [dbo].[NueGoalGlobelRepo]  WITH CHECK ADD FOREIGN KEY([GoalTypeId])
 REFERENCES [dbo].[NueRequestSubType] ([Id])
 GO
+
+ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([GoalCatType])
+REFERENCES [dbo].[NueGoalCatgoryTypeMaster] ([Id])
+GO
 --------------------------------------------------------------------------------------
 USE [NueRequest]
 GO
@@ -2274,6 +2307,7 @@ CREATE TABLE [dbo].[NueGoalStatusMapper](
 	[UserId] [int] NULL,
 	[OwnerId] [int] NULL,
 	[GoalTypeId] [int] NULL,
+	[GoalCatType] [int] NULL,
 	[GoalStartDate] [date] NULL,
 	[GoalEndDate] [date] NULL,
 	[GoalStatusId] [int] NULL,
@@ -2301,6 +2335,10 @@ GO
 
 ALTER TABLE [dbo].[NueGoalStatusMapper]  WITH CHECK ADD FOREIGN KEY([GoalTypeId])
 REFERENCES [dbo].[NueRequestSubType] ([Id])
+GO
+
+ALTER TABLE [dbo].[NueGoalLocalRepo]  WITH CHECK ADD FOREIGN KEY([GoalCatType])
+REFERENCES [dbo].[NueGoalCatgoryTypeMaster] ([Id])
 GO
 
 ALTER TABLE [dbo].[NueGoalStatusMapper]  WITH CHECK ADD FOREIGN KEY([GoalStatusId])
@@ -2356,6 +2394,21 @@ REFERENCES [dbo].[NueGoalAccessType] ([Id])
 GO
 -------------------------------------------------------------------
 
+Team Goal:
+
+Goal category
+> PerformanceGoal
+> DevelopmentalGoals
+> PersonalGoal
+Goal Title:
+Goal Desc:
+Start Date:
+End Date:
+Mapped Users:
+----------------------------------------------------------------------
+
+https://www.talkingdotnet.com/create-react-app-visual-studio-2017-and-asp-net-core-2-2/
+https://www.talkingdotnet.com/create-react-redux-app-with-visual-studio-2017-and-asp-net-core-2-2/
 
 
 

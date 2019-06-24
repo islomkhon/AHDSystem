@@ -1738,6 +1738,87 @@ namespace NeuRequest.DB
             return userRequest;
         }
 
+        public NuRequestActivityMaster getGoalStatusType(string goalStatusType)
+        {
+            NuRequestActivityMaster nueRequestActivityMaster = new NuRequestActivityMaster();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT Id, StausDesc
+                                                          FROM NueGoalStatusTypeMaster
+                                                          WHERE StausDesc = @GoalStatusType", connection))
+                {
+                    cmd.Parameters.AddWithValue("@GoalStatusType", goalStatusType);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            nueRequestActivityMaster = new NuRequestActivityMaster();
+                            nueRequestActivityMaster.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            nueRequestActivityMaster.ActivityDesc = ConvertFromDBVal<string>(dataReader["StausDesc"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return nueRequestActivityMaster;
+        }
+
+        public NuRequestActivityMaster getGoalAccessType(string goalAccessType)
+        {
+            NuRequestActivityMaster nueRequestActivityMaster = new NuRequestActivityMaster();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT Id, GoalAccessType
+                                                          FROM NueGoalAccessType
+                                                          WHERE GoalAccessType = @GoalAccessType", connection))
+                {
+                    cmd.Parameters.AddWithValue("@GoalAccessType", goalAccessType);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            nueRequestActivityMaster = new NuRequestActivityMaster();
+                            nueRequestActivityMaster.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            nueRequestActivityMaster.ActivityDesc = ConvertFromDBVal<string>(dataReader["GoalAccessType"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return nueRequestActivityMaster;
+        }
+
+        public NuRequestActivityMaster getGoalCatgoryType(string goalCatgoryType)
+        {
+            NuRequestActivityMaster nueRequestActivityMaster = new NuRequestActivityMaster();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(@"SELECT Id, GoalDesc
+                                                          FROM NueGoalCatgoryTypeMaster
+                                                          WHERE GoalDesc = @GoalCatgoryType", connection))
+                {
+                    cmd.Parameters.AddWithValue("@GoalCatgoryType", goalCatgoryType);
+                    using (SqlDataReader dataReader = cmd.ExecuteReader())
+                    {
+                        while (dataReader.Read())
+                        {
+                            nueRequestActivityMaster = new NuRequestActivityMaster();
+                            nueRequestActivityMaster.Id = ConvertFromDBVal<int>(dataReader["Id"]);
+                            nueRequestActivityMaster.ActivityDesc = ConvertFromDBVal<string>(dataReader["GoalDesc"]);
+                            break;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return nueRequestActivityMaster;
+        }
+
         public NuRequestActivityMaster getRequestType(string requestMainType, string requestSubType)
         {
             NuRequestActivityMaster nueRequestActivityMaster = new NuRequestActivityMaster();

@@ -33,7 +33,7 @@
                                     <i class="icon pe-7s-science icon-gradient bg-happy-itmeo"></i>
                                 </div>
                                 <div>
-                                    Goal Dashboard
+                                    Team Goal Dashboard
                                     <div class="page-title-subheading">
                                         Active Perfomence Enable you to be more productive and successful with continuous performance feedback aligned to expectations and organizational goals
                                     </div>
@@ -41,12 +41,14 @@
                             </div>
 
                             <div class="page-title-actions">
-                                <button class="btn-shadow d-inline-flex align-items-center btn btn-success" data-toggle="modal" data-target="#exampleModal-4" type="button">
-                                    <fa class="mr-2" name="plus" _nghost-c2="">
-                                        <i class="mdi mdi-calendar-plus"></i>
-                                    </fa> 
-                                    Create New 
-                                </button>
+                                <div class="hide">
+                                    <button class="btn-shadow d-inline-flex align-items-center btn btn-success" data-toggle="modal" data-target="#exampleModal-4" type="button">
+                                        <fa class="mr-2" name="plus" _nghost-c2="">
+                                            <i class="mdi mdi-calendar-plus"></i>
+                                        </fa>
+                                        Create New
+                                    </button>
+                                </div>
                             </div>
 
 
@@ -66,16 +68,19 @@
             <div class="col-md-12 mb-4 mt-4">
                 <div class="btn-toolbar">
                     <div class="btn-group inline">
-                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn" data-toggle="modal" data-target="#exampleModal-4"><i class="mdi mdi-gondola"></i> Add New Request</button>
-                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmDashboard/RequestHistory"><i class="mdi mdi-compare"></i> Request History</button>
-                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn" data-target="/HcmDashboard/ApprovalInbox"><i class="mdi mdi-compare"></i> Approval Inbox</button>
-
+                        <button type="button" class="btn btn-sm btn-inverse-info inbox-inline-btn link-action-tigger" data-target="/GoalDashboard/CreateNeuTeamGoal"><i class="mdi mdi-gondola"></i> Add New Goal</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn hide" data-target="/HcmDashboard/RequestHistory"><i class="mdi mdi-compare"></i> Request History</button>
+                        <button type="button" class="btn btn-sm btn-inverse-info link-action-tigger inbox-inline-btn hide" data-target="/HcmDashboard/ApprovalInbox"><i class="mdi mdi-compare"></i> Approval Inbox</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        
+        <div class="row">
+            <div class="col-md-12">
+                1
+            </div>
+        </div>
 
 
         

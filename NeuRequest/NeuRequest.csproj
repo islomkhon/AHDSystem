@@ -343,6 +343,8 @@
     <Compile Include="Hubs\MessagesHub.cs" />
     <Compile Include="Models\AdalTokenCache.cs" />
     <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\GoalStatus.cs" />
+    <Compile Include="Models\TeamGoalUiRender.cs" />
     <Compile Include="Models\PGBRequestUiRender.cs" />
     <Compile Include="Models\DBLocationChangeUiRender.cs" />
     <Compile Include="Models\DBManagerChangeUiRender.cs" />
@@ -1575,6 +1577,7 @@
     <Content Include="Views\HcmDashboard\DBLocationChangeRequest.cshtml" />
     <Content Include="Views\HcmDashboard\PGBRequest.cshtml" />
     <Content Include="Views\GoalDashboard\Index.cshtml" />
+    <Content Include="Views\GoalDashboard\CreateNeuTeamGoal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Analytics\" />
