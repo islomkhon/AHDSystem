@@ -16,6 +16,9 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Azure.ActiveDirectory.GraphClient;
 using Microsoft.Graph;
 using System.IO;
+using HCMApi.DB;
+using Newtonsoft.Json;
+using FormatWith;
 
 namespace HCMApi.Controllers
 {
@@ -26,6 +29,7 @@ namespace HCMApi.Controllers
     public class ValuesController : ControllerBase
     {
         private AzureAd AzureAdSettings { get; set; }
+
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public ValuesController(IOptions<AzureAd> settings, IHostingEnvironment hostingEnvironment)
@@ -71,12 +75,43 @@ namespace HCMApi.Controllers
         [Route("HCMRequestTemplate")]
         public JsonResult HCMRequestTemplate(string templateType)
         {
-            //string webRootPath = _hostingEnvironment.WebRootPath;
-            string contentRootPath = _hostingEnvironment.ContentRootPath;
-            //var path = Path.Combine(contentRootPath, @"\MyStaticFiles\hcmtemplate.json");
-            var path = contentRootPath + "\\MyStaticFiles\\hcmtemplate.json";
-            var requestTemplate = System.IO.File.ReadAllText(path);
-            return new JsonResult(new JsonResponse("Ok", "Request withdrawn successfully.", requestTemplate));
+
+            if (!User.Identity.IsAuthenticated)
+            {
+
+            }
+            try
+            {
+                List<UserProfile> userProfiles = new DataAccess(this.AzureAdSettings).getAllUserProfileExcept(User.Identity.Name.ToLower());
+                ListUserId listUserId = new Modal.Utils().generateUserDropdownList(userProfiles);
+                ListUserRender listUserRender = new ListUserRender();
+
+                listUserRender.UserId = JsonConvert.SerializeObject(listUserId.userIds);
+                listUserRender.UserMail = JsonConvert.SerializeObject(listUserId.emails);
+
+
+                //string webRootPath = _hostingEnvironment.WebRootPath;
+                string contentRootPath = _hostingEnvironment.ContentRootPath;
+                //var path = Path.Combine(contentRootPath, @"\MyStaticFiles\hcmtemplate.json");
+                var path = contentRootPath + "\\MyStaticFiles\\hcmtemplate.json";
+                var requestTemplate = System.IO.File.ReadAllText(path);
+
+                //String str = String.Format(requestTemplate, userIdStr, userEmailStr);
+
+                string str = requestTemplate;
+                str = str.Replace("@UserIdList", listUserRender.UserId);
+                str = str.Replace("@UserMailList", listUserRender.UserMail);
+
+
+
+                return new JsonResult(new JsonResponse("Ok", "Request withdrawn successfully.", str));
+
+            }
+            catch (Exception e1)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            
         }
 
         public class WeatherForecast

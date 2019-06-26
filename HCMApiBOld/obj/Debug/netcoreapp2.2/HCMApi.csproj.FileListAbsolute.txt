@@ -1,0 +1,14 @@
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\bin\Debug\netcoreapp2.2\HCMApi.deps.json
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\bin\Debug\netcoreapp2.2\HCMApi.runtimeconfig.json
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\bin\Debug\netcoreapp2.2\HCMApi.runtimeconfig.dev.json
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\bin\Debug\netcoreapp2.2\HCMApi.dll
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\bin\Debug\netcoreapp2.2\HCMApi.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.RazorAssemblyInfo.cache
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.RazorAssemblyInfo.cs
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.AssemblyInfoInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.AssemblyInfo.cs
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.RazorTargetAssemblyInfo.cache
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.dll
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApi\obj\Debug\netcoreapp2.2\HCMApi.pdb

@@ -2239,6 +2239,7 @@ namespace NeuRequest.DB
             }
             return userProfiles;
         }
+
         public List<UserAccess> getUserAccess()
         {
             List<UserAccess> userAccesses = new List<UserAccess>();

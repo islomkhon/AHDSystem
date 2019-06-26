@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\ValuesController - Copy.cs" />
     <Compile Remove="Modal\AdalTokenCache.cs" />
     <Compile Remove="Modal\ApplicationDbContext.cs" />
   </ItemGroup>

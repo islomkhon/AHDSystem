@@ -3,42 +3,37 @@
   "description": "A simple form example.",
   "type": "object",
   "required": [
-    "firstName",
-    "lastName",
-    "startDate"
+    "leaveStartDate",
+    "leaveEndDate",
+    "leaveCancelationApprover1",
+    "leaveCancelationApprover2"
   ],
   "properties": {
-    "firstName": {
+    "leaveStartDate": {
       "type": "string",
-      "title": "First name",
-      "default": ""
-    },
-    "lastName": {
-      "type": "string",
-      "title": "Last name"
-    },
-    "age": {
-      "type": "integer",
-      "title": "Age"
-    },
-    "bio": {
-      "type": "string",
-      "title": "Bio"
-    },
-    "password": {
-      "type": "string",
-      "title": "Password",
-      "minLength": 3
-    },
-    "telephone": {
-      "type": "string",
-      "title": "Telephone",
-      "minLength": 10
-    },
-    "startDate": {
-      "type": "string",
-      "title": "Start Date",
+      "title": "Leave Start Date",
       "format": "date"
+    },
+    "leaveEndDate": {
+      "type": "string",
+      "title": "Leave End Date",
+      "format": "date"
+    },
+    "leaveCancelationApprover1": {
+      "type": "number",
+      "title": "Approver EM",
+      "enum": @UserIdList,
+      "enumNames": @UserMailList
+    },
+    "leaveCancelationApprover2": {
+      "type": "number",
+      "title": "Approver CM",
+      "enum": @UserIdList,
+      "enumNames": @UserMailList
+    },
+    "message": {
+      "type": "string",
+      "title": "Message"
     }
   }
 }

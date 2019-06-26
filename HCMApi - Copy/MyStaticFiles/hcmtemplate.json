@@ -1,0 +1,39 @@
+{
+  "title": "requestTitle",
+  "description": "A simple form example.",
+  "type": "object",
+  "required": [
+    "leaveStartDate",
+    "leaveEndDate",
+    "leaveCancelationApprover1",
+    "leaveCancelationApprover2"
+  ],
+  "properties": {
+    "leaveStartDate": {
+      "type": "string",
+      "title": "Leave Start Date",
+      "format": "date"
+    },
+    "leaveEndDate": {
+      "type": "string",
+      "title": "Leave End Date",
+      "format": "date"
+    },
+    "leaveCancelationApprover1": {
+      "type": "number",
+      "title": "Approver EM",
+      "enum": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ],
+      "enumNames": [ "one", "two", "three", "one", "two", "three", "one", "two", "three", "one", "two", "three", "three" ]
+    },
+    "leaveCancelationApprover2": {
+      "type": "number",
+      "title": "Approver CM",
+      "enum": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ],
+      "enumNames": [ "one", "two", "three", "one", "two", "three", "one", "two", "three", "one", "two", "three", "three" ]
+    },
+    "message": {
+      "type": "string",
+      "title": "Message"
+    }
+  }
+}

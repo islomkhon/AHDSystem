@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Azure.ActiveDirectory.GraphClient;
 using Microsoft.Graph;
+using System.IO;
 
 namespace HCMApi.Controllers
 {
@@ -25,10 +26,12 @@ namespace HCMApi.Controllers
     public class ValuesController : ControllerBase
     {
         private AzureAd AzureAdSettings { get; set; }
-        
-        public ValuesController(IOptions<AzureAd> settings)
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public ValuesController(IOptions<AzureAd> settings, IHostingEnvironment hostingEnvironment)
         {
             AzureAdSettings = settings.Value;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET api/values
@@ -46,21 +49,51 @@ namespace HCMApi.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        private static string EnsureTrailingSlash(string value)
+        private static string[] Summaries = new[]
         {
-            if (value == null)
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
+        [HttpGet]
+        [Route("WeatherForecasts")]
+        public IEnumerable<WeatherForecast> WeatherForecasts(int startDateIndex)
+        {
+            var rng = new Random();
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
-                value = string.Empty;
-            }
-
-            if (!value.EndsWith("/", StringComparison.Ordinal))
-            {
-                return value + "/";
-            }
-
-            return value;
-
+                DateFormatted = DateTime.Now.AddDays(index + startDateIndex).ToString("d"),
+                TemperatureC = rng.Next(-20, 55),
+                Summary = Summaries[rng.Next(Summaries.Length)]
+            });
         }
+
+        [HttpGet]
+        [Route("HCMRequestTemplate")]
+        public JsonResult HCMRequestTemplate(string templateType)
+        {
+            //string webRootPath = _hostingEnvironment.WebRootPath;
+            string contentRootPath = _hostingEnvironment.ContentRootPath;
+            //var path = Path.Combine(contentRootPath, @"\MyStaticFiles\hcmtemplate.json");
+            var path = contentRootPath + "\\MyStaticFiles\\hcmtemplate.json";
+            var requestTemplate = System.IO.File.ReadAllText(path);
+            return new JsonResult(new JsonResponse("Ok", "Request withdrawn successfully.", requestTemplate));
+        }
+
+        public class WeatherForecast
+        {
+            public string DateFormatted { get; set; }
+            public int TemperatureC { get; set; }
+            public string Summary { get; set; }
+
+            public int TemperatureF
+            {
+                get
+                {
+                    return 32 + (int)(TemperatureC / 0.5556);
+                }
+            }
+        }
+
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
