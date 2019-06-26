@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using HCMApi.Modal;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace HCMApi
 {
@@ -64,6 +66,15 @@ namespace HCMApi
             }
 
             app.UseCors("MyPolicy");
+
+            app.UseStaticFiles();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles")),
+                RequestPath = "/StaticFiles"
+            });
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
