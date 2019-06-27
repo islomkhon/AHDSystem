@@ -8,7 +8,7 @@ namespace HCMApi.Modal
     public class Utils
     {
 
-        public ListUserId generateUserDropdownList(List<UserProfile> userProfiles)
+        public ListUserId generateUserDropdownList(List<DAL.NueUserProfile> userProfiles)
         {
             ListUserId listUserId = new ListUserId();
             List<int> userIds = new List<int>();

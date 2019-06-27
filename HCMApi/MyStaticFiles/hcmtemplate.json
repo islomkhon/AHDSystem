@@ -1,6 +1,6 @@
 {
-  "title": "requestTitle",
-  "description": "A simple form example.",
+  "title": "New Request",
+  "description": "HCM request.",
   "type": "object",
   "required": [
     "leaveStartDate",

@@ -1,4 +1,5 @@
-﻿using HCMApi.Modal;
+﻿using HCMApi.DAL;
+using HCMApi.Modal;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,12 @@ namespace HCMApi.DB
         public DataAccess(AzureAd AzureAdSettings)
         {
             this.connectionString = AzureAdSettings.Db;
+        }
+
+        public List<NueUserProfile> getAllUserProfilesDinamic()
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            return nueRequestContext.NueUserProfile.ToList<NueUserProfile>();
         }
 
         public List<UserProfile> getAllUserProfileExcept(string email)

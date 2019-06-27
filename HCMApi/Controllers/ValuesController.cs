@@ -82,8 +82,14 @@ namespace HCMApi.Controllers
             }
             try
             {
-                List<UserProfile> userProfiles = new DataAccess(this.AzureAdSettings).getAllUserProfileExcept(User.Identity.Name.ToLower());
-                ListUserId listUserId = new Modal.Utils().generateUserDropdownList(userProfiles);
+                string userEmail = User.Identity.Name.ToLower();
+
+                //List<UserProfile> userProfiles = new DataAccess(this.AzureAdSettings).getAllUserProfileExcept(userEmail);
+                List<DAL.NueUserProfile> nueUserProfilesMaster = new DataAccess(this.AzureAdSettings).getAllUserProfilesDinamic();
+
+                List<DAL.NueUserProfile> nueUserProfiles = nueUserProfilesMaster.Where(x => x.Email != userEmail).ToList<DAL.NueUserProfile>();
+
+                ListUserId listUserId = new Modal.Utils().generateUserDropdownList(nueUserProfiles);
                 ListUserRender listUserRender = new ListUserRender();
 
                 listUserRender.UserId = JsonConvert.SerializeObject(listUserId.userIds);

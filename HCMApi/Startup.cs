@@ -16,17 +16,31 @@ using HCMApi.Modal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using HCMApi.DAL;
+using Microsoft.EntityFrameworkCore;
 
 namespace HCMApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        public IConfigurationRoot ConfigurationRoot
         {
-            Configuration = configuration;
+            get;
+            set;
+        }
+        public static string ConnectionString
+        {
+            get;
+            private set;
         }
 
-        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        {
+            Configuration = configuration;
+            ConfigurationRoot = new ConfigurationBuilder().SetBasePath(env.ContentRootPath).AddJsonFile("appsettings.json").Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -49,6 +63,18 @@ namespace HCMApi
 
             services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
                 .AddAzureADBearer(options => Configuration.Bind("AzureAd", options));
+
+            /*services
+                .AddOptions()
+                .Configure<NueRequestContext>(Configuration.GetSection("Db"))
+                ;*/
+            
+            var connection = Configuration["ConnectionStrings:Db"];
+
+            services.AddDbContext<NueRequestContext>(options =>
+                options.UseSqlServer(connection)
+            );
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -64,6 +90,8 @@ namespace HCMApi
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            ConnectionString = ConfigurationRoot["ConnectionStrings:Db"];
 
             app.UseCors("MyPolicy");
 
