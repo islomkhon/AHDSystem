@@ -95,7 +95,6 @@ namespace HCMApi.Controllers
                 listUserRender.UserId = JsonConvert.SerializeObject(listUserId.userIds);
                 listUserRender.UserMail = JsonConvert.SerializeObject(listUserId.emails);
 
-
                 //string webRootPath = _hostingEnvironment.WebRootPath;
                 string contentRootPath = _hostingEnvironment.ContentRootPath;
                 //var path = Path.Combine(contentRootPath, @"\MyStaticFiles\hcmtemplate.json");
@@ -108,9 +107,7 @@ namespace HCMApi.Controllers
                 str = str.Replace("@UserIdList", listUserRender.UserId);
                 str = str.Replace("@UserMailList", listUserRender.UserMail);
 
-
-
-                return new JsonResult(new JsonResponse("Ok", "Request withdrawn successfully.", str));
+                return new JsonResult(new JsonResponse("Ok", "Data Loaded.", str));
 
             }
             catch (Exception e1)
@@ -118,6 +115,150 @@ namespace HCMApi.Controllers
                 return new JsonResult(new JsonResponse("Failed", "An error occerd"));
             }
             
+        }
+
+        [HttpGet]
+        [Route("GetDepartments")]
+        public JsonResult GetDepartments()
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        return new JsonResult(new JsonResponse("Ok", "Data Loaded.", new DataAccess(this.AzureAdSettings).getDepartments()));
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetDepartmentDetails")]
+        public JsonResult GetDepartmentDetails(int departmentId)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        DAL.MichaelDepartmentMaster michaelDepartmentMaster = new DataAccess(this.AzureAdSettings).GetDepartmentDetails(departmentId);
+                        if(michaelDepartmentMaster != null)
+                        {
+                            return new JsonResult(new JsonResponse("Ok", "Data loaded.", michaelDepartmentMaster));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request. Unable to locate requested information"));
+                        }
+                        
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+
+        [HttpPost]
+        [Route("CreateDepartment")]
+        public JsonResult CreateDepartment([FromBody] Department department)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else if (department != null && department.Departmentname != null && department.Departmentname.Trim() != "")
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                    if(nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        department.UserId = nueUserProfile.Id;
+                        JsonResponse dbStatus = new DataAccess(this.AzureAdSettings).addNewDepartMent(department);
+                        return new JsonResult(dbStatus);
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpPost]
+        [Route("EditDepartment")]
+        public JsonResult EditDepartment([FromBody] Department department)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else if (department != null && department.Departmentname != null && department.Departmentname.Trim() != "")
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        department.UserId = nueUserProfile.Id;
+                        JsonResponse dbStatus = new DataAccess(this.AzureAdSettings).updateDepartMentDetails(department);
+                        return new JsonResult(dbStatus);
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
         }
 
         public class WeatherForecast

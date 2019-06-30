@@ -15,6 +15,7 @@ namespace HCMApi.DAL
         {
         }
 
+        public virtual DbSet<MichaelDepartmentMaster> MichaelDepartmentMaster { get; set; }
         public virtual DbSet<NeuCountry> NeuCountry { get; set; }
         public virtual DbSet<NeuDesignation> NeuDesignation { get; set; }
         public virtual DbSet<NeuEmployeeVerificationRequest> NeuEmployeeVerificationRequest { get; set; }
@@ -73,9 +74,25 @@ namespace HCMApi.DAL
             }
         }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
+
+            modelBuilder.Entity<MichaelDepartmentMaster>(entity =>
+            {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Departmentname)
+                    .HasMaxLength(2500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description).HasColumnType("text");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+            });
 
             modelBuilder.Entity<NeuCountry>(entity =>
             {
