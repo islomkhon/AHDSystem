@@ -114,6 +114,38 @@ namespace HCMApi.DB
             }
         }
 
+        public List<MichaelDepartmentMaster> DepartmentStatusToggle(int departmentId)
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var department = nueRequestContext.MichaelDepartmentMaster.Where(x => x.Id == departmentId);
+            var result = nueRequestContext.MichaelDepartmentMaster.SingleOrDefault(b => b.Id == departmentId);
+            if (result != null)
+            {
+                if(result.Active == 1)
+                {
+                    result.Active = 0;
+                }
+                else
+                {
+                    result.Active = 1;
+                }
+                int returnValue = nueRequestContext.SaveChanges();
+                if (returnValue > 0)
+                {
+                    return nueRequestContext.MichaelDepartmentMaster.ToList<MichaelDepartmentMaster>();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
         public JsonResponse updateDepartMentDetails(Department department)
         {
             JsonResponse jsonResponse = new JsonResponse();

@@ -186,6 +186,44 @@ namespace HCMApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("DepartmentStatusToggle")]
+        public JsonResult DepartmentStatusToggle(int departmentId)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        List <DAL.MichaelDepartmentMaster> departmentList = new DataAccess(this.AzureAdSettings).DepartmentStatusToggle(departmentId);
+                        if(departmentList != null)
+                        {
+                            return new JsonResult(new JsonResponse("Ok", "Data updated.", departmentList));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "AN error occerd while updating the data"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
 
         [HttpPost]
         [Route("CreateDepartment")]
