@@ -114,6 +114,26 @@ namespace HCMApi.DB
             }
         }
 
+        public MichaelDepartmentRequestTypeMaster GetDepartmentRequestDetails(int departmentId, int requestId)
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var departmentRequestItem = nueRequestContext.MichaelDepartmentRequestTypeMaster.Where(x => x.Id == requestId && x.DepartmentId == departmentId);
+            if (departmentRequestItem != null && departmentRequestItem.Count() > 0)
+            {
+                return departmentRequestItem.First<MichaelDepartmentRequestTypeMaster>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<MichaelDepartmentRequestTypeMaster> GetDepartmentRequestList(Department department)
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            return nueRequestContext.MichaelDepartmentRequestTypeMaster.Where(x => x.DepartmentId == department.Id && x.UserId == department.UserId).ToList<MichaelDepartmentRequestTypeMaster>();
+        }
+
         public List<MichaelDepartmentMaster> DepartmentStatusToggle(int departmentId)
         {
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -122,6 +142,37 @@ namespace HCMApi.DB
             if (result != null)
             {
                 if(result.Active == 1)
+                {
+                    result.Active = 0;
+                }
+                else
+                {
+                    result.Active = 1;
+                }
+                int returnValue = nueRequestContext.SaveChanges();
+                if (returnValue > 0)
+                {
+                    return nueRequestContext.MichaelDepartmentMaster.ToList<MichaelDepartmentMaster>();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<MichaelDepartmentMaster> GetDepartmentRequestList(int departmentId)
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var department = nueRequestContext.MichaelDepartmentMaster.Where(x => x.Id == departmentId);
+            var result = nueRequestContext.MichaelDepartmentMaster.SingleOrDefault(b => b.Id == departmentId);
+            if (result != null)
+            {
+                if (result.Active == 1)
                 {
                     result.Active = 0;
                 }
@@ -204,7 +255,7 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse addNewDepartMent(Department department)
+        public JsonResponse addNewDepartment(Department department)
         {
             JsonResponse jsonResponse = new JsonResponse();
 
@@ -238,6 +289,77 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
+        public JsonResponse editDepartmentRequestType(DepartmentRequest departmentRequest)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            if (nueRequestContext.MichaelDepartmentRequestTypeMaster.Where(x => x.RequestTypeName.ToString() == departmentRequest.RequestTypeName.ToString() && x.DepartmentId == departmentRequest.DepartmentId && x.Id != departmentRequest.Id).Count() <= 0)
+            {
+
+                var result = nueRequestContext.MichaelDepartmentRequestTypeMaster.SingleOrDefault(b => b.Id == departmentRequest.Id);
+                if (result != null)
+                {
+                    var dateCreated = DateTime.UtcNow;
+                    result.RequestTypeName = departmentRequest.RequestTypeName;
+                    result.RequestTypeDescription = departmentRequest.RequestTypeDescription;
+                    result.Active = departmentRequest.Active;
+                    result.ModifiedOn = dateCreated;
+                    int returnValue = nueRequestContext.SaveChanges();
+                    if (returnValue > 0)
+                    {
+                        jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+                    }
+                    else
+                    {
+                        jsonResponse = new JsonResponse("Failed", "An error occerd.");
+                    }
+                }
+                else
+                {
+                    jsonResponse = new JsonResponse("Failed", "Unable to locate requested information");
+                }
+            }
+            else
+            {
+                jsonResponse = new JsonResponse("Failed", "Department name already in use.");
+
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse addNewDepartmentRequestType(DepartmentRequest departmentRequest)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            if (nueRequestContext.MichaelDepartmentRequestTypeMaster.Where(x => x.RequestTypeName.ToString() == departmentRequest.RequestTypeName.ToString() && x.DepartmentId == departmentRequest.DepartmentId).Count() <= 0)
+            {
+                var dateCreated = DateTime.UtcNow;
+                MichaelDepartmentRequestTypeMaster michaelDepartmentRequestTypeMaster = new MichaelDepartmentRequestTypeMaster();
+                michaelDepartmentRequestTypeMaster.DepartmentId = departmentRequest.DepartmentId;
+                michaelDepartmentRequestTypeMaster.RequestTypeName = departmentRequest.RequestTypeName;
+                michaelDepartmentRequestTypeMaster.RequestTypeDescription = departmentRequest.RequestTypeDescription;
+                michaelDepartmentRequestTypeMaster.UserId = departmentRequest.UserId;
+                michaelDepartmentRequestTypeMaster.Active = 1;
+                michaelDepartmentRequestTypeMaster.AddedOn = dateCreated;
+                michaelDepartmentRequestTypeMaster.ModifiedOn = dateCreated;
+                nueRequestContext.MichaelDepartmentRequestTypeMaster.Add(michaelDepartmentRequestTypeMaster);
+                int returnValue = nueRequestContext.SaveChanges();
+                if (returnValue > 0)
+                {
+                    jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+                }
+                else
+                {
+                    jsonResponse = new JsonResponse("Failed", "An error occerd.");
+                }
+            }
+            else
+            {
+                jsonResponse = new JsonResponse("Failed", "Department request type already exist.");
+
+            }
+            return jsonResponse;
+        }
 
         public static T ConvertFromDBVal<T>(object obj)
         {

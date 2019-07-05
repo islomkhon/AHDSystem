@@ -16,6 +16,7 @@ namespace HCMApi.DAL
         }
 
         public virtual DbSet<MichaelDepartmentMaster> MichaelDepartmentMaster { get; set; }
+        public virtual DbSet<MichaelDepartmentRequestTypeMaster> MichaelDepartmentRequestTypeMaster { get; set; }
         public virtual DbSet<NeuCountry> NeuCountry { get; set; }
         public virtual DbSet<NeuDesignation> NeuDesignation { get; set; }
         public virtual DbSet<NeuEmployeeVerificationRequest> NeuEmployeeVerificationRequest { get; set; }
@@ -74,7 +75,6 @@ namespace HCMApi.DAL
             }
         }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
@@ -92,6 +92,34 @@ namespace HCMApi.DAL
                 entity.Property(e => e.Description).HasColumnType("text");
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelDepartmentMaster)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelDe__UserI__49B9D516");
+            });
+
+            modelBuilder.Entity<MichaelDepartmentRequestTypeMaster>(entity =>
+            {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.RequestTypeDescription).HasColumnType("text");
+
+                entity.Property(e => e.RequestTypeName).HasColumnType("text");
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.MichaelDepartmentRequestTypeMaster)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("FK__MichaelDe__Depar__665613C4");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelDepartmentRequestTypeMaster)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelDe__UserI__6561EF8B");
             });
 
             modelBuilder.Entity<NeuCountry>(entity =>

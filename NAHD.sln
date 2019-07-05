@@ -31,11 +31,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreReactAzureAD", "D:\r
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "core3", "D:\react\core3\core3.csproj", "{37539091-1520-47BB-B991-8DDFCD3E6289}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adal", "Adal\Adal.csproj", "{E4B96374-E610-4BC3-B96B-9F2C47DDB2F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adal", "Adal\Adal.csproj", "{E4B96374-E610-4BC3-B96B-9F2C47DDB2F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HCMApi", "HCMApi\HCMApi.csproj", "{B258F9D7-CC51-4CFC-A58F-B075A7ADFA93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HCMApi", "HCMApi\HCMApi.csproj", "{B258F9D7-CC51-4CFC-A58F-B075A7ADFA93}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicrosoftGraphAspNetCoreConnectSample", "D:\react\adal\graph\aspnetcore-connect-sample-master\MicrosoftGraphAspNetCoreConnectSample\MicrosoftGraphAspNetCoreConnectSample.csproj", "{860EC223-5270-4BD9-838C-BDE1A3101925}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiveDirect", "ActiveDirect\ActiveDirect.csproj", "{F1FAD264-A560-45E4-9B85-D72F7C0714AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console-csharp-connect-sample", "D:\graphapi\console-csharp-connect-sample-master\console-csharp-connect-sample\console-csharp-connect-sample.csproj", "{DF76DFE5-5ECB-41CB-8E85-D7763225E15C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console-csharp-snippets-sample", "D:\graphapi\console-csharp-snippets-sample-master\console-csharp-snippets-sample\console-csharp-snippets-sample.csproj", "{6A3A724C-5985-494F-9FFE-2C1DD10E789F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HCMApiPlayground", "HCMApiPlayground\HCMApiPlayground.csproj", "{FE7B41EE-6AAB-4DC5-9028-C22393C9F27A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +119,22 @@ Global
 		{860EC223-5270-4BD9-838C-BDE1A3101925}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{860EC223-5270-4BD9-838C-BDE1A3101925}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{860EC223-5270-4BD9-838C-BDE1A3101925}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1FAD264-A560-45E4-9B85-D72F7C0714AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1FAD264-A560-45E4-9B85-D72F7C0714AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1FAD264-A560-45E4-9B85-D72F7C0714AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1FAD264-A560-45E4-9B85-D72F7C0714AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF76DFE5-5ECB-41CB-8E85-D7763225E15C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF76DFE5-5ECB-41CB-8E85-D7763225E15C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF76DFE5-5ECB-41CB-8E85-D7763225E15C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF76DFE5-5ECB-41CB-8E85-D7763225E15C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A3A724C-5985-494F-9FFE-2C1DD10E789F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A3A724C-5985-494F-9FFE-2C1DD10E789F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A3A724C-5985-494F-9FFE-2C1DD10E789F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A3A724C-5985-494F-9FFE-2C1DD10E789F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE7B41EE-6AAB-4DC5-9028-C22393C9F27A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE7B41EE-6AAB-4DC5-9028-C22393C9F27A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE7B41EE-6AAB-4DC5-9028-C22393C9F27A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE7B41EE-6AAB-4DC5-9028-C22393C9F27A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,10 @@
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\bin\Debug\HCMApiPlayground.exe.config
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\bin\Debug\HCMApiPlayground.exe
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\bin\Debug\HCMApiPlayground.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\obj\Debug\HCMApiPlayground.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\obj\Debug\HCMApiPlayground.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\obj\Debug\HCMApiPlayground.exe
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\obj\Debug\HCMApiPlayground.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Monin.Jose\source\repos\NAHD\HCMApiPlayground\obj\Debug\HCMApiPlayground.csproj.CopyComplete

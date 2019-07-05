@@ -225,6 +225,168 @@ namespace HCMApi.Controllers
         }
 
 
+        [HttpGet]
+        [Route("DepartmentRequestListUiTableRender")]
+        public JsonResult DepartmentRequestListUiTableRender(int departmentId)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        Department department = new Department();
+                        department.UserId = nueUserProfile.Id;
+                        department.Id = departmentId;
+                        List<DAL.MichaelDepartmentRequestTypeMaster> departmentRequestList = new DataAccess(this.AzureAdSettings).GetDepartmentRequestList(department);
+                        if (departmentRequestList != null)
+                        {
+                            UiMaterialTableModel uiMaterialTableModel = new Modal.Utils().DepartmentRequestListUiTableRender(departmentRequestList);
+                            return new JsonResult(new JsonResponse("Ok", "Data updated.", JsonConvert.SerializeObject(uiMaterialTableModel)));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "AN error occerd while updating the data"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetDepartmentRequestDetails")]
+        public JsonResult GetDepartmentRequestDetails(int departmentId, int requestId)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        DAL.MichaelDepartmentRequestTypeMaster michaelDepartmentRequestTypeMaster = new DataAccess(this.AzureAdSettings).GetDepartmentRequestDetails(departmentId, requestId);
+                        if (michaelDepartmentRequestTypeMaster != null)
+                        {
+                            return new JsonResult(new JsonResponse("Ok", "Data loaded.", michaelDepartmentRequestTypeMaster));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request. Unable to locate requested information"));
+                        }
+
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+
+
+
+        [HttpPost]
+        [Route("EditDepartmentRequestType")]
+        public JsonResult EditDepartmentRequestType([FromBody] DepartmentRequest departmentRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else if (departmentRequest != null && departmentRequest.DepartmentId != 0 && departmentRequest.RequestTypeName != null && departmentRequest.RequestTypeName.Trim() != "")
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        departmentRequest.UserId = nueUserProfile.Id;
+                        JsonResponse dbStatus = new DataAccess(this.AzureAdSettings).editDepartmentRequestType(departmentRequest);
+                        return new JsonResult(dbStatus);
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateDepartmentRequestType")]
+        public JsonResult CreateDepartmentRequestType([FromBody] DepartmentRequest departmentRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else if (departmentRequest != null && departmentRequest.DepartmentId != 0 && departmentRequest.RequestTypeName != null && departmentRequest.RequestTypeName.Trim() != "")
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        departmentRequest.UserId = nueUserProfile.Id;
+                        JsonResponse dbStatus = new DataAccess(this.AzureAdSettings).addNewDepartmentRequestType(departmentRequest);
+                        return new JsonResult(dbStatus);
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
         [HttpPost]
         [Route("CreateDepartment")]
         public JsonResult CreateDepartment([FromBody] Department department)
@@ -243,7 +405,7 @@ namespace HCMApi.Controllers
                     if(nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
                     {
                         department.UserId = nueUserProfile.Id;
-                        JsonResponse dbStatus = new DataAccess(this.AzureAdSettings).addNewDepartMent(department);
+                        JsonResponse dbStatus = new DataAccess(this.AzureAdSettings).addNewDepartment(department);
                         return new JsonResult(dbStatus);
                     }
                     else
