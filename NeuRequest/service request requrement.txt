@@ -2479,4 +2479,142 @@ ALTER TABLE [dbo].[MichaelDepartmentRequestTypeMaster]  WITH CHECK ADD FOREIGN K
 REFERENCES [dbo].[MichaelDepartmentMaster] ([Id])
 GO
 ---------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestMaster]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestMaster](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[IsApprovalProcess] [int] DEFAULT 0,
+	[UserId] [int] NULL,
+	[RequestStatus] [int] NULL,
+	[DepartmentId] [int] NULL,
+	[Payload][TEXT] NULL,
+	[DepartmentRequestTypeId] [int] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([RequestStatus])
+REFERENCES [dbo].[NueRequestStatus] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([DepartmentId])
+REFERENCES [dbo].[MichaelDepartmentMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([DepartmentRequestTypeId])
+REFERENCES [dbo].[MichaelDepartmentRequestTypeMaster] ([Id])
+GO
+---------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestPayload]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestPayload](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [varchar](350) NULL,
+	[RequestMasterId] [int] NULL,
+	[Name] [varchar](2000) NULL,
+	[Fieldvalue] [TEXT] NULL,
+	[Fieldtype] [varchar](1000) NULL,
+	[UserId] [int] NULL,
+	[Payload][TEXT] NULL,
+	[DepartmentId] [int] NULL,
+	[DepartmentRequestTypeId] [int] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestPayload]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestPayload]  WITH CHECK ADD FOREIGN KEY([RequestMasterId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestPayload]  WITH CHECK ADD FOREIGN KEY([DepartmentId])
+REFERENCES [dbo].[MichaelDepartmentMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestPayload]  WITH CHECK ADD FOREIGN KEY([DepartmentRequestTypeId])
+REFERENCES [dbo].[MichaelDepartmentRequestTypeMaster] ([Id])
+GO
+--------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestAceessLog]    Script Date: 6/9/2019 5:59:37 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestAceessLog](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [int] NULL,
+	[UserId] [int] NULL,
+	[OwnerId] [int] NULL,
+	[Completed] [int] default 0,
+	[DepartmentId] [int] NULL,
+	[Log] [text] NULL,
+	[DepartmentRequestTypeId] [int] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAceessLog]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAceessLog]  WITH CHECK ADD FOREIGN KEY([OwnerId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAceessLog]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAceessLog]  WITH CHECK ADD FOREIGN KEY([DepartmentId])
+REFERENCES [dbo].[MichaelDepartmentMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAceessLog]  WITH CHECK ADD FOREIGN KEY([DepartmentRequestTypeId])
+REFERENCES [dbo].[MichaelDepartmentRequestTypeMaster] ([Id])
+GO
+------------------------------------------------------------------------------
 

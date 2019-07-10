@@ -82,7 +82,6 @@ namespace HCMApi.Controllers
             }
             try
             {
-
                 var item = templateType.Split('/');
                 string userEmail = User.Identity.Name.ToLower();
 
@@ -95,19 +94,28 @@ namespace HCMApi.Controllers
                     DAL.MichaelDepartmentRequestTypeMaster michaelDepartmentRequestTypeMaster = new DataAccess(this.AzureAdSettings).GetDepartmentRequestDetails(departmentId, requestId);
                     if (michaelDepartmentRequestTypeMaster != null)
                     {
+                        
                         michaelDepartmentRequestTypeMaster.Department = new DataAccess(this.AzureAdSettings).GetDepartmentDetails((int)michaelDepartmentRequestTypeMaster.DepartmentId);
                         DepartmentRequestTemplateRender departmentRequestTemplateRender = new DepartmentRequestTemplateRender();
                         departmentRequestTemplateRender.DepartmentId = (int) michaelDepartmentRequestTypeMaster.DepartmentId;
                         departmentRequestTemplateRender.RequestId = michaelDepartmentRequestTypeMaster.Id;
-                        string contentRootPath1 = _hostingEnvironment.ContentRootPath;
-                        //var path = Path.Combine(contentRootPath, @"\MyStaticFiles\hcmtemplate.json");
-                        var dirPath1 = contentRootPath1 + "\\MyStaticFiles\\" + departmentRequestTemplateRender.DepartmentId + "\\" + departmentRequestTemplateRender.RequestId;
-                        var path1 = dirPath1 + "\\template.json";
-                        var requestTemplate1 = System.IO.File.ReadAllText(path1);
-                        departmentRequestTemplateRender.AvilableField = JsonConvert.DeserializeObject<List<object>>(requestTemplate1);
-                        departmentRequestTemplateRender.michaelDepartmentRequestTypeMaster = michaelDepartmentRequestTypeMaster;
 
-                        return new JsonResult(new JsonResponse("Ok", "Data Loaded.", departmentRequestTemplateRender));
+                        if (michaelDepartmentRequestTypeMaster.Department.Active == 1 && michaelDepartmentRequestTypeMaster.Active == 1)
+                        {
+                            string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                            //var path = Path.Combine(contentRootPath, @"\MyStaticFiles\hcmtemplate.json");
+                            var dirPath1 = contentRootPath1 + "\\MyStaticFiles\\" + departmentRequestTemplateRender.DepartmentId + "\\" + departmentRequestTemplateRender.RequestId;
+                            var path1 = dirPath1 + "\\template.json";
+                            var requestTemplate1 = System.IO.File.ReadAllText(path1);
+                            departmentRequestTemplateRender.AvilableField = JsonConvert.DeserializeObject<List<object>>(requestTemplate1);
+                            departmentRequestTemplateRender.michaelDepartmentRequestTypeMaster = michaelDepartmentRequestTypeMaster;
+
+                            return new JsonResult(new JsonResponse("Ok", "Data Loaded.", departmentRequestTemplateRender));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request."));
+                        }
                     }
                     else
                     {
@@ -418,6 +426,127 @@ namespace HCMApi.Controllers
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpPost]
+        [Route("GetApiData")]
+        public JsonResult GetApiData([FromBody] GetAPIDataTemplate getAPIDataTemplate)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+
+                string userEmail = User.Identity.Name.ToLower();
+                string requestedApi = getAPIDataTemplate.Name;
+                if(requestedApi.Trim().ToLower() == "approverapi")
+                {
+
+                    List<DAL.NueUserProfile> nueUserProfilesMaster = new DataAccess(this.AzureAdSettings).getAllUserProfilesDinamic();
+                    List<DAL.NueUserProfile> nueUserProfiles = nueUserProfilesMaster.Where(x => x.Email != userEmail).ToList<DAL.NueUserProfile>();
+
+                    List<UiDropdownItem> uiDropdownItems = new List<UiDropdownItem>();
+                    for (int i = 0; i < nueUserProfiles.Count; i++)
+                    {
+                        uiDropdownItems.Add(new UiDropdownItem(nueUserProfiles[i].Email, nueUserProfiles[i].Id.ToString()));
+                    }
+
+                    return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+
+
+                    /*ListUserId listUserId = new Modal.Utils().generateUserDropdownList(nueUserProfiles);
+                    ListUserRender listUserRender = new ListUserRender();
+
+                    listUserRender.UserId = JsonConvert.SerializeObject(listUserId.userIds);
+                    listUserRender.UserMail = JsonConvert.SerializeObject(listUserId.emails);*/
+                    
+                }
+
+                //var dbField = departmentRequestSaveTemplate.DataFields;
+                //var temp = JsonConvert.DeserializeObject<List<DepartmentRequestSaveFormItem>>(dbField.ToString());
+
+                /*else if (departmentRequestTemplate != null && departmentRequestTemplate.DepartmentId != 0 && departmentRequestTemplate.RequestId != 0)
+                {
+                    var json = JsonConvert.SerializeObject(departmentRequestTemplate.AvilableField);
+
+                    string contentRootPath = _hostingEnvironment.ContentRootPath;
+                    //var path = Path.Combine(contentRootPath, @"\MyStaticFiles\hcmtemplate.json");
+                    var dirPath = contentRootPath + "\\MyStaticFiles\\" + departmentRequestTemplate.DepartmentId + "\\" + departmentRequestTemplate.RequestId;
+                    var path = dirPath + "\\template.json";
+                    System.IO.Directory.CreateDirectory(dirPath);
+                    System.IO.File.WriteAllText(path, json);
+                    return new JsonResult(new JsonResponse("Ok", "Data updated"));
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }*/
+
+                return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+
+        [HttpPost]
+        [Route("CreateNewRequest")]
+        public JsonResult CreateNewRequest([FromBody] DepartmentRequestSaveTemplate departmentRequestSaveTemplate)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+
+                var dbField = departmentRequestSaveTemplate.DataFields;
+                //var temp = JsonConvert.DeserializeObject<List<DepartmentRequestSaveFormItem>>(dbField.ToString());
+
+                /*else if (departmentRequestTemplate != null && departmentRequestTemplate.DepartmentId != 0 && departmentRequestTemplate.RequestId != 0)
+                {
+                    var json = JsonConvert.SerializeObject(departmentRequestTemplate.AvilableField);
+
+                    string contentRootPath = _hostingEnvironment.ContentRootPath;
+                    //var path = Path.Combine(contentRootPath, @"\MyStaticFiles\hcmtemplate.json");
+                    var dirPath = contentRootPath + "\\MyStaticFiles\\" + departmentRequestTemplate.DepartmentId + "\\" + departmentRequestTemplate.RequestId;
+                    var path = dirPath + "\\template.json";
+                    System.IO.Directory.CreateDirectory(dirPath);
+                    System.IO.File.WriteAllText(path, json);
+                    return new JsonResult(new JsonResponse("Ok", "Data updated"));
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }*/
+
+                return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
 
         [HttpPost]
         [Route("UpdateDepartmentRequestTemplateType")]

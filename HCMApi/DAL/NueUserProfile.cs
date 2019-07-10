@@ -9,6 +9,10 @@ namespace HCMApi.DAL
         {
             MichaelDepartmentMaster = new HashSet<MichaelDepartmentMaster>();
             MichaelDepartmentRequestTypeMaster = new HashSet<MichaelDepartmentRequestTypeMaster>();
+            MichaelRequestAceessLogOwner = new HashSet<MichaelRequestAceessLog>();
+            MichaelRequestAceessLogUser = new HashSet<MichaelRequestAceessLog>();
+            MichaelRequestMaster = new HashSet<MichaelRequestMaster>();
+            MichaelRequestPayload = new HashSet<MichaelRequestPayload>();
             NeuEmployeeVerificationRequest = new HashSet<NeuEmployeeVerificationRequest>();
             NeuMessages = new HashSet<NeuMessages>();
             NeuUserPreferenceFirstApproverNavigation = new HashSet<NeuUserPreference>();
@@ -70,6 +74,10 @@ namespace HCMApi.DAL
         public virtual NeuPractice PracticeNavigation { get; set; }
         public virtual ICollection<MichaelDepartmentMaster> MichaelDepartmentMaster { get; set; }
         public virtual ICollection<MichaelDepartmentRequestTypeMaster> MichaelDepartmentRequestTypeMaster { get; set; }
+        public virtual ICollection<MichaelRequestAceessLog> MichaelRequestAceessLogOwner { get; set; }
+        public virtual ICollection<MichaelRequestAceessLog> MichaelRequestAceessLogUser { get; set; }
+        public virtual ICollection<MichaelRequestMaster> MichaelRequestMaster { get; set; }
+        public virtual ICollection<MichaelRequestPayload> MichaelRequestPayload { get; set; }
         public virtual ICollection<NeuEmployeeVerificationRequest> NeuEmployeeVerificationRequest { get; set; }
         public virtual ICollection<NeuMessages> NeuMessages { get; set; }
         public virtual ICollection<NeuUserPreference> NeuUserPreferenceFirstApproverNavigation { get; set; }

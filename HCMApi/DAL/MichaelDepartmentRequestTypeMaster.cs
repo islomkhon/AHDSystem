@@ -5,6 +5,13 @@ namespace HCMApi.DAL
 {
     public partial class MichaelDepartmentRequestTypeMaster
     {
+        public MichaelDepartmentRequestTypeMaster()
+        {
+            MichaelRequestAceessLog = new HashSet<MichaelRequestAceessLog>();
+            MichaelRequestMaster = new HashSet<MichaelRequestMaster>();
+            MichaelRequestPayload = new HashSet<MichaelRequestPayload>();
+        }
+
         public int Id { get; set; }
         public int? DepartmentId { get; set; }
         public string RequestTypeName { get; set; }
@@ -16,5 +23,8 @@ namespace HCMApi.DAL
 
         public virtual MichaelDepartmentMaster Department { get; set; }
         public virtual NueUserProfile User { get; set; }
+        public virtual ICollection<MichaelRequestAceessLog> MichaelRequestAceessLog { get; set; }
+        public virtual ICollection<MichaelRequestMaster> MichaelRequestMaster { get; set; }
+        public virtual ICollection<MichaelRequestPayload> MichaelRequestPayload { get; set; }
     }
 }

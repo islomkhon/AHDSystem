@@ -17,6 +17,9 @@ namespace HCMApi.DAL
 
         public virtual DbSet<MichaelDepartmentMaster> MichaelDepartmentMaster { get; set; }
         public virtual DbSet<MichaelDepartmentRequestTypeMaster> MichaelDepartmentRequestTypeMaster { get; set; }
+        public virtual DbSet<MichaelRequestAceessLog> MichaelRequestAceessLog { get; set; }
+        public virtual DbSet<MichaelRequestMaster> MichaelRequestMaster { get; set; }
+        public virtual DbSet<MichaelRequestPayload> MichaelRequestPayload { get; set; }
         public virtual DbSet<NeuCountry> NeuCountry { get; set; }
         public virtual DbSet<NeuDesignation> NeuDesignation { get; set; }
         public virtual DbSet<NeuEmployeeVerificationRequest> NeuEmployeeVerificationRequest { get; set; }
@@ -114,12 +117,126 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.MichaelDepartmentRequestTypeMaster)
                     .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__MichaelDe__Depar__665613C4");
+                    .HasConstraintName("FK__MichaelDe__Depar__6FDF7DFE");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelDepartmentRequestTypeMaster)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelDe__UserI__6561EF8B");
+                    .HasConstraintName("FK__MichaelDe__UserI__6EEB59C5");
+            });
+
+            modelBuilder.Entity<MichaelRequestAceessLog>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Completed).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Log).HasColumnType("text");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.MichaelRequestAceessLog)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("FK__MichaelRe__Depar__07B7078F");
+
+                entity.HasOne(d => d.DepartmentRequestType)
+                    .WithMany(p => p.MichaelRequestAceessLog)
+                    .HasForeignKey(d => d.DepartmentRequestTypeId)
+                    .HasConstraintName("FK__MichaelRe__Depar__08AB2BC8");
+
+                entity.HasOne(d => d.Owner)
+                    .WithMany(p => p.MichaelRequestAceessLogOwner)
+                    .HasForeignKey(d => d.OwnerId)
+                    .HasConstraintName("FK__MichaelRe__Owner__05CEBF1D");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestAceessLog)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__06C2E356");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestAceessLogUser)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__04DA9AE4");
+            });
+
+            modelBuilder.Entity<MichaelRequestMaster>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.IsApprovalProcess).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.Property(e => e.RequestId)
+                    .HasMaxLength(350)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.MichaelRequestMaster)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("FK__MichaelRe__Depar__7A5D0C71");
+
+                entity.HasOne(d => d.DepartmentRequestType)
+                    .WithMany(p => p.MichaelRequestMaster)
+                    .HasForeignKey(d => d.DepartmentRequestTypeId)
+                    .HasConstraintName("FK__MichaelRe__Depar__7B5130AA");
+
+                entity.HasOne(d => d.RequestStatusNavigation)
+                    .WithMany(p => p.MichaelRequestMaster)
+                    .HasForeignKey(d => d.RequestStatus)
+                    .HasConstraintName("FK__MichaelRe__Reque__74A4331B");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestMaster)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__7968E838");
+            });
+
+            modelBuilder.Entity<MichaelRequestPayload>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Fieldtype)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Fieldvalue).HasColumnType("text");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.Property(e => e.RequestId)
+                    .HasMaxLength(350)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.MichaelRequestPayload)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("FK__MichaelRe__Depar__0015E5C7");
+
+                entity.HasOne(d => d.DepartmentRequestType)
+                    .WithMany(p => p.MichaelRequestPayload)
+                    .HasForeignKey(d => d.DepartmentRequestTypeId)
+                    .HasConstraintName("FK__MichaelRe__Depar__010A0A00");
+
+                entity.HasOne(d => d.RequestMaster)
+                    .WithMany(p => p.MichaelRequestPayload)
+                    .HasForeignKey(d => d.RequestMasterId)
+                    .HasConstraintName("FK__MichaelRe__Reque__7F21C18E");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestPayload)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__7E2D9D55");
             });
 
             modelBuilder.Entity<NeuCountry>(entity =>
