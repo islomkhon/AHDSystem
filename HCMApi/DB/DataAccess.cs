@@ -289,6 +289,59 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
+        public JsonResponse sincUsersAd(List<UserAdModelClass> toBeAdded, List<UserAdModelClass> toBeRemoved)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            if(toBeRemoved != null && toBeRemoved.Count > 0)
+            {
+                for (int i = 0; i < toBeRemoved.Count; i++)
+                {
+                    try
+                    {
+                        var result = nueRequestContext.NueUserProfile.SingleOrDefault(b => b.Email == toBeRemoved[i].email);
+                        if (result != null)
+                        {
+                            result.Active = 0;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+            }
+            if (toBeAdded != null && toBeAdded.Count > 0)
+            {
+                for (int i = 0; i < toBeAdded.Count; i++)
+                {
+                    try
+                    {
+                        var result = nueRequestContext.NueUserProfile.SingleOrDefault(b => b.Email == toBeAdded[i].email);
+                        if (result == null)
+                        {
+                            NueUserProfile nueUserProfile = new NueUserProfile();
+                            nueUserProfile.Email = toBeAdded[i].email;
+                            nueUserProfile.FullName = toBeAdded[i].userName;
+                            nueUserProfile.FirstName = toBeAdded[i].firstName;
+                            nueUserProfile.LastName = toBeAdded[i].lastName;
+                            nueUserProfile.EmploymentStatus = 5;
+                            nueUserProfile.Active = 1;
+                            nueUserProfile.AddedOn = DateTime.UtcNow;
+                            nueRequestContext.NueUserProfile.Add(nueUserProfile);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+            }
+            int returnValue = nueRequestContext.SaveChanges();
+            jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            return jsonResponse;
+        }
+
         public JsonResponse editDepartmentRequestType(DepartmentRequest departmentRequest)
         {
             JsonResponse jsonResponse = new JsonResponse();

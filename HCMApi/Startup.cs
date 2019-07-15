@@ -18,9 +18,16 @@ using Microsoft.Extensions.FileProviders;
 using System.IO;
 using HCMApi.DAL;
 using Microsoft.EntityFrameworkCore;
+using Hangfire;
+using Hangfire.Dashboard;
+using HCMApi.Shedules;
+using System.Diagnostics;
 
 namespace HCMApi
 {
+    
+
+
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -75,6 +82,8 @@ namespace HCMApi
                 options.UseSqlServer(connection)
             );
 
+            //services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("Db")));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -104,9 +113,20 @@ namespace HCMApi
                 RequestPath = "/StaticFiles"
             });
 
+            //app.UseHangfireDashboard("/dashboard");
+            //app.UseHangfireDashboard("/hangfiredashboard", new DashboardOptions
+            //{
+            //    Authorization = new[] { new HangfireAuthorizationFilter() },
+            //});
+            //app.UseHangfireServer();
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
+
+            //BackgroundJob.Schedule(() => ApplyWatermark(filename), TimeSpan.FromMinutes(5));
+            //BackgroundJob.Schedule(() => Debug.WriteLine(new DateTime().ToLocalTime()), TimeSpan.FromMinutes(1));
+
         }
     }
 }

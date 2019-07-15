@@ -2617,4 +2617,856 @@ ALTER TABLE [dbo].[MichaelRequestAceessLog]  WITH CHECK ADD FOREIGN KEY([Departm
 REFERENCES [dbo].[MichaelDepartmentRequestTypeMaster] ([Id])
 GO
 ------------------------------------------------------------------------------
+*********************************************************************************
+*********************************************************************************
+*********************************************************************************
+*********************************************************************************
+MichaelRequestStageBase
+Id int
+StageType(varchar(2500), null)
+AddedOn(datetime, not null)
+ModifiedOn(datetime, not null)
+---------------
+Created
+Assignee Accepted
+Assignee Rejected
+Approver Accepted
+Approver Rejected
+Completed
+Feedback Given
+-------------------------------
+-------------------------------
+MichaelEscalationBase
+Id int
+EscalationLevel (varchar(2500), null)
+AddedOn(datetime, not null)
+---------------
+EL0
+EL1
+EL2
+-------------------------------
+-------------------------------
+MichaelRequestPriority
+Id int
+RequestPriority(varchar(2500), null)
+AddedOn(datetime, not null)
+---------------
+Heigh
+Medium
+Low
+-------------------------------
+-------------------------------
+MichaelPayloadDataType
+Id int
+DataType(varchar(2500), null)
+AddedOn(datetime, not null)
+---------------
+integer
+string
+bool
+-------------------------------
+-------------------------------
+MichaelRequestAccessTypes
+Id int
+AccessTypes(varchar(2500), null)
+AddedOn(datetime, not null)
+---------------
+owner
+approver
+-------------------------------
+-------------------------------
+MichaelRequestLogTypes
+Id int
+LogType(varchar(2500), null)
+AddedOn(datetime, not null)
+---------------
+commented
+approved
+rejected
+attachedfile
+-------------------------------
+-------------------------------
+MichaelApproverStatusTypes
+Id int
+Status(varchar(2500), null)
+AddedOn(datetime, not null)
+---------------
+pending
+approved
+rejected
+-------------------------------
+-------------------------------
+*****************************************
+MichaelDepartmentRequestMaster
+Id int
+DepartmentId [int] NULL,[MichaelDepartmentMaster] ([Id])
+RequestTypeName [text] NULL,
+RequestTypeDescription [text] NULL,
+UserId [int] NULL,
+RequestPriorityId[int] NULL,[MichaelRequestPriority] ([Id])
+Active [int] DEFAULT 1,
+AddedOn [datetime] NOT NULL,
+ModifiedOn [datetime] NOT NULL,
+---------------------------------------
+MichaelRequestEscalationMapper
+Id int
+DepartmentId [int] NULL,[MichaelDepartmentMaster] ([Id])
+DepartmentRequestId [int] NULL,[MichaelDepartmentRequestMaster] ([Id])
+EscalationBaseId [int] NULL,[MichaelEscalationBase] ([Id])
+Level [int] NULL, <1,2,3>
+MaxSla [int] NULL,
+Active [int] DEFAULT 1,
+UserId [int] NULL,
+AddedOn [datetime] NOT NULL,
+ModifiedOn [datetime] NOT NULL,
+---------------------------------------
+MichaelRequestEscalationUserBaseMapper
+Id int
+RequestEscalationMapperId [int] NULL,[MichaelRequestEscalationMapper] ([Id])
+UserId [int] NULL,
+Active [int] DEFAULT 1,
+AddedOn [datetime] NOT NULL,
+ModifiedOn [datetime] NOT NULL,
+---------------------------------------
+MichaelRequestMaster
+Id int
+RequestId [varchar](2500) null,
+DepartmentId [int] NULL,[MichaelDepartmentMaster] ([Id])
+DepartmentRequestId [int] NULL,[MichaelDepartmentRequestMaster] ([Id])
+UserId [int] NULL,
+RequestStageBaseId [INT] NULL,[MichaelRequestStageBase] ([Id])
+RequestEscalationMapperId [int] NULL,[MichaelRequestEscalationMapper] ([Id])
+RequestEscalationUserId[int] NULL,[MichaelRequestEscalationUserBaseMapper] ([Id])
+RequestPriorityId[int] NULL,[MichaelRequestPriority] ([Id])
+IsApprovalProcess [int] DEFAULT 0,
+IsApprovalProcessComplted [int] DEFAULT 0,
+CurrentSla [int] NULL, <MaxSla>
+AddedOn [datetime] NOT NULL,
+ModifiedOn [datetime] NOT NULL
+---------------------------------------
+MichaelRequestPayloadMaster
+Id int,
+RequestId [INT] NULL,[MichaelRequestMaster] ([Id])
+PayloadDataType [INT] NULL, [MichaelPayloadDataType] ([Id])
+Payload [TEXT], null)
+AddedOn [datetime] NOT NULL,
+ModifiedOn [datetime] NOT NULL
+---------------------------------------
+MichaelRequestEscalationAccessLogs
+Id int,
+RequestId [INT] NULL,[MichaelRequestMaster] ([Id])
+UserId [int] NULL,
+Active [int] DEFAULT 1,
+RequestEscalationMapperId [int] NULL,[MichaelRequestEscalationMapper] ([Id])
+RequestEscalationUserId[int] NULL,[MichaelRequestEscalationUserBaseMapper] ([Id])
+AddedOn [datetime] NOT NULL
+---------------------------------------
+MichaelRequestEscalationDurationLogs
+Id int,
+RequestId [INT] NULL,[MichaelRequestMaster] ([Id])
+Duration [INT] NULL,
+UserId [int] NULL,
+RequestEscalationMapperId [int] NULL,[MichaelRequestEscalationMapper] ([Id])
+RequestEscalationUserId[int] NULL,[MichaelRequestEscalationUserBaseMapper] ([Id])
+AddedOn [datetime] NOT NULL
+---------------------------------------
+MichaelRequestStageLogs
+Id int,
+RequestId [INT] NULL,[MichaelRequestMaster] ([Id])
+RequestStageBaseId [INT] NULL,[MichaelRequestStageBase] ([Id])
+AddedOn [datetime] NOT NULL
+---------------------------------------
+MichaelRequestAccessMapper
+Id int,
+RequestId [INT] NULL,[MichaelRequestMaster] ([Id])
+UserId [int] NULL,
+RequestAccessTypesId [int] NULL,[MichaelRequestAccessTypes] ([Id])
+Active [int] DEFAULT 1,
+AddedOn [datetime] NOT NULL
+---------------------------------------
+MichaelRequestApproverStatusMapper
+Id int,
+RequestId [INT] NULL,[MichaelRequestMaster] ([Id])
+UserId [int] NULL,
+RequestAccessId [int] NULL,[MichaelRequestAccessMapper] ([Id])
+RequestAccessTypesId [int] NULL,[MichaelRequestAccessTypes] ([Id])
+ApproverStatusId [int] NULL, [MichaelApproverStatusTypes] ([Id])
+Active [int] DEFAULT 1,
+AddedOn [datetime] NOT NULL
+---------------------------------------
+MichaelRequestLog
+Id int,
+RequestId [INT] NULL,[MichaelRequestMaster] ([Id])
+UserId [int] NULL,
+RequestLogTypeId [INT] NULL, [MichaelRequestLogTypes] ([Id])
+PayLoad [TEXT] NULL,
+RequestStageBaseId [INT] NULL,[MichaelRequestStageBase] ([Id])
+RequestEscalationMapperId [int] NULL,[MichaelRequestEscalationMapper] ([Id])
+RequestEscalationUserId[int] NULL,[MichaelRequestEscalationUserBaseMapper] ([Id])
+RequestPriorityId[int] NULL,[MichaelRequestPriority] ([Id])
+AddedOn [datetime] NOT NULL
+---------------------------------------
+MichaelRequestAttachmentLog
+Id int,
+RequestId [INT] NULL,[MichaelRequestMaster] ([Id])
+UserId [int] NULL,
+AddedOn [datetime] NOT NULL
+---------------------------------------
+***************************************************
+---------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestStageBase]    Script Date: 7/14/2019 6:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestStageBase](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[StageType] [varchar](2500) NULL,
+	[AddedOn] [datetime] NULL,
+	[ModifiedOn] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelEscalationBase]    Script Date: 7/14/2019 6:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelEscalationBase](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[EscalationLevel] [varchar](2500) NULL,
+	[AddedOn] [datetime] NULL,
+	[ModifiedOn] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestPriority]    Script Date: 7/14/2019 6:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestPriority](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestPriority] [varchar](2500) NULL,
+	[AddedOn] [datetime] NULL,
+	[ModifiedOn] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelPayloadDataType]    Script Date: 7/14/2019 6:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelPayloadDataType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[DataType] [varchar](2500) NULL,
+	[AddedOn] [datetime] NULL,
+	[ModifiedOn] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestAccessTypes]    Script Date: 7/14/2019 6:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestAccessTypes](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[AccessTypes] [varchar](2500) NULL,
+	[AddedOn] [datetime] NULL,
+	[ModifiedOn] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestLogTypes]    Script Date: 7/14/2019 6:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestLogTypes](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[LogType] [varchar](2500) NULL,
+	[AddedOn] [datetime] NULL,
+	[ModifiedOn] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelApproverStatusTypes]    Script Date: 7/14/2019 6:27:28 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelApproverStatusTypes](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Status] [varchar](2500) NULL,
+	[AddedOn] [datetime] NULL,
+	[ModifiedOn] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelDepartmentRequestMaster]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelDepartmentRequestMaster](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestTypeName] [text] NULL,
+	[RequestTypeDescription] [text] NULL,
+	[UserId] [int] NULL,
+	[DepartmentId] [int] NULL,
+	[RequestPriorityId] [int] NULL,
+	[Active] [int] DEFAULT 1,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelDepartmentRequestMaster]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelDepartmentRequestMaster]  WITH CHECK ADD FOREIGN KEY([DepartmentId])
+REFERENCES [dbo].[MichaelDepartmentMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelDepartmentRequestMaster]  WITH CHECK ADD FOREIGN KEY([RequestPriorityId])
+REFERENCES [dbo].[MichaelRequestPriority] ([Id])
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestEscalationMapper]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestEscalationMapper](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Level] [int] DEFAULT 1,
+	[MaxSla] [int] NULL,
+	[Active] [int] DEFAULT 1,
+	[Payload] [text] NULL,
+	[UserId] [int] NULL,
+	[DepartmentId] [int] NULL,
+	[DepartmentRequestId] [int] NULL,
+	[EscalationBaseId] [int] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationMapper]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationMapper]  WITH CHECK ADD FOREIGN KEY([DepartmentId])
+REFERENCES [dbo].[MichaelDepartmentMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationMapper]  WITH CHECK ADD FOREIGN KEY([DepartmentRequestId])
+REFERENCES [dbo].[MichaelDepartmentRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationMapper]  WITH CHECK ADD FOREIGN KEY([EscalationBaseId])
+REFERENCES [dbo].[MichaelEscalationBase] ([Id])
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestEscalationUserBaseMapper]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestEscalationUserBaseMapper](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Active] [int] DEFAULT 1,
+	[Payload] [text] NULL,
+	[UserId] [int] NULL,
+	[RequestEscalationMapperId] [int] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationUserBaseMapper]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationUserBaseMapper]  WITH CHECK ADD FOREIGN KEY([RequestEscalationMapperId])
+REFERENCES [dbo].[MichaelRequestEscalationMapper] ([Id])
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestMaster]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestMaster](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [VARCHAR](3000) NOT NULL,
+	[DepartmentId] [int] NULL,
+	[DepartmentRequestId] [int] NULL,
+	[UserId] [int] NULL,
+	[RequestStageBaseId] [int] NULL,
+	[RequestEscalationMapperId] [int] NULL,
+	[RequestEscalationUserId] [int] NULL,
+	[RequestPriorityId] [int] NULL,
+	[IsApprovalProcess] [int] DEFAULT 0,
+	[IsApprovalProcessComplted] [int] DEFAULT 0,
+	[CurrentSla] [int] NULL,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([DepartmentId])
+REFERENCES [dbo].[MichaelDepartmentMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([DepartmentRequestId])
+REFERENCES [dbo].[MichaelDepartmentRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([RequestStageBaseId])
+REFERENCES [dbo].[MichaelRequestStageBase] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([RequestEscalationMapperId])
+REFERENCES [dbo].[MichaelRequestEscalationMapper] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([RequestEscalationUserId])
+REFERENCES [dbo].[MichaelRequestEscalationUserBaseMapper] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestMaster]  WITH CHECK ADD FOREIGN KEY([RequestPriorityId])
+REFERENCES [dbo].[MichaelRequestPriority] ([Id])
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestPayloadMaster]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestPayloadMaster](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [INT] NULL,
+	[PayloadDataType] [int] NULL,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestPayloadMaster]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestPayloadMaster]  WITH CHECK ADD FOREIGN KEY([PayloadDataType])
+REFERENCES [dbo].[MichaelPayloadDataType] ([Id])
+GO
+-----------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestEscalationAccessLogs]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestEscalationAccessLogs](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [INT] NULL,
+	[UserId] [INT] NULL,
+	[Active] [int] DEFAULT 1,
+	[RequestEscalationMapperId] [INT] NULL,
+	[RequestEscalationUserId] [INT] NULL,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationAccessLogs]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationAccessLogs]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationAccessLogs]  WITH CHECK ADD FOREIGN KEY([RequestEscalationMapperId])
+REFERENCES [dbo].[MichaelRequestEscalationMapper] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationAccessLogs]  WITH CHECK ADD FOREIGN KEY([RequestEscalationUserId])
+REFERENCES [dbo].[MichaelRequestEscalationUserBaseMapper] ([Id])
+GO
+------------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestEscalationDurationLogs]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestEscalationDurationLogs](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [INT] NULL,
+	[Duration] [int] NULL,
+	[UserId] [INT] NULL,
+	[RequestEscalationMapperId] [INT] NULL,
+	[RequestEscalationUserId] [INT] NULL,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationDurationLogs]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationDurationLogs]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationDurationLogs]  WITH CHECK ADD FOREIGN KEY([RequestEscalationMapperId])
+REFERENCES [dbo].[MichaelRequestEscalationMapper] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestEscalationDurationLogs]  WITH CHECK ADD FOREIGN KEY([RequestEscalationUserId])
+REFERENCES [dbo].[MichaelRequestEscalationUserBaseMapper] ([Id])
+GO
+------------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestStageLogs]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestStageLogs](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [INT] NULL,
+	[RequestStageBaseId] [INT] NULL,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestStageLogs]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestStageLogs]  WITH CHECK ADD FOREIGN KEY([RequestStageBaseId])
+REFERENCES [dbo].[MichaelRequestStageBase] ([Id])
+GO
+------------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestAccessMapper]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestAccessMapper](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [INT] NULL,
+	[UserId] [INT] NULL,
+	[RequestAccessTypesId] [INT] NULL,
+	[Active] [INT] Default 1,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAccessMapper]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAccessMapper]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAccessMapper]  WITH CHECK ADD FOREIGN KEY([RequestAccessTypesId])
+REFERENCES [dbo].[MichaelRequestAccessTypes] ([Id])
+GO
+------------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestApproverStatusMapper]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestApproverStatusMapper](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [INT] NULL,
+	[UserId] [INT] NULL,
+	[RequestAccessId] [INT] NULL,
+	[RequestAccessTypesId] [INT] NULL,
+	[ApproverStatusId] [INT] NULL,
+	[Active] [INT] Default 1,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestApproverStatusMapper]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestApproverStatusMapper]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestApproverStatusMapper]  WITH CHECK ADD FOREIGN KEY([RequestAccessId])
+REFERENCES [dbo].[MichaelRequestAccessMapper] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestApproverStatusMapper]  WITH CHECK ADD FOREIGN KEY([RequestAccessTypesId])
+REFERENCES [dbo].[MichaelRequestAccessTypes] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestApproverStatusMapper]  WITH CHECK ADD FOREIGN KEY([ApproverStatusId])
+REFERENCES [dbo].[MichaelApproverStatusTypes] ([Id])
+GO
+------------------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestLog]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestLog](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [INT] NULL,
+	[UserId] [INT] NULL,
+	[RequestLogTypeId] [INT] NULL,
+	[RequestStageBaseId] [INT] NULL,
+	[RequestEscalationMapperId] [INT] NULL,
+	[RequestEscalationUserId] [INT] NULL,
+	[RequestPriorityId] [INT] NULL,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestLog]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestLog]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestLog]  WITH CHECK ADD FOREIGN KEY([RequestLogTypeId])
+REFERENCES [dbo].[MichaelRequestLogTypes] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestLog]  WITH CHECK ADD FOREIGN KEY([RequestStageBaseId])
+REFERENCES [dbo].[MichaelRequestStageBase] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestLog]  WITH CHECK ADD FOREIGN KEY([RequestEscalationMapperId])
+REFERENCES [dbo].[MichaelRequestEscalationMapper] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestLog]  WITH CHECK ADD FOREIGN KEY([RequestEscalationUserId])
+REFERENCES [dbo].[MichaelRequestEscalationUserBaseMapper] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestLog]  WITH CHECK ADD FOREIGN KEY([RequestPriorityId])
+REFERENCES [dbo].[MichaelRequestPriority] ([Id])
+GO
+---------------------------------------------------------------------------------------
+USE [NueRequest]
+GO
+
+/****** Object:  Table [dbo].[MichaelRequestAttachmentLog]    Script Date: 7/15/2019 10:45:55 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MichaelRequestAttachmentLog](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[RequestId] [INT] NULL,
+	[UserId] [INT] NULL,
+	[FileName] [text] NULL,
+    [FileExt] [text] NULL,
+    [VFileName] [text] NULL,
+	[Payload] [text] NULL,
+	[AddedOn] [datetime] NOT NULL,
+	[ModifiedOn] [datetime] NOT NULL
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAttachmentLog]  WITH CHECK ADD FOREIGN KEY([RequestId])
+REFERENCES [dbo].[MichaelRequestMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[MichaelRequestAttachmentLog]  WITH CHECK ADD FOREIGN KEY([UserId])
+REFERENCES [dbo].[NueUserProfile] ([Id])
+GO
+-----------------------------------------------------------------------------------------------------
+
 

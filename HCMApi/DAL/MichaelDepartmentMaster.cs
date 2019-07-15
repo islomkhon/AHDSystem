@@ -7,10 +7,9 @@ namespace HCMApi.DAL
     {
         public MichaelDepartmentMaster()
         {
-            MichaelDepartmentRequestTypeMaster = new HashSet<MichaelDepartmentRequestTypeMaster>();
-            MichaelRequestAceessLog = new HashSet<MichaelRequestAceessLog>();
+            MichaelDepartmentRequestMaster = new HashSet<MichaelDepartmentRequestMaster>();
+            MichaelRequestEscalationMapper = new HashSet<MichaelRequestEscalationMapper>();
             MichaelRequestMaster = new HashSet<MichaelRequestMaster>();
-            MichaelRequestPayload = new HashSet<MichaelRequestPayload>();
         }
 
         public int Id { get; set; }
@@ -22,9 +21,8 @@ namespace HCMApi.DAL
         public DateTime ModifiedOn { get; set; }
 
         public virtual NueUserProfile User { get; set; }
-        public virtual ICollection<MichaelDepartmentRequestTypeMaster> MichaelDepartmentRequestTypeMaster { get; set; }
-        public virtual ICollection<MichaelRequestAceessLog> MichaelRequestAceessLog { get; set; }
+        public virtual ICollection<MichaelDepartmentRequestMaster> MichaelDepartmentRequestMaster { get; set; }
+        public virtual ICollection<MichaelRequestEscalationMapper> MichaelRequestEscalationMapper { get; set; }
         public virtual ICollection<MichaelRequestMaster> MichaelRequestMaster { get; set; }
-        public virtual ICollection<MichaelRequestPayload> MichaelRequestPayload { get; set; }
     }
 }

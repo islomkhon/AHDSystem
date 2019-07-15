@@ -15,11 +15,32 @@ namespace HCMApi.DAL
         {
         }
 
+        public virtual DbSet<AggregatedCounter> AggregatedCounter { get; set; }
+        public virtual DbSet<Hash> Hash { get; set; }
+        public virtual DbSet<Job> Job { get; set; }
+        public virtual DbSet<JobParameter> JobParameter { get; set; }
+        public virtual DbSet<JobQueue> JobQueue { get; set; }
+        public virtual DbSet<List> List { get; set; }
+        public virtual DbSet<MichaelApproverStatusTypes> MichaelApproverStatusTypes { get; set; }
         public virtual DbSet<MichaelDepartmentMaster> MichaelDepartmentMaster { get; set; }
-        public virtual DbSet<MichaelDepartmentRequestTypeMaster> MichaelDepartmentRequestTypeMaster { get; set; }
-        public virtual DbSet<MichaelRequestAceessLog> MichaelRequestAceessLog { get; set; }
+        public virtual DbSet<MichaelDepartmentRequestMaster> MichaelDepartmentRequestMaster { get; set; }
+        public virtual DbSet<MichaelEscalationBase> MichaelEscalationBase { get; set; }
+        public virtual DbSet<MichaelPayloadDataType> MichaelPayloadDataType { get; set; }
+        public virtual DbSet<MichaelRequestAccessMapper> MichaelRequestAccessMapper { get; set; }
+        public virtual DbSet<MichaelRequestAccessTypes> MichaelRequestAccessTypes { get; set; }
+        public virtual DbSet<MichaelRequestApproverStatusMapper> MichaelRequestApproverStatusMapper { get; set; }
+        public virtual DbSet<MichaelRequestAttachmentLog> MichaelRequestAttachmentLog { get; set; }
+        public virtual DbSet<MichaelRequestEscalationAccessLogs> MichaelRequestEscalationAccessLogs { get; set; }
+        public virtual DbSet<MichaelRequestEscalationDurationLogs> MichaelRequestEscalationDurationLogs { get; set; }
+        public virtual DbSet<MichaelRequestEscalationMapper> MichaelRequestEscalationMapper { get; set; }
+        public virtual DbSet<MichaelRequestEscalationUserBaseMapper> MichaelRequestEscalationUserBaseMapper { get; set; }
+        public virtual DbSet<MichaelRequestLog> MichaelRequestLog { get; set; }
+        public virtual DbSet<MichaelRequestLogTypes> MichaelRequestLogTypes { get; set; }
         public virtual DbSet<MichaelRequestMaster> MichaelRequestMaster { get; set; }
-        public virtual DbSet<MichaelRequestPayload> MichaelRequestPayload { get; set; }
+        public virtual DbSet<MichaelRequestPayloadMaster> MichaelRequestPayloadMaster { get; set; }
+        public virtual DbSet<MichaelRequestPriority> MichaelRequestPriority { get; set; }
+        public virtual DbSet<MichaelRequestStageBase> MichaelRequestStageBase { get; set; }
+        public virtual DbSet<MichaelRequestStageLogs> MichaelRequestStageLogs { get; set; }
         public virtual DbSet<NeuCountry> NeuCountry { get; set; }
         public virtual DbSet<NeuDesignation> NeuDesignation { get; set; }
         public virtual DbSet<NeuEmployeeVerificationRequest> NeuEmployeeVerificationRequest { get; set; }
@@ -62,6 +83,12 @@ namespace HCMApi.DAL
         public virtual DbSet<NueSalaryCertificateRequest> NueSalaryCertificateRequest { get; set; }
         public virtual DbSet<NueUserOrgMapper> NueUserOrgMapper { get; set; }
         public virtual DbSet<NueUserProfile> NueUserProfile { get; set; }
+        public virtual DbSet<Schema> Schema { get; set; }
+        public virtual DbSet<Server> Server { get; set; }
+        public virtual DbSet<Set> Set { get; set; }
+        public virtual DbSet<State> State { get; set; }
+
+        // Unable to generate entity type for table 'HangFire.Counter'. Please see the warning messages.
 
         public static string GetConnectionString()
         {
@@ -80,7 +107,122 @@ namespace HCMApi.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+
+            modelBuilder.Entity<AggregatedCounter>(entity =>
+            {
+                entity.HasKey(e => e.Key)
+                    .HasName("PK_HangFire_CounterAggregated");
+
+                entity.ToTable("AggregatedCounter", "HangFire");
+
+                entity.HasIndex(e => e.ExpireAt)
+                    .HasName("IX_HangFire_AggregatedCounter_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.Property(e => e.Key)
+                    .HasMaxLength(100)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Hash>(entity =>
+            {
+                entity.HasKey(e => new { e.Key, e.Field })
+                    .HasName("PK_HangFire_Hash");
+
+                entity.ToTable("Hash", "HangFire");
+
+                entity.HasIndex(e => e.ExpireAt)
+                    .HasName("IX_HangFire_Hash_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.Property(e => e.Key).HasMaxLength(100);
+
+                entity.Property(e => e.Field).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Job>(entity =>
+            {
+                entity.ToTable("Job", "HangFire");
+
+                entity.HasIndex(e => e.StateName)
+                    .HasName("IX_HangFire_Job_StateName")
+                    .HasFilter("([StateName] IS NOT NULL)");
+
+                entity.HasIndex(e => new { e.StateName, e.ExpireAt })
+                    .HasName("IX_HangFire_Job_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.Property(e => e.Arguments).IsRequired();
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.InvocationData).IsRequired();
+
+                entity.Property(e => e.StateName).HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<JobParameter>(entity =>
+            {
+                entity.HasKey(e => new { e.JobId, e.Name })
+                    .HasName("PK_HangFire_JobParameter");
+
+                entity.ToTable("JobParameter", "HangFire");
+
+                entity.Property(e => e.Name).HasMaxLength(40);
+
+                entity.HasOne(d => d.Job)
+                    .WithMany(p => p.JobParameter)
+                    .HasForeignKey(d => d.JobId)
+                    .HasConstraintName("FK_HangFire_JobParameter_Job");
+            });
+
+            modelBuilder.Entity<JobQueue>(entity =>
+            {
+                entity.HasKey(e => new { e.Queue, e.Id })
+                    .HasName("PK_HangFire_JobQueue");
+
+                entity.ToTable("JobQueue", "HangFire");
+
+                entity.Property(e => e.Queue).HasMaxLength(50);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.FetchedAt).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<List>(entity =>
+            {
+                entity.HasKey(e => new { e.Key, e.Id })
+                    .HasName("PK_HangFire_List");
+
+                entity.ToTable("List", "HangFire");
+
+                entity.HasIndex(e => e.ExpireAt)
+                    .HasName("IX_HangFire_List_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.Property(e => e.Key).HasMaxLength(100);
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<MichaelApproverStatusTypes>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(2500)
+                    .IsUnicode(false);
+            });
 
             modelBuilder.Entity<MichaelDepartmentMaster>(entity =>
             {
@@ -102,7 +244,7 @@ namespace HCMApi.DAL
                     .HasConstraintName("FK__MichaelDe__UserI__49B9D516");
             });
 
-            modelBuilder.Entity<MichaelDepartmentRequestTypeMaster>(entity =>
+            modelBuilder.Entity<MichaelDepartmentRequestMaster>(entity =>
             {
                 entity.Property(e => e.Active).HasDefaultValueSql("((1))");
 
@@ -115,50 +257,300 @@ namespace HCMApi.DAL
                 entity.Property(e => e.RequestTypeName).HasColumnType("text");
 
                 entity.HasOne(d => d.Department)
-                    .WithMany(p => p.MichaelDepartmentRequestTypeMaster)
+                    .WithMany(p => p.MichaelDepartmentRequestMaster)
                     .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__MichaelDe__Depar__6FDF7DFE");
+                    .HasConstraintName("FK__MichaelDe__Depar__3FFB60B2");
+
+                entity.HasOne(d => d.RequestPriority)
+                    .WithMany(p => p.MichaelDepartmentRequestMaster)
+                    .HasForeignKey(d => d.RequestPriorityId)
+                    .HasConstraintName("FK__MichaelDe__Reque__40EF84EB");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.MichaelDepartmentRequestTypeMaster)
+                    .WithMany(p => p.MichaelDepartmentRequestMaster)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelDe__UserI__6EEB59C5");
+                    .HasConstraintName("FK__MichaelDe__UserI__3F073C79");
             });
 
-            modelBuilder.Entity<MichaelRequestAceessLog>(entity =>
+            modelBuilder.Entity<MichaelEscalationBase>(entity =>
             {
                 entity.Property(e => e.AddedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.Completed).HasDefaultValueSql("((0))");
+                entity.Property(e => e.EscalationLevel)
+                    .HasMaxLength(2500)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Log).HasColumnType("text");
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<MichaelPayloadDataType>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.DataType)
+                    .HasMaxLength(2500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<MichaelRequestAccessMapper>(entity =>
+            {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.RequestAccessTypes)
+                    .WithMany(p => p.MichaelRequestAccessMapper)
+                    .HasForeignKey(d => d.RequestAccessTypesId)
+                    .HasConstraintName("FK__MichaelRe__Reque__7192BC46");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestAccessMapper)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__6FAA73D4");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestAccessMapper)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__709E980D");
+            });
+
+            modelBuilder.Entity<MichaelRequestAccessTypes>(entity =>
+            {
+                entity.Property(e => e.AccessTypes)
+                    .HasMaxLength(2500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<MichaelRequestApproverStatusMapper>(entity =>
+            {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.ApproverStatus)
+                    .WithMany(p => p.MichaelRequestApproverStatusMapper)
+                    .HasForeignKey(d => d.ApproverStatusId)
+                    .HasConstraintName("FK__MichaelRe__Appro__7933DE0E");
+
+                entity.HasOne(d => d.RequestAccess)
+                    .WithMany(p => p.MichaelRequestApproverStatusMapper)
+                    .HasForeignKey(d => d.RequestAccessId)
+                    .HasConstraintName("FK__MichaelRe__Reque__774B959C");
+
+                entity.HasOne(d => d.RequestAccessTypes)
+                    .WithMany(p => p.MichaelRequestApproverStatusMapper)
+                    .HasForeignKey(d => d.RequestAccessTypesId)
+                    .HasConstraintName("FK__MichaelRe__Reque__783FB9D5");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestApproverStatusMapper)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__75634D2A");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestApproverStatusMapper)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__76577163");
+            });
+
+            modelBuilder.Entity<MichaelRequestAttachmentLog>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.FileExt).HasColumnType("text");
+
+                entity.Property(e => e.FileName).HasColumnType("text");
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
-                entity.HasOne(d => d.Department)
-                    .WithMany(p => p.MichaelRequestAceessLog)
-                    .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__MichaelRe__Depar__07B7078F");
+                entity.Property(e => e.Payload).HasColumnType("text");
 
-                entity.HasOne(d => d.DepartmentRequestType)
-                    .WithMany(p => p.MichaelRequestAceessLog)
-                    .HasForeignKey(d => d.DepartmentRequestTypeId)
-                    .HasConstraintName("FK__MichaelRe__Depar__08AB2BC8");
-
-                entity.HasOne(d => d.Owner)
-                    .WithMany(p => p.MichaelRequestAceessLogOwner)
-                    .HasForeignKey(d => d.OwnerId)
-                    .HasConstraintName("FK__MichaelRe__Owner__05CEBF1D");
+                entity.Property(e => e.VfileName)
+                    .HasColumnName("VFileName")
+                    .HasColumnType("text");
 
                 entity.HasOne(d => d.Request)
-                    .WithMany(p => p.MichaelRequestAceessLog)
+                    .WithMany(p => p.MichaelRequestAttachmentLog)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__06C2E356");
+                    .HasConstraintName("FK__MichaelRe__Reque__04A590BA");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.MichaelRequestAceessLogUser)
+                    .WithMany(p => p.MichaelRequestAttachmentLog)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__04DA9AE4");
+                    .HasConstraintName("FK__MichaelRe__UserI__0599B4F3");
+            });
+
+            modelBuilder.Entity<MichaelRequestEscalationAccessLogs>(entity =>
+            {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.RequestEscalationMapper)
+                    .WithMany(p => p.MichaelRequestEscalationAccessLogs)
+                    .HasForeignKey(d => d.RequestEscalationMapperId)
+                    .HasConstraintName("FK__MichaelRe__Reque__615C547D");
+
+                entity.HasOne(d => d.RequestEscalationUser)
+                    .WithMany(p => p.MichaelRequestEscalationAccessLogs)
+                    .HasForeignKey(d => d.RequestEscalationUserId)
+                    .HasConstraintName("FK__MichaelRe__Reque__625078B6");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestEscalationAccessLogs)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__5F740C0B");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestEscalationAccessLogs)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__60683044");
+            });
+
+            modelBuilder.Entity<MichaelRequestEscalationDurationLogs>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.RequestEscalationMapper)
+                    .WithMany(p => p.MichaelRequestEscalationDurationLogs)
+                    .HasForeignKey(d => d.RequestEscalationMapperId)
+                    .HasConstraintName("FK__MichaelRe__Reque__67152DD3");
+
+                entity.HasOne(d => d.RequestEscalationUser)
+                    .WithMany(p => p.MichaelRequestEscalationDurationLogs)
+                    .HasForeignKey(d => d.RequestEscalationUserId)
+                    .HasConstraintName("FK__MichaelRe__Reque__6809520C");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestEscalationDurationLogs)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__652CE561");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestEscalationDurationLogs)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__6621099A");
+            });
+
+            modelBuilder.Entity<MichaelRequestEscalationMapper>(entity =>
+            {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Level).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.MichaelRequestEscalationMapper)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("FK__MichaelRe__Depar__46A85E41");
+
+                entity.HasOne(d => d.DepartmentRequest)
+                    .WithMany(p => p.MichaelRequestEscalationMapper)
+                    .HasForeignKey(d => d.DepartmentRequestId)
+                    .HasConstraintName("FK__MichaelRe__Depar__479C827A");
+
+                entity.HasOne(d => d.EscalationBase)
+                    .WithMany(p => p.MichaelRequestEscalationMapper)
+                    .HasForeignKey(d => d.EscalationBaseId)
+                    .HasConstraintName("FK__MichaelRe__Escal__4890A6B3");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestEscalationMapper)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__45B43A08");
+            });
+
+            modelBuilder.Entity<MichaelRequestEscalationUserBaseMapper>(entity =>
+            {
+                entity.Property(e => e.Active).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.RequestEscalationMapper)
+                    .WithMany(p => p.MichaelRequestEscalationUserBaseMapper)
+                    .HasForeignKey(d => d.RequestEscalationMapperId)
+                    .HasConstraintName("FK__MichaelRe__Reque__4D555BD0");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestEscalationUserBaseMapper)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__4C613797");
+            });
+
+            modelBuilder.Entity<MichaelRequestLog>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.RequestEscalationMapper)
+                    .WithMany(p => p.MichaelRequestLog)
+                    .HasForeignKey(d => d.RequestEscalationMapperId)
+                    .HasConstraintName("FK__MichaelRe__Reque__7FE0DB9D");
+
+                entity.HasOne(d => d.RequestEscalationUser)
+                    .WithMany(p => p.MichaelRequestLog)
+                    .HasForeignKey(d => d.RequestEscalationUserId)
+                    .HasConstraintName("FK__MichaelRe__Reque__00D4FFD6");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestLog)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__7C104AB9");
+
+                entity.HasOne(d => d.RequestLogType)
+                    .WithMany(p => p.MichaelRequestLog)
+                    .HasForeignKey(d => d.RequestLogTypeId)
+                    .HasConstraintName("FK__MichaelRe__Reque__7DF8932B");
+
+                entity.HasOne(d => d.RequestPriority)
+                    .WithMany(p => p.MichaelRequestLog)
+                    .HasForeignKey(d => d.RequestPriorityId)
+                    .HasConstraintName("FK__MichaelRe__Reque__01C9240F");
+
+                entity.HasOne(d => d.RequestStageBase)
+                    .WithMany(p => p.MichaelRequestLog)
+                    .HasForeignKey(d => d.RequestStageBaseId)
+                    .HasConstraintName("FK__MichaelRe__Reque__7EECB764");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestLog)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__7D046EF2");
+            });
+
+            modelBuilder.Entity<MichaelRequestLogTypes>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.LogType)
+                    .HasMaxLength(2500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<MichaelRequestMaster>(entity =>
@@ -167,76 +559,109 @@ namespace HCMApi.DAL
 
                 entity.Property(e => e.IsApprovalProcess).HasDefaultValueSql("((0))");
 
+                entity.Property(e => e.IsApprovalProcessComplted).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Payload).HasColumnType("text");
 
                 entity.Property(e => e.RequestId)
-                    .HasMaxLength(350)
+                    .IsRequired()
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__MichaelRe__Depar__7A5D0C71");
+                    .HasConstraintName("FK__MichaelRe__Depar__530E3526");
 
-                entity.HasOne(d => d.DepartmentRequestType)
+                entity.HasOne(d => d.DepartmentRequest)
                     .WithMany(p => p.MichaelRequestMaster)
-                    .HasForeignKey(d => d.DepartmentRequestTypeId)
-                    .HasConstraintName("FK__MichaelRe__Depar__7B5130AA");
+                    .HasForeignKey(d => d.DepartmentRequestId)
+                    .HasConstraintName("FK__MichaelRe__Depar__5402595F");
 
-                entity.HasOne(d => d.RequestStatusNavigation)
+                entity.HasOne(d => d.RequestEscalationMapper)
                     .WithMany(p => p.MichaelRequestMaster)
-                    .HasForeignKey(d => d.RequestStatus)
-                    .HasConstraintName("FK__MichaelRe__Reque__74A4331B");
+                    .HasForeignKey(d => d.RequestEscalationMapperId)
+                    .HasConstraintName("FK__MichaelRe__Reque__55EAA1D1");
+
+                entity.HasOne(d => d.RequestEscalationUser)
+                    .WithMany(p => p.MichaelRequestMaster)
+                    .HasForeignKey(d => d.RequestEscalationUserId)
+                    .HasConstraintName("FK__MichaelRe__Reque__56DEC60A");
+
+                entity.HasOne(d => d.RequestPriority)
+                    .WithMany(p => p.MichaelRequestMaster)
+                    .HasForeignKey(d => d.RequestPriorityId)
+                    .HasConstraintName("FK__MichaelRe__Reque__57D2EA43");
+
+                entity.HasOne(d => d.RequestStageBase)
+                    .WithMany(p => p.MichaelRequestMaster)
+                    .HasForeignKey(d => d.RequestStageBaseId)
+                    .HasConstraintName("FK__MichaelRe__Reque__54F67D98");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__7968E838");
+                    .HasConstraintName("FK__MichaelRe__UserI__521A10ED");
             });
 
-            modelBuilder.Entity<MichaelRequestPayload>(entity =>
+            modelBuilder.Entity<MichaelRequestPayloadMaster>(entity =>
             {
                 entity.Property(e => e.AddedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.Fieldtype)
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Fieldvalue).HasColumnType("text");
-
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(2000)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Payload).HasColumnType("text");
 
-                entity.Property(e => e.RequestId)
-                    .HasMaxLength(350)
+                entity.HasOne(d => d.PayloadDataTypeNavigation)
+                    .WithMany(p => p.MichaelRequestPayloadMaster)
+                    .HasForeignKey(d => d.PayloadDataType)
+                    .HasConstraintName("FK__MichaelRe__Paylo__5BA37B27");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestPayloadMaster)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__5AAF56EE");
+            });
+
+            modelBuilder.Entity<MichaelRequestPriority>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.RequestPriority)
+                    .HasMaxLength(2500)
                     .IsUnicode(false);
+            });
 
-                entity.HasOne(d => d.Department)
-                    .WithMany(p => p.MichaelRequestPayload)
-                    .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__MichaelRe__Depar__0015E5C7");
+            modelBuilder.Entity<MichaelRequestStageBase>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
 
-                entity.HasOne(d => d.DepartmentRequestType)
-                    .WithMany(p => p.MichaelRequestPayload)
-                    .HasForeignKey(d => d.DepartmentRequestTypeId)
-                    .HasConstraintName("FK__MichaelRe__Depar__010A0A00");
+                entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
-                entity.HasOne(d => d.RequestMaster)
-                    .WithMany(p => p.MichaelRequestPayload)
-                    .HasForeignKey(d => d.RequestMasterId)
-                    .HasConstraintName("FK__MichaelRe__Reque__7F21C18E");
+                entity.Property(e => e.StageType)
+                    .HasMaxLength(2500)
+                    .IsUnicode(false);
+            });
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.MichaelRequestPayload)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__7E2D9D55");
+            modelBuilder.Entity<MichaelRequestStageLogs>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestStageLogs)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__6AE5BEB7");
+
+                entity.HasOne(d => d.RequestStageBase)
+                    .WithMany(p => p.MichaelRequestStageLogs)
+                    .HasForeignKey(d => d.RequestStageBaseId)
+                    .HasConstraintName("FK__MichaelRe__Reque__6BD9E2F0");
             });
 
             modelBuilder.Entity<NeuCountry>(entity =>
@@ -1284,6 +1709,74 @@ namespace HCMApi.DAL
                     .WithMany(p => p.NueUserProfile)
                     .HasForeignKey(d => d.Practice)
                     .HasConstraintName("FK__NueUserPr__Pract__47A6A41B");
+            });
+
+            modelBuilder.Entity<Schema>(entity =>
+            {
+                entity.HasKey(e => e.Version)
+                    .HasName("PK_HangFire_Schema");
+
+                entity.ToTable("Schema", "HangFire");
+
+                entity.Property(e => e.Version).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<Server>(entity =>
+            {
+                entity.ToTable("Server", "HangFire");
+
+                entity.HasIndex(e => e.LastHeartbeat)
+                    .HasName("IX_HangFire_Server_LastHeartbeat");
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(100)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.LastHeartbeat).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Set>(entity =>
+            {
+                entity.HasKey(e => new { e.Key, e.Value })
+                    .HasName("PK_HangFire_Set");
+
+                entity.ToTable("Set", "HangFire");
+
+                entity.HasIndex(e => e.ExpireAt)
+                    .HasName("IX_HangFire_Set_ExpireAt")
+                    .HasFilter("([ExpireAt] IS NOT NULL)");
+
+                entity.HasIndex(e => new { e.Key, e.Score })
+                    .HasName("IX_HangFire_Set_Score");
+
+                entity.Property(e => e.Key).HasMaxLength(100);
+
+                entity.Property(e => e.Value).HasMaxLength(256);
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<State>(entity =>
+            {
+                entity.HasKey(e => new { e.JobId, e.Id })
+                    .HasName("PK_HangFire_State");
+
+                entity.ToTable("State", "HangFire");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Reason).HasMaxLength(100);
+
+                entity.HasOne(d => d.Job)
+                    .WithMany(p => p.State)
+                    .HasForeignKey(d => d.JobId)
+                    .HasConstraintName("FK_HangFire_State_Job");
             });
         }
     }

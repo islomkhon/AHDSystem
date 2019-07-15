@@ -8,11 +8,16 @@ namespace HCMApi.DAL
         public NueUserProfile()
         {
             MichaelDepartmentMaster = new HashSet<MichaelDepartmentMaster>();
-            MichaelDepartmentRequestTypeMaster = new HashSet<MichaelDepartmentRequestTypeMaster>();
-            MichaelRequestAceessLogOwner = new HashSet<MichaelRequestAceessLog>();
-            MichaelRequestAceessLogUser = new HashSet<MichaelRequestAceessLog>();
+            MichaelDepartmentRequestMaster = new HashSet<MichaelDepartmentRequestMaster>();
+            MichaelRequestAccessMapper = new HashSet<MichaelRequestAccessMapper>();
+            MichaelRequestApproverStatusMapper = new HashSet<MichaelRequestApproverStatusMapper>();
+            MichaelRequestAttachmentLog = new HashSet<MichaelRequestAttachmentLog>();
+            MichaelRequestEscalationAccessLogs = new HashSet<MichaelRequestEscalationAccessLogs>();
+            MichaelRequestEscalationDurationLogs = new HashSet<MichaelRequestEscalationDurationLogs>();
+            MichaelRequestEscalationMapper = new HashSet<MichaelRequestEscalationMapper>();
+            MichaelRequestEscalationUserBaseMapper = new HashSet<MichaelRequestEscalationUserBaseMapper>();
+            MichaelRequestLog = new HashSet<MichaelRequestLog>();
             MichaelRequestMaster = new HashSet<MichaelRequestMaster>();
-            MichaelRequestPayload = new HashSet<MichaelRequestPayload>();
             NeuEmployeeVerificationRequest = new HashSet<NeuEmployeeVerificationRequest>();
             NeuMessages = new HashSet<NeuMessages>();
             NeuUserPreferenceFirstApproverNavigation = new HashSet<NeuUserPreference>();
@@ -73,11 +78,16 @@ namespace HCMApi.DAL
         public virtual NeuJobLevel JobLevelNavigation { get; set; }
         public virtual NeuPractice PracticeNavigation { get; set; }
         public virtual ICollection<MichaelDepartmentMaster> MichaelDepartmentMaster { get; set; }
-        public virtual ICollection<MichaelDepartmentRequestTypeMaster> MichaelDepartmentRequestTypeMaster { get; set; }
-        public virtual ICollection<MichaelRequestAceessLog> MichaelRequestAceessLogOwner { get; set; }
-        public virtual ICollection<MichaelRequestAceessLog> MichaelRequestAceessLogUser { get; set; }
+        public virtual ICollection<MichaelDepartmentRequestMaster> MichaelDepartmentRequestMaster { get; set; }
+        public virtual ICollection<MichaelRequestAccessMapper> MichaelRequestAccessMapper { get; set; }
+        public virtual ICollection<MichaelRequestApproverStatusMapper> MichaelRequestApproverStatusMapper { get; set; }
+        public virtual ICollection<MichaelRequestAttachmentLog> MichaelRequestAttachmentLog { get; set; }
+        public virtual ICollection<MichaelRequestEscalationAccessLogs> MichaelRequestEscalationAccessLogs { get; set; }
+        public virtual ICollection<MichaelRequestEscalationDurationLogs> MichaelRequestEscalationDurationLogs { get; set; }
+        public virtual ICollection<MichaelRequestEscalationMapper> MichaelRequestEscalationMapper { get; set; }
+        public virtual ICollection<MichaelRequestEscalationUserBaseMapper> MichaelRequestEscalationUserBaseMapper { get; set; }
+        public virtual ICollection<MichaelRequestLog> MichaelRequestLog { get; set; }
         public virtual ICollection<MichaelRequestMaster> MichaelRequestMaster { get; set; }
-        public virtual ICollection<MichaelRequestPayload> MichaelRequestPayload { get; set; }
         public virtual ICollection<NeuEmployeeVerificationRequest> NeuEmployeeVerificationRequest { get; set; }
         public virtual ICollection<NeuMessages> NeuMessages { get; set; }
         public virtual ICollection<NeuUserPreference> NeuUserPreferenceFirstApproverNavigation { get; set; }

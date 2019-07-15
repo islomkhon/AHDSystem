@@ -19,6 +19,7 @@ using System.IO;
 using HCMApi.DB;
 using Newtonsoft.Json;
 using FormatWith;
+using HCMApi.Shedules;
 
 namespace HCMApi.Controllers
 {
@@ -426,7 +427,30 @@ namespace HCMApi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("TestSync")]
+        public JsonResult TestSync()
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
 
+                    SyncUsersAd.SyncUsers(this.AzureAdSettings);
+
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
 
 
 
@@ -507,8 +531,7 @@ namespace HCMApi.Controllers
                 return new JsonResult(new JsonResponse("Failed", "An error occerd"));
             }
         }
-
-
+        
         [HttpPost]
         [Route("CreateNewRequest")]
         public JsonResult CreateNewRequest([FromBody] DepartmentRequestSaveTemplate departmentRequestSaveTemplate)
