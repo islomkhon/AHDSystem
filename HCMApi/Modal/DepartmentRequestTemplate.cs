@@ -16,7 +16,7 @@ namespace HCMApi.Modal
     {
         public int RequestId { get; set; }
         public int DepartmentId { get; set; }
-        public DAL.MichaelDepartmentRequestTypeMaster michaelDepartmentRequestTypeMaster { get; set; }
+        public DAL.MichaelDepartmentRequestMaster michaelDepartmentRequestMaster { get; set; }
         public List<object> AvilableField { get; set; }
     }
 }
