@@ -502,6 +502,9 @@ namespace HCMApi.DB
                 var result = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == michaelDepartmentRequest.Id);
                 if (result != null)
                 {
+
+                    var baseStage = nueRequestContext.MichaelRequestStageBase.Where(x => x.StageType == "Feedback Given").SingleOrDefault();
+
                     var dateUpdated = DateTime.UtcNow;
 
                     result.RequestTypeName = michaelDepartmentRequest.RequestTypeName;
@@ -514,99 +517,129 @@ namespace HCMApi.DB
                     {
                         foreach (var item in michaelDepartmentRequest.EscalationMapper)
                         {
-                            var slaBaseObject = nueRequestContext.MichaelEscalationBase.Where(x => x.EscalationLevel == "EL"+ item.Level).First();
+                            var slaBaseObject = nueRequestContext.MichaelEscalationBase.Where(x => x.EscalationLevel == "EL" + item.Level).First();
                             var requestL1SLa = nueRequestContext.MichaelRequestEscalationMapper.Where(x => x.DepartmentId == result.DepartmentId && x.DepartmentRequestId == result.Id && x.EscalationBaseId == slaBaseObject.Id).SingleOrDefault();
                             requestL1SLa.MaxSla = item.MaxSla;
+                            nueRequestContext.SaveChanges();
+
+                            var salSloatUserList = item.Assignees;
+
+                            //find new people for sla slot
                             var asigneeList = nueRequestContext.MichaelRequestEscalationUserBaseMapper.Where(x => x.RequestEscalationMapperId == requestL1SLa.Id);
-                            List<int> addList = new List<int>();
-                            List<int> removeList = new List<int>();
-                            foreach (var itemAssignee in item.Assignees)
+                            foreach (var itemAssignee in salSloatUserList)
                             {
-                                if(asigneeList.Where(x => x.UserId == int.Parse(itemAssignee.value)).Count() <= 0)
-                                {
-                                    addList.Add(int.Parse(itemAssignee.value));
-                                }
-                            }
-
-                            foreach (var itemAssignee in asigneeList)
-                            {
-                                if(item.Assignees.Where(x=> int.Parse(x.value) == itemAssignee.UserId).Count() <= 0)
-                                {
-                                    removeList.Add((int)itemAssignee.UserId);
-                                }
-                            }
-
-                            if(addList.Count > 0)
-                            {
-                                foreach (var itemAssignee in addList)
+                                var matched = asigneeList.Where(x => x.UserId == int.Parse(itemAssignee.value));
+                                if(matched == null || matched.FirstOrDefault() == null)
                                 {
                                     MichaelRequestEscalationUserBaseMapper michaelRequestEscalationUserBaseMapper = new MichaelRequestEscalationUserBaseMapper();
                                     michaelRequestEscalationUserBaseMapper.RequestEscalationMapperId = requestL1SLa.Id;
-                                    michaelRequestEscalationUserBaseMapper.UserId = itemAssignee;
+                                    michaelRequestEscalationUserBaseMapper.UserId = int.Parse(itemAssignee.value);
                                     michaelRequestEscalationUserBaseMapper.Active = 1;
                                     michaelRequestEscalationUserBaseMapper.AddedOn = dateUpdated;
                                     michaelRequestEscalationUserBaseMapper.ModifiedOn = dateUpdated;
                                     nueRequestContext.MichaelRequestEscalationUserBaseMapper.Add(michaelRequestEscalationUserBaseMapper);
+                                    nueRequestContext.SaveChanges();
                                 }
-                                nueRequestContext.SaveChanges();
-                            }
-
-                            if(removeList.Count > 0)
-                            {
-                                foreach (var itemAssignee in removeList)
+                                else
                                 {
-                                   var resUs = nueRequestContext.MichaelRequestEscalationUserBaseMapper.SingleOrDefault(x => x.UserId == itemAssignee);
-                                   resUs.Active = 0;
-                                   nueRequestContext.SaveChanges();
-
-                                    var activeUsers = nueRequestContext.MichaelRequestEscalationUserBaseMapper.Where(x => x.RequestEscalationMapperId == requestL1SLa.Id && x.UserId != itemAssignee && x.Active == 1);
-                                    var slaUser = activeUsers.Random();
-                                    var michaelRequestEscalationAccessLog = nueRequestContext.MichaelRequestEscalationAccessLogs.SingleOrDefault(x => x.RequestEscalationMapperId  == requestL1SLa.Id && x.RequestEscalationUserId == itemAssignee && x.Active == 1);
-                                    if(michaelRequestEscalationAccessLog != null)
+                                    if(matched.FirstOrDefault().Active == 0)
                                     {
-                                        michaelRequestEscalationAccessLog.Active = 0;
-                                        michaelRequestEscalationAccessLog.AddedOn = dateUpdated;
-                                        nueRequestContext.SaveChanges();
-
-                                        var michaelRequestEscalationDurationLog = nueRequestContext.MichaelRequestEscalationDurationLogs.SingleOrDefault(x => x.RequestId == michaelRequestEscalationAccessLog.RequestId && x.RequestEscalationMapperId == requestL1SLa.Id && x.RequestEscalationUserId == itemAssignee);
-                                        var duration = michaelRequestEscalationDurationLog.Duration;
-                                        TimeSpan diff = dateUpdated - michaelRequestEscalationDurationLog.AddedOn;
-                                        michaelRequestEscalationDurationLog.Duration = Convert.ToInt32(diff.TotalHours);
-                                        michaelRequestEscalationDurationLog.AddedOn = dateUpdated;
-
-
-                                        MichaelRequestEscalationAccessLogs michaelRequestEscalationAccessLogs = new MichaelRequestEscalationAccessLogs();
-                                        michaelRequestEscalationAccessLogs.RequestId = michaelRequestEscalationAccessLog.RequestId;
-                                        michaelRequestEscalationAccessLogs.UserId = michaelRequestEscalationAccessLog.UserId;
-                                        michaelRequestEscalationAccessLogs.Active = 1;
-                                        michaelRequestEscalationAccessLogs.RequestEscalationMapperId = requestL1SLa.Id;
-                                        michaelRequestEscalationAccessLogs.RequestEscalationUserId = slaUser.Id;
-                                        michaelRequestEscalationAccessLogs.AddedOn = dateUpdated;
-                                        nueRequestContext.MichaelRequestEscalationAccessLogs.Add(michaelRequestEscalationAccessLogs);
-
-
-                                        MichaelRequestEscalationDurationLogs michaelRequestEscalationDurationLogs = new MichaelRequestEscalationDurationLogs();
-                                        michaelRequestEscalationDurationLogs.RequestId = michaelRequestEscalationAccessLog.RequestId;
-                                        michaelRequestEscalationDurationLogs.Duration = -1;
-                                        michaelRequestEscalationDurationLogs.UserId = slaUser.Id;
-                                        michaelRequestEscalationDurationLogs.RequestEscalationMapperId = requestL1SLa.Id;
-                                        michaelRequestEscalationDurationLogs.RequestEscalationUserId = slaUser.Id;
-                                        michaelRequestEscalationDurationLogs.AddedOn = dateUpdated;
-                                        nueRequestContext.MichaelRequestEscalationDurationLogs.Add(michaelRequestEscalationDurationLogs);
-
-                                        var resReq = nueRequestContext.MichaelRequestMaster.SingleOrDefault(x => x.Id == michaelRequestEscalationAccessLog.RequestId && x.RequestEscalationMapperId == requestL1SLa.Id);
-                                        if (resReq != null)
-                                        {
-                                            resReq.RequestEscalationUserId = slaUser.Id;
-                                        }
+                                        var asigneeReactivate = nueRequestContext.MichaelRequestEscalationUserBaseMapper.SingleOrDefault(x => x.RequestEscalationMapperId == requestL1SLa.Id && x.UserId == int.Parse(itemAssignee.value));
+                                        asigneeReactivate.Active = 1;
                                         nueRequestContext.SaveChanges();
                                     }
                                 }
-
                             }
 
+                            /*List<int> deactivateUserIds = new List<int>();
+                            var asigneePreRmList = nueRequestContext.MichaelRequestEscalationUserBaseMapper.Where(x => x.RequestEscalationMapperId == requestL1SLa.Id && x.Active == 1);
+                            foreach (var itemAssignee in asigneePreRmList)
+                            {
+                                if (salSloatUserList.Where(x => int.Parse(x.value) == itemAssignee.UserId).Count() <= 0)
+                                {
+                                    deactivateUserIds.Add((int)itemAssignee.UserId);
+                                }
+                            }
 
-                            nueRequestContext.SaveChanges();
+                            if(deactivateUserIds.Count > 0)
+                            {
+                                foreach (var revabaleUserId in deactivateUserIds)
+                                {
+                                    var asigneeReactivate = nueRequestContext.MichaelRequestEscalationUserBaseMapper.SingleOrDefault(x => x.RequestEscalationMapperId == requestL1SLa.Id && x.UserId == revabaleUserId);
+                                    asigneeReactivate.Active = 0;
+                                    nueRequestContext.SaveChanges();
+
+                                    var slaAsigneesQ = nueRequestContext.MichaelRequestEscalationAccessLogs.Where(x => x.RequestEscalationMapperId == requestL1SLa.Id && x.UserId == revabaleUserId);
+                                    if(slaAsigneesQ != null && slaAsigneesQ.Count() > 0)
+                                    {
+                                        var slaAsignees = slaAsigneesQ.ToList();
+                                        for (int i = 0; i < slaAsignees.Count(); i++)
+                                        {
+                                            var slaAsignee = slaAsignees[i];
+                                            slaAsignee.Active = 0;
+                                            nueRequestContext.SaveChanges();
+
+                                            var requestIdTemp = slaAsignee.RequestId;
+
+                                            try
+                                            {
+                                                var slaAsigneeDurationLog = nueRequestContext.MichaelRequestEscalationDurationLogs.FirstOrDefault(x => x.RequestId == requestIdTemp && x.RequestEscalationMapperId == requestL1SLa.Id && x.UserId == revabaleUserId && x.Duration == -1);
+                                                if (slaAsigneeDurationLog != null)
+                                                {
+                                                    var duration = slaAsigneeDurationLog.Duration;
+                                                    TimeSpan diff = dateUpdated - slaAsigneeDurationLog.AddedOn;
+                                                    slaAsigneeDurationLog.Duration = Convert.ToInt32(diff.TotalHours);
+                                                    slaAsigneeDurationLog.AddedOn = dateUpdated;
+                                                    nueRequestContext.SaveChanges();
+                                                }
+                                            }
+                                            catch (Exception e1)
+                                            {
+                                                
+                                            }
+                                            
+                                            
+
+                                            //find new user id for replcement
+                                            var activeUsers = nueRequestContext.MichaelRequestEscalationUserBaseMapper.Where(x => x.RequestEscalationMapperId == requestL1SLa.Id && x.Active == 1);
+                                            var replacementUserid = activeUsers.Random();
+
+                                            //update to new user
+                                            MichaelRequestEscalationAccessLogs michaelRequestEscalationAccessLogs = new MichaelRequestEscalationAccessLogs();
+                                            michaelRequestEscalationAccessLogs.RequestId = requestIdTemp;
+                                            michaelRequestEscalationAccessLogs.UserId = slaAsignee.UserId;
+                                            michaelRequestEscalationAccessLogs.Active = 1;
+                                            michaelRequestEscalationAccessLogs.RequestEscalationMapperId = requestL1SLa.Id;
+                                            michaelRequestEscalationAccessLogs.RequestEscalationUserId = replacementUserid.Id;
+                                            michaelRequestEscalationAccessLogs.AddedOn = dateUpdated;
+                                            nueRequestContext.MichaelRequestEscalationAccessLogs.Add(michaelRequestEscalationAccessLogs);
+
+
+                                            MichaelRequestEscalationDurationLogs michaelRequestEscalationDurationLogs = new MichaelRequestEscalationDurationLogs();
+                                            michaelRequestEscalationDurationLogs.RequestId = requestIdTemp;
+                                            michaelRequestEscalationDurationLogs.Duration = -1;
+                                            michaelRequestEscalationDurationLogs.UserId = slaAsignee.UserId;
+                                            michaelRequestEscalationDurationLogs.RequestEscalationMapperId = requestL1SLa.Id;
+                                            michaelRequestEscalationDurationLogs.RequestEscalationUserId = replacementUserid.Id;
+                                            michaelRequestEscalationDurationLogs.AddedOn = dateUpdated;
+                                            nueRequestContext.MichaelRequestEscalationDurationLogs.Add(michaelRequestEscalationDurationLogs);
+
+                                            nueRequestContext.SaveChanges();
+
+                                            //update request master if needed
+                                            var requestMaster = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == requestIdTemp && x.RequestEscalationMapperId == requestL1SLa.Id && x.RequestStageBaseId != baseStage.Id);
+                                            if (requestMaster != null)
+                                            {
+                                                requestMaster.RequestEscalationUserId = replacementUserid.Id;
+                                                nueRequestContext.SaveChanges();
+                                            }
+
+
+                                        }
+                                    }
+                                    
+                                }
+                            }*/
                         }
 
                         jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
@@ -620,72 +653,6 @@ namespace HCMApi.DB
                 {
                     jsonResponse = new JsonResponse("Failed", "An error occerd.");
                 }
-                /*var result = nueRequestContext.MichaelDepartmentMaster.SingleOrDefault(b => b.Id == department.Id);
-                if (result != null)
-                {
-                    var dateCreated = DateTime.UtcNow;
-                    result.Departmentname = department.Departmentname;
-                    result.Description = department.Description;
-                    result.Active = department.Active;
-                    result.ModifiedOn = dateCreated;
-                    int returnValue = nueRequestContext.SaveChanges();
-                    if (returnValue > 0)
-                    {
-                        jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
-                    }
-                    else
-                    {
-                        jsonResponse = new JsonResponse("Failed", "An error occerd.");
-                    }
-                }*/
-
-                /*var dateCreated = DateTime.UtcNow;
-                MichaelDepartmentRequestMaster michaelDepartmentRequestMaster = new MichaelDepartmentRequestMaster();
-                michaelDepartmentRequestMaster.DepartmentId = int.Parse(michaelDepartmentRequest.DepartmentId);
-                michaelDepartmentRequestMaster.RequestTypeName = michaelDepartmentRequest.RequestTypeName;
-                michaelDepartmentRequestMaster.RequestTypeDescription = michaelDepartmentRequest.RequestTypeDescription;
-                michaelDepartmentRequestMaster.RequestPriorityId = michaelDepartmentRequest.RequestPriorityId;
-                michaelDepartmentRequestMaster.UserId = michaelDepartmentRequest.UserId;
-                michaelDepartmentRequestMaster.Active = 1;
-                michaelDepartmentRequestMaster.AddedOn = dateCreated;
-                michaelDepartmentRequestMaster.ModifiedOn = dateCreated;
-                nueRequestContext.MichaelDepartmentRequestMaster.Add(michaelDepartmentRequestMaster);
-                int returnValue = nueRequestContext.SaveChanges();
-                if (returnValue > 0)
-                {
-                    int departmentRequestId = michaelDepartmentRequestMaster.Id;
-                    foreach (var item in michaelDepartmentRequest.EscalationMapper)
-                    {
-                        MichaelRequestEscalationMapper michaelRequestEscalationMapper = new MichaelRequestEscalationMapper();
-                        michaelRequestEscalationMapper.Level = item.Level;
-                        michaelRequestEscalationMapper.Active = item.Active;
-                        michaelRequestEscalationMapper.MaxSla = item.MaxSla;
-                        michaelRequestEscalationMapper.DepartmentId = michaelDepartmentRequestMaster.DepartmentId;
-                        michaelRequestEscalationMapper.DepartmentRequestId = departmentRequestId;
-                        michaelRequestEscalationMapper.EscalationBaseId = nueRequestContext.MichaelEscalationBase.Where(x => x.EscalationLevel == "EL" + item.Level).First().Id;
-                        michaelRequestEscalationMapper.AddedOn = dateCreated;
-                        michaelRequestEscalationMapper.ModifiedOn = dateCreated;
-                        nueRequestContext.MichaelRequestEscalationMapper.Add(michaelRequestEscalationMapper);
-                        nueRequestContext.SaveChanges();
-                        int requestEscalationMapperId = michaelRequestEscalationMapper.Id;
-                        foreach (var itemAssignee in item.Assignees)
-                        {
-                            MichaelRequestEscalationUserBaseMapper michaelRequestEscalationUserBaseMapper = new MichaelRequestEscalationUserBaseMapper();
-                            michaelRequestEscalationUserBaseMapper.RequestEscalationMapperId = requestEscalationMapperId;
-                            michaelRequestEscalationUserBaseMapper.UserId = int.Parse(itemAssignee.value);
-                            michaelRequestEscalationUserBaseMapper.Active = 1;
-                            michaelRequestEscalationUserBaseMapper.AddedOn = dateCreated;
-                            michaelRequestEscalationUserBaseMapper.ModifiedOn = dateCreated;
-                            nueRequestContext.MichaelRequestEscalationUserBaseMapper.Add(michaelRequestEscalationUserBaseMapper);
-                        }
-                        nueRequestContext.SaveChanges();
-                    }
-                    jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
-                }
-                else
-                {
-                    jsonResponse = new JsonResponse("Failed", "An error occerd.");
-                }*/
             }
             else
             {
@@ -694,7 +661,7 @@ namespace HCMApi.DB
             }
             return jsonResponse;
         }
-
+        
         public JsonResponse addNewDepartmentRequestType(MichaelDepartmentRequest michaelDepartmentRequest)
         {
             JsonResponse jsonResponse = new JsonResponse();

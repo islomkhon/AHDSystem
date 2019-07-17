@@ -1,0 +1,10 @@
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\bin\Debug\WebScreen.exe.config
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\bin\Debug\WebScreen.exe
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\bin\Debug\WebScreen.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\bin\Debug\Freezer.dll
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\bin\Debug\Freezer.xml
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\obj\Debug\WebScreen.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\obj\Debug\WebScreen.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\obj\Debug\WebScreen.csproj.CopyComplete
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\obj\Debug\WebScreen.exe
+C:\Users\Monin.Jose\source\repos\NAHD\WebScreen\obj\Debug\WebScreen.pdb

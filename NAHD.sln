@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActiveDirUsers", "ActiveDir
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountManagementGUI", "D:\sampleProject\AccountManagement\AccountManagementGUI\AccountManagementGUI.csproj", "{AA1CCA1C-BCA8-4BCE-8EA9-14F62A4D0CF9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScreen", "WebScreen\WebScreen.csproj", "{C04CD94C-AB34-49B8-A46F-6F146257CA7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{AA1CCA1C-BCA8-4BCE-8EA9-14F62A4D0CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA1CCA1C-BCA8-4BCE-8EA9-14F62A4D0CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA1CCA1C-BCA8-4BCE-8EA9-14F62A4D0CF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C04CD94C-AB34-49B8-A46F-6F146257CA7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C04CD94C-AB34-49B8-A46F-6F146257CA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C04CD94C-AB34-49B8-A46F-6F146257CA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C04CD94C-AB34-49B8-A46F-6F146257CA7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
