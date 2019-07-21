@@ -34,6 +34,7 @@ namespace HCMApi.DAL
         public virtual DbSet<MichaelRequestEscalationDurationLogs> MichaelRequestEscalationDurationLogs { get; set; }
         public virtual DbSet<MichaelRequestEscalationMapper> MichaelRequestEscalationMapper { get; set; }
         public virtual DbSet<MichaelRequestEscalationUserBaseMapper> MichaelRequestEscalationUserBaseMapper { get; set; }
+        public virtual DbSet<MichaelRequestFeedbackMaster> MichaelRequestFeedbackMaster { get; set; }
         public virtual DbSet<MichaelRequestLog> MichaelRequestLog { get; set; }
         public virtual DbSet<MichaelRequestLogTypes> MichaelRequestLogTypes { get; set; }
         public virtual DbSet<MichaelRequestMaster> MichaelRequestMaster { get; set; }
@@ -259,17 +260,17 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.MichaelDepartmentRequestMaster)
                     .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__MichaelDe__Depar__3FFB60B2");
+                    .HasConstraintName("FK__MichaelDe__Depar__0A5E6A10");
 
                 entity.HasOne(d => d.RequestPriority)
                     .WithMany(p => p.MichaelDepartmentRequestMaster)
                     .HasForeignKey(d => d.RequestPriorityId)
-                    .HasConstraintName("FK__MichaelDe__Reque__40EF84EB");
+                    .HasConstraintName("FK__MichaelDe__Reque__0B528E49");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelDepartmentRequestMaster)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelDe__UserI__3F073C79");
+                    .HasConstraintName("FK__MichaelDe__UserI__096A45D7");
             });
 
             modelBuilder.Entity<MichaelEscalationBase>(entity =>
@@ -305,17 +306,17 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.RequestAccessTypes)
                     .WithMany(p => p.MichaelRequestAccessMapper)
                     .HasForeignKey(d => d.RequestAccessTypesId)
-                    .HasConstraintName("FK__MichaelRe__Reque__7192BC46");
+                    .HasConstraintName("FK__MichaelRe__Reque__3BF5C5A4");
 
                 entity.HasOne(d => d.Request)
                     .WithMany(p => p.MichaelRequestAccessMapper)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__6FAA73D4");
+                    .HasConstraintName("FK__MichaelRe__Reque__3A0D7D32");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestAccessMapper)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__709E980D");
+                    .HasConstraintName("FK__MichaelRe__UserI__3B01A16B");
             });
 
             modelBuilder.Entity<MichaelRequestAccessTypes>(entity =>
@@ -340,27 +341,27 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.ApproverStatus)
                     .WithMany(p => p.MichaelRequestApproverStatusMapper)
                     .HasForeignKey(d => d.ApproverStatusId)
-                    .HasConstraintName("FK__MichaelRe__Appro__7933DE0E");
+                    .HasConstraintName("FK__MichaelRe__Appro__4396E76C");
 
                 entity.HasOne(d => d.RequestAccess)
                     .WithMany(p => p.MichaelRequestApproverStatusMapper)
                     .HasForeignKey(d => d.RequestAccessId)
-                    .HasConstraintName("FK__MichaelRe__Reque__774B959C");
+                    .HasConstraintName("FK__MichaelRe__Reque__41AE9EFA");
 
                 entity.HasOne(d => d.RequestAccessTypes)
                     .WithMany(p => p.MichaelRequestApproverStatusMapper)
                     .HasForeignKey(d => d.RequestAccessTypesId)
-                    .HasConstraintName("FK__MichaelRe__Reque__783FB9D5");
+                    .HasConstraintName("FK__MichaelRe__Reque__42A2C333");
 
                 entity.HasOne(d => d.Request)
                     .WithMany(p => p.MichaelRequestApproverStatusMapper)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__75634D2A");
+                    .HasConstraintName("FK__MichaelRe__Reque__3FC65688");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestApproverStatusMapper)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__76577163");
+                    .HasConstraintName("FK__MichaelRe__UserI__40BA7AC1");
             });
 
             modelBuilder.Entity<MichaelRequestAttachmentLog>(entity =>
@@ -382,12 +383,12 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.Request)
                     .WithMany(p => p.MichaelRequestAttachmentLog)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__04A590BA");
+                    .HasConstraintName("FK__MichaelRe__Reque__4F089A18");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestAttachmentLog)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__0599B4F3");
+                    .HasConstraintName("FK__MichaelRe__UserI__4FFCBE51");
             });
 
             modelBuilder.Entity<MichaelRequestEscalationAccessLogs>(entity =>
@@ -401,22 +402,22 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.RequestEscalationMapper)
                     .WithMany(p => p.MichaelRequestEscalationAccessLogs)
                     .HasForeignKey(d => d.RequestEscalationMapperId)
-                    .HasConstraintName("FK__MichaelRe__Reque__615C547D");
+                    .HasConstraintName("FK__MichaelRe__Reque__2BBF5DDB");
 
                 entity.HasOne(d => d.RequestEscalationUser)
                     .WithMany(p => p.MichaelRequestEscalationAccessLogs)
                     .HasForeignKey(d => d.RequestEscalationUserId)
-                    .HasConstraintName("FK__MichaelRe__Reque__625078B6");
+                    .HasConstraintName("FK__MichaelRe__Reque__2CB38214");
 
                 entity.HasOne(d => d.Request)
                     .WithMany(p => p.MichaelRequestEscalationAccessLogs)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__5F740C0B");
+                    .HasConstraintName("FK__MichaelRe__Reque__29D71569");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestEscalationAccessLogs)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__60683044");
+                    .HasConstraintName("FK__MichaelRe__UserI__2ACB39A2");
             });
 
             modelBuilder.Entity<MichaelRequestEscalationDurationLogs>(entity =>
@@ -428,22 +429,22 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.RequestEscalationMapper)
                     .WithMany(p => p.MichaelRequestEscalationDurationLogs)
                     .HasForeignKey(d => d.RequestEscalationMapperId)
-                    .HasConstraintName("FK__MichaelRe__Reque__67152DD3");
+                    .HasConstraintName("FK__MichaelRe__Reque__31783731");
 
                 entity.HasOne(d => d.RequestEscalationUser)
                     .WithMany(p => p.MichaelRequestEscalationDurationLogs)
                     .HasForeignKey(d => d.RequestEscalationUserId)
-                    .HasConstraintName("FK__MichaelRe__Reque__6809520C");
+                    .HasConstraintName("FK__MichaelRe__Reque__326C5B6A");
 
                 entity.HasOne(d => d.Request)
                     .WithMany(p => p.MichaelRequestEscalationDurationLogs)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__652CE561");
+                    .HasConstraintName("FK__MichaelRe__Reque__2F8FEEBF");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestEscalationDurationLogs)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__6621099A");
+                    .HasConstraintName("FK__MichaelRe__UserI__308412F8");
             });
 
             modelBuilder.Entity<MichaelRequestEscalationMapper>(entity =>
@@ -461,22 +462,22 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.MichaelRequestEscalationMapper)
                     .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__MichaelRe__Depar__46A85E41");
+                    .HasConstraintName("FK__MichaelRe__Depar__110B679F");
 
                 entity.HasOne(d => d.DepartmentRequest)
                     .WithMany(p => p.MichaelRequestEscalationMapper)
                     .HasForeignKey(d => d.DepartmentRequestId)
-                    .HasConstraintName("FK__MichaelRe__Depar__479C827A");
+                    .HasConstraintName("FK__MichaelRe__Depar__11FF8BD8");
 
                 entity.HasOne(d => d.EscalationBase)
                     .WithMany(p => p.MichaelRequestEscalationMapper)
                     .HasForeignKey(d => d.EscalationBaseId)
-                    .HasConstraintName("FK__MichaelRe__Escal__4890A6B3");
+                    .HasConstraintName("FK__MichaelRe__Escal__12F3B011");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestEscalationMapper)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__45B43A08");
+                    .HasConstraintName("FK__MichaelRe__UserI__10174366");
             });
 
             modelBuilder.Entity<MichaelRequestEscalationUserBaseMapper>(entity =>
@@ -492,12 +493,31 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.RequestEscalationMapper)
                     .WithMany(p => p.MichaelRequestEscalationUserBaseMapper)
                     .HasForeignKey(d => d.RequestEscalationMapperId)
-                    .HasConstraintName("FK__MichaelRe__Reque__4D555BD0");
+                    .HasConstraintName("FK__MichaelRe__Reque__17B8652E");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestEscalationUserBaseMapper)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__4C613797");
+                    .HasConstraintName("FK__MichaelRe__UserI__16C440F5");
+            });
+
+            modelBuilder.Entity<MichaelRequestFeedbackMaster>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.FeedbackComment).HasColumnType("text");
+
+                entity.Property(e => e.Ratting).HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.MichaelRequestFeedbackMaster)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK__MichaelRe__Reque__53CD4F35");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelRequestFeedbackMaster)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelRe__UserI__54C1736E");
             });
 
             modelBuilder.Entity<MichaelRequestLog>(entity =>
@@ -509,37 +529,37 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.RequestEscalationMapper)
                     .WithMany(p => p.MichaelRequestLog)
                     .HasForeignKey(d => d.RequestEscalationMapperId)
-                    .HasConstraintName("FK__MichaelRe__Reque__7FE0DB9D");
+                    .HasConstraintName("FK__MichaelRe__Reque__4A43E4FB");
 
                 entity.HasOne(d => d.RequestEscalationUser)
                     .WithMany(p => p.MichaelRequestLog)
                     .HasForeignKey(d => d.RequestEscalationUserId)
-                    .HasConstraintName("FK__MichaelRe__Reque__00D4FFD6");
+                    .HasConstraintName("FK__MichaelRe__Reque__4B380934");
 
                 entity.HasOne(d => d.Request)
                     .WithMany(p => p.MichaelRequestLog)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__7C104AB9");
+                    .HasConstraintName("FK__MichaelRe__Reque__46735417");
 
                 entity.HasOne(d => d.RequestLogType)
                     .WithMany(p => p.MichaelRequestLog)
                     .HasForeignKey(d => d.RequestLogTypeId)
-                    .HasConstraintName("FK__MichaelRe__Reque__7DF8932B");
+                    .HasConstraintName("FK__MichaelRe__Reque__485B9C89");
 
                 entity.HasOne(d => d.RequestPriority)
                     .WithMany(p => p.MichaelRequestLog)
                     .HasForeignKey(d => d.RequestPriorityId)
-                    .HasConstraintName("FK__MichaelRe__Reque__01C9240F");
+                    .HasConstraintName("FK__MichaelRe__Reque__4C2C2D6D");
 
                 entity.HasOne(d => d.RequestStageBase)
                     .WithMany(p => p.MichaelRequestLog)
                     .HasForeignKey(d => d.RequestStageBaseId)
-                    .HasConstraintName("FK__MichaelRe__Reque__7EECB764");
+                    .HasConstraintName("FK__MichaelRe__Reque__494FC0C2");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestLog)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__7D046EF2");
+                    .HasConstraintName("FK__MichaelRe__UserI__47677850");
             });
 
             modelBuilder.Entity<MichaelRequestLogTypes>(entity =>
@@ -573,42 +593,44 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.Department)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.DepartmentId)
-                    .HasConstraintName("FK__MichaelRe__Depar__530E3526");
+                    .HasConstraintName("FK__MichaelRe__Depar__1D713E84");
 
                 entity.HasOne(d => d.DepartmentRequest)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.DepartmentRequestId)
-                    .HasConstraintName("FK__MichaelRe__Depar__5402595F");
+                    .HasConstraintName("FK__MichaelRe__Depar__1E6562BD");
 
                 entity.HasOne(d => d.RequestEscalationMapper)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.RequestEscalationMapperId)
-                    .HasConstraintName("FK__MichaelRe__Reque__55EAA1D1");
+                    .HasConstraintName("FK__MichaelRe__Reque__204DAB2F");
 
                 entity.HasOne(d => d.RequestEscalationUser)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.RequestEscalationUserId)
-                    .HasConstraintName("FK__MichaelRe__Reque__56DEC60A");
+                    .HasConstraintName("FK__MichaelRe__Reque__2141CF68");
 
                 entity.HasOne(d => d.RequestPriority)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.RequestPriorityId)
-                    .HasConstraintName("FK__MichaelRe__Reque__57D2EA43");
+                    .HasConstraintName("FK__MichaelRe__Reque__2235F3A1");
 
                 entity.HasOne(d => d.RequestStageBase)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.RequestStageBaseId)
-                    .HasConstraintName("FK__MichaelRe__Reque__54F67D98");
+                    .HasConstraintName("FK__MichaelRe__Reque__1F5986F6");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.MichaelRequestMaster)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__MichaelRe__UserI__521A10ED");
+                    .HasConstraintName("FK__MichaelRe__UserI__1C7D1A4B");
             });
 
             modelBuilder.Entity<MichaelRequestPayloadMaster>(entity =>
             {
                 entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.FieldName).HasColumnType("text");
 
                 entity.Property(e => e.ModifiedOn).HasColumnType("datetime");
 
@@ -617,12 +639,12 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.PayloadDataTypeNavigation)
                     .WithMany(p => p.MichaelRequestPayloadMaster)
                     .HasForeignKey(d => d.PayloadDataType)
-                    .HasConstraintName("FK__MichaelRe__Paylo__5BA37B27");
+                    .HasConstraintName("FK__MichaelRe__Paylo__26068485");
 
                 entity.HasOne(d => d.Request)
                     .WithMany(p => p.MichaelRequestPayloadMaster)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__5AAF56EE");
+                    .HasConstraintName("FK__MichaelRe__Reque__2512604C");
             });
 
             modelBuilder.Entity<MichaelRequestPriority>(entity =>
@@ -656,12 +678,12 @@ namespace HCMApi.DAL
                 entity.HasOne(d => d.Request)
                     .WithMany(p => p.MichaelRequestStageLogs)
                     .HasForeignKey(d => d.RequestId)
-                    .HasConstraintName("FK__MichaelRe__Reque__6AE5BEB7");
+                    .HasConstraintName("FK__MichaelRe__Reque__3548C815");
 
                 entity.HasOne(d => d.RequestStageBase)
                     .WithMany(p => p.MichaelRequestStageLogs)
                     .HasForeignKey(d => d.RequestStageBaseId)
-                    .HasConstraintName("FK__MichaelRe__Reque__6BD9E2F0");
+                    .HasConstraintName("FK__MichaelRe__Reque__363CEC4E");
             });
 
             modelBuilder.Entity<NeuCountry>(entity =>

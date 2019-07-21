@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "8b8c842ef436be8f613d85933c9ce563b32037af"
+    "signature": "d65804cb357b44d32c03835320f1467da10bc6c7"
   },
   "compilationOptions": {
     "defines": [
@@ -27,6 +27,7 @@
           "EntityFramework": "6.2.0",
           "FormatWith": "2.2.1",
           "Hangfire": "1.7.4",
+          "Microsoft.AspNet.SignalR": "2.4.1",
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.Authentication.AzureAD.UI": "2.2.0",
           "Microsoft.AspNetCore.Razor.Design": "2.2.0",
@@ -41,7 +42,8 @@
           "System.DirectoryServices": "4.5.0",
           "System.DirectoryServices.AccountManagement": "4.5.0",
           "System.DirectoryServices.Protocols": "4.5.0",
-          "System.Net.Security": "4.3.2"
+          "System.Net.Security": "4.3.2",
+          "TimeAgo": "1.0.8"
         },
         "runtime": {
           "HCMApi.dll": {}
@@ -149,6 +151,7 @@
           "lib/netstandard2.0/Hangfire.SqlServer.dll": {}
         }
       },
+      "Microsoft.AspNet.SignalR/2.4.1": {},
       "Microsoft.AspNetCore.Authentication.AzureAD.UI/2.2.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.Cookies": "2.2.0",
@@ -1031,6 +1034,17 @@
         "dependencies": {
           "System.Runtime": "4.3.0",
           "System.Runtime.Handles": "4.3.0"
+        }
+      },
+      "TimeAgo/1.0.8": {
+        "runtime": {
+          "lib/portable-net4+sl5/TimeAgo.dll": {
+            "assemblyVersion": "1.0.8.0",
+            "fileVersion": "1.0.8.0"
+          }
+        },
+        "compile": {
+          "lib/portable-net4+sl5/TimeAgo.dll": {}
         }
       },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -4047,6 +4061,13 @@
       "path": "hangfire.sqlserver/1.7.4",
       "hashPath": "hangfire.sqlserver.1.7.4.nupkg.sha512"
     },
+    "Microsoft.AspNet.SignalR/2.4.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-aYbLVE5toZwv/qaQ0BiIZRRwN/00WKYzGjaYUWIQuI91xZ50nnAymWD1sxCZFN9XXDRq8bevM5ET9GmAeOI/Nw==",
+      "path": "microsoft.aspnet.signalr/2.4.1",
+      "hashPath": "microsoft.aspnet.signalr.2.4.1.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.Authentication.AzureAD.UI/2.2.0": {
       "type": "package",
       "serviceable": true,
@@ -4438,6 +4459,13 @@
       "sha512": "sha512-O6LKTNrqpVPucYxHEBAPi+RrQbnwtEQ+0N2rgFoHfrqq7mXklX8QX4qlPlfmYPwpwTXJdtzhjMFCl3aAKbOHhg==",
       "path": "system.threading.threadpool/4.3.0",
       "hashPath": "system.threading.threadpool.4.3.0.nupkg.sha512"
+    },
+    "TimeAgo/1.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sXT3CxKDXyoG1/JxClqBBTfHjDENhsqJSVbhseW08lc/rSsMjOnhOh6YTrqIXtm9eTcbWEo4DEtn57KDlIxZaA==",
+      "path": "timeago/1.0.8",
+      "hashPath": "timeago.1.0.8.nupkg.sha512"
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
       "type": "package",

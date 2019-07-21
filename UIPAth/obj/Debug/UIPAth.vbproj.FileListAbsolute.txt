@@ -1,0 +1,4 @@
+C:\Users\Monin.Jose\source\repos\NAHD\UIPAth\obj\Debug\UIPAth.vbprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\UIPAth\obj\Debug\UIPAth.Resources.resources
+C:\Users\Monin.Jose\source\repos\NAHD\UIPAth\obj\Debug\UIPAth.vbproj.GenerateResource.cache
+C:\Users\Monin.Jose\source\repos\NAHD\UIPAth\obj\Debug\UIPAth.vbproj.CoreCompileInputs.cache

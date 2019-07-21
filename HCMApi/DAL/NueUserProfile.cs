@@ -16,6 +16,7 @@ namespace HCMApi.DAL
             MichaelRequestEscalationDurationLogs = new HashSet<MichaelRequestEscalationDurationLogs>();
             MichaelRequestEscalationMapper = new HashSet<MichaelRequestEscalationMapper>();
             MichaelRequestEscalationUserBaseMapper = new HashSet<MichaelRequestEscalationUserBaseMapper>();
+            MichaelRequestFeedbackMaster = new HashSet<MichaelRequestFeedbackMaster>();
             MichaelRequestLog = new HashSet<MichaelRequestLog>();
             MichaelRequestMaster = new HashSet<MichaelRequestMaster>();
             NeuEmployeeVerificationRequest = new HashSet<NeuEmployeeVerificationRequest>();
@@ -86,6 +87,7 @@ namespace HCMApi.DAL
         public virtual ICollection<MichaelRequestEscalationDurationLogs> MichaelRequestEscalationDurationLogs { get; set; }
         public virtual ICollection<MichaelRequestEscalationMapper> MichaelRequestEscalationMapper { get; set; }
         public virtual ICollection<MichaelRequestEscalationUserBaseMapper> MichaelRequestEscalationUserBaseMapper { get; set; }
+        public virtual ICollection<MichaelRequestFeedbackMaster> MichaelRequestFeedbackMaster { get; set; }
         public virtual ICollection<MichaelRequestLog> MichaelRequestLog { get; set; }
         public virtual ICollection<MichaelRequestMaster> MichaelRequestMaster { get; set; }
         public virtual ICollection<NeuEmployeeVerificationRequest> NeuEmployeeVerificationRequest { get; set; }

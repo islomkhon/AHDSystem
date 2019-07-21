@@ -90,6 +90,63 @@ namespace HCMApi.Modal
             return listUserId;
         }
 
+        public List<BotIntnetItem> getBotWelcomeIntents(List<MichaelDepartmentRequestMaster> michaelDepartmentRequestMasters)
+        {
+            List<BotIntnetItem> botIntnetItems = new List<BotIntnetItem>();
+
+            botIntnetItems.Add(new BotIntnetItem() { id = "welcome", message = "Hi, I am Michael", trigger = "0" });
+            botIntnetItems.Add(new BotIntnetItem() { id = "0", message = "These are some of the things I can help you with", trigger = "MenuOption" });
+            List<Option> optionList = new List<Option>();
+            optionList.Add(new Option() { value = "GetBotRequestSearchIntent", label = "Search Request", trigger = "IntentSwitch" });
+            optionList.Add(new Option() { value = "GetBotHCMRequestIntent", label = "HCM Request", trigger = "IntentSwitch" });
+            botIntnetItems.Add(new BotIntnetItem() { id = "MenuOption", options = optionList });
+            botIntnetItems.Add(new BotIntnetItem() { id = "IntentSwitch", component = "IntentSwitchComponent", waitAction = true });
+            return botIntnetItems;
+        }
+
+        public List<BotIntnetItem> getBotIntents(List<MichaelDepartmentRequestMaster> michaelDepartmentRequestMasters)
+        {
+            List<BotIntnetItem> botIntnetItems = new List<BotIntnetItem>();
+
+            botIntnetItems.Add(new BotIntnetItem() { id= "welcome", message= "Hi, I am Michael", trigger="0" });
+            botIntnetItems.Add(new BotIntnetItem() { id = "0", message = "These are some of the things I can help you with", trigger = "MenuOption" });
+            List<Option> optionList = new List<Option>();
+            optionList.Add(new Option() { value = "requestId", label = "Search Request", trigger = "RequestSearchInit" });
+            optionList.Add(new Option() { value = "HCMRequest", label = "HCM Request", trigger = "HCMRequest" });
+            botIntnetItems.Add(new BotIntnetItem() { id = "MenuOption", options = optionList });
+            List<Option> hcmRequestList = new List<Option>();
+            foreach (var item in michaelDepartmentRequestMasters)
+            {
+                hcmRequestList.Add(new Option() { value = ""+ item.DepartmentId+"/"+item.Id, label = item.RequestTypeName, trigger = "HCMRequestHandilar" });
+            }
+            botIntnetItems.Add(new BotIntnetItem() { id = "HCMRequest", options = hcmRequestList });
+            botIntnetItems.Add(new BotIntnetItem() { id = "HCMRequestHandilar", component = "HCMRequestComponent", waitAction=true, trigger= "MenuOption" });
+            botIntnetItems.Add(new BotIntnetItem() { id = "RequestSearchInit", message = "Enter Request id", trigger = "RequestSearchInput" });
+            botIntnetItems.Add(new BotIntnetItem() { id = "RequestSearchInput", user = true, trigger = "RequestSearchTigger" });
+            botIntnetItems.Add(new BotIntnetItem() { id = "RequestSearchTigger", component = "RequestSearchPrevBotComponent", waitAction = true, trigger = "MenuOption" });
+
+            return botIntnetItems;
+        }
+
+        public static string FirstCharToUpper(string s)
+        {
+            try
+            {
+                // Check for empty string.  
+                if (string.IsNullOrEmpty(s))
+                {
+                    return string.Empty;
+                }
+                // Return char and concat substring.  
+                return char.ToUpper(s[0]) + s.Substring(1);
+            }
+            catch(Exception e1)
+            {
+                return s;
+            }
+            
+        }
+
         public List<EscalationMapper> getUiMetaEscaltionList(ICollection<MichaelRequestEscalationMapper> michaelRequestEscalationMapper, List<DAL.NueUserProfile> nueUserProfilesMaster)
         {
             List<EscalationMapper> escalationMappers = new List<EscalationMapper>();

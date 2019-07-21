@@ -11,6 +11,7 @@ namespace HCMApi.DAL
         public string Payload { get; set; }
         public DateTime AddedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
+        public string FieldName { get; set; }
 
         public virtual MichaelPayloadDataType PayloadDataTypeNavigation { get; set; }
         public virtual MichaelRequestMaster Request { get; set; }

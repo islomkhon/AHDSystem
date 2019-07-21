@@ -1,0 +1,88 @@
+Base (Report.Name as Name, Status.of.Employment = Employed | Probation)
+Holidays (Date)
+Leaves(Employee Name, Start Date, End Date, Leave Request Status -> Approved, Employee Name as Name)
+Comp-Offs(EmployeeName as Name, CompOffStartDate as startDate, CompOffEndDate as endDate)
+Flexi(EmployeeName as Name,LeaveEndDate as startDate, LeaveStartDate as endDate)
+Onsite(Name, Start Date as startDate, End Date as endDate)
+PunchData(Name, Date)
+
+baseDt
+"select [Report#Name] as Name from [Base$] where [Status#of#Employment] = 'Employed' OR  [Status#of#Employment] = 'Probation'"
+
+holidayDt
+"select [Date], [Holiday Name] as hName from [Holidays$]"
+
+leaveDt
+"select [Employee Name] as Name, [Start Date] as startDate, [End Date] as endDate from [Leaves$] where [Leave Request Status] = 'Approved'"
+"select [Employee Name] as Name, [Start Date] as startDate, [End Date] as endDate from [Leaves$]"
+"select [EmployeeEmail] as Name, [Start Date] as startDate, [End Date] as endDate from [Leaves$]"
+
+compOffDt
+"select [EmployeeName] as Name, [CompOffStartDate] as startDate, [CompOffEndDate] as endDate from [Comp-Offs$]"
+"select [EmployeeEmail] as Name, [CompOffStartDate] as startDate, [CompOffEndDate] as endDate from [Comp-Offs$]"
+
+flexyDt
+"select [EmployeeName] as Name, [LeaveEndDate] as startDate, [LeaveStartDate] as endDate from [Flexi$]"
+"select [EmployeeEmail] as Name, [LeaveEndDate] as startDate, [LeaveStartDate] as endDate from [Flexi$]"
+
+onsiteDt
+"select [Name] as Name, [Start Date] as startDate, [End Date] as endDate from [Onsite$]"
+"select [Neudesic Email] as Name, [Start Date] as startDate, [End Date] as endDate from [Onsite$]"
+
+swipeDt
+"select [Consultant] as Name, [Date] as sDate from [PunchData$]"
+
+
+Calculate working days
+
+1. Get input from user
+2. Change key from name to email ID
+3. Incorporate changes to clean up the input sheet (get email ID on Flexi and Onsite email)
+4. Lookout for date format that comes in the sheet sent to us from HCM team.
+
+https://www.youtube.com/watch?v=WUiE4Hpx62I
+
+
+Bez rules-:
+
+name email, de date - res
+
+practice = "en" <> tbs (from base db)
+
+if swipe|wFH|onsite conslutent db > tbs should be th
+
+if base -> location remote/mumbai > (not swipe) > tbs/leave shoulde be there
+
+if leave|comp|flexy > tbs should not be th
+
+-------------------------------------------------
+output-> location , reporting manager, grade
+-----------------------------------------------------------
+steps:-
+
+Store all excels in a directory and in uipath select folder that contains all excels
+(base, comp, flexi, leave, onsite, swipe)
+
+Normalize data in all excecls
+base:- full name, email, empid, empStatus, practice -> full name * <leave where matching email
+leave:- full name, email, Start Date, End Date, Applied Date
+comp:- full name, email, Start Date, End Date -> email * < get from base where matching full name
+flexi:- full name, email, Start Date, End Date -> email * < get from base where matching full name
+
+empdb.xlsx -> baseFile -> baseDt *
+comp.xlsx -> compFile -> compOffDt *
+flexi.xlsx -> flexiFile -> flexiDt *
+leave.xlsx -> leaveFile -> leaveDt *
+onsite.xlsx -> onsiteFile -> onsiteDt *
+swipe.xlsx -> swipeFile -> swipeDt 
+tbs.xlsx -> tbsFile -> tbsDt
+holiday.xlsx -> holidayFile -> holidayDt *
+
+
+
+https://forum.uipath.com/t/start-a-workflow-from-the-command-prompt-as-a-front-office-robot/15166/2
+
+
+
+
+

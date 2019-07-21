@@ -20,6 +20,7 @@ using HCMApi.DB;
 using Newtonsoft.Json;
 using FormatWith;
 using HCMApi.Shedules;
+using Microsoft.AspNetCore.Http;
 
 namespace HCMApi.Controllers
 {
@@ -417,6 +418,7 @@ namespace HCMApi.Controllers
                     DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
                     if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
                     {
+                        //new MessagesRepository().GetAllUnreadMessages(nueUserProfile.Id);
                         DAL.MichaelDepartmentRequestMaster michaelDepartmentRequestMaster = new DAL.MichaelDepartmentRequestMaster();
                         michaelDepartmentRequestMaster.UserId = nueUserProfile.Id;
                         michaelDepartmentRequestMaster.DepartmentId = departmentId;
@@ -623,6 +625,263 @@ namespace HCMApi.Controllers
             }
         }
 
+
+        [HttpGet]
+        [Route("GetMichaelRequestViewerData")]
+        public JsonResult GetMichaelRequestViewerData(string requestId)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                        michaelRequestViewerData.RequestId = requestId;
+                        michaelRequestViewerData.UserId = nueUserProfile.Id;
+                        return new JsonResult(new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData));
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetMichaelRequestBotPrev")]
+        public JsonResult GetMichaelRequestBotPrev(string requestId)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                        michaelRequestViewerData.RequestId = requestId;
+                        michaelRequestViewerData.UserId = nueUserProfile.Id;
+                        var requestData = new DataAccess(this.AzureAdSettings).GetMichaelRequestBotPrevData(michaelRequestViewerData);
+                        MichaelRequestBotPrevData michaelRequestBotPrevData = new MichaelRequestBotPrevData();
+                        if (requestData.status == "Ok")
+                        {
+                            michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                            if (michaelRequestViewerData.IsPermitted == 1)
+                            {
+                                michaelRequestBotPrevData.IsPermitted = 1;
+                                michaelRequestBotPrevData.michaelRequestViewerData = michaelRequestViewerData;
+                                michaelRequestBotPrevData.ResponseMode = "Single";
+                            }
+                            else
+                            {
+                                michaelRequestBotPrevData.IsPermitted = 0;
+                                michaelRequestBotPrevData.michaelRequestViewerData = null;
+                                michaelRequestBotPrevData.ResponseMode = "Single";
+                            }
+                        }
+                        else
+                        {
+                            michaelRequestBotPrevData.IsPermitted = 0;
+                            michaelRequestBotPrevData.michaelRequestViewerData = null;
+                            michaelRequestBotPrevData.ResponseMode = "SearchRedirect";
+                        }
+                        return new JsonResult(new JsonResponse("Ok", "Data loaded successfully.", michaelRequestBotPrevData));
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetMichaelRequestViewerLogData")]
+        public JsonResult GetMichaelRequestViewerLogData(string requestId)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                        michaelRequestViewerData.RequestId = requestId;
+                        michaelRequestViewerData.UserId = nueUserProfile.Id;
+
+                        JsonResponse requestData = new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                        if (requestData.status == "Ok")
+                        {
+                            michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                            if (michaelRequestViewerData.IsPermitted == 1)
+                            {
+                                JsonResponse requestLogResponse = new DataAccess(this.AzureAdSettings).getMichaelRequestLogs(michaelRequestViewerData);
+                                return new JsonResult(requestLogResponse);
+                            }
+                            else
+                            {
+                                return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                            }
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetMichaelBotSteps")]
+        public JsonResult GetMichaelBotWelcomeSteps()
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        var activeDepartments = new DataAccess(this.AzureAdSettings).GetDepartmentActiveRequestTypes();
+                        if(activeDepartments != null)
+                        {
+                            return new JsonResult(new JsonResponse("Ok", "Data loaded successfully.", new Modal.Utils().getBotIntents(activeDepartments)));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+        
+        [HttpGet]
+        [Route("GetMichaelRequestResourceFile")]
+        public async Task<IActionResult> GetMichaelRequestResourceFile(string resId)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return null;
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+
+                        DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                        michaelRequestLog.UserId = nueUserProfile.Id;
+                        michaelRequestLog.Id = int.Parse(resId);
+                        var response = new DataAccess(this.AzureAdSettings).getMichaelRequestAttachmentItem(michaelRequestLog);
+                        if (response != null && response.status == "Ok")
+                        {
+                            DAL.MichaelRequestAttachmentLog michaelRequestAttachmentLog = (DAL.MichaelRequestAttachmentLog)response.payload;
+                            var VFileName = michaelRequestAttachmentLog.VfileName;
+                            var FileName = michaelRequestAttachmentLog.FileName;
+                            var FileExtension = michaelRequestAttachmentLog.FileExt;
+                            var requestId = michaelRequestAttachmentLog.RequestId;
+                            string contentRootPath = _hostingEnvironment.ContentRootPath;
+                            var dirPath = contentRootPath + "\\Uploads\\" + requestId;
+                            var path = dirPath + "\\" + VFileName;
+
+                            //var memory = new MemoryStream();
+                            //using (var stream = new FileStream(path, FileMode.Open))
+                            //{
+                            //    await stream.CopyToAsync(memory);
+                            //}
+                            //memory.Position = 0;
+                            //return File(memory, GetContentType(path), Path.GetFileName(path));
+
+                            //Stream stream = await { { __get_stream_based_on_id_here__} }
+                            //FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+                            //if (fileStream == null)
+                            //    return NotFound(); // returns a NotFoundResult with Status404NotFound response.
+
+                            //return File(fileStream, "application/octet-stream");
+
+                            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+                            string fileName = FileName + FileExtension;
+                            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+
+                            //Stream stream = await { { __get_stream_based_on_id_here__} }
+
+                            //if (stream == null)
+                            //    return NotFound();
+
+                            //return File(stream, "application/octet-stream"); // returns a FileStreamResult
+
+                        }
+                        else
+                        {
+                            return NotFound();
+                        }
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return NotFound();
+            }
+        }
+
         /*[HttpGet]
         [Route("GetDepartmentRequestTemplateRaw")]
         public JsonResult GetDepartmentRequestTemplateRaw(int departmentId, int requestId)
@@ -708,16 +967,487 @@ namespace HCMApi.Controllers
 
 
 
+        [HttpPost]
+        [Route("AddMichaelRequestFeedback")]
+        public JsonResult AddMichaelRequestFeedback([FromBody] MichaelRequestFeedbackRequest michaelRequestFeedbackRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                string userEmail = User.Identity.Name.ToLower();
+                DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
 
+                if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                {
+                    michaelRequestFeedbackRequest.UserId = nueUserProfile.Id;
 
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = michaelRequestFeedbackRequest.RequestId;
+                    michaelRequestViewerData.UserId = nueUserProfile.Id;
 
+                    JsonResponse requestData = new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if (requestData.status == "Ok")
+                    {
+                        michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1 && michaelRequestViewerData.MichaelRequestUserAcces.IsOwner == 1 && michaelRequestViewerData.MichaelRequestUserOp.Close == 1)
+                        {
+                            DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                            michaelRequestLog.RequestId = michaelRequestViewerData.Id;
+                            michaelRequestLog.UserId = michaelRequestViewerData.UserId;
+                            michaelRequestLog.Payload = michaelRequestFeedbackRequest.RequestComment;
+                            return new JsonResult(new DataAccess(this.AzureAdSettings).addMichaelRequestFeedback(michaelRequestLog, michaelRequestViewerData, michaelRequestFeedbackRequest));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
 
+                //return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
 
+        [HttpPost]
+        [Route("AdminRejectMichaelRequest")]
+        public JsonResult AdminRejectMichaelRequest([FromBody] MichaelRequestCommentRequest michaelRequestCommentRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                string userEmail = User.Identity.Name.ToLower();
+                DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
 
+                if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                {
+                    michaelRequestCommentRequest.UserId = nueUserProfile.Id;
 
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = michaelRequestCommentRequest.RequestId;
+                    michaelRequestViewerData.UserId = nueUserProfile.Id;
 
+                    JsonResponse requestData = new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if (requestData.status == "Ok")
+                    {
+                        michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1 && michaelRequestViewerData.MichaelRequestUserAcces.IsAssignee == 1 && michaelRequestViewerData.MichaelRequestUserOp.AdminApprove == 1)
+                        {
+                            DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                            michaelRequestLog.RequestId = michaelRequestViewerData.Id;
+                            michaelRequestLog.UserId = michaelRequestViewerData.UserId;
+                            michaelRequestLog.Payload = michaelRequestCommentRequest.RequestComment;
+                            return new JsonResult(new DataAccess(this.AzureAdSettings).adminRejectMichaelRequest(michaelRequestLog, michaelRequestViewerData));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
 
+                //return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
 
+        [HttpPost]
+        [Route("AdminApproveMichaelRequest")]
+        public JsonResult AdminApproveMichaelRequest([FromBody] MichaelRequestCommentRequest michaelRequestCommentRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                string userEmail = User.Identity.Name.ToLower();
+                DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                {
+                    michaelRequestCommentRequest.UserId = nueUserProfile.Id;
+
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = michaelRequestCommentRequest.RequestId;
+                    michaelRequestViewerData.UserId = nueUserProfile.Id;
+
+                    JsonResponse requestData = new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if (requestData.status == "Ok")
+                    {
+                        michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1 && michaelRequestViewerData.MichaelRequestUserAcces.IsAssignee == 1 && michaelRequestViewerData.MichaelRequestUserOp.AdminApprove == 1)
+                        {
+                            DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                            michaelRequestLog.RequestId = michaelRequestViewerData.Id;
+                            michaelRequestLog.UserId = michaelRequestViewerData.UserId;
+                            michaelRequestLog.Payload = michaelRequestCommentRequest.RequestComment;
+                            return new JsonResult(new DataAccess(this.AzureAdSettings).adminApproveMichaelRequest(michaelRequestLog, michaelRequestViewerData));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+
+                //return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpPost]
+        [Route("RejectMichaelRequest")]
+        public JsonResult RejectMichaelRequest([FromBody] MichaelRequestCommentRequest michaelRequestCommentRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                string userEmail = User.Identity.Name.ToLower();
+                DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                {
+                    michaelRequestCommentRequest.UserId = nueUserProfile.Id;
+
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = michaelRequestCommentRequest.RequestId;
+                    michaelRequestViewerData.UserId = nueUserProfile.Id;
+
+                    JsonResponse requestData = new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if (requestData.status == "Ok")
+                    {
+                        michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1 && michaelRequestViewerData.MichaelRequestUserAcces.IsApprover == 1 && michaelRequestViewerData.MichaelRequestUserOp.Approve == 1)
+                        {
+                            DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                            michaelRequestLog.RequestId = michaelRequestViewerData.Id;
+                            michaelRequestLog.UserId = michaelRequestViewerData.UserId;
+                            michaelRequestLog.Payload = michaelRequestCommentRequest.RequestComment;
+                            return new JsonResult(new DataAccess(this.AzureAdSettings).rejectMichaelRequest(michaelRequestLog, michaelRequestViewerData));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+
+                //return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpPost]
+        [Route("ApproveMichaelRequest")]
+        public JsonResult ApproveMichaelRequest([FromBody] MichaelRequestCommentRequest michaelRequestCommentRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                string userEmail = User.Identity.Name.ToLower();
+                DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                {
+                    michaelRequestCommentRequest.UserId = nueUserProfile.Id;
+
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = michaelRequestCommentRequest.RequestId;
+                    michaelRequestViewerData.UserId = nueUserProfile.Id;
+
+                    JsonResponse requestData = new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if (requestData.status == "Ok")
+                    {
+                        michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1 && michaelRequestViewerData.MichaelRequestUserAcces.IsApprover == 1 && michaelRequestViewerData.MichaelRequestUserOp.Approve == 1)
+                        {
+                            DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                            michaelRequestLog.RequestId = michaelRequestViewerData.Id;
+                            michaelRequestLog.UserId = michaelRequestViewerData.UserId;
+                            michaelRequestLog.Payload = michaelRequestCommentRequest.RequestComment;
+                            return new JsonResult(new DataAccess(this.AzureAdSettings).approveMichaelRequest(michaelRequestLog, michaelRequestViewerData));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+
+                //return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpPost]
+        [Route("WithdrawMichaelRequest")]
+        public JsonResult WithdrawMichaelRequest([FromBody] MichaelRequestCommentRequest michaelRequestCommentRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                string userEmail = User.Identity.Name.ToLower();
+                DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                {
+                    michaelRequestCommentRequest.UserId = nueUserProfile.Id;
+
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = michaelRequestCommentRequest.RequestId;
+                    michaelRequestViewerData.UserId = nueUserProfile.Id;
+
+                    JsonResponse requestData = new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if (requestData.status == "Ok")
+                    {
+                        michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1 && michaelRequestViewerData.MichaelRequestUserAcces.IsOwner == 1 && michaelRequestViewerData.MichaelRequestUserOp.Withdraw == 1)
+                        {
+                            DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                            michaelRequestLog.RequestId = michaelRequestViewerData.Id;
+                            michaelRequestLog.UserId = michaelRequestViewerData.UserId;
+                            michaelRequestLog.Payload = michaelRequestCommentRequest.RequestComment;
+                            return new JsonResult(new DataAccess(this.AzureAdSettings).withdrawMichaelRequest(michaelRequestLog));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+
+                //return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpPost]
+        [Route("AddMichaelRequestAttachment")]
+        public JsonResult AddMichaelRequestAttachment(IFormCollection form)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                string userEmail = User.Identity.Name.ToLower();
+                DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1 && form.Files != null && form.Files.Count > 0)
+                {
+                    MichaelRequestAttachment michaelRequestAttachment = new MichaelRequestAttachment();
+                    michaelRequestAttachment.RequestId = form["requestId"];
+                    michaelRequestAttachment.file = form.Files[0];
+
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = michaelRequestAttachment.RequestId;
+                    michaelRequestViewerData.UserId = nueUserProfile.Id;
+
+                    JsonResponse requestData =  new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if(requestData.status == "Ok")
+                    {
+                        michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1 && michaelRequestViewerData.MichaelRequestUserOp.Attach == 1)
+                        {
+                            string FileName = Path.GetFileNameWithoutExtension(michaelRequestAttachment.file.FileName);
+                            string FileExtension = Path.GetExtension(michaelRequestAttachment.file.FileName);
+                            string VFileName = DateTime.UtcNow.ToString("yyyyMMddhhmmss") + "_" + FileExtension;
+
+                            DAL.MichaelRequestAttachmentLog michaelRequestAttachmentLog = new DAL.MichaelRequestAttachmentLog();
+                            michaelRequestAttachmentLog.UserId = michaelRequestViewerData.UserId;
+                            michaelRequestAttachmentLog.RequestId = michaelRequestViewerData.Id;
+                            michaelRequestAttachmentLog.FileName = FileName;
+                            michaelRequestAttachmentLog.FileExt = FileExtension;
+                            michaelRequestAttachmentLog.VfileName = VFileName;
+                            var ops = new DataAccess(this.AzureAdSettings).addNewMichaelRequestAttchment(michaelRequestAttachmentLog, michaelRequestAttachment);
+                            if(ops.status == "Ok")
+                            {
+                                string contentRootPath = _hostingEnvironment.ContentRootPath;
+                                var dirPath = contentRootPath + "\\Uploads\\" + michaelRequestViewerData.Id;
+                                var path = dirPath + "\\"+ VFileName;
+                                System.IO.Directory.CreateDirectory(dirPath);
+                                using (var fileStream = new FileStream(path, FileMode.Create))
+                                {
+                                    michaelRequestAttachment.file.CopyToAsync(fileStream);
+                                }
+                                return new JsonResult(ops);
+                            }
+                            else
+                            {
+                                return new JsonResult(ops);
+                            }
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                    //michaelRequestCommentRequest.UserId = nueUserProfile.Id;
+                    //return new JsonResult(new DataAccess(this.AzureAdSettings).updateDepartmentRequestType(michaelDepartmentRequest));
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+
+                //return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpPost]
+        [Route("AddMichaelRequestComment")]
+        public JsonResult AddMichaelRequestComment([FromBody] MichaelRequestCommentRequest michaelRequestCommentRequest)
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                string userEmail = User.Identity.Name.ToLower();
+                DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+
+                if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                {
+                    michaelRequestCommentRequest.UserId = nueUserProfile.Id;
+
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = michaelRequestCommentRequest.RequestId;
+                    michaelRequestViewerData.UserId = nueUserProfile.Id;
+
+                    JsonResponse requestData =  new DataAccess(this.AzureAdSettings).GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if (requestData.status == "Ok")
+                    {
+                        michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1 && michaelRequestViewerData.MichaelRequestUserOp.Comment == 1)
+                        {
+                            DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                            michaelRequestLog.RequestId = michaelRequestViewerData.Id;
+                            michaelRequestLog.UserId = michaelRequestViewerData.UserId;
+                            michaelRequestLog.Payload = michaelRequestCommentRequest.RequestComment;
+                            return new JsonResult(new DataAccess(this.AzureAdSettings).addNewMichaelRequestComment(michaelRequestLog));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+                else
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+
+                //return new JsonResult(new JsonResponse("Ok", "Data updated", uiDropdownItems));
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
 
 
         [HttpPost]
@@ -1129,6 +1859,31 @@ namespace HCMApi.Controllers
             {
                 return new JsonResult(new JsonResponse("Failed", "An error occerd"));
             }
+        }
+
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats  officedocument.spreadsheetml.sheet"},  
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
         }
 
         public class WeatherForecast

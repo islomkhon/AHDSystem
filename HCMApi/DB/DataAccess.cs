@@ -2,11 +2,13 @@
 using HCMApi.Extensions;
 using HCMApi.Modal;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeAgo;
 
 namespace HCMApi.DB
 {
@@ -18,6 +20,11 @@ namespace HCMApi.DB
         public DataAccess(AzureAd AzureAdSettings)
         {
             this.connectionString = AzureAdSettings.Db;
+        }
+
+        public DataAccess(string connectionString)
+        {
+            this.connectionString = connectionString;
         }
 
         public List<NueUserProfile> getAllUserProfilesDinamic()
@@ -122,6 +129,20 @@ namespace HCMApi.DB
             if (departmentRequestItem != null && departmentRequestItem.Count() > 0)
             {
                 return departmentRequestItem.First<MichaelDepartmentRequestMaster>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<MichaelDepartmentRequestMaster> GetDepartmentActiveRequestTypes()
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var departmentRequestItem = nueRequestContext.MichaelDepartmentRequestMaster.Where(x => x.Active == 1);
+            if (departmentRequestItem != null && departmentRequestItem.Count() > 0)
+            {
+                return departmentRequestItem.ToList<MichaelDepartmentRequestMaster>();
             }
             else
             {
@@ -510,7 +531,7 @@ namespace HCMApi.DB
                     result.RequestTypeName = michaelDepartmentRequest.RequestTypeName;
                     result.RequestTypeDescription = michaelDepartmentRequest.RequestTypeDescription;
                     result.RequestPriorityId = michaelDepartmentRequest.RequestPriorityId;
-                    result.Active = 1;
+                    result.Active = michaelDepartmentRequest.Active;
                     result.ModifiedOn = dateUpdated;
                     int updatedValue = nueRequestContext.SaveChanges();
                     if (updatedValue > 0)
@@ -675,7 +696,7 @@ namespace HCMApi.DB
                 michaelDepartmentRequestMaster.RequestTypeDescription = michaelDepartmentRequest.RequestTypeDescription;
                 michaelDepartmentRequestMaster.RequestPriorityId = michaelDepartmentRequest.RequestPriorityId;
                 michaelDepartmentRequestMaster.UserId = michaelDepartmentRequest.UserId;
-                michaelDepartmentRequestMaster.Active = 1;
+                michaelDepartmentRequestMaster.Active = michaelDepartmentRequest.Active;
                 michaelDepartmentRequestMaster.AddedOn = dateCreated;
                 michaelDepartmentRequestMaster.ModifiedOn = dateCreated;
                 nueRequestContext.MichaelDepartmentRequestMaster.Add(michaelDepartmentRequestMaster);
@@ -724,6 +745,897 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
+        public JsonResponse GetMichaelRequestBotPrevData(MichaelRequestViewerData michaelRequestViewerData)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => x.RequestId == michaelRequestViewerData.RequestId);
+                if (requestObj != null && requestObj.FirstOrDefault() != null)
+                {
+                    var request = requestObj.FirstOrDefault();
+
+                    michaelRequestViewerData.IsPermitted = 0;
+                    michaelRequestViewerData.Id = request.Id;
+                    michaelRequestViewerData.RequestId = request.RequestId;
+                    michaelRequestViewerData.RequestType = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName;
+                    michaelRequestViewerData.IsApprovalProcess = (int)request.IsApprovalProcess;
+                    michaelRequestViewerData.IsApprovalProcessComplated = (int)request.IsApprovalProcessComplted;
+
+                    int isUserHasAccess = 0;
+
+                    MichaelRequestUserAccess michaelRequestUserAccess = new MichaelRequestUserAccess();
+
+                    //check user is assignee
+                    var MichaelRequestEscalationUserBaseMapper = nueRequestContext.MichaelRequestEscalationUserBaseMapper.Where(x => x.Id == request.RequestEscalationUserId && x.UserId == michaelRequestViewerData.UserId && x.RequestEscalationMapperId == request.RequestEscalationMapperId);
+                    if (MichaelRequestEscalationUserBaseMapper != null && MichaelRequestEscalationUserBaseMapper.FirstOrDefault() != null)
+                    {
+                        var requestSLAUser = MichaelRequestEscalationUserBaseMapper.FirstOrDefault();
+                        var userAccess = nueRequestContext.MichaelRequestEscalationAccessLogs.Where(x => x.RequestEscalationUserId == requestSLAUser.Id && x.Active == 1 && x.RequestEscalationMapperId == request.RequestEscalationMapperId && x.RequestId == request.Id);
+                        if (userAccess != null && userAccess.FirstOrDefault() != null)
+                        {
+                            michaelRequestUserAccess.IsAssignee = 1;
+                            isUserHasAccess = 1;
+                        }
+                    }
+
+                    //check user is owner and approver
+                    var ownerAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "owner");
+                    var approverAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "approver");
+
+                    var ownerAccess = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id && x.UserId == michaelRequestViewerData.UserId);
+                    var approverAccess = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == approverAccessType.Id && x.UserId == michaelRequestViewerData.UserId);
+
+                    if (ownerAccess != null && ownerAccess.FirstOrDefault() != null)
+                    {
+                        michaelRequestUserAccess.IsOwner = 1;
+                        isUserHasAccess = 1;
+                    }
+
+                    if (approverAccess != null && approverAccess.FirstOrDefault() != null)
+                    {
+                        michaelRequestUserAccess.IsApprover = 1;
+                        isUserHasAccess = 1;
+                    }
+
+                    if (isUserHasAccess == 1)
+                    {
+                        michaelRequestViewerData.IsPermitted = 1;
+                        michaelRequestViewerData.MichaelRequestUserAcces = michaelRequestUserAccess;
+
+                        var ownerUserBase = nueRequestContext.MichaelRequestAccessMapper.SingleOrDefault(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id);
+                        var owner = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == ownerUserBase.UserId);
+
+                        var requestStage = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.Id == request.RequestStageBaseId);
+
+                        //load sidebar data
+                        List<SideBarItem> sideBarItems = new List<SideBarItem>();
+                        //var requestPayloads = nueRequestContext.MichaelRequestPayloadMaster.Where(x => x.RequestId == request.Id);
+                        //foreach (var item in requestPayloads)
+                        //{
+                        //    sideBarItems.Add(new SideBarItem(item.FieldName, item.Payload));
+                        //}
+                        michaelRequestViewerData.RequestStatus = Utils.FirstCharToUpper(requestStage.StageType);
+                        //sideBarItems.Add(new SideBarItem("Status", requestStage.StageType));
+                        sideBarItems.Add(new SideBarItem("Created On", request.AddedOn.ToLocalTime().TimeAgo().ToString()));
+                        sideBarItems.Add(new SideBarItem("Ticket Creator", owner.FullName));
+                        if (request.IsApprovalProcess == 1)
+                        {
+                            var approverUsersBase = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == approverAccessType.Id);
+                            if (approverUsersBase != null && approverUsersBase.FirstOrDefault() != null)
+                            {
+                                int li = 1;
+                                foreach (var item in approverUsersBase)
+                                {
+                                    var approverUserName = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).FullName;
+                                    var assessMapper = nueRequestContext.MichaelRequestApproverStatusMapper.FirstOrDefault(x => x.RequestId == request.Id && x.RequestAccessId == item.Id && x.UserId == item.UserId);
+                                    var approverstage = nueRequestContext.MichaelApproverStatusTypes.FirstOrDefault(x => x.Id == assessMapper.ApproverStatusId);
+                                    sideBarItems.Add(new SideBarItem("Ticket Approver(L" + li + ")", approverUserName + "- " + approverstage.Status));
+                                    li++;
+                                }
+                            }
+                        }
+                        michaelRequestViewerData.SidebarData = sideBarItems;
+
+                        MichaelRequestUserOps MichaelRequestUserOp = new MichaelRequestUserOps();
+
+                        if (requestStage.StageType.ToLower() == "created")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Withdraw = 1;
+                            }
+                            if (michaelRequestUserAccess.IsApprover == 1)
+                            {
+                                MichaelRequestUserOp.Approve = 1;
+                            }
+
+                            if (michaelRequestUserAccess.IsAssignee == 1)
+                            {
+                                MichaelRequestUserOp.AdminApprove = 1;
+
+                                if (request.IsApprovalProcessComplted == 0)
+                                {
+                                    MichaelRequestUserOp.AdminOverideApprove = 1;
+                                }
+                            }
+
+                            //MichaelRequestUserOp.Close = 0;
+                            //MichaelRequestUserOp.Withdraw = 0;
+                            //MichaelRequestUserOp.Approve = 0;
+                            //MichaelRequestUserOp.AdminApprove = 0;
+                            //MichaelRequestUserOp.AdminOverideApprove = 0;
+                        }
+                        else if (requestStage.StageType.ToLower() == "assignee accepted")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Close = 1;
+                            }
+                        }
+                        else if (requestStage.StageType.ToLower() == "assignee rejected")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Close = 1;
+                            }
+                        }
+                        else if (requestStage.StageType.ToLower() == "approver accepted")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Withdraw = 1;
+                            }
+                            if (michaelRequestUserAccess.IsApprover == 1)
+                            {
+                                //MichaelRequestUserOp.Approve = 1;
+                            }
+
+                            if (michaelRequestUserAccess.IsAssignee == 1)
+                            {
+                                MichaelRequestUserOp.AdminApprove = 1;
+
+                                if (request.IsApprovalProcessComplted == 0)
+                                {
+                                    //MichaelRequestUserOp.AdminOverideApprove = 1;
+                                }
+                            }
+                        }
+                        else if (requestStage.StageType.ToLower() == "approver rejected")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Withdraw = 1;
+                            }
+                            if (michaelRequestUserAccess.IsApprover == 1)
+                            {
+                                //MichaelRequestUserOp.Approve = 1;
+                                MichaelRequestUserOp.ApproveReject = 1;
+                            }
+
+                            if (michaelRequestUserAccess.IsAssignee == 1)
+                            {
+                                MichaelRequestUserOp.AdminApprove = 1;
+
+                                if (request.IsApprovalProcessComplted == 0)
+                                {
+                                    MichaelRequestUserOp.AdminOverideApprove = 1;
+                                }
+                            }
+                        }
+                        else if (requestStage.StageType.ToLower() == "withdraw")
+                        {
+
+                        }
+                        else if (requestStage.StageType.ToLower() == "completed")
+                        {
+
+                        }
+
+                        michaelRequestViewerData.MichaelRequestUserOp = MichaelRequestUserOp;
+
+                        jsonResponse = new JsonResponse("Ok", "Data loaded successfully.", michaelRequestViewerData);
+                    }
+                    else
+                    {
+                        michaelRequestViewerData.IsPermitted = 0;
+                        jsonResponse = new JsonResponse("Failed", "Invalid request.");
+                    }
+
+                }
+                else
+                {
+                    jsonResponse = new JsonResponse("Failed", "Invalid request");
+                }
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse GetMichaelRequestViewerData(MichaelRequestViewerData michaelRequestViewerData)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => x.RequestId == michaelRequestViewerData.RequestId);
+                if(requestObj != null && requestObj.FirstOrDefault() != null)
+                {
+                    var request = requestObj.FirstOrDefault();
+
+                    michaelRequestViewerData.IsPermitted = 0;
+                    michaelRequestViewerData.Id = request.Id;
+                    michaelRequestViewerData.RequestId = request.RequestId;
+                    michaelRequestViewerData.RequestType = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName;
+                    michaelRequestViewerData.IsApprovalProcess = (int) request.IsApprovalProcess;
+                    michaelRequestViewerData.IsApprovalProcessComplated = (int)request.IsApprovalProcessComplted;
+
+                    int isUserHasAccess = 0;
+
+                    MichaelRequestUserAccess michaelRequestUserAccess = new MichaelRequestUserAccess();
+
+                    //check user is assignee
+                    var MichaelRequestEscalationUserBaseMapper = nueRequestContext.MichaelRequestEscalationUserBaseMapper.Where(x => x.Id == request.RequestEscalationUserId && x.UserId == michaelRequestViewerData.UserId && x.RequestEscalationMapperId == request.RequestEscalationMapperId);
+                    if(MichaelRequestEscalationUserBaseMapper != null && MichaelRequestEscalationUserBaseMapper.FirstOrDefault() != null)
+                    {
+                        var requestSLAUser = MichaelRequestEscalationUserBaseMapper.FirstOrDefault();
+                        var userAccess = nueRequestContext.MichaelRequestEscalationAccessLogs.Where(x => x.RequestEscalationUserId == requestSLAUser.Id && x.Active == 1 && x.RequestEscalationMapperId == request.RequestEscalationMapperId && x.RequestId == request.Id);
+                        if(userAccess != null && userAccess.FirstOrDefault() != null)
+                        {
+                            michaelRequestUserAccess.IsAssignee = 1;
+                            isUserHasAccess = 1;
+                        }
+                    }
+
+                    //check user is owner and approver
+                    var ownerAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "owner");
+                    var approverAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "approver");
+
+                    var ownerAccess = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id && x.UserId == michaelRequestViewerData.UserId);
+                    var approverAccess = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == approverAccessType.Id && x.UserId == michaelRequestViewerData.UserId);
+
+                    if(ownerAccess != null && ownerAccess.FirstOrDefault() != null)
+                    {
+                        michaelRequestUserAccess.IsOwner = 1;
+                        isUserHasAccess = 1;
+                    }
+
+                    if (approverAccess != null && approverAccess.FirstOrDefault() != null)
+                    {
+                        michaelRequestUserAccess.IsApprover = 1;
+                        isUserHasAccess = 1;
+                    }
+
+                    if(isUserHasAccess == 1)
+                    {
+                        michaelRequestViewerData.IsPermitted = 1;
+                        michaelRequestViewerData.MichaelRequestUserAcces = michaelRequestUserAccess;
+
+                        var ownerUserBase = nueRequestContext.MichaelRequestAccessMapper.SingleOrDefault(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id);
+                        var owner = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == ownerUserBase.UserId);
+
+                        var requestStage = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.Id == request.RequestStageBaseId);
+
+                        //load sidebar data
+                        List<SideBarItem> sideBarItems = new List<SideBarItem>();
+                        var requestPayloads = nueRequestContext.MichaelRequestPayloadMaster.Where(x =>x.RequestId == request.Id);
+                        foreach (var item in requestPayloads)
+                        {
+                            sideBarItems.Add(new SideBarItem(Utils.FirstCharToUpper(item.FieldName), Utils.FirstCharToUpper(item.Payload)));
+                        }
+
+                        sideBarItems.Add(new SideBarItem("Status", Utils.FirstCharToUpper(requestStage.StageType)));
+                        sideBarItems.Add(new SideBarItem("Created On", request.AddedOn.ToLocalTime().TimeAgo().ToString()));
+                        sideBarItems.Add(new SideBarItem("Ticket Creator", owner.FullName));
+                        if (request.IsApprovalProcess == 1)
+                        {
+                            var approverUsersBase = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == approverAccessType.Id);
+                            if (approverUsersBase != null && approverUsersBase.FirstOrDefault() != null)
+                            {
+                                int li = 1;
+                                foreach (var item in approverUsersBase)
+                                {
+                                    var approverUserName = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).FullName;
+                                    var assessMapper = nueRequestContext.MichaelRequestApproverStatusMapper.FirstOrDefault(x => x.RequestId == request.Id && x.RequestAccessId == item.Id && x.UserId == item.UserId);
+                                    var approverstage = nueRequestContext.MichaelApproverStatusTypes.FirstOrDefault(x => x.Id == assessMapper.ApproverStatusId);
+                                    sideBarItems.Add(new SideBarItem("Ticket Approver(L" + li + ")", approverUserName + "- " + approverstage.Status));
+                                    li++;
+                                }
+                            }
+                        }
+                        michaelRequestViewerData.SidebarData = sideBarItems;
+
+                        MichaelRequestUserOps MichaelRequestUserOp = new MichaelRequestUserOps();
+
+                        if (requestStage.StageType.ToLower() == "created")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Withdraw = 1;
+                            }
+                            if (michaelRequestUserAccess.IsApprover == 1)
+                            {
+                                MichaelRequestUserOp.Approve = 1;
+                            }
+
+                            if (michaelRequestUserAccess.IsAssignee == 1)
+                            {
+                                MichaelRequestUserOp.AdminApprove = 1;
+
+                                if (request.IsApprovalProcessComplted == 0)
+                                {
+                                    MichaelRequestUserOp.AdminOverideApprove = 1;
+                                }
+                            }
+
+                            //MichaelRequestUserOp.Close = 0;
+                            //MichaelRequestUserOp.Withdraw = 0;
+                            //MichaelRequestUserOp.Approve = 0;
+                            //MichaelRequestUserOp.AdminApprove = 0;
+                            //MichaelRequestUserOp.AdminOverideApprove = 0;
+                        }
+                        else if (requestStage.StageType.ToLower() == "assignee accepted")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Close = 1;
+                            }
+                        }
+                        else if (requestStage.StageType.ToLower() == "assignee rejected")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Close = 1;
+                            }
+                        }
+                        else if (requestStage.StageType.ToLower() == "approver accepted")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Withdraw = 1;
+                            }
+                            if (michaelRequestUserAccess.IsApprover == 1)
+                            {
+                                //MichaelRequestUserOp.Approve = 1;
+                            }
+
+                            if (michaelRequestUserAccess.IsAssignee == 1)
+                            {
+                                MichaelRequestUserOp.AdminApprove = 1;
+
+                                if (request.IsApprovalProcessComplted == 0)
+                                {
+                                    //MichaelRequestUserOp.AdminOverideApprove = 1;
+                                }
+                            }
+                        }
+                        else if (requestStage.StageType.ToLower() == "approver rejected")
+                        {
+                            MichaelRequestUserOp.Comment = 1;
+                            MichaelRequestUserOp.Attach = 1;
+                            if (michaelRequestUserAccess.IsOwner == 1)
+                            {
+                                MichaelRequestUserOp.Withdraw = 1;
+                            }
+                            if (michaelRequestUserAccess.IsApprover == 1)
+                            {
+                                //MichaelRequestUserOp.Approve = 1;
+                                MichaelRequestUserOp.ApproveReject = 1;
+                            }
+
+                            if (michaelRequestUserAccess.IsAssignee == 1)
+                            {
+                                MichaelRequestUserOp.AdminApprove = 1;
+
+                                if (request.IsApprovalProcessComplted == 0)
+                                {
+                                    MichaelRequestUserOp.AdminOverideApprove = 1;
+                                }
+                            }
+                        }
+                        else if (requestStage.StageType.ToLower() == "withdraw")
+                        {
+
+                        }
+                        else if (requestStage.StageType.ToLower() == "completed")
+                        {
+
+                        }
+
+                        michaelRequestViewerData.MichaelRequestUserOp = MichaelRequestUserOp;
+
+                        jsonResponse = new JsonResponse("Ok", "Data loaded successfully.", michaelRequestViewerData);
+                    }
+                    else
+                    {
+                        michaelRequestViewerData.IsPermitted = 0;
+                        jsonResponse = new JsonResponse("Failed", "Invalid request.");
+                    }
+                    
+                }
+                else
+                {
+                    jsonResponse = new JsonResponse("Failed", "Invalid request");
+                }
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse getMichaelRequestLogs(MichaelRequestViewerData michaelRequestViewerData)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                List<MichaelRequestLogItem> michaelRequestLogItems = new List<MichaelRequestLogItem>();
+
+                var requestLog = nueRequestContext.MichaelRequestLog.Where(x => x.RequestId == michaelRequestViewerData.Id);
+                foreach (var item in requestLog)
+                {
+                    var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.Id == item.RequestLogTypeId);
+                    if(attachFileActivity.LogType.ToLower() == "commented")
+                    {
+                        var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId);
+                        MichaelRequestLogItem michaelRequestLogItem = new MichaelRequestLogItem();
+                        michaelRequestLogItem.DateOn = item.AddedOn.ToLocalTime().TimeAgo();
+                        michaelRequestLogItem.Icon = "SchoolIcon";
+                        michaelRequestLogItem.UserName = user.FullName;
+                        michaelRequestLogItem.UserEmail = user.Email;
+                        michaelRequestLogItem.UserId = user.Id;
+                        michaelRequestLogItem.Payload = Utils.FirstCharToUpper(item.Payload);
+                        michaelRequestLogItem.PayloadType = "commented";
+                        michaelRequestLogItems.Add(michaelRequestLogItem);
+                    }
+                    else if (attachFileActivity.LogType.ToLower() == "withdraw")
+                    {
+                        var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId);
+                        MichaelRequestLogItem michaelRequestLogItem = new MichaelRequestLogItem();
+                        michaelRequestLogItem.DateOn = item.AddedOn.ToLocalTime().TimeAgo();
+                        michaelRequestLogItem.Icon = "SchoolIcon";
+                        michaelRequestLogItem.UserName = user.FullName;
+                        michaelRequestLogItem.UserEmail = user.Email;
+                        michaelRequestLogItem.UserId = user.Id;
+                        michaelRequestLogItem.Payload = Utils.FirstCharToUpper(item.Payload);
+                        michaelRequestLogItem.PayloadType = "withdraw";
+                        michaelRequestLogItems.Add(michaelRequestLogItem);
+                    }
+                    else if (attachFileActivity.LogType.ToLower() == "attachedfile")
+                    {
+                        var attachment = nueRequestContext.MichaelRequestAttachmentLog.FirstOrDefault(x => x.Id == int.Parse(item.Payload));
+                        var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId);
+                        MichaelRequestLogItem michaelRequestLogItem = new MichaelRequestLogItem();
+                        michaelRequestLogItem.DateOn = item.AddedOn.ToLocalTime().TimeAgo();
+                        michaelRequestLogItem.Icon = "WorkIcon";
+                        michaelRequestLogItem.UserName = user.FullName;
+                        michaelRequestLogItem.UserEmail = user.Email;
+                        michaelRequestLogItem.UserId = user.Id;
+                        michaelRequestLogItem.Payload = attachment.FileName+"."+attachment.FileExt;
+                        michaelRequestLogItem.PayloadType = "attachedfile";
+                        michaelRequestLogItem.AttachmentId = item.Id;
+                        michaelRequestLogItems.Add(michaelRequestLogItem);
+                    }
+                    else if (attachFileActivity.LogType.ToLower() == "approved")
+                    {
+                        var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId);
+                        MichaelRequestLogItem michaelRequestLogItem = new MichaelRequestLogItem();
+                        michaelRequestLogItem.DateOn = item.AddedOn.ToLocalTime().TimeAgo();
+                        michaelRequestLogItem.Icon = "SchoolIcon";
+                        michaelRequestLogItem.UserName = user.FullName;
+                        michaelRequestLogItem.UserEmail = user.Email;
+                        michaelRequestLogItem.UserId = user.Id;
+                        michaelRequestLogItem.Payload = Utils.FirstCharToUpper(item.Payload);
+                        michaelRequestLogItem.PayloadType = "approved";
+                        michaelRequestLogItems.Add(michaelRequestLogItem);
+                    }
+                    else if (attachFileActivity.LogType.ToLower() == "rejected")
+                    {
+                        var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId);
+                        MichaelRequestLogItem michaelRequestLogItem = new MichaelRequestLogItem();
+                        michaelRequestLogItem.DateOn = item.AddedOn.ToLocalTime().TimeAgo();
+                        michaelRequestLogItem.Icon = "SchoolIcon";
+                        michaelRequestLogItem.UserName = user.FullName;
+                        michaelRequestLogItem.UserEmail = user.Email;
+                        michaelRequestLogItem.UserId = user.Id;
+                        michaelRequestLogItem.Payload = Utils.FirstCharToUpper(item.Payload);
+                        michaelRequestLogItem.PayloadType = "rejected";
+                        michaelRequestLogItems.Add(michaelRequestLogItem);
+                    }
+                    else if (attachFileActivity.LogType.ToLower() == "approverapproved")
+                    {
+                        var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId);
+                        MichaelRequestLogItem michaelRequestLogItem = new MichaelRequestLogItem();
+                        michaelRequestLogItem.DateOn = item.AddedOn.ToLocalTime().TimeAgo();
+                        michaelRequestLogItem.Icon = "SchoolIcon";
+                        michaelRequestLogItem.UserName = user.FullName;
+                        michaelRequestLogItem.UserEmail = user.Email;
+                        michaelRequestLogItem.UserId = user.Id;
+                        michaelRequestLogItem.Payload = Utils.FirstCharToUpper(item.Payload);
+                        michaelRequestLogItem.PayloadType = "approverapproved";
+                        michaelRequestLogItems.Add(michaelRequestLogItem);
+                    }
+                    else if (attachFileActivity.LogType.ToLower() == "approverrejected")
+                    {
+                        var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId);
+                        MichaelRequestLogItem michaelRequestLogItem = new MichaelRequestLogItem();
+                        michaelRequestLogItem.DateOn = item.AddedOn.ToLocalTime().TimeAgo();
+                        michaelRequestLogItem.Icon = "SchoolIcon";
+                        michaelRequestLogItem.UserName = user.FullName;
+                        michaelRequestLogItem.UserEmail = user.Email;
+                        michaelRequestLogItem.UserId = user.Id;
+                        michaelRequestLogItem.Payload = Utils.FirstCharToUpper(item.Payload);
+                        michaelRequestLogItem.PayloadType = "approverrejected";
+                        michaelRequestLogItems.Add(michaelRequestLogItem);
+                    }
+                    else if (attachFileActivity.LogType.ToLower() == "completed")
+                    {
+                        var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId);
+                        MichaelRequestLogItem michaelRequestLogItem = new MichaelRequestLogItem();
+                        michaelRequestLogItem.DateOn = item.AddedOn.ToLocalTime().TimeAgo();
+                        michaelRequestLogItem.Icon = "SchoolIcon";
+                        michaelRequestLogItem.UserName = user.FullName;
+                        michaelRequestLogItem.UserEmail = user.Email;
+                        michaelRequestLogItem.UserId = user.Id;
+                        michaelRequestLogItem.Payload = Utils.FirstCharToUpper(item.Payload);
+                        michaelRequestLogItem.PayloadType = "completed";
+                        michaelRequestLogItems.Add(michaelRequestLogItem);
+                    }
+
+                }
+
+                jsonResponse = new JsonResponse("Ok", "Data loaded successfully.", michaelRequestLogItems);
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse addMichaelRequestFeedback(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData, MichaelRequestFeedbackRequest michaelRequestFeedbackRequest)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+
+                var requestCompltedStage = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.StageType == "Completed");
+                var request = nueRequestContext.MichaelRequestMaster.SingleOrDefault(x => x.Id == michaelRequestLog.RequestId);
+                request.RequestStageBaseId = requestCompltedStage.Id;
+                request.ModifiedOn = dateCreated;
+
+                MichaelRequestFeedbackMaster michaelRequestFeedbackMaster = new MichaelRequestFeedbackMaster();
+                michaelRequestFeedbackMaster.RequestId = michaelRequestViewerData.Id;
+                michaelRequestFeedbackMaster.Ratting = michaelRequestFeedbackRequest.Ratting;
+                michaelRequestFeedbackMaster.FeedbackComment = michaelRequestLog.Payload;
+                michaelRequestFeedbackMaster.UserId = michaelRequestLog.UserId;
+                michaelRequestFeedbackMaster.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestFeedbackMaster.Add(michaelRequestFeedbackMaster);
+
+                var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "completed");
+                michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                michaelRequestLog.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse adminRejectMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+
+                var requestCompltedStage = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.StageType == "Assignee Rejected");
+                var request = nueRequestContext.MichaelRequestMaster.SingleOrDefault(x => x.Id == michaelRequestLog.RequestId);
+                request.RequestStageBaseId = requestCompltedStage.Id;
+                request.ModifiedOn = dateCreated;
+
+                var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "rejected");
+                michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                michaelRequestLog.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse adminApproveMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+
+                var requestCompltedStage = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.StageType == "Assignee Accepted");
+                var request = nueRequestContext.MichaelRequestMaster.SingleOrDefault(x => x.Id == michaelRequestLog.RequestId);
+                request.RequestStageBaseId = requestCompltedStage.Id;
+                request.ModifiedOn = dateCreated;
+
+                var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "approved");
+                michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                michaelRequestLog.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse rejectMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+
+                var approverAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "approver");
+                var userAccess = nueRequestContext.MichaelRequestAccessMapper.FirstOrDefault(x => x.RequestId == michaelRequestViewerData.Id && x.Active == 1 && x.RequestAccessTypesId == approverAccessType.Id && x.UserId == michaelRequestViewerData.UserId);
+                var approvedPendingStatusBase = nueRequestContext.MichaelApproverStatusTypes.Where(x => x.Status == "pending").SingleOrDefault();
+                var rejectStatusBase = nueRequestContext.MichaelApproverStatusTypes.Where(x => x.Status == "rejected").SingleOrDefault();
+
+
+                var approverAccess = nueRequestContext.MichaelRequestApproverStatusMapper.FirstOrDefault(x => x.RequestId == michaelRequestViewerData.Id
+                                                                                    && x.RequestAccessTypesId == approverAccessType.Id
+                                                                                    && x.UserId == michaelRequestViewerData.UserId
+                                                                                    && x.RequestAccessId == userAccess.Id
+                                                                                    && x.ApproverStatusId == approvedPendingStatusBase.Id);
+
+                if (approverAccess != null)
+                {
+                    approverAccess.ApproverStatusId = rejectStatusBase.Id;
+                    approverAccess.AddedOn = dateCreated;
+                    nueRequestContext.SaveChanges();
+                }
+                
+
+                //change request status to approver rejected
+                var requestCompltedStage = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.StageType == "Approver Rejected");
+                var request = nueRequestContext.MichaelRequestMaster.SingleOrDefault(x => x.Id == michaelRequestLog.RequestId);
+                request.RequestStageBaseId = requestCompltedStage.Id;
+                request.ModifiedOn = dateCreated;
+
+                var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "approverrejected");
+                michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                michaelRequestLog.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse approveMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+
+                var approverAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "approver");
+                var userAccess = nueRequestContext.MichaelRequestAccessMapper.FirstOrDefault(x => x.RequestId == michaelRequestViewerData.Id && x.Active == 1 && x.RequestAccessTypesId == approverAccessType.Id && x.UserId == michaelRequestViewerData.UserId);
+                var approvedPendingStatusBase = nueRequestContext.MichaelApproverStatusTypes.Where(x => x.Status == "pending").SingleOrDefault();
+                var approvedStatusBase = nueRequestContext.MichaelApproverStatusTypes.Where(x => x.Status == "approved").SingleOrDefault();
+
+
+                var approverAccess = nueRequestContext.MichaelRequestApproverStatusMapper.FirstOrDefault(x => x.RequestId == michaelRequestViewerData.Id 
+                                                                                    && x.RequestAccessTypesId == approverAccessType.Id 
+                                                                                    && x.UserId == michaelRequestViewerData.UserId
+                                                                                    && x.RequestAccessId == userAccess.Id
+                                                                                    && x.ApproverStatusId == approvedPendingStatusBase.Id);
+
+                if(approverAccess != null)
+                {
+                    approverAccess.ApproverStatusId = approvedStatusBase.Id;
+                    approverAccess.AddedOn = dateCreated;
+                    nueRequestContext.SaveChanges();
+                }
+
+                
+
+                //check all approvers have approved for the request
+                var requestApproverStatus = nueRequestContext.MichaelRequestApproverStatusMapper.Where(x => x.RequestId == michaelRequestViewerData.Id
+                                                                                                        && x.RequestAccessTypesId == approverAccessType.Id
+                                                                                                        && x.ApproverStatusId != approvedStatusBase.Id);
+                if(requestApproverStatus == null || requestApproverStatus.Count() <= 0)
+                {
+                    var requestCompltedStage = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.StageType == "Approver Accepted");
+                    var request = nueRequestContext.MichaelRequestMaster.SingleOrDefault(x => x.Id == michaelRequestLog.RequestId);
+                    request.RequestStageBaseId = requestCompltedStage.Id;
+                    request.IsApprovalProcessComplted = 1;
+                    request.ModifiedOn = dateCreated;
+                }
+
+                var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "approverapproved");
+                michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                michaelRequestLog.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse withdrawMichaelRequest(MichaelRequestLog michaelRequestLog)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+
+                var requestCompltedStage = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.StageType == "Withdraw");
+                var request = nueRequestContext.MichaelRequestMaster.SingleOrDefault(x => x.Id == michaelRequestLog.RequestId);
+                request.RequestStageBaseId = requestCompltedStage.Id;
+                request.ModifiedOn = dateCreated;
+                
+                var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "withdraw");
+                michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                michaelRequestLog.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse addNewMichaelRequestComment(MichaelRequestLog michaelRequestLog)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+                var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "commented");
+                michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                michaelRequestLog.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse getMichaelRequestAttachmentItem(MichaelRequestLog michaelRequestLog)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestLogs = nueRequestContext.MichaelRequestLog.Where(x => x.UserId == michaelRequestLog.UserId && x.Id == michaelRequestLog.Id);
+                if(requestLogs != null && requestLogs.FirstOrDefault() != null)
+                {
+                    var requestLog = requestLogs.FirstOrDefault();
+                    var attchmentLogs = nueRequestContext.MichaelRequestAttachmentLog.Where(x => x.Id == int.Parse(requestLog.Payload));
+                    if(attchmentLogs != null && attchmentLogs.FirstOrDefault() != null)
+                    {
+                        jsonResponse = new JsonResponse("Ok", "Data loaded successfully.", attchmentLogs.FirstOrDefault());
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                else
+                {
+                    throw new Exception();
+                }
+                //var dateCreated = DateTime.UtcNow;
+                //michaelRequestAttachmentLog.AddedOn = dateCreated;
+                //michaelRequestAttachmentLog.ModifiedOn = dateCreated;
+                //nueRequestContext.MichaelRequestAttachmentLog.Add(michaelRequestAttachmentLog);
+                //nueRequestContext.SaveChanges();
+                //var fileAtachmentId = michaelRequestAttachmentLog.Id;
+                //var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "attachedfile");
+                //MichaelRequestLog michaelRequestLog = new MichaelRequestLog();
+                //michaelRequestLog.RequestId = michaelRequestAttachmentLog.RequestId;
+                //michaelRequestLog.UserId = michaelRequestAttachmentLog.UserId;
+                //michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                //michaelRequestLog.AddedOn = dateCreated;
+                //michaelRequestLog.Payload = fileAtachmentId.ToString();
+                //nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                //nueRequestContext.SaveChanges();
+                
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse addNewMichaelRequestAttchment(MichaelRequestAttachmentLog michaelRequestAttachmentLog, MichaelRequestAttachment michaelRequestAttachment)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+                michaelRequestAttachmentLog.AddedOn = dateCreated;
+                michaelRequestAttachmentLog.ModifiedOn = dateCreated;
+                nueRequestContext.MichaelRequestAttachmentLog.Add(michaelRequestAttachmentLog);
+                nueRequestContext.SaveChanges();
+                var fileAtachmentId = michaelRequestAttachmentLog.Id;
+                var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "attachedfile");
+                MichaelRequestLog michaelRequestLog = new MichaelRequestLog();
+                michaelRequestLog.RequestId = michaelRequestAttachmentLog.RequestId;
+                michaelRequestLog.UserId = michaelRequestAttachmentLog.UserId;
+                michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
+                michaelRequestLog.AddedOn = dateCreated;
+                michaelRequestLog.Payload = fileAtachmentId.ToString();
+                nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
+                nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
         public JsonResponse addNewMichaelRequest(DepartmentRequestSaveTemplate departmentRequestSaveTemplate, NueUserProfile nueUserProfile, string contentRootPath)
         {
             JsonResponse jsonResponse = new JsonResponse();
@@ -738,6 +1650,138 @@ namespace HCMApi.DB
                 var approverFields = dbField.Where(x => x.IsApproverField).ToList<DepartmentRequestSaveFormItem>();
 
                 if (dataFields == null || dataFields.Count <= 0) {
+                    throw new Exception("Invalid request");
+                }
+
+                var baseStage = nueRequestContext.MichaelRequestStageBase.Where(x => x.StageType == "Created").SingleOrDefault();
+
+                var slaBaseObject = nueRequestContext.MichaelEscalationBase.Where(x => x.EscalationLevel == "EL0").First();
+                var requestL1SLa = nueRequestContext.MichaelRequestEscalationMapper.Where(x => x.DepartmentId == baseRequest.DepartmentId && x.DepartmentRequestId == baseRequest.Id && x.EscalationBaseId == slaBaseObject.Id).SingleOrDefault();
+
+
+                var activeUsers = nueRequestContext.MichaelRequestEscalationUserBaseMapper.Where(x => x.RequestEscalationMapperId == requestL1SLa.Id && x.Active == 1);
+                var slaUser = activeUsers.Random();
+
+
+                var requestStrId = new Modal.Utils().getUniqRequestId(contentRootPath);
+                DAL.MichaelRequestMaster michaelRequestMaster = new DAL.MichaelRequestMaster();
+                michaelRequestMaster.RequestId = requestStrId;
+                michaelRequestMaster.DepartmentId = baseRequest.DepartmentId;
+                michaelRequestMaster.DepartmentRequestId = baseRequest.Id;
+                michaelRequestMaster.UserId = nueUserProfile.Id;
+                michaelRequestMaster.RequestStageBaseId = baseStage.Id;
+                michaelRequestMaster.RequestEscalationMapperId = requestL1SLa.Id;
+                michaelRequestMaster.RequestEscalationUserId = 1; //slaUser.Id;
+                michaelRequestMaster.RequestPriorityId = nueRequestContext.MichaelDepartmentRequestMaster.Where(x => x.DepartmentId == baseRequest.DepartmentId && x.Id == baseRequest.Id).SingleOrDefault().RequestPriorityId;
+                michaelRequestMaster.IsApprovalProcess = (approverFields != null && approverFields.Count > 0) ? 1 : 0;
+                michaelRequestMaster.IsApprovalProcessComplted = 0;
+                michaelRequestMaster.CurrentSla = requestL1SLa.MaxSla;
+                michaelRequestMaster.AddedOn = dateCreated;
+                michaelRequestMaster.ModifiedOn = dateCreated;
+                nueRequestContext.MichaelRequestMaster.Add(michaelRequestMaster);
+                nueRequestContext.SaveChanges();
+
+                var requestId = michaelRequestMaster.Id;
+
+                foreach (var item in dataFields)
+                {
+                    MichaelRequestPayloadMaster michaelRequestPayloadMaster = new MichaelRequestPayloadMaster();
+                    michaelRequestPayloadMaster.RequestId = requestId;
+                    michaelRequestPayloadMaster.FieldName = item.Name;
+                    michaelRequestPayloadMaster.PayloadDataType = nueRequestContext.MichaelPayloadDataType.Where(x => x.DataType == item.Fieldtype).SingleOrDefault().Id;
+                    michaelRequestPayloadMaster.Payload = item.Fieldvalue;
+                    michaelRequestPayloadMaster.AddedOn = dateCreated;
+                    michaelRequestPayloadMaster.ModifiedOn = dateCreated;
+                    nueRequestContext.MichaelRequestPayloadMaster.Add(michaelRequestPayloadMaster);
+                }
+                //nueRequestContext.SaveChanges();
+
+                MichaelRequestEscalationAccessLogs michaelRequestEscalationAccessLogs = new MichaelRequestEscalationAccessLogs();
+                michaelRequestEscalationAccessLogs.RequestId = requestId;
+                michaelRequestEscalationAccessLogs.UserId = nueUserProfile.Id;
+                michaelRequestEscalationAccessLogs.Active = 1;
+                michaelRequestEscalationAccessLogs.RequestEscalationMapperId = requestL1SLa.Id;
+                michaelRequestEscalationAccessLogs.RequestEscalationUserId = 1;//slaUser.Id;
+                michaelRequestEscalationAccessLogs.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestEscalationAccessLogs.Add(michaelRequestEscalationAccessLogs);
+                //nueRequestContext.SaveChanges();
+
+                MichaelRequestEscalationDurationLogs michaelRequestEscalationDurationLogs = new MichaelRequestEscalationDurationLogs();
+                michaelRequestEscalationDurationLogs.RequestId = requestId;
+                michaelRequestEscalationDurationLogs.Duration = -1;
+                michaelRequestEscalationDurationLogs.UserId = 1;// slaUser.Id;
+                michaelRequestEscalationDurationLogs.RequestEscalationMapperId = requestL1SLa.Id;
+                michaelRequestEscalationDurationLogs.RequestEscalationUserId = 1;// slaUser.Id;
+                michaelRequestEscalationDurationLogs.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestEscalationDurationLogs.Add(michaelRequestEscalationDurationLogs);
+                //nueRequestContext.SaveChanges();
+
+                MichaelRequestStageLogs michaelRequestStageLogs = new MichaelRequestStageLogs();
+                michaelRequestStageLogs.RequestId = requestId;
+                michaelRequestStageLogs.RequestStageBaseId = baseStage.Id;
+                michaelRequestStageLogs.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestStageLogs.Add(michaelRequestStageLogs);
+                nueRequestContext.SaveChanges();
+
+                MichaelRequestAccessMapper michaelRequestOwnerAccessMapper = new MichaelRequestAccessMapper();
+                michaelRequestOwnerAccessMapper.RequestId = requestId;
+                michaelRequestOwnerAccessMapper.UserId = nueUserProfile.Id;
+                michaelRequestOwnerAccessMapper.RequestAccessTypesId = nueRequestContext.MichaelRequestAccessTypes.Where(x => x.AccessTypes == "owner").SingleOrDefault().Id;
+                michaelRequestOwnerAccessMapper.Active = 1;
+                michaelRequestOwnerAccessMapper.AddedOn = dateCreated;
+                nueRequestContext.MichaelRequestAccessMapper.Add(michaelRequestOwnerAccessMapper);
+                nueRequestContext.SaveChanges();
+
+                if (approverFields != null && approverFields.Count > 0)
+                {
+                    foreach (var item in approverFields)
+                    {
+
+                        MichaelRequestAccessMapper michaelRequestAccessMapper = new MichaelRequestAccessMapper();
+                        michaelRequestAccessMapper.RequestId = requestId;
+                        michaelRequestAccessMapper.UserId = 1;// int.Parse(item.Fieldvalue);
+                        michaelRequestAccessMapper.RequestAccessTypesId = nueRequestContext.MichaelRequestAccessTypes.Where(x => x.AccessTypes == "approver").SingleOrDefault().Id;
+                        michaelRequestAccessMapper.Active = 1;
+                        michaelRequestAccessMapper.AddedOn = dateCreated;
+                        nueRequestContext.MichaelRequestAccessMapper.Add(michaelRequestAccessMapper);
+                        nueRequestContext.SaveChanges();
+
+                        MichaelRequestApproverStatusMapper michaelRequestApproverStatusMapper = new MichaelRequestApproverStatusMapper();
+                        michaelRequestApproverStatusMapper.RequestId = requestId;
+                        michaelRequestApproverStatusMapper.UserId = 1;//int.Parse(item.Fieldvalue);
+                        michaelRequestApproverStatusMapper.RequestAccessId = michaelRequestAccessMapper.Id;
+                        michaelRequestApproverStatusMapper.RequestAccessTypesId = michaelRequestAccessMapper.RequestAccessTypesId;
+                        michaelRequestApproverStatusMapper.ApproverStatusId = nueRequestContext.MichaelApproverStatusTypes.Where(x => x.Status == "pending").SingleOrDefault().Id;
+                        michaelRequestApproverStatusMapper.Active = 1;
+                        michaelRequestApproverStatusMapper.AddedOn = dateCreated;
+                        nueRequestContext.MichaelRequestApproverStatusMapper.Add(michaelRequestApproverStatusMapper);
+                        nueRequestContext.SaveChanges();
+                    }
+                }
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.", requestStrId);
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse addNewMichaelRequestX(DepartmentRequestSaveTemplate departmentRequestSaveTemplate, NueUserProfile nueUserProfile, string contentRootPath)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+                var dbField = departmentRequestSaveTemplate.DataFields;
+                var baseRequest = departmentRequestSaveTemplate.michaelDepartmentRequestTypeMaster;
+
+                var dataFields = dbField.Where(x => !x.IsApproverField).ToList<DepartmentRequestSaveFormItem>();
+                var approverFields = dbField.Where(x => x.IsApproverField).ToList<DepartmentRequestSaveFormItem>();
+
+                if (dataFields == null || dataFields.Count <= 0)
+                {
                     throw new Exception("Invalid request");
                 }
 
@@ -775,6 +1819,7 @@ namespace HCMApi.DB
                 {
                     MichaelRequestPayloadMaster michaelRequestPayloadMaster = new MichaelRequestPayloadMaster();
                     michaelRequestPayloadMaster.RequestId = requestId;
+                    michaelRequestPayloadMaster.FieldName = item.Name;
                     michaelRequestPayloadMaster.PayloadDataType = nueRequestContext.MichaelPayloadDataType.Where(x => x.DataType == item.Fieldtype).SingleOrDefault().Id;
                     michaelRequestPayloadMaster.Payload = item.Fieldvalue;
                     michaelRequestPayloadMaster.AddedOn = dateCreated;
@@ -853,7 +1898,6 @@ namespace HCMApi.DB
             }
             return jsonResponse;
         }
-
 
         public static T ConvertFromDBVal<T>(object obj)
         {

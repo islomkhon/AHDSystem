@@ -22,6 +22,7 @@ using Hangfire;
 using Hangfire.Dashboard;
 using HCMApi.Shedules;
 using System.Diagnostics;
+using HCMApi.Hubs;
 
 namespace HCMApi
 {
@@ -81,10 +82,12 @@ namespace HCMApi
             services.AddDbContext<NueRequestContext>(options =>
                 options.UseSqlServer(connection)
             );
-
+            
             //services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("Db")));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -122,6 +125,14 @@ namespace HCMApi
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<MessagesHub>("/chat");
+            });
+
+            System.Data.SqlClient.SqlDependency.Start(ConnectionString);
+
             app.UseMvc();
 
             //BackgroundJob.Schedule(() => ApplyWatermark(filename), TimeSpan.FromMinutes(5));

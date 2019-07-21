@@ -12,6 +12,7 @@ namespace HCMApi.DAL
             MichaelRequestAttachmentLog = new HashSet<MichaelRequestAttachmentLog>();
             MichaelRequestEscalationAccessLogs = new HashSet<MichaelRequestEscalationAccessLogs>();
             MichaelRequestEscalationDurationLogs = new HashSet<MichaelRequestEscalationDurationLogs>();
+            MichaelRequestFeedbackMaster = new HashSet<MichaelRequestFeedbackMaster>();
             MichaelRequestLog = new HashSet<MichaelRequestLog>();
             MichaelRequestPayloadMaster = new HashSet<MichaelRequestPayloadMaster>();
             MichaelRequestStageLogs = new HashSet<MichaelRequestStageLogs>();
@@ -45,6 +46,7 @@ namespace HCMApi.DAL
         public virtual ICollection<MichaelRequestAttachmentLog> MichaelRequestAttachmentLog { get; set; }
         public virtual ICollection<MichaelRequestEscalationAccessLogs> MichaelRequestEscalationAccessLogs { get; set; }
         public virtual ICollection<MichaelRequestEscalationDurationLogs> MichaelRequestEscalationDurationLogs { get; set; }
+        public virtual ICollection<MichaelRequestFeedbackMaster> MichaelRequestFeedbackMaster { get; set; }
         public virtual ICollection<MichaelRequestLog> MichaelRequestLog { get; set; }
         public virtual ICollection<MichaelRequestPayloadMaster> MichaelRequestPayloadMaster { get; set; }
         public virtual ICollection<MichaelRequestStageLogs> MichaelRequestStageLogs { get; set; }

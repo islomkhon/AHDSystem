@@ -89,6 +89,9 @@
           "lib/netstandard2.0/Hangfire.SqlServer.dll": {}
         }
       },
+      "Microsoft.AspNet.SignalR/2.4.1": {
+        "type": "package"
+      },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
         "type": "package",
         "dependencies": {
@@ -5071,6 +5074,15 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
+      },
+      "TimeAgo/1.0.8": {
+        "type": "package",
+        "compile": {
+          "lib/portable-net4+sl5/TimeAgo.dll": {}
+        },
+        "runtime": {
+          "lib/portable-net4+sl5/TimeAgo.dll": {}
+        }
       }
     }
   },
@@ -5221,6 +5233,17 @@
         "lib/netstandard2.0/Hangfire.SqlServer.dll",
         "lib/netstandard2.0/Hangfire.SqlServer.xml",
         "tools/install.sql"
+      ]
+    },
+    "Microsoft.AspNet.SignalR/2.4.1": {
+      "sha512": "aYbLVE5toZwv/qaQ0BiIZRRwN/00WKYzGjaYUWIQuI91xZ50nnAymWD1sxCZFN9XXDRq8bevM5ET9GmAeOI/Nw==",
+      "type": "package",
+      "path": "microsoft.aspnet.signalr/2.4.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "microsoft.aspnet.signalr.2.4.1.nupkg.sha512",
+        "microsoft.aspnet.signalr.nuspec"
       ]
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -13678,6 +13701,18 @@
         "system.xml.xpath.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xpath.xdocument.nuspec"
       ]
+    },
+    "TimeAgo/1.0.8": {
+      "sha512": "sXT3CxKDXyoG1/JxClqBBTfHjDENhsqJSVbhseW08lc/rSsMjOnhOh6YTrqIXtm9eTcbWEo4DEtn57KDlIxZaA==",
+      "type": "package",
+      "path": "timeago/1.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/portable-net4+sl5/TimeAgo.dll",
+        "timeago.1.0.8.nupkg.sha512",
+        "timeago.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -13685,6 +13720,7 @@
       "EntityFramework >= 6.2.0",
       "FormatWith >= 2.2.1",
       "Hangfire >= 1.7.4",
+      "Microsoft.AspNet.SignalR >= 2.4.1",
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Authentication.AzureAD.UI >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
@@ -13699,7 +13735,8 @@
       "System.DirectoryServices >= 4.5.0",
       "System.DirectoryServices.AccountManagement >= 4.5.0",
       "System.DirectoryServices.Protocols >= 4.5.0",
-      "System.Net.Security >= 4.3.2"
+      "System.Net.Security >= 4.3.2",
+      "TimeAgo >= 1.0.8"
     ]
   },
   "packageFolders": {
@@ -13755,6 +13792,10 @@
           "Hangfire": {
             "target": "Package",
             "version": "[1.7.4, )"
+          },
+          "Microsoft.AspNet.SignalR": {
+            "target": "Package",
+            "version": "[2.4.1, )"
           },
           "Microsoft.AspNetCore.App": {
             "suppressParent": "All",
@@ -13822,6 +13863,10 @@
           "System.Net.Security": {
             "target": "Package",
             "version": "[4.3.2, )"
+          },
+          "TimeAgo": {
+            "target": "Package",
+            "version": "[1.0.8, )"
           }
         },
         "imports": [
@@ -13889,6 +13934,16 @@
       "warningLevel": 1,
       "message": "Package 'System.Spatial 5.6.4' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.2'. This package may not be fully compatible with your project.",
       "libraryId": "System.Spatial",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.2"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'TimeAgo 1.0.8' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.2'. This package may not be fully compatible with your project.",
+      "libraryId": "TimeAgo",
       "targetGraphs": [
         ".NETCoreApp,Version=v2.2"
       ]

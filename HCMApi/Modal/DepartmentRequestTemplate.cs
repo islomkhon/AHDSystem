@@ -19,4 +19,6 @@ namespace HCMApi.Modal
         public DAL.MichaelDepartmentRequestMaster michaelDepartmentRequestMaster { get; set; }
         public List<object> AvilableField { get; set; }
     }
+
+
 }

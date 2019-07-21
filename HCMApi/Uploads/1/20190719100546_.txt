@@ -1,0 +1,44 @@
+<html >
+<style>
+table {
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid #ADD8E6;
+}    
+div {
+    background-color: green;
+}
+</style>
+
+<body style="width:540px;margin:0 auto;text-align: left;margin-top: 29px;" align="center">
+
+<p style="text-aligin:left;">Hi MONIN JOSE</p>
+
+<p>We have found discrepancy in following dates. Please fix as soon as possible</p>
+
+<table style="width: 140px;border-color: #91d5f7; margin-top: 24px;">
+
+<thead>
+ <tr>
+  <th>Date</th>
+ </tr>
+</thead>
+
+<tbody align="center" style="border-collapse:collapse;">
+
+<tr style="">
+
+<td style="padding: 5px;">2/8/2019</td>
+
+</tr>
+
+</tbody>
+
+</table>
+<p style="padding: 0px; margin-bottom: 0;">Please ignore if you have already updated.</p>
+<p style="padding: 0px; margin-bottom: 0; margin-top: 3px;">Note: This is an auto-generated mail. Please do not reply.</p>
+</body>
+
+</html>
+
