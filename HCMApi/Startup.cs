@@ -132,7 +132,7 @@ namespace HCMApi
             });
 
             System.Data.SqlClient.SqlDependency.Start(ConnectionString);
-
+            MessagesRepository.GetAllUnreadMessages();
             app.UseMvc();
 
             //BackgroundJob.Schedule(() => ApplyWatermark(filename), TimeSpan.FromMinutes(5));

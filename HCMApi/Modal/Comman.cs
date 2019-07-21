@@ -187,4 +187,40 @@ namespace HCMApi.Modal
 
     }
 
+    public class MichaeNotificationPayload
+    {
+        public int MessageId { get; set; }
+        public string Message { get; set; }
+        public string EmptyMessage { get; set; }
+        public int Processed { get; set; }
+        public int UserId { get; set; }
+        public string Target { get; set; }
+        public DateTime Date { get; set; }
+        public string DateAdded { get; set; }
+    }
+
+    public class MichaeNotificationBase
+    {
+        public List<MichaeNotificationPayload> MichaeNotificationPayloads { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class MichaeNotification
+    {
+        public string Channel { get; set; }
+        public MichaeNotificationBase michaeNotificationBase { get; set; }
+
+    }
+
+    public class MichaeRequestSummaryItem
+    {
+        public int Id { get; set; }
+        public string User { get; set; }
+        public string RequestId { get; set; }
+        public string RequestType { get; set; }
+        public string RequestStatus { get; set; }
+        public string DateAdded { get; set; }
+        public string DateModified { get; set; }
+    }
+
 }

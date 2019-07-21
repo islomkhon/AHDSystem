@@ -150,6 +150,34 @@ namespace HCMApi.DB
             }
         }
 
+        public List<NeuMessages> getUnreadNotifications(int user)
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var notificationMessages = nueRequestContext.NeuMessages.Where(x => x.Processed == 0 && x.UserId == user);
+            if (notificationMessages != null && notificationMessages.FirstOrDefault() != null)
+            {
+                return notificationMessages.ToList<NeuMessages>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<NeuMessages> getNotifications()
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var notificationMessages = nueRequestContext.NeuMessages;
+            if(notificationMessages != null && notificationMessages.FirstOrDefault() != null)
+            {
+                return notificationMessages.ToList<NeuMessages>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public MichaelDepartmentRequestMaster GetDepartmentRequestMetaDetails(int departmentId, int requestId)
         {
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -964,6 +992,83 @@ namespace HCMApi.DB
                 jsonResponse = new JsonResponse("Failed", "An error occerd.");
             }
             return jsonResponse;
+        }
+
+        public List<MichaeRequestSummaryItem> GetSelfNewRequestHistorySummary(int userId)
+        {
+            List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => (x.RequestStageBase.StageType == "Completed" || x.RequestStageBase.StageType == "Withdraw")
+                                                                                    && (x.MichaelRequestAccessMapper.Where(y => y.RequestId == x.Id
+                                                                                    && y.UserId == userId && y.Active == 1 && y.RequestAccessTypes.AccessTypes == "owner").Count() > 0));
+
+                
+                if (requestObj != null && requestObj.FirstOrDefault() != null)
+                {
+                    foreach (var item in requestObj)
+                    {
+                        michaeRequestSummaryItems.Add(new MichaeRequestSummaryItem()
+                        {
+                            Id = item.Id,
+                            RequestId = item.RequestId,
+                            RequestType = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == item.DepartmentRequestId && x.DepartmentId == item.DepartmentId).RequestTypeName,
+                            User = nueRequestContext.NueUserProfile.SingleOrDefault(x => x.Id == userId).FullName,
+                            RequestStatus = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.Id == item.RequestStageBaseId).StageType,
+                            DateAdded = item.AddedOn.ToLocalTime().ToString(),
+                            DateModified = item.ModifiedOn.ToLocalTime().ToString()
+                        });
+                    }
+                    return michaeRequestSummaryItems;
+                }
+                else
+                {
+                    michaeRequestSummaryItems = null;
+                }
+            }
+            catch (Exception e1)
+            {
+                michaeRequestSummaryItems = null;
+            }
+            return michaeRequestSummaryItems;
+        }
+
+        public List<MichaeRequestSummaryItem> GetSelfNewRequestSummary(int userId)
+        {
+            List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => (x.RequestStageBase.StageType != "Completed" && x.RequestStageBase.StageType != "Withdraw") 
+                                                                                    && (x.MichaelRequestAccessMapper.Where(y => y.RequestId == x.Id 
+                                                                                    && y.UserId == userId && y.Active == 1 && y.RequestAccessTypes.AccessTypes == "owner").Count() > 0));
+                if (requestObj != null && requestObj.FirstOrDefault() != null)
+                {
+                    foreach (var item in requestObj)
+                    {
+                        michaeRequestSummaryItems.Add(new MichaeRequestSummaryItem() {
+                            Id = item.Id,
+                            RequestId = item.RequestId,
+                            RequestType = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == item.DepartmentRequestId && x.DepartmentId == item.DepartmentId).RequestTypeName,
+                            User = nueRequestContext.NueUserProfile.SingleOrDefault(x => x.Id == userId).FullName,
+                            RequestStatus = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.Id == item.RequestStageBaseId).StageType,
+                            DateAdded = item.AddedOn.ToLocalTime().ToString(),
+                            DateModified = item.ModifiedOn.ToLocalTime().ToString()
+                        });
+                    }
+                    return michaeRequestSummaryItems;
+                }
+                else
+                {
+                    michaeRequestSummaryItems = null;
+                }
+            }
+            catch (Exception e1)
+            {
+                michaeRequestSummaryItems = null;
+            }
+            return michaeRequestSummaryItems;
         }
 
         public JsonResponse GetMichaelRequestViewerData(MichaelRequestViewerData michaelRequestViewerData)

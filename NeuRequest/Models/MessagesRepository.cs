@@ -11,7 +11,8 @@ namespace NeuRequest.Models
 {
     public class MessagesRepository
     {
-        readonly string _connString = ConfigurationManager.ConnectionStrings["DB"].ConnectionString;
+        readonly static string _connString = ConfigurationManager.ConnectionStrings["DB"].ConnectionString;
+        
         public IEnumerable<Messages> GetAllUnreadMessages(int userId)
         {
             var messages = new List<Messages>();

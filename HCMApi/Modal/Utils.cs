@@ -46,6 +46,47 @@ namespace HCMApi.Modal
             return uiMaterialTableModel;
         }
 
+        public UiMaterialTableModel GetSelfNewRequestSummaryUiTableRender(List<MichaeRequestSummaryItem> michaeRequestSummaryItems)
+        {
+            UiMaterialTableModel uiMaterialTableModel = new UiMaterialTableModel();
+            //"[{\"Id\":1,\"Name\":\"Leave Cancellation\"},{\"Id\":2,\"Name\":\"Past Leave Apply\"}]"
+            List<string> dataCols = new List<string>();
+            dataCols.Add("{\"title\":\"Id\",\"field\":\"Id\"}");
+            dataCols.Add("{\"title\":\"RequestType\",\"field\":\"RequestType\"}");
+            dataCols.Add("{\"title\":\"RequestStatus\",\"field\":\"RequestStatus\"}");
+            dataCols.Add("{\"title\":\"DateAdded\",\"field\":\"DateAdded\"}");
+            dataCols.Add("{\"title\":\"DateModified\",\"field\":\"DateModified\"}");
+            //dataCols.Add("{\"title\":\"Active/Deactive\",\"field\":\"Active\"}");
+            uiMaterialTableModel.DataCols = "[" + string.Join(",", dataCols) + "]";
+            //var requestTypes = michaelDepartmentRequestMasters.Select(i => new { i.Id, i.RequestTypeName, i.Active });
+            List<string> dataRows = new List<string>();
+            foreach (var item in michaeRequestSummaryItems)
+            {
+                dataRows.Add("{\"Id\":\"" + item.RequestId + "\",\"RequestType\":\"" + item.RequestType + "\",\"RequestStatus\":\"" + item.RequestStatus + "\",\"DateAdded\":\"" + item.DateAdded + "\",\"DateModified\":\"" + item.DateModified + "\"}");
+            }
+            uiMaterialTableModel.DataRows = "[" + string.Join(",", dataRows) + "]";
+            return uiMaterialTableModel;
+        }
+
+        public UiMaterialTableModel GetSelfNewRequestHistorySummaryUiTableRender(List<MichaeRequestSummaryItem> michaeRequestSummaryItems)
+        {
+            UiMaterialTableModel uiMaterialTableModel = new UiMaterialTableModel();
+            List<string> dataCols = new List<string>();
+            dataCols.Add("{\"title\":\"Id\",\"field\":\"Id\"}");
+            dataCols.Add("{\"title\":\"RequestType\",\"field\":\"RequestType\"}");
+            dataCols.Add("{\"title\":\"RequestStatus\",\"field\":\"RequestStatus\"}");
+            dataCols.Add("{\"title\":\"DateAdded\",\"field\":\"DateAdded\"}");
+            dataCols.Add("{\"title\":\"DateModified\",\"field\":\"DateModified\"}");
+            uiMaterialTableModel.DataCols = "[" + string.Join(",", dataCols) + "]";
+            List<string> dataRows = new List<string>();
+            foreach (var item in michaeRequestSummaryItems)
+            {
+                dataRows.Add("{\"Id\":\"" + item.RequestId + "\",\"RequestType\":\"" + item.RequestType + "\",\"RequestStatus\":\"" + item.RequestStatus + "\",\"DateAdded\":\"" + item.DateAdded + "\",\"DateModified\":\"" + item.DateModified + "\"}");
+            }
+            uiMaterialTableModel.DataRows = "[" + string.Join(",", dataRows) + "]";
+            return uiMaterialTableModel;
+        }
+
         /*public UiMaterialTableModel DepartmentRequestListUiTableRender(List<DAL.MichaelDepartmentRequestTypeMaster> departmentRequestList)
         {
             UiMaterialTableModel uiMaterialTableModel = new UiMaterialTableModel();

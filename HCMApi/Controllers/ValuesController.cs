@@ -401,6 +401,116 @@ namespace HCMApi.Controllers
                 return new JsonResult(new JsonResponse("Failed", "An error occerd"));
             }
         }
+        
+        [HttpGet]
+        [Route("GetUserProfile")]
+        public JsonResult GetUserProfile()
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        return new JsonResult(new JsonResponse("Ok", "Data loaded.", nueUserProfile));
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetSelfNewRequestHistorySummary")]
+        public JsonResult GetSelfNewRequestHistorySummary()
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new DataAccess(this.AzureAdSettings).GetSelfNewRequestHistorySummary(nueUserProfile.Id);
+                        if (michaeRequestSummaryItems != null)
+                        {
+
+                            UiMaterialTableModel uiMaterialTableModel = new Modal.Utils().GetSelfNewRequestHistorySummaryUiTableRender(michaeRequestSummaryItems);
+                            return new JsonResult(new JsonResponse("Ok", "Data updated.", JsonConvert.SerializeObject(uiMaterialTableModel)));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "An error occerd while updating the data"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
+
+        [HttpGet]
+        [Route("GetSelfNewRequestSummary")]
+        public JsonResult GetSelfNewRequestSummary()
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                }
+                else
+                {
+                    string userEmail = User.Identity.Name.ToLower();
+                    DAL.NueUserProfile nueUserProfile = new DataAccess(this.AzureAdSettings).getSpecificUserProfilesByEmail(userEmail);
+                    if (nueUserProfile != null && nueUserProfile.Email != null && nueUserProfile.Email.ToLower() == userEmail && nueUserProfile.Active == 1)
+                    {
+                        List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new DataAccess(this.AzureAdSettings).GetSelfNewRequestSummary(nueUserProfile.Id);
+                        if (michaeRequestSummaryItems != null)
+                        {
+                            
+                            UiMaterialTableModel uiMaterialTableModel = new Modal.Utils().GetSelfNewRequestSummaryUiTableRender(michaeRequestSummaryItems);
+                            return new JsonResult(new JsonResponse("Ok", "Data updated.", JsonConvert.SerializeObject(uiMaterialTableModel)));
+                        }
+                        else
+                        {
+                            return new JsonResult(new JsonResponse("Failed", "An error occerd while updating the data"));
+                        }
+                    }
+                    else
+                    {
+                        return new JsonResult(new JsonResponse("Failed", "Invalid Request"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(new JsonResponse("Failed", "An error occerd"));
+            }
+        }
 
         [HttpGet]
         [Route("DepartmentRequestListUiTableRender")]
@@ -430,7 +540,7 @@ namespace HCMApi.Controllers
                         }
                         else
                         {
-                            return new JsonResult(new JsonResponse("Failed", "AN error occerd while updating the data"));
+                            return new JsonResult(new JsonResponse("Failed", "An error occerd while updating the data"));
                         }
                     }
                     else
