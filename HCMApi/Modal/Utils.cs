@@ -1,10 +1,14 @@
-﻿using HCMApi.DAL;
+﻿using Hangfire;
+using HCMApi.DAL;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HCMApi.Modal
@@ -87,6 +91,188 @@ namespace HCMApi.Modal
             return uiMaterialTableModel;
         }
 
+        public UiMaterialTableModel GetApproverNewRequestSummaryUiTableRender(List<MichaeRequestSummaryItem> michaeRequestSummaryItems)
+        {
+            UiMaterialTableModel uiMaterialTableModel = new UiMaterialTableModel();
+            List<string> dataCols = new List<string>();
+            dataCols.Add("{\"title\":\"Id\",\"field\":\"Id\"}");
+            dataCols.Add("{\"title\":\"User\",\"field\":\"User\"}");
+            dataCols.Add("{\"title\":\"RequestType\",\"field\":\"RequestType\"}");
+            dataCols.Add("{\"title\":\"RequestStatus\",\"field\":\"RequestStatus\"}");
+            dataCols.Add("{\"title\":\"DateAdded\",\"field\":\"DateAdded\"}");
+            dataCols.Add("{\"title\":\"DateModified\",\"field\":\"DateModified\"}");
+            uiMaterialTableModel.DataCols = "[" + string.Join(",", dataCols) + "]";
+            List<string> dataRows = new List<string>();
+            foreach (var item in michaeRequestSummaryItems)
+            {
+                dataRows.Add("{\"Id\":\"" + item.RequestId + "\",\"User\":\"" + item.User + "\",\"RequestType\":\"" + item.RequestType + "\",\"RequestStatus\":\"" + item.RequestStatus + "\",\"DateAdded\":\"" + item.DateAdded + "\",\"DateModified\":\"" + item.DateModified + "\"}");
+            }
+            uiMaterialTableModel.DataRows = "[" + string.Join(",", dataRows) + "]";
+            return uiMaterialTableModel;
+        }
+
+        public UiMaterialTableModel GetApproverNewRequestHistorySummaryUiTableRender(List<MichaeRequestSummaryItem> michaeRequestSummaryItems)
+        {
+            UiMaterialTableModel uiMaterialTableModel = new UiMaterialTableModel();
+            List<string> dataCols = new List<string>();
+            dataCols.Add("{\"title\":\"Id\",\"field\":\"Id\"}");
+            dataCols.Add("{\"title\":\"User\",\"field\":\"User\"}");
+            dataCols.Add("{\"title\":\"RequestType\",\"field\":\"RequestType\"}");
+            dataCols.Add("{\"title\":\"RequestStatus\",\"field\":\"RequestStatus\"}");
+            dataCols.Add("{\"title\":\"DateAdded\",\"field\":\"DateAdded\"}");
+            dataCols.Add("{\"title\":\"DateModified\",\"field\":\"DateModified\"}");
+            uiMaterialTableModel.DataCols = "[" + string.Join(",", dataCols) + "]";
+            List<string> dataRows = new List<string>();
+            foreach (var item in michaeRequestSummaryItems)
+            {
+                dataRows.Add("{\"Id\":\"" + item.RequestId + "\",\"User\":\"" + item.User + "\",\"RequestType\":\"" + item.RequestType + "\",\"RequestStatus\":\"" + item.RequestStatus + "\",\"DateAdded\":\"" + item.DateAdded + "\",\"DateModified\":\"" + item.DateModified + "\"}");
+            }
+            uiMaterialTableModel.DataRows = "[" + string.Join(",", dataRows) + "]";
+            return uiMaterialTableModel;
+        }
+
+        public UiMaterialTableModel GetAssigneeNewRequestSummaryUiTableRender(List<MichaeRequestSummaryItem> michaeRequestSummaryItems)
+        {
+            UiMaterialTableModel uiMaterialTableModel = new UiMaterialTableModel();
+            List<string> dataCols = new List<string>();
+            dataCols.Add("{\"title\":\"Id\",\"field\":\"Id\"}");
+            dataCols.Add("{\"title\":\"User\",\"field\":\"User\"}");
+            dataCols.Add("{\"title\":\"RequestType\",\"field\":\"RequestType\"}");
+            dataCols.Add("{\"title\":\"RequestStatus\",\"field\":\"RequestStatus\"}");
+            dataCols.Add("{\"title\":\"DateAdded\",\"field\":\"DateAdded\"}");
+            dataCols.Add("{\"title\":\"DateModified\",\"field\":\"DateModified\"}");
+            uiMaterialTableModel.DataCols = "[" + string.Join(",", dataCols) + "]";
+            List<string> dataRows = new List<string>();
+            foreach (var item in michaeRequestSummaryItems)
+            {
+                dataRows.Add("{\"Id\":\"" + item.RequestId + "\",\"User\":\"" + item.User + "\",\"RequestType\":\"" + item.RequestType + "\",\"RequestStatus\":\"" + item.RequestStatus + "\",\"DateAdded\":\"" + item.DateAdded + "\",\"DateModified\":\"" + item.DateModified + "\"}");
+            }
+            uiMaterialTableModel.DataRows = "[" + string.Join(",", dataRows) + "]";
+            return uiMaterialTableModel;
+        }
+
+        public UiMaterialTableModel GetAssigneeNewRequestHistorySummaryUiTableRender(List<MichaeRequestSummaryItem> michaeRequestSummaryItems)
+        {
+            UiMaterialTableModel uiMaterialTableModel = new UiMaterialTableModel();
+            List<string> dataCols = new List<string>();
+            dataCols.Add("{\"title\":\"Id\",\"field\":\"Id\"}");
+            dataCols.Add("{\"title\":\"User\",\"field\":\"User\"}");
+            dataCols.Add("{\"title\":\"RequestType\",\"field\":\"RequestType\"}");
+            dataCols.Add("{\"title\":\"RequestStatus\",\"field\":\"RequestStatus\"}");
+            dataCols.Add("{\"title\":\"DateAdded\",\"field\":\"DateAdded\"}");
+            dataCols.Add("{\"title\":\"DateModified\",\"field\":\"DateModified\"}");
+            uiMaterialTableModel.DataCols = "[" + string.Join(",", dataCols) + "]";
+            List<string> dataRows = new List<string>();
+            foreach (var item in michaeRequestSummaryItems)
+            {
+                dataRows.Add("{\"Id\":\"" + item.RequestId + "\",\"User\":\"" + item.User + "\",\"RequestType\":\"" + item.RequestType + "\",\"RequestStatus\":\"" + item.RequestStatus + "\",\"DateAdded\":\"" + item.DateAdded + "\",\"DateModified\":\"" + item.DateModified + "\"}");
+            }
+            uiMaterialTableModel.DataRows = "[" + string.Join(",", dataRows) + "]";
+            return uiMaterialTableModel;
+        }
+
+        public void mailHandilar(List<MailItem> mailItems)
+        {
+            try
+            {
+                foreach (var item in mailItems)
+                {
+                    BackgroundJob.Enqueue(() => SendMailAsync(item));
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        public static void SendMailAsync(MailItem mailItem)
+        {
+            try
+            {
+
+                string smtpServer = "smtp.gmail.com";
+                int smtpPort = 587;
+                string smtpEmail = "nuhcmuser@gmail.com";
+                string smtpPassword = "GoodPassword@#neudesic.net";
+                //var message = new MailMessage(new MailAddress(smtpEmail), new MailAddress(mailItem.To));
+                var message = new MailMessage(new MailAddress(smtpEmail), new MailAddress("monin.jose@neudesic.com"));
+                message.Subject = mailItem.Subject;
+                message.Body = mailItem.Body;
+                message.IsBodyHtml = true;
+                message.HeadersEncoding = Encoding.UTF8;
+                message.SubjectEncoding = Encoding.UTF8;
+                message.Headers.Add("From", smtpEmail);
+                message.BodyEncoding = Encoding.UTF8;
+                if (mailItem.Priority) message.Priority = MailPriority.High;
+                SmtpClient client = new SmtpClient(smtpServer, smtpPort);
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.EnableSsl = true;
+                client.UseDefaultCredentials = false;
+
+                NetworkCredential smtpUserInfo = new NetworkCredential(smtpEmail, smtpPassword);
+                client.Credentials = smtpUserInfo;
+                client.Send(message);
+                client.Dispose();
+                message.Dispose();
+
+            }
+            catch (Exception e1)
+            {
+
+            }
+        }
+
+        public void renderGenerateMailItem(string domainName, string mailTemplate, MichaelRequestViewerData michaelRequestViewerData, List<MessagesModel> messages)
+        {
+            Dictionary<string, string> messageData = new Dictionary<string, string>();
+            messageData.Add("Request Category", michaelRequestViewerData.RequestType);
+            foreach (var item in michaelRequestViewerData.SidebarData)
+            {
+                messageData.Add(Utils.FirstCharToUpper(item.key), Utils.FirstCharToUpper(item.value));
+            }
+            List<MailItem> mailItems = new List<MailItem>();
+            foreach (MessagesModel messagesModel in messages)
+            {
+                string messageTitle = messagesModel.EmptyMessage;
+                string requestUrl = messagesModel.Target;
+                var mailToUser = messagesModel.Email;
+
+                string mailTemplateGen = mailTemplate;
+                mailTemplateGen = mailTemplateGen.Replace("{TitleMessage}", messageTitle).Replace("{RequestLink}", requestUrl)
+                    .Replace("{RequestBody}", generateMailDataRow(messageData)).Replace("{RequestMessage}", messagesModel.EmptyMessage);
+
+                MailItem mailItem = new MailItem();
+                mailItem.Subject = messagesModel.Message;
+                mailItem.Body = mailTemplateGen;
+                mailItem.To = mailToUser;
+                mailItem.Priority = true;
+                mailItems.Add(mailItem);
+            }
+
+            if(mailItems.Count > 0)
+            {
+                mailHandilar(mailItems);
+            }
+        }
+
+        private string generateMailDataRow(Dictionary<string, string> messageData)
+        {
+            string returnVal = "";
+            foreach (var item in messageData)
+            {
+                returnVal += "<tr>\r\n" +
+                    "                              <td align=\"left\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;\">\r\n" +
+                    item.Key +
+                    "                              </td>\r\n" +
+                    "                              <td align=\"left\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;\">\r\n" +
+                    item.Value +
+                    "                              </td>\r\n" +
+                    "                            </tr>";
+            }
+            return returnVal;
+        }
+
         /*public UiMaterialTableModel DepartmentRequestListUiTableRender(List<DAL.MichaelDepartmentRequestTypeMaster> departmentRequestList)
         {
             UiMaterialTableModel uiMaterialTableModel = new UiMaterialTableModel();
@@ -145,15 +331,27 @@ namespace HCMApi.Modal
             return botIntnetItems;
         }
 
-        public List<BotIntnetItem> getBotIntents(List<MichaelDepartmentRequestMaster> michaelDepartmentRequestMasters)
+        public List<BotIntnetItem> getBotIntents(List<MichaelDepartmentRequestMaster> michaelDepartmentRequestMasters, MichaeUserAccess michaeUserAccess)
         {
             List<BotIntnetItem> botIntnetItems = new List<BotIntnetItem>();
 
             botIntnetItems.Add(new BotIntnetItem() { id= "welcome", message= "Hi, I am Michael", trigger="0" });
             botIntnetItems.Add(new BotIntnetItem() { id = "0", message = "These are some of the things I can help you with", trigger = "MenuOption" });
             List<Option> optionList = new List<Option>();
-            optionList.Add(new Option() { value = "requestId", label = "Search Request", trigger = "RequestSearchInit" });
-            optionList.Add(new Option() { value = "HCMRequest", label = "HCM Request", trigger = "HCMRequest" });
+            optionList.Add(new Option() { value = "requestId", label = "Search Ticket", trigger = "RequestSearchInit" });
+            optionList.Add(new Option() { value = "HCMRequest", label = "New Ticket", trigger = "HCMRequest" });
+            optionList.Add(new Option() { value = "/HCM/RequestSummary", label = "Ticket Summary", trigger = "IntentSwitchTigger" });
+            if (michaeUserAccess.IsAssignee == 1)
+            {
+                optionList.Add(new Option() { value = "/HCM/AssigneeRequestSummary", label = "Admin Approval", trigger = "IntentSwitchTigger" });
+            }
+
+            if (michaeUserAccess.AcessType == "Administrator")
+            {
+                optionList.Add(new Option() { value = "/HCM/ManageAdminUser", label = "Admin Users", trigger = "IntentSwitchTigger" });
+                optionList.Add(new Option() { value = "/HCM/ManageDepartment", label = "Manage Department", trigger = "IntentSwitchTigger" });
+            }
+            
             botIntnetItems.Add(new BotIntnetItem() { id = "MenuOption", options = optionList });
             List<Option> hcmRequestList = new List<Option>();
             foreach (var item in michaelDepartmentRequestMasters)
@@ -165,6 +363,7 @@ namespace HCMApi.Modal
             botIntnetItems.Add(new BotIntnetItem() { id = "RequestSearchInit", message = "Enter Request id", trigger = "RequestSearchInput" });
             botIntnetItems.Add(new BotIntnetItem() { id = "RequestSearchInput", user = true, trigger = "RequestSearchTigger" });
             botIntnetItems.Add(new BotIntnetItem() { id = "RequestSearchTigger", component = "RequestSearchPrevBotComponent", waitAction = true, trigger = "MenuOption" });
+            botIntnetItems.Add(new BotIntnetItem() { id = "IntentSwitchTigger", component = "IntentSwitchComponent", waitAction = true, trigger = "MenuOption" });
 
             return botIntnetItems;
         }

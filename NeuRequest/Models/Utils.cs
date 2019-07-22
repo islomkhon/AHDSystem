@@ -110,7 +110,7 @@ namespace NeuRequest.Models
         public void renderGenerateMailItem(string domainName, string mailTemplate, string requestId, List<MessagesModel> messages)
         {
             
-            string mailBody = "";
+            string mailBody1 = "";
             try
             {
                 UserRequest userRequest = new DataAccess().getRequestDetailsByReqId(requestId);

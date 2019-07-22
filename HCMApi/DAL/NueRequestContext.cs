@@ -21,6 +21,7 @@ namespace HCMApi.DAL
         public virtual DbSet<JobParameter> JobParameter { get; set; }
         public virtual DbSet<JobQueue> JobQueue { get; set; }
         public virtual DbSet<List> List { get; set; }
+        public virtual DbSet<MichaelAdminUserMaster> MichaelAdminUserMaster { get; set; }
         public virtual DbSet<MichaelApproverStatusTypes> MichaelApproverStatusTypes { get; set; }
         public virtual DbSet<MichaelDepartmentMaster> MichaelDepartmentMaster { get; set; }
         public virtual DbSet<MichaelDepartmentRequestMaster> MichaelDepartmentRequestMaster { get; set; }
@@ -212,6 +213,25 @@ namespace HCMApi.DAL
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<MichaelAdminUserMaster>(entity =>
+            {
+                entity.Property(e => e.AddedOn).HasColumnType("datetime");
+
+                entity.Property(e => e.Admin).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Payload).HasColumnType("text");
+
+                entity.HasOne(d => d.AddedByNavigation)
+                    .WithMany(p => p.MichaelAdminUserMasterAddedByNavigation)
+                    .HasForeignKey(d => d.AddedBy)
+                    .HasConstraintName("FK__MichaelAd__Added__20AD9DE2");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.MichaelAdminUserMasterUser)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__MichaelAd__UserI__1FB979A9");
             });
 
             modelBuilder.Entity<MichaelApproverStatusTypes>(entity =>

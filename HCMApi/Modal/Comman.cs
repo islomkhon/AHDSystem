@@ -223,4 +223,38 @@ namespace HCMApi.Modal
         public string DateModified { get; set; }
     }
 
+    public class MichaeRequestAcessItem
+    {
+        public int UserId { get; set; }
+        public string AcessType { get; set; }
+    }
+
+    public class MichaeUserAcess
+    {
+        DAL.NueUserProfile UserProfile { get; set; }
+        public string AcessType { get; set; }
+
+        public MichaeUserAcess()
+        {
+
+        }
+
+        public MichaeUserAcess(DAL.NueUserProfile UserProfile, string AcessType)
+        {
+            this.UserProfile = UserProfile;
+            this.AcessType = AcessType;
+        }
+    }
+
+    public class MichaeAdminUserRequest
+    {
+        public List<UiDropdownItem> AdminUserList { get; set; }
+    }
+
+    public class MichaeUserAccess
+    {
+        public string AcessType { get; set; }
+        public int IsAssignee { get; set; }
+    }
+
 }

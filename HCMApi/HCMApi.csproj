@@ -14,14 +14,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="MyStaticFiles\MailTemplate.txt" />
     <None Remove="MyStaticFiles\request-number-tracker.db" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="MyStaticFiles\MailTemplate.txt" />
     <Content Include="MyStaticFiles\request-number-tracker.db" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DalSoft.Hosting.BackgroundQueue" Version="1.0.4" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="FormatWith" Version="2.2.1" />
     <PackageReference Include="Hangfire" Version="1.7.4" />
@@ -40,6 +43,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.1.0" />
     <PackageReference Include="MQTTnet" Version="3.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="ReturnTrue.AspNetCore.Net.SmtpClient" Version="1.2.0" />
     <PackageReference Include="System.DirectoryServices" Version="4.5.0" />
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.5.0" />
     <PackageReference Include="System.DirectoryServices.Protocols" Version="4.5.0" />

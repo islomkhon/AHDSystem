@@ -23,6 +23,7 @@ using Hangfire.Dashboard;
 using HCMApi.Shedules;
 using System.Diagnostics;
 using HCMApi.Hubs;
+using DalSoft.Hosting.BackgroundQueue.DependencyInjection;
 
 namespace HCMApi
 {
@@ -82,8 +83,13 @@ namespace HCMApi
             services.AddDbContext<NueRequestContext>(options =>
                 options.UseSqlServer(connection)
             );
-            
-            //services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("Db")));
+
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("Db")));
+
+            services.AddBackgroundQueue(onException: exception =>
+            {
+
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -117,11 +123,11 @@ namespace HCMApi
             });
 
             //app.UseHangfireDashboard("/dashboard");
-            //app.UseHangfireDashboard("/hangfiredashboard", new DashboardOptions
-            //{
-            //    Authorization = new[] { new HangfireAuthorizationFilter() },
-            //});
-            //app.UseHangfireServer();
+            app.UseHangfireDashboard("/hangfiredashboard", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthorizationFilter() },
+            });
+            app.UseHangfireServer();
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

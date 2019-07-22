@@ -1,4 +1,6 @@
-﻿using HCMApi.DAL;
+﻿using DalSoft.Hosting.BackgroundQueue;
+using Hangfire;
+using HCMApi.DAL;
 using HCMApi.Extensions;
 using HCMApi.Modal;
 using Microsoft.Extensions.Options;
@@ -7,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using TimeAgo;
 
@@ -120,6 +123,34 @@ namespace HCMApi.DB
             {
                 return null;
             }
+        }
+
+       
+
+        public List<UiDropdownItem> GetAdminUserList()
+        {
+            List<UiDropdownItem> adminUserList = new List<UiDropdownItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var adminUsers = nueRequestContext.MichaelAdminUserMaster.ToList();
+
+            List<UiDropdownItem> Assignees = new List<UiDropdownItem>();
+            //var slaUsers = item.MichaelRequestEscalationUserBaseMapper;
+            //foreach (var itemU in slaUsers)
+            //{
+            //    if (itemU.Active == 1)
+            //    {
+            //        Assignees.Add(new UiDropdownItem(nueUserProfilesMaster.Where(x => x.Id == itemU.UserId && x.Active == 1).SingleOrDefault().Email, itemU.UserId.ToString()));
+            //    }
+            //}
+            foreach (var item in adminUsers)
+            {
+                var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId && x.Active == 1);
+                if(user.Active == 1 && item.Admin == 1)
+                {
+                    adminUserList.Add(new UiDropdownItem(user.Email, item.UserId.ToString()));
+                }
+            }
+            return adminUserList;
         }
 
         public MichaelDepartmentRequestMaster GetDepartmentRequestDetails(int departmentId, int requestId)
@@ -539,6 +570,82 @@ namespace HCMApi.DB
                 return null;
             }
 
+        }
+
+        public JsonResponse updateAdminUsers(List<UiDropdownItem> AdminUserList, int userId)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            if(AdminUserList != null && AdminUserList.Count > 0)
+            {
+                var dateUpdated = DateTime.UtcNow;
+                //deactivate users
+                List<int> deactivateUserList = new List<int>();
+                var avilableAdmins = nueRequestContext.MichaelAdminUserMaster.ToList();
+                if(avilableAdmins != null && avilableAdmins.FirstOrDefault() != null && avilableAdmins.Count > 0)
+                {
+                    foreach (var item in avilableAdmins)
+                    {
+                        //item.UserId
+                        var keepUser = AdminUserList.Where(x => int.Parse(x.value) == item.UserId);
+                        if(keepUser != null && keepUser.FirstOrDefault() != null)
+                        {
+
+                        }
+                        else
+                        {
+                            deactivateUserList.Add((int)item.UserId);
+                           
+                        }
+                    }
+                }
+
+                foreach (var item in deactivateUserList)
+                {
+                    var deactivateUser = nueRequestContext.MichaelAdminUserMaster.SingleOrDefault(x => x.UserId == item);
+                    deactivateUser.Admin = 0;
+                    deactivateUser.AddedBy = userId;
+                    deactivateUser.AddedOn = dateUpdated;
+                    nueRequestContext.SaveChanges();
+                }
+
+                foreach (var users in AdminUserList)
+                {
+                    var user = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == int.Parse(users.value));
+                    if(user != null && user.Active == 1)
+                    {
+                        var deactivatedUser = nueRequestContext.MichaelAdminUserMaster.Where(x => x.UserId == int.Parse(users.value));
+                        if(deactivatedUser != null && deactivatedUser.FirstOrDefault() != null)
+                        {
+                            if(deactivatedUser.FirstOrDefault().Admin == 0)
+                            {
+                                var deactivateUser = nueRequestContext.MichaelAdminUserMaster.SingleOrDefault(x => x.UserId == int.Parse(users.value));
+                                deactivateUser.Admin = 1;
+                                deactivateUser.AddedBy = userId;
+                                deactivateUser.AddedOn = dateUpdated;
+                                nueRequestContext.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            MichaelAdminUserMaster michaelAdminUserMaster = new MichaelAdminUserMaster();
+                            michaelAdminUserMaster.UserId = int.Parse(users.value);
+                            michaelAdminUserMaster.Admin = 1;
+                            michaelAdminUserMaster.AddedBy = userId;
+                            michaelAdminUserMaster.AddedOn = dateUpdated;
+                            nueRequestContext.MichaelAdminUserMaster.Add(michaelAdminUserMaster);
+                        }
+                    }
+                }
+                //nueRequestContext.SaveChanges();
+                jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+            }
+            else
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd");
+
+            }
+            return jsonResponse;
         }
 
         public JsonResponse updateDepartmentRequestType(MichaelDepartmentRequest michaelDepartmentRequest)
@@ -994,6 +1101,179 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
+        public List<MichaeRequestSummaryItem> GetRequestAssigneeHistorySummary(int userId)
+        {
+            List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => (x.RequestStageBase.StageType == "Completed" || x.RequestStageBase.StageType == "Withdraw")
+                                                                                    && (x.MichaelRequestEscalationAccessLogs.Where(y => y.RequestId == x.Id
+                                                                                    && y.RequestEscalationMapperId == x.RequestEscalationMapperId
+                                                                                    && y.Active == 1 && y.RequestEscalationUser.UserId == userId && y.RequestEscalationUser.Active == 1).Count() > 0)
+                                                                                    );
+
+                if (requestObj != null && requestObj.FirstOrDefault() != null)
+                {
+                    var ownerAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "owner");
+                    foreach (var item in requestObj)
+                    {
+                        var ownerAccess = nueRequestContext.MichaelRequestAccessMapper.FirstOrDefault(x => x.RequestId == item.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id);
+                        michaeRequestSummaryItems.Add(new MichaeRequestSummaryItem()
+                        {
+                            Id = item.Id,
+                            RequestId = item.RequestId,
+                            RequestType = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == item.DepartmentRequestId && x.DepartmentId == item.DepartmentId).RequestTypeName,
+                            User = nueRequestContext.NueUserProfile.SingleOrDefault(x => x.Id == ownerAccess.UserId).FullName,
+                            RequestStatus = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.Id == item.RequestStageBaseId).StageType,
+                            DateAdded = item.AddedOn.ToLocalTime().ToString(),
+                            DateModified = item.ModifiedOn.ToLocalTime().ToString()
+                        });
+                    }
+                    return michaeRequestSummaryItems;
+                }
+                else
+                {
+                    michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+                }
+            }
+            catch (Exception e1)
+            {
+                michaeRequestSummaryItems = null;
+            }
+            return michaeRequestSummaryItems;
+        }
+
+        public List<MichaeRequestSummaryItem> GetRequestAssigneeSummary(int userId)
+        {
+            List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => (x.RequestStageBase.StageType != "Completed" && x.RequestStageBase.StageType != "Withdraw")
+                                                                                    && (x.MichaelRequestEscalationAccessLogs.Where(y => y.RequestId == x.Id 
+                                                                                    && y.RequestEscalationMapperId == x.RequestEscalationMapperId
+                                                                                    && y.Active == 1 && y.RequestEscalationUser.UserId == userId && y.RequestEscalationUser.Active == 1).Count() > 0)
+                                                                                    );
+
+                if (requestObj != null && requestObj.FirstOrDefault() != null)
+                {
+                    var ownerAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "owner");
+                    foreach (var item in requestObj)
+                    {
+                        var ownerAccess = nueRequestContext.MichaelRequestAccessMapper.FirstOrDefault(x => x.RequestId == item.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id);
+                        michaeRequestSummaryItems.Add(new MichaeRequestSummaryItem()
+                        {
+                            Id = item.Id,
+                            RequestId = item.RequestId,
+                            RequestType = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == item.DepartmentRequestId && x.DepartmentId == item.DepartmentId).RequestTypeName,
+                            User = nueRequestContext.NueUserProfile.SingleOrDefault(x => x.Id == ownerAccess.UserId).FullName,
+                            RequestStatus = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.Id == item.RequestStageBaseId).StageType,
+                            DateAdded = item.AddedOn.ToLocalTime().ToString(),
+                            DateModified = item.ModifiedOn.ToLocalTime().ToString()
+                        });
+                    }
+                    return michaeRequestSummaryItems;
+                }
+                else
+                {
+                    michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+                }
+            }
+            catch (Exception e1)
+            {
+                michaeRequestSummaryItems = null;
+            }
+            return michaeRequestSummaryItems;
+        }
+
+        public List<MichaeRequestSummaryItem> GetApproverRequestHistorySummary(int userId)
+        {
+            List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => (x.MichaelRequestAccessMapper.Where(y => y.RequestId == x.Id
+                                                                                    && y.UserId == userId && y.Active == 1 && y.RequestAccessTypes.AccessTypes == "approver"
+                                                                                    && (y.MichaelRequestApproverStatusMapper.Where(z => z.UserId == y.UserId
+                                                                                     && z.RequestId == y.RequestId && z.RequestAccessId == y.Id
+                                                                                     && z.RequestAccessTypes.AccessTypes == "approver" && (z.ApproverStatus.Status == "rejected" || z.ApproverStatus.Status == "approved")).Count() > 0)).Count() > 0)
+                                                                                    );
+                if (requestObj != null && requestObj.FirstOrDefault() != null)
+                {
+                    var ownerAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "owner");
+                    foreach (var item in requestObj)
+                    {
+                        var ownerAccess = nueRequestContext.MichaelRequestAccessMapper.FirstOrDefault(x => x.RequestId == item.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id);
+                        michaeRequestSummaryItems.Add(new MichaeRequestSummaryItem()
+                        {
+                            Id = item.Id,
+                            RequestId = item.RequestId,
+                            RequestType = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == item.DepartmentRequestId && x.DepartmentId == item.DepartmentId).RequestTypeName,
+                            User = nueRequestContext.NueUserProfile.SingleOrDefault(x => x.Id == ownerAccess.UserId).FullName,
+                            RequestStatus = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.Id == item.RequestStageBaseId).StageType,
+                            DateAdded = item.AddedOn.ToLocalTime().ToString(),
+                            DateModified = item.ModifiedOn.ToLocalTime().ToString()
+                        });
+                    }
+                    return michaeRequestSummaryItems;
+                }
+                else
+                {
+                    michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+                }
+            }
+            catch (Exception e1)
+            {
+                michaeRequestSummaryItems = null;
+            }
+            return michaeRequestSummaryItems;
+        }
+
+        public List<MichaeRequestSummaryItem> GetApproverRequestSummary(int userId)
+        {
+            List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => (x.RequestStageBase.StageType != "Completed" && x.RequestStageBase.StageType != "Withdraw")
+                                                                                    && (x.MichaelRequestAccessMapper.Where(y => y.RequestId == x.Id
+                                                                                    && y.UserId == userId && y.Active == 1 && y.RequestAccessTypes.AccessTypes == "approver" 
+                                                                                    &&(y.MichaelRequestApproverStatusMapper.Where(z => z.UserId == y.UserId 
+                                                                                    && z.RequestId == y.RequestId && z.RequestAccessId == y.Id 
+                                                                                    && z.RequestAccessTypes.AccessTypes == "approver" && z.ApproverStatus.Status == "pending").Count() > 0)).Count() > 0)
+                                                                                    );
+                if (requestObj != null && requestObj.FirstOrDefault() != null)
+                {
+                    var ownerAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "owner");
+                    foreach (var item in requestObj)
+                    {
+                        var ownerAccess = nueRequestContext.MichaelRequestAccessMapper.FirstOrDefault(x => x.RequestId == item.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id);
+                        michaeRequestSummaryItems.Add(new MichaeRequestSummaryItem()
+                        {
+                            Id = item.Id,
+                            RequestId = item.RequestId,
+                            RequestType = nueRequestContext.MichaelDepartmentRequestMaster.SingleOrDefault(x => x.Id == item.DepartmentRequestId && x.DepartmentId == item.DepartmentId).RequestTypeName,
+                            User = nueRequestContext.NueUserProfile.SingleOrDefault(x => x.Id == ownerAccess.UserId).FullName,
+                            RequestStatus = nueRequestContext.MichaelRequestStageBase.SingleOrDefault(x => x.Id == item.RequestStageBaseId).StageType,
+                            DateAdded = item.AddedOn.ToLocalTime().ToString(),
+                            DateModified = item.ModifiedOn.ToLocalTime().ToString()
+                        });
+                    }
+                    return michaeRequestSummaryItems;
+                }
+                else
+                {
+                    michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
+                }
+            }
+            catch (Exception e1)
+            {
+                michaeRequestSummaryItems = null;
+            }
+            return michaeRequestSummaryItems;
+        }
+
         public List<MichaeRequestSummaryItem> GetSelfNewRequestHistorySummary(int userId)
         {
             List<MichaeRequestSummaryItem> michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
@@ -1003,7 +1283,6 @@ namespace HCMApi.DB
                 var requestObj = nueRequestContext.MichaelRequestMaster.Where(x => (x.RequestStageBase.StageType == "Completed" || x.RequestStageBase.StageType == "Withdraw")
                                                                                     && (x.MichaelRequestAccessMapper.Where(y => y.RequestId == x.Id
                                                                                     && y.UserId == userId && y.Active == 1 && y.RequestAccessTypes.AccessTypes == "owner").Count() > 0));
-
                 
                 if (requestObj != null && requestObj.FirstOrDefault() != null)
                 {
@@ -1024,7 +1303,7 @@ namespace HCMApi.DB
                 }
                 else
                 {
-                    michaeRequestSummaryItems = null;
+                    michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
                 }
             }
             catch (Exception e1)
@@ -1061,7 +1340,7 @@ namespace HCMApi.DB
                 }
                 else
                 {
-                    michaeRequestSummaryItems = null;
+                    michaeRequestSummaryItems = new List<MichaeRequestSummaryItem>();
                 }
             }
             catch (Exception e1)
@@ -1422,7 +1701,7 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse addMichaelRequestFeedback(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData, MichaelRequestFeedbackRequest michaelRequestFeedbackRequest)
+        public JsonResponse addMichaelRequestFeedback(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData, MichaelRequestFeedbackRequest michaelRequestFeedbackRequest, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -1448,6 +1727,58 @@ namespace HCMApi.DB
                 michaelRequestLog.AddedOn = dateCreated;
                 nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
                 nueRequestContext.SaveChanges();
+
+                string domainName = azureAdSettings.ClientUrl;
+                string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                var mailTemplate = System.IO.File.ReadAllText(templatePath);
+                
+                //michaelRequestViewerData.RequestId = request.RequestId;
+                //michaelRequestViewerData.UserId = (int)michaelRequestLog.UserId;
+                //JsonResponse requestData = GetMichaelRequestViewerData(michaelRequestViewerData);
+                //michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+
+                List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestLog.RequestId);
+                if (accessUsers != null && accessUsers.Count > 0)
+                {
+                    List<MessagesModel> messages = new List<MessagesModel>();
+
+                    //var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+                    var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaelRequestLog.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                    var message = commentUser.FullName + " given feedback";
+                    var payload = commentUser.FullName + " given feedback for " + nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower() + " ticket.";
+                    string target = "/HCM/RequestViewer/" + request.RequestId;
+                    foreach (var item in accessUsers)
+                    {
+                        if (item.UserId != (int)michaelRequestLog.UserId && item.AcessType == "Assignee")
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl + target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+                        }
+                    }
+
+                    if (messages.Count > 0)
+                    {
+                        BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                    }
+
+                    nueRequestContext.SaveChanges();
+                }
+
                 jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
             }
             catch (Exception e1)
@@ -1457,7 +1788,7 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse adminRejectMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData)
+        public JsonResponse adminRejectMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -1475,6 +1806,55 @@ namespace HCMApi.DB
                 michaelRequestLog.AddedOn = dateCreated;
                 nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
                 nueRequestContext.SaveChanges();
+
+                string domainName = azureAdSettings.ClientUrl;
+                string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                var mailTemplate = System.IO.File.ReadAllText(templatePath);
+
+                List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestLog.RequestId);
+                if (accessUsers != null && accessUsers.Count > 0)
+                {
+                    List<MessagesModel> messages = new List<MessagesModel>();
+
+                    //var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+                    var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaelRequestLog.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                    var message = commentUser.FullName + " (admin) rejected tickect";
+                    var payload = commentUser.FullName + " rejected " + nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower() + " ticket.";
+                    string target = "/HCM/RequestViewer/" + request.RequestId;
+                    foreach (var item in accessUsers)
+                    {
+                        if (item.UserId != (int)michaelRequestLog.UserId)
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl + target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
+
+                        }
+                    }
+
+                    if (messages.Count > 0)
+                    {
+                        BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                    }
+
+                    nueRequestContext.SaveChanges();
+                }
+
                 jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
             }
             catch (Exception e1)
@@ -1484,7 +1864,7 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse adminApproveMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData)
+        public JsonResponse adminApproveMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -1502,6 +1882,54 @@ namespace HCMApi.DB
                 michaelRequestLog.AddedOn = dateCreated;
                 nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
                 nueRequestContext.SaveChanges();
+
+                string domainName = azureAdSettings.ClientUrl;
+                string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                var mailTemplate = System.IO.File.ReadAllText(templatePath);
+
+                List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestLog.RequestId);
+                if (accessUsers != null && accessUsers.Count > 0)
+                {
+                    List<MessagesModel> messages = new List<MessagesModel>();
+
+                    //var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+                    var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaelRequestLog.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                    var message = commentUser.FullName + " (admin) approved tickect";
+                    var payload = commentUser.FullName + " approved " + nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower() + " ticket.";
+                    string target = "/HCM/RequestViewer/" + request.RequestId;
+                    foreach (var item in accessUsers)
+                    {
+                        if (item.UserId != (int)michaelRequestLog.UserId)
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl + target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
+                        }
+                    }
+
+                    if (messages.Count > 0)
+                    {
+                        BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                    }
+
+                    nueRequestContext.SaveChanges();
+                }
+
                 jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
             }
             catch (Exception e1)
@@ -1511,7 +1939,7 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse rejectMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData)
+        public JsonResponse rejectMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -1550,6 +1978,54 @@ namespace HCMApi.DB
                 michaelRequestLog.AddedOn = dateCreated;
                 nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
                 nueRequestContext.SaveChanges();
+
+                string domainName = azureAdSettings.ClientUrl;
+                string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                var mailTemplate = System.IO.File.ReadAllText(templatePath);
+
+                List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestLog.RequestId);
+                if (accessUsers != null && accessUsers.Count > 0)
+                {
+                    List<MessagesModel> messages = new List<MessagesModel>();
+
+                    //var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+                    var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaelRequestLog.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                    var message = commentUser.FullName + " (approver) rejected tickect";
+                    var payload = commentUser.FullName + " (approver) rejected " + nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower() + " ticket.";
+                    string target = "/HCM/RequestViewer/" + request.RequestId;
+                    foreach (var item in accessUsers)
+                    {
+                        if (item.UserId != (int)michaelRequestLog.UserId)
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl + target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
+                        }
+                    }
+
+                    if (messages.Count > 0)
+                    {
+                        BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                    }
+
+                    nueRequestContext.SaveChanges();
+                }
+
                 jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
             }
             catch (Exception e1)
@@ -1559,7 +2035,7 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse approveMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData)
+        public JsonResponse approveMichaelRequest(MichaelRequestLog michaelRequestLog, MichaelRequestViewerData michaelRequestViewerData, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -1606,6 +2082,54 @@ namespace HCMApi.DB
                 michaelRequestLog.AddedOn = dateCreated;
                 nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
                 nueRequestContext.SaveChanges();
+
+                List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestLog.RequestId);
+                if (accessUsers != null && accessUsers.Count > 0)
+                {
+                    List<MessagesModel> messages = new List<MessagesModel>();
+
+                    string domainName = azureAdSettings.ClientUrl;
+                    string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                    var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                    var mailTemplate = System.IO.File.ReadAllText(templatePath);
+
+                    var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+                    var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaelRequestLog.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                    var message = commentUser.FullName + " (approver) approved tickect";
+                    var payload = commentUser.FullName + " (approver) approved " + nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower() + " ticket.";
+                    string target = "/HCM/RequestViewer/" + request.RequestId;
+                    foreach (var item in accessUsers)
+                    {
+                        if (item.UserId != (int)michaelRequestLog.UserId)
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl + target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
+                        }
+                    }
+
+                    if (messages.Count > 0)
+                    {
+                        BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                    }
+
+                    nueRequestContext.SaveChanges();
+                }
+
                 jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
             }
             catch (Exception e1)
@@ -1615,7 +2139,7 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse withdrawMichaelRequest(MichaelRequestLog michaelRequestLog)
+        public JsonResponse withdrawMichaelRequest(MichaelRequestLog michaelRequestLog, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -1633,6 +2157,61 @@ namespace HCMApi.DB
                 michaelRequestLog.AddedOn = dateCreated;
                 nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
                 nueRequestContext.SaveChanges();
+                
+                string domainName = azureAdSettings.ClientUrl;
+                string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                var mailTemplate = System.IO.File.ReadAllText(templatePath);
+
+                MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                michaelRequestViewerData.RequestId = request.RequestId;
+                michaelRequestViewerData.UserId = (int)michaelRequestLog.UserId;
+                JsonResponse requestData = GetMichaelRequestViewerData(michaelRequestViewerData);
+                michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+
+                List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestLog.RequestId);
+                if (accessUsers != null && accessUsers.Count > 0)
+                {
+                    List<MessagesModel> messages = new List<MessagesModel>();
+
+
+                    //var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+                    var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaelRequestLog.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                    var message = commentUser.FullName + " withdraw tickect";
+                    var payload = commentUser.FullName + " withdraw " + nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower() + " ticket.";
+                    string target = "/HCM/RequestViewer/" + request.RequestId;
+                    foreach (var item in accessUsers)
+                    {
+                        if (item.UserId != (int)michaelRequestLog.UserId)
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl + target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+
+                        }
+                    }
+
+                    if (messages.Count > 0)
+                    {
+                        BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                    }
+
+                    nueRequestContext.SaveChanges();
+                }
+
                 jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
             }
             catch (Exception e1)
@@ -1642,18 +2221,216 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse addNewMichaelRequestComment(MichaelRequestLog michaelRequestLog)
+        public MichaeUserAccess getMichaeUserAccess(int userId)
+        {
+            MichaeUserAccess michaeUserAccess = new MichaeUserAccess();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var MichaelRequestEscalationUsers = nueRequestContext.MichaelRequestEscalationAccessLogs.Where(y => y.Active == 1 && y.RequestEscalationUser.Active == 1 && y.RequestEscalationUser.UserId == userId);
+                if (MichaelRequestEscalationUsers != null && MichaelRequestEscalationUsers.FirstOrDefault() != null)
+                {
+                    michaeUserAccess.IsAssignee = 1;
+                }
+                else
+                {
+                    michaeUserAccess.IsAssignee = 0;
+                }
+
+                var adminUser = nueRequestContext.MichaelAdminUserMaster.Where(x => x.UserId == userId && x.Admin == 1);
+                if(adminUser != null && adminUser.FirstOrDefault() != null && adminUser.Count() > 0)
+                {
+                    michaeUserAccess.AcessType = "Administrator";
+                }
+                else
+                {
+                    michaeUserAccess.AcessType = "User";
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return michaeUserAccess;
+        }
+
+        public List<MichaeRequestAcessItem> getRequestAllAccessUsers(int requestId)
+        {
+            List<MichaeRequestAcessItem> users = new List<MichaeRequestAcessItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x=>x.Id == requestId);
+                //get slas
+                var MichaelRequestEscalationUsers = nueRequestContext.MichaelRequestEscalationAccessLogs.Where(y => y.RequestId == request.Id
+                                                                                    && y.RequestEscalationMapperId == request.RequestEscalationMapperId
+                                                                                    && y.Active == 1 && y.RequestEscalationUser.Active == 1).Select(x=> x.RequestEscalationUser.UserId).ToList();
+
+                if(MichaelRequestEscalationUsers != null && MichaelRequestEscalationUsers.FirstOrDefault() != null)
+                {
+                    foreach (var item in MichaelRequestEscalationUsers)
+                    {
+                        users.Add(new MichaeRequestAcessItem() {UserId =(int)item, AcessType = "Assignee" });
+                    }
+                }
+                
+                
+                var ownerAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "owner");
+                var approverAccessType = nueRequestContext.MichaelRequestAccessTypes.SingleOrDefault(x => x.AccessTypes == "approver");
+
+                //get owner
+                var ownerAccess = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == ownerAccessType.Id);
+                if(ownerAccess != null && ownerAccess.FirstOrDefault() != null)
+                {
+                    users.Add(new MichaeRequestAcessItem() { UserId = (int)ownerAccess.FirstOrDefault().UserId, AcessType = "Owner" });
+                }
+                
+                //get approvers
+                if(request.IsApprovalProcess == 1)
+                {
+                    var approverAccess = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == request.Id && x.Active == 1 && x.RequestAccessTypesId == approverAccessType.Id);
+                    if (approverAccess != null && approverAccess.FirstOrDefault() != null)
+                    {
+                        foreach (var item in approverAccess)
+                        {
+                            users.Add(new MichaeRequestAcessItem() { UserId = (int)item.UserId, AcessType = "Approver" });
+                        }  
+                    }
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return users;
+        }
+
+        
+        public JsonResponse addNewMichaelRequestComment(MichaelRequestLog michaelRequestLog, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
             NueRequestContext nueRequestContext = new NueRequestContext();
             try
             {
+
                 var dateCreated = DateTime.UtcNow;
                 var attachFileActivity = nueRequestContext.MichaelRequestLogTypes.FirstOrDefault(x => x.LogType == "commented");
                 michaelRequestLog.RequestLogTypeId = attachFileActivity.Id;
                 michaelRequestLog.AddedOn = dateCreated;
                 nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
                 nueRequestContext.SaveChanges();
+
+                var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+
+                string domainName = azureAdSettings.ClientUrl;
+                string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                var mailTemplate = System.IO.File.ReadAllText(templatePath);
+
+                MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                michaelRequestViewerData.RequestId = request.RequestId;
+                michaelRequestViewerData.UserId = (int)michaelRequestLog.UserId;
+                JsonResponse requestData = GetMichaelRequestViewerData(michaelRequestViewerData);
+                michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                
+                List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestLog.RequestId);
+                if(accessUsers != null && accessUsers.Count > 0)
+                {
+                    List<MessagesModel> messages = new List<MessagesModel>();
+
+                    var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaelRequestLog.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                    var message = commentUser.FullName + " added new comment";
+                    var payload = commentUser.FullName + " added new comment for "+ nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x=> x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower()+" ticket.";
+                    string target = "/HCM/RequestViewer/"+ request.RequestId;
+                    foreach (var item in accessUsers)
+                    {
+                        if(item.UserId != (int)michaelRequestLog.UserId)
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl+target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+                        }
+                    }
+
+                    //new BackgroundQueue(maxConcurrentCount: 10, millisecondsToWaitBeforePickingUpTask: 10,
+                    // onException: exception => 
+                    // {
+
+                    // }).Enqueue(async cancellationToken =>
+                    //{
+                    //    new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData.SidebarData, messages);
+                    //});
+
+                    if(messages.Count > 0)
+                    {
+                        BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                    }
+                    
+
+
+                    //QueueBackgroundWorkItem(ct => new Utils().renderGenerateMailItem(domainName, mailTemplate, newRequestId, messages));
+
+                    nueRequestContext.SaveChanges();
+                }
+
+                //try
+                //{
+                //    var client = new SmtpClient("smtp.gmail.com", 587)
+                //    {
+                //        Credentials = new System.Net.NetworkCredential("nuhcmuser@gmail.com", "GoodPassword@#neudesic.net"),
+                //        EnableSsl = true
+                //    };
+                //    client.Send("nuhcmuser@gmail.com", "monin.jose@neudesic.com", "test", "testbody");
+                //}
+                //catch (Exception e)
+                //{
+                    
+                //}
+
+                /*try
+                {
+                    MailMessageBuilder mailMessageBuilder = new MailMessageBuilder()
+                      .SetSender("info@mydomain.com", "My domain")
+                      .AddRecipient("monin.jose@neudesic.com", "Monin Jose") // Default recipient type is To (but can also be CC or Bcc)
+                      .SetSubject("Please confirm your account")
+                      .SetBody(@"<b>Please</b> click on the following <a href=""www.mydomain.com"">link</a> to confirm your account.", true); // Specifies HTML format
+                                                                                                                                              //AddAttachment("Invoice.pdf", System.IO.File.ReadAllBytes(@"C:\Invoice.pdf"));
+
+                    using (var client = new SmtpClient("mail.neudesic.com", 25))
+                    {
+                        client.SendAsync(mailMessageBuilder.Build());
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }*/
+
+                //sendRequestNotification((int)michaelRequestLog.RequestId, "", "");
+
+
+                /*DAL.MichaelRequestLog michaelRequestLog = new DAL.MichaelRequestLog();
+                michaelRequestLog.RequestId = michaelRequestViewerData.Id;
+                michaelRequestLog.UserId = michaelRequestViewerData.UserId;
+                michaelRequestLog.Payload = michaelRequestCommentRequest.RequestComment;*/
+
+                //NeuMessages
+
                 jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
             }
             catch (Exception e1)
@@ -1711,7 +2488,7 @@ namespace HCMApi.DB
             return jsonResponse;
         }
 
-        public JsonResponse addNewMichaelRequestAttchment(MichaelRequestAttachmentLog michaelRequestAttachmentLog, MichaelRequestAttachment michaelRequestAttachment)
+        public JsonResponse addNewMichaelRequestAttchment(MichaelRequestAttachmentLog michaelRequestAttachmentLog, MichaelRequestAttachment michaelRequestAttachment, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -1732,6 +2509,62 @@ namespace HCMApi.DB
                 michaelRequestLog.Payload = fileAtachmentId.ToString();
                 nueRequestContext.MichaelRequestLog.Add(michaelRequestLog);
                 nueRequestContext.SaveChanges();
+
+
+                var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+
+                string domainName = azureAdSettings.ClientUrl;
+                string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                var mailTemplate = System.IO.File.ReadAllText(templatePath);
+
+                MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                michaelRequestViewerData.RequestId = request.RequestId;
+                michaelRequestViewerData.UserId = (int)michaelRequestLog.UserId;
+                JsonResponse requestData = GetMichaelRequestViewerData(michaelRequestViewerData);
+                michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+
+                List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestLog.RequestId);
+                if (accessUsers != null && accessUsers.Count > 0)
+                {
+                    List<MessagesModel> messages = new List<MessagesModel>();
+
+                    var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaelRequestLog.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                    var message = commentUser.FullName + " added new attachment";
+                    var payload = commentUser.FullName + " added new attachment for " + nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower() + " ticket.";
+                    string target = "/HCM/RequestViewer/" + request.RequestId;
+                    foreach (var item in accessUsers)
+                    {
+                        if (item.UserId != (int)michaelRequestLog.UserId)
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl + target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+                        }
+                    }
+
+                    if (messages.Count > 0)
+                    {
+                        BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                    }
+
+                    nueRequestContext.SaveChanges();
+
+                }
+
                 jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
             }
             catch (Exception e1)

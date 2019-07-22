@@ -7,6 +7,8 @@ namespace HCMApi.DAL
     {
         public NueUserProfile()
         {
+            MichaelAdminUserMasterAddedByNavigation = new HashSet<MichaelAdminUserMaster>();
+            MichaelAdminUserMasterUser = new HashSet<MichaelAdminUserMaster>();
             MichaelDepartmentMaster = new HashSet<MichaelDepartmentMaster>();
             MichaelDepartmentRequestMaster = new HashSet<MichaelDepartmentRequestMaster>();
             MichaelRequestAccessMapper = new HashSet<MichaelRequestAccessMapper>();
@@ -78,6 +80,8 @@ namespace HCMApi.DAL
         public virtual NeuEmploymentStatus EmploymentStatusNavigation { get; set; }
         public virtual NeuJobLevel JobLevelNavigation { get; set; }
         public virtual NeuPractice PracticeNavigation { get; set; }
+        public virtual ICollection<MichaelAdminUserMaster> MichaelAdminUserMasterAddedByNavigation { get; set; }
+        public virtual ICollection<MichaelAdminUserMaster> MichaelAdminUserMasterUser { get; set; }
         public virtual ICollection<MichaelDepartmentMaster> MichaelDepartmentMaster { get; set; }
         public virtual ICollection<MichaelDepartmentRequestMaster> MichaelDepartmentRequestMaster { get; set; }
         public virtual ICollection<MichaelRequestAccessMapper> MichaelRequestAccessMapper { get; set; }

@@ -13,6 +13,7 @@ namespace HCMApi.Modal
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string Db { get; set; }
+        public string ClientUrl { get; set; }
     }
 
 }

@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "ade31171279350b3b606eb72016e18b635d4ba7c"
+    "signature": "e717175227d4d247f3f9eb9a6959c1252efd4a0c"
   },
   "compilationOptions": {
     "defines": [
@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v2.2": {
       "HCMApi/1.0.0": {
         "dependencies": {
+          "DalSoft.Hosting.BackgroundQueue": "1.0.4",
           "EntityFramework": "6.2.0",
           "FormatWith": "2.2.1",
           "Hangfire": "1.7.4",
@@ -40,6 +41,7 @@
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "5.1.0",
           "Microsoft.NETCore.App": "2.2.0",
           "Newtonsoft.Json": "12.0.2",
+          "ReturnTrue.AspNetCore.Net.SmtpClient": "1.2.0",
           "System.DirectoryServices": "4.5.0",
           "System.DirectoryServices.AccountManagement": "4.5.0",
           "System.DirectoryServices.Protocols": "4.5.0",
@@ -51,6 +53,21 @@
         },
         "compile": {
           "HCMApi.dll": {}
+        }
+      },
+      "DalSoft.Hosting.BackgroundQueue/1.0.4": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.2.0",
+          "Microsoft.Extensions.Hosting.Abstractions": "2.2.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/DalSoft.Hosting.BackgroundQueue.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/DalSoft.Hosting.BackgroundQueue.dll": {}
         }
       },
       "EntityFramework/6.2.0": {
@@ -519,6 +536,20 @@
         },
         "compile": {
           "lib/netstandard1.0/Remotion.Linq.dll": {}
+        }
+      },
+      "ReturnTrue.AspNetCore.Net.SmtpClient/1.2.0": {
+        "dependencies": {
+          "Microsoft.NETCore.App": "2.2.0"
+        },
+        "runtime": {
+          "lib/netcoreapp1.1/SmtpClient.dll": {
+            "assemblyVersion": "1.2.0.0",
+            "fileVersion": "1.2.0.0"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp1.1/SmtpClient.dll": {}
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
@@ -4138,6 +4169,13 @@
       "serviceable": false,
       "sha512": ""
     },
+    "DalSoft.Hosting.BackgroundQueue/1.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hrv15YFjBB+1XWwgD8AzvZXl26aPxwkuSiwJZ45fwILTYWpNzCYEYFz3UcidVkwkLAZq5cit6Ca32hPISE9TUw==",
+      "path": "dalsoft.hosting.backgroundqueue/1.0.4",
+      "hashPath": "dalsoft.hosting.backgroundqueue.1.0.4.nupkg.sha512"
+    },
     "EntityFramework/6.2.0": {
       "type": "package",
       "serviceable": true,
@@ -4319,6 +4357,13 @@
       "sha512": "sha512-fK/76UmpC0FXBlGDFVPLJHQlDLYnGC+XY3eoDgCgbtrhi0vzbXDQ3n/IYHhqSKqXQfGw/u04A1drWs7rFVkRjw==",
       "path": "remotion.linq/2.2.0",
       "hashPath": "remotion.linq.2.2.0.nupkg.sha512"
+    },
+    "ReturnTrue.AspNetCore.Net.SmtpClient/1.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-V1OzzEPpMw/32TLlBt7N0cVBZVtRstjKpoBItT2kFG91cfl/CO9wgCw9wD1XrbR7JeaLEUekyHwHdyZDpVYRew==",
+      "path": "returntrue.aspnetcore.net.smtpclient/1.2.0",
+      "hashPath": "returntrue.aspnetcore.net.smtpclient.1.2.0.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
       "type": "package",
