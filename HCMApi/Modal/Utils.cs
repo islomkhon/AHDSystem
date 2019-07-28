@@ -223,6 +223,8 @@ namespace HCMApi.Modal
             }
         }
 
+
+
         public void renderGenerateMailItem(string domainName, string mailTemplate, MichaelRequestViewerData michaelRequestViewerData, List<MessagesModel> messages)
         {
             Dictionary<string, string> messageData = new Dictionary<string, string>();

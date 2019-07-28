@@ -116,6 +116,9 @@ namespace HCMApi.Modal
         public int ApproveReject { get; set; }
         public int AdminApprove { get; set; }
         public int AdminOverideApprove { get; set; }
+        public int ChangeApprover { get; set; }
+        public int ChangeOwnerShip { get; set; }
+        public int ChangeEscalation { get; set; }
 
         public MichaelRequestUserOps()
         {
@@ -127,6 +130,9 @@ namespace HCMApi.Modal
             this.Approve = 0;
             this.AdminApprove = 0;
             this.AdminOverideApprove = 0;
+            this.ChangeApprover = 0;
+            this.ChangeOwnerShip = 0;
+            this.ChangeEscalation = 0;
         }
     }
 
@@ -167,6 +173,7 @@ namespace HCMApi.Modal
         public DAL.MichaelRequestMaster michaelRequestBase { get; set; }
         public int UserId { get; set; }
         public int IsPermitted { get; set; }
+        public int IsAdmin { get; set; }
         public int IsError { get; set; }
         public string ErrorMessage { get; set; }
         public int RequestStatusId { get; set; }
@@ -257,4 +264,52 @@ namespace HCMApi.Modal
         public int IsAssignee { get; set; }
     }
 
+    public class MichaeNotificationUpdateRequest
+    {
+        public int NotificationId { get; set; }
+        public int UserId { get; set; }
+    }
+
+    public class MichaeNotificationItem
+    {
+        public int MessageId { get; set; }
+        public int UserId { get; set; }
+        public string Target { get; set; }
+        public int Processed { get; set; }
+        public string Message { get; set; }
+        public string EmptyMessage { get; set; }
+        public string DateAdded { get; set; }
+    }
+
+    public class MichaeSearchResultItem
+    {
+        public int Id { get; set; }
+        public string User { get; set; }
+        public string RequestId { get; set; }
+        public string RequestType { get; set; }
+        public string RequestStatus { get; set; }
+        public string DateAdded { get; set; }
+        public string DateModified { get; set; }
+    }
+
+    public class MichaeApproverChangeModelPayload
+    {
+        public List<UiDropdownItem> accessDropdownItems { get; set; }
+        public List<UiDropdownItem> usersDropdownItems { get; set; }
+    }
+
+    public class MichaeApproverChangeRequestPayload
+    {
+        public UiDropdownItem FromUser { get; set; }
+        public UiDropdownItem ToUser { get; set; }
+        public string requestId { get; set; }
+    }
+
+    public class MichaeApproverChangeRequest
+    {
+        public int FromUser { get; set; }
+        public int ToUser { get; set; }
+        public string requestId { get; set; }
+        public int UserId { get; set; }
+    }
 }

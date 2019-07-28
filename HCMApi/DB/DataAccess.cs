@@ -36,6 +36,12 @@ namespace HCMApi.DB
             return nueRequestContext.NueUserProfile.ToList<NueUserProfile>();
         }
 
+        public List<NueUserProfile> getAllUserProfilesActiveDinamic()
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            return nueRequestContext.NueUserProfile.Where(x=> x.Active == 1).ToList<NueUserProfile>();
+        }
+
         public NueUserProfile getSpecificUserProfilesByEmail(string email)
         {
             NueRequestContext nueRequestContext = new NueRequestContext();
@@ -202,6 +208,65 @@ namespace HCMApi.DB
             if(notificationMessages != null && notificationMessages.FirstOrDefault() != null)
             {
                 return notificationMessages.ToList<NeuMessages>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<NeuMessages> getUserNotifications(int userId)
+        {
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var notificationMessages = nueRequestContext.NeuMessages.Where(x=>x.UserId == userId);
+            if (notificationMessages != null && notificationMessages.FirstOrDefault() != null)
+            {
+                return notificationMessages.ToList<NeuMessages>();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<MichaeSearchResultItem> getUserSearchResultForId(string partialId, int userId)
+        {
+            List<MichaeSearchResultItem> michaeSearchResultItems = new List<MichaeSearchResultItem>();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            var searchResults = nueRequestContext.MichaelRequestMaster.Where(x => x.RequestId.ToLower().StartsWith(partialId.ToLower()));
+            if (searchResults != null && searchResults.FirstOrDefault() != null)
+            {
+
+                foreach (var item in searchResults)
+                {
+                    MichaelRequestViewerData michaelRequestViewerData = new MichaelRequestViewerData();
+                    michaelRequestViewerData.RequestId = item.RequestId;
+                    michaelRequestViewerData.UserId = userId;
+
+                    JsonResponse requestData = GetMichaelRequestViewerData(michaelRequestViewerData);
+                    if (requestData.status == "Ok")
+                    {
+                         michaelRequestViewerData = (MichaelRequestViewerData)requestData.payload;
+                        if (michaelRequestViewerData.IsPermitted == 1)
+                        {
+                            List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)item.Id);
+                            if (accessUsers != null && accessUsers.Count > 0)
+                            {
+                                int onerId = accessUsers.FirstOrDefault(x => x.AcessType == "Owner").UserId;
+                                michaeSearchResultItems.Add(new MichaeSearchResultItem() {
+                                    Id = michaelRequestViewerData.Id,
+                                    User = Utils.FirstCharToUpper(nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == (int)onerId).FullName),
+                                    RequestType = Utils.FirstCharToUpper(michaelRequestViewerData.RequestType),
+                                    RequestStatus = Utils.FirstCharToUpper(michaelRequestViewerData.SidebarData.FirstOrDefault(x=>x.key == "Status").value),
+                                    RequestId = michaelRequestViewerData.RequestId,
+                                    DateAdded = item.AddedOn.ToLocalTime().ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return michaeSearchResultItems;
             }
             else
             {
@@ -1349,6 +1414,7 @@ namespace HCMApi.DB
             }
             return michaeRequestSummaryItems;
         }
+        
 
         public JsonResponse GetMichaelRequestViewerData(MichaelRequestViewerData michaelRequestViewerData)
         {
@@ -1404,7 +1470,25 @@ namespace HCMApi.DB
                         isUserHasAccess = 1;
                     }
 
-                    if(isUserHasAccess == 1)
+                    List<UiDropdownItem> adminUserList = GetAdminUserList();
+                    var admin = adminUserList.Where(x => int.Parse(x.value) == michaelRequestViewerData.UserId);
+                    bool isAdmin = false;
+                    if(admin != null && admin.FirstOrDefault() != null && admin.Count() > 0)
+                    {
+                        isAdmin = true;
+                    }
+
+                    if (isAdmin)
+                    {
+                        isUserHasAccess = 1;
+                        michaelRequestViewerData.IsAdmin = 1;
+                    }
+                    else
+                    {
+                        michaelRequestViewerData.IsAdmin = 0;
+                    }
+
+                    if (isUserHasAccess == 1)
                     {
                         michaelRequestViewerData.IsPermitted = 1;
                         michaelRequestViewerData.MichaelRequestUserAcces = michaelRequestUserAccess;
@@ -1447,26 +1531,51 @@ namespace HCMApi.DB
 
                         if (requestStage.StageType.ToLower() == "created")
                         {
-                            MichaelRequestUserOp.Comment = 1;
-                            MichaelRequestUserOp.Attach = 1;
-                            if (michaelRequestUserAccess.IsOwner == 1)
+
+                            if (isAdmin)
                             {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
                                 MichaelRequestUserOp.Withdraw = 1;
-                            }
-                            if (michaelRequestUserAccess.IsApprover == 1)
-                            {
                                 MichaelRequestUserOp.Approve = 1;
-                            }
-
-                            if (michaelRequestUserAccess.IsAssignee == 1)
-                            {
                                 MichaelRequestUserOp.AdminApprove = 1;
-
-                                if (request.IsApprovalProcessComplted == 0)
+                                if (michaelRequestViewerData.IsApprovalProcess == 1)
                                 {
-                                    MichaelRequestUserOp.AdminOverideApprove = 1;
+                                    MichaelRequestUserOp.ChangeApprover = 1;
+                                }
+                                MichaelRequestUserOp.ChangeOwnerShip = 1;
+                                MichaelRequestUserOp.ChangeEscalation = 1;
+                                MichaelRequestUserOp.AdminOverideApprove = 1;
+                            }
+                            else
+                            {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
+                                if (michaelRequestUserAccess.IsOwner == 1)
+                                {
+                                    MichaelRequestUserOp.Withdraw = 1;
+                                }
+                                if (michaelRequestUserAccess.IsApprover == 1 && michaelRequestViewerData.IsApprovalProcess == 1)
+                                {
+                                    MichaelRequestUserOp.Approve = 1;
+                                }
+
+                                if (michaelRequestUserAccess.IsAssignee == 1)
+                                {
+                                    MichaelRequestUserOp.AdminApprove = 1;
+                                    if (michaelRequestViewerData.IsApprovalProcess == 1)
+                                    {
+                                        MichaelRequestUserOp.ChangeApprover = 1;
+                                    }
+                                    MichaelRequestUserOp.ChangeOwnerShip = 1;
+                                    MichaelRequestUserOp.ChangeEscalation = 1;
+                                    if (request.IsApprovalProcessComplted == 0)
+                                    {
+                                        MichaelRequestUserOp.AdminOverideApprove = 1;
+                                    }
                                 }
                             }
+                            
 
                             //MichaelRequestUserOp.Close = 0;
                             //MichaelRequestUserOp.Withdraw = 0;
@@ -1476,66 +1585,123 @@ namespace HCMApi.DB
                         }
                         else if (requestStage.StageType.ToLower() == "assignee accepted")
                         {
-                            MichaelRequestUserOp.Comment = 1;
-                            MichaelRequestUserOp.Attach = 1;
-                            if (michaelRequestUserAccess.IsOwner == 1)
+                            if (isAdmin)
                             {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
                                 MichaelRequestUserOp.Close = 1;
                             }
+                            else
+                            {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
+                                if (michaelRequestUserAccess.IsOwner == 1)
+                                {
+                                    MichaelRequestUserOp.Close = 1;
+                                }
+                            }
+                            
                         }
                         else if (requestStage.StageType.ToLower() == "assignee rejected")
                         {
-                            MichaelRequestUserOp.Comment = 1;
-                            MichaelRequestUserOp.Attach = 1;
-                            if (michaelRequestUserAccess.IsOwner == 1)
+                            if (isAdmin)
                             {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
                                 MichaelRequestUserOp.Close = 1;
+                            }
+                            else
+                            {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
+                                if (michaelRequestUserAccess.IsOwner == 1)
+                                {
+                                    MichaelRequestUserOp.Close = 1;
+                                }
                             }
                         }
                         else if (requestStage.StageType.ToLower() == "approver accepted")
                         {
-                            MichaelRequestUserOp.Comment = 1;
-                            MichaelRequestUserOp.Attach = 1;
-                            if (michaelRequestUserAccess.IsOwner == 1)
+                            if (isAdmin)
                             {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
                                 MichaelRequestUserOp.Withdraw = 1;
-                            }
-                            if (michaelRequestUserAccess.IsApprover == 1)
-                            {
-                                //MichaelRequestUserOp.Approve = 1;
-                            }
-
-                            if (michaelRequestUserAccess.IsAssignee == 1)
-                            {
                                 MichaelRequestUserOp.AdminApprove = 1;
-
-                                if (request.IsApprovalProcessComplted == 0)
+                                MichaelRequestUserOp.ChangeOwnerShip = 1;
+                                MichaelRequestUserOp.ChangeEscalation = 1;
+                            }
+                            else
+                            {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
+                                if (michaelRequestUserAccess.IsOwner == 1)
                                 {
-                                    //MichaelRequestUserOp.AdminOverideApprove = 1;
+                                    MichaelRequestUserOp.Withdraw = 1;
+                                }
+                                if (michaelRequestUserAccess.IsApprover == 1)
+                                {
+                                    //MichaelRequestUserOp.Approve = 1;
+                                }
+
+                                if (michaelRequestUserAccess.IsAssignee == 1)
+                                {
+                                    MichaelRequestUserOp.AdminApprove = 1;
+                                    MichaelRequestUserOp.ChangeOwnerShip = 1;
+                                    MichaelRequestUserOp.ChangeEscalation = 1;
+
+                                    if (request.IsApprovalProcessComplted == 0)
+                                    {
+                                        //MichaelRequestUserOp.AdminOverideApprove = 1;
+                                    }
                                 }
                             }
                         }
                         else if (requestStage.StageType.ToLower() == "approver rejected")
                         {
-                            MichaelRequestUserOp.Comment = 1;
-                            MichaelRequestUserOp.Attach = 1;
-                            if (michaelRequestUserAccess.IsOwner == 1)
+                            if (isAdmin)
                             {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
                                 MichaelRequestUserOp.Withdraw = 1;
-                            }
-                            if (michaelRequestUserAccess.IsApprover == 1)
-                            {
-                                //MichaelRequestUserOp.Approve = 1;
                                 MichaelRequestUserOp.ApproveReject = 1;
-                            }
-
-                            if (michaelRequestUserAccess.IsAssignee == 1)
-                            {
                                 MichaelRequestUserOp.AdminApprove = 1;
-
-                                if (request.IsApprovalProcessComplted == 0)
+                                if (michaelRequestViewerData.IsApprovalProcess == 1)
                                 {
-                                    MichaelRequestUserOp.AdminOverideApprove = 1;
+                                    MichaelRequestUserOp.ChangeApprover = 1;
+                                }
+                                MichaelRequestUserOp.ChangeOwnerShip = 1;
+                                MichaelRequestUserOp.ChangeEscalation = 1;
+                                MichaelRequestUserOp.AdminOverideApprove = 1;
+                            }
+                            else
+                            {
+                                MichaelRequestUserOp.Comment = 1;
+                                MichaelRequestUserOp.Attach = 1;
+                                if (michaelRequestUserAccess.IsOwner == 1)
+                                {
+                                    MichaelRequestUserOp.Withdraw = 1;
+                                }
+                                if (michaelRequestUserAccess.IsApprover == 1 && michaelRequestViewerData.IsApprovalProcess == 1)
+                                {
+                                    //MichaelRequestUserOp.Approve = 1;
+                                    MichaelRequestUserOp.ApproveReject = 1;
+                                }
+
+                                if (michaelRequestUserAccess.IsAssignee == 1)
+                                {
+                                    MichaelRequestUserOp.AdminApprove = 1;
+                                    if (michaelRequestViewerData.IsApprovalProcess == 1)
+                                    {
+                                        MichaelRequestUserOp.ChangeApprover = 1;
+                                    }
+                                    MichaelRequestUserOp.ChangeOwnerShip = 1;
+                                    MichaelRequestUserOp.ChangeEscalation = 1;
+
+                                    if (request.IsApprovalProcessComplted == 0)
+                                    {
+                                        MichaelRequestUserOp.AdminOverideApprove = 1;
+                                    }
                                 }
                             }
                         }
@@ -1693,6 +1859,85 @@ namespace HCMApi.DB
                 }
 
                 jsonResponse = new JsonResponse("Ok", "Data loaded successfully.", michaelRequestLogItems);
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+        public JsonResponse ChangeApproverMichaelRequest(MichaeApproverChangeRequest michaeApproverChangeRequest, MichaelRequestViewerData michaelRequestViewerData, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+                var dateCreated = DateTime.UtcNow;
+                var approverAccessType = nueRequestContext.MichaelRequestAccessTypes.FirstOrDefault(x=>x.AccessTypes == "approver");
+                var requestAccess = nueRequestContext.MichaelRequestAccessMapper.Where(x => x.RequestId == michaelRequestViewerData.Id
+                                                                   && x.UserId == michaeApproverChangeRequest.FromUser
+                                                                   && x.RequestAccessTypesId == approverAccessType.Id
+                                                                   && x.Active == 1);
+                var request = nueRequestContext.MichaelRequestMaster.SingleOrDefault(x => x.Id == michaelRequestViewerData.Id);
+                if (requestAccess != null && requestAccess.FirstOrDefault() != null && requestAccess.Count() > 0)
+                {
+                    var requestAcces = requestAccess.FirstOrDefault();
+                    requestAcces.UserId = michaeApproverChangeRequest.ToUser;
+                    requestAcces.AddedOn = dateCreated;
+                    nueRequestContext.SaveChanges();
+
+                    //send notification
+                    string domainName = azureAdSettings.ClientUrl;
+                    string contentRootPath1 = _hostingEnvironment.ContentRootPath;
+                    var templatePath = contentRootPath1 + "\\MyStaticFiles\\MailTemplate.txt";
+                    var mailTemplate = System.IO.File.ReadAllText(templatePath);
+
+                    List<MichaeRequestAcessItem> accessUsers = getRequestAllAccessUsers((int)michaelRequestViewerData.Id);
+                    if (accessUsers != null && accessUsers.Count > 0)
+                    {
+                        List<MessagesModel> messages = new List<MessagesModel>();
+
+                        //var request = nueRequestContext.MichaelRequestMaster.FirstOrDefault(x => x.Id == (int)michaelRequestLog.RequestId);
+                        var commentUser = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == michaeApproverChangeRequest.UserId); //nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == accessUsers.FirstOrDefault(y => y.AcessType == "Owner").UserId);
+                        var message = commentUser.FullName + " is assigned as approver";
+                        var payload = commentUser.FullName + " is assigned as approver for " + nueRequestContext.MichaelDepartmentRequestMaster.FirstOrDefault(x => x.Id == request.DepartmentRequestId && x.DepartmentId == request.DepartmentId).RequestTypeName.ToLower() + " ticket.";
+                        string target = "/HCM/RequestViewer/" + michaelRequestViewerData.Id;
+                        foreach (var item in accessUsers)
+                        {
+                            NeuMessages neuMessages = new NeuMessages();
+                            neuMessages.Message = message;
+                            neuMessages.EmptyMessage = payload;
+                            neuMessages.UserId = item.UserId;
+                            neuMessages.Target = target;
+                            neuMessages.Processed = 0;
+                            neuMessages.Date = dateCreated;
+                            nueRequestContext.NeuMessages.Add(neuMessages);
+
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.Message = message;
+                            messagesModel.EmptyMessage = payload;
+                            messagesModel.Email = nueRequestContext.NueUserProfile.FirstOrDefault(x => x.Id == item.UserId).Email;
+                            messagesModel.Target = azureAdSettings.ClientUrl + target;
+                            messagesModel.MessageDate = dateCreated;
+                            messages.Add(messagesModel);
+                        }
+
+                        if (messages.Count > 0)
+                        {
+                            BackgroundJob.Enqueue(() => new Utils().renderGenerateMailItem(domainName, mailTemplate, michaelRequestViewerData, messages));
+                        }
+
+                        nueRequestContext.SaveChanges();
+                    }
+
+                    jsonResponse = new JsonResponse("Ok", "Data updated successfully.");
+                }
+                else
+                {
+                    jsonResponse = new JsonResponse("Failed", "Invalid request.");
+                }
+                
             }
             catch (Exception e1)
             {
@@ -2307,7 +2552,39 @@ namespace HCMApi.DB
             return users;
         }
 
-        
+
+        public JsonResponse UpdateMichaelNotificationStatusSeen(MichaeNotificationUpdateRequest michaeNotificationUpdateRequest)
+        {
+            JsonResponse jsonResponse = new JsonResponse();
+            NueRequestContext nueRequestContext = new NueRequestContext();
+            try
+            {
+
+                var dateCreated = DateTime.UtcNow;
+                var michaelNotifications = nueRequestContext.NeuMessages
+                    .Where(x => x.MessageId == michaeNotificationUpdateRequest.NotificationId && x.UserId == michaeNotificationUpdateRequest.UserId);
+
+                if(michaelNotifications != null && michaelNotifications.FirstOrDefault() != null && michaelNotifications.Count() > 0)
+                {
+                    var michaelNotification = michaelNotifications.FirstOrDefault();
+                    michaelNotification.Processed = 1;
+                    nueRequestContext.SaveChanges();
+                    jsonResponse = new JsonResponse("Ok", "Data loaded successfully.", michaelNotification.Target);
+                }
+                else
+                {
+                    jsonResponse = new JsonResponse("Failed", "An error occerd.");
+
+                }
+            }
+            catch (Exception e1)
+            {
+                jsonResponse = new JsonResponse("Failed", "An error occerd.");
+            }
+            return jsonResponse;
+        }
+
+
         public JsonResponse addNewMichaelRequestComment(MichaelRequestLog michaelRequestLog, AzureAd azureAdSettings, Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment)
         {
             JsonResponse jsonResponse = new JsonResponse();
@@ -2573,6 +2850,7 @@ namespace HCMApi.DB
             }
             return jsonResponse;
         }
+        
 
         public JsonResponse addNewMichaelRequest(DepartmentRequestSaveTemplate departmentRequestSaveTemplate, NueUserProfile nueUserProfile, string contentRootPath)
         {

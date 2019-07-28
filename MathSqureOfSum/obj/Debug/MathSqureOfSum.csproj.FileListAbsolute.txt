@@ -1,0 +1,6 @@
+C:\Users\Monin.Jose\source\repos\NAHD\MathSqureOfSum\bin\Debug\MathSqureOfSum.dll
+C:\Users\Monin.Jose\source\repos\NAHD\MathSqureOfSum\bin\Debug\MathSqureOfSum.pdb
+C:\Users\Monin.Jose\source\repos\NAHD\MathSqureOfSum\obj\Debug\MathSqureOfSum.csprojAssemblyReference.cache
+C:\Users\Monin.Jose\source\repos\NAHD\MathSqureOfSum\obj\Debug\MathSqureOfSum.csproj.CoreCompileInputs.cache
+C:\Users\Monin.Jose\source\repos\NAHD\MathSqureOfSum\obj\Debug\MathSqureOfSum.dll
+C:\Users\Monin.Jose\source\repos\NAHD\MathSqureOfSum\obj\Debug\MathSqureOfSum.pdb
